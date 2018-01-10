@@ -1,0 +1,95 @@
+/* ================================================================ 
+This copyright notice must be kept untouched in the stylesheet at 
+all times.
+
+The original version of this stylesheet and the associated (x)html
+is available at http://www.stunicholls.com/menu/pro_drop_1.html
+Copyright (c) 2005-2007 Stu Nicholls. All rights reserved.
+This stylesheet and the associated (x)html may be modified in any 
+way to fit your requirements.
+=================================================================== */
+
+#navleft {padding:0; margin:0; list-style:none; padding-left: 0}
+#navleft li.sidebar {display:block;line-height:20px; color:#000; font-size:15px; font-weight:bold;padding-left: 0}
+
+#appnav {padding:0; margin:0; list-style:none; padding-left: 0}
+#appnav li.top_left {display:block;}
+#appnav li a.app_closed {/*display:block;*/line-height:20px; color:#000; text-decoration:none; font-size:13px; font-weight:bold; padding:0 0 0 16px; cursor:pointer;background: url(APPC.BMP) no-repeat left center;
+	text-indent: 6}
+#appnav li a.rec-keyg {line-height:20px; color:#000; text-decoration:none; font-size:13px; font-weight:bold; padding:0 0 0 16px; cursor:pointer;background: url(REC-KEYG.BMP) no-repeat left center;
+	text-indent: 6}
+
+#appnav li a.app_open {/*display:block;*/line-height:20px; color:#000; text-decoration:none; font-size:13px; font-weight:bold; padding:0 0 0 16px; cursor:pointer;background: url(APPO.BMP) no-repeat left center;
+	text-indent: 6}
+#appnav li ul.draw {padding:0; margin:0; list-style:none; padding-left: 16}
+#appnav li ul.draw li.top_left {display:block;}
+#appnav li ul.draw li a.draw_closed {line-height:20px; color:#000; text-decoration:none; font-size:13px; font-weight:bold; padding:0 0 0 16px; cursor:pointer;
+	background: url("closedFolder.gif") no-repeat left center;text-indent: 6}
+#appnav li ul.draw li a.draw_open {line-height:20px; color:#000; text-decoration:none; font-size:13px; font-weight:bold; padding:0 0 0 16px; cursor:pointer;
+	background: url("openfolder.gif") no-repeat left center;text-indent: 6}
+#appnav li ul.draw li ul.fold {padding:0; margin:0; list-style:none; padding-left: 16}
+#appnav li ul.draw li ul.fold li.top_left {display:block;}
+#appnav li ul.draw li ul.fold li a.folder_closed {line-height:20px; color:#000; text-decoration:none; font-size:13px; font-weight:bold; padding:0 0 0 16px; cursor:pointer;
+	background: url("closedFolder.gif") no-repeat left center;text-indent: 6}
+#appnav li ul.draw li ul.fold li a.folder_open {line-height:20px; color:#000; text-decoration:none; font-size:13px; font-weight:bold; padding:0 0 0 16px; cursor:pointer;
+	background: url("openfolder.gif") no-repeat left center;text-indent: 6}
+#appnav li ul.draw li ul.fold li ul.doc{padding:0; margin:0; list-style:none;padding-left: 16}
+#appnav li ul.draw li ul.fold li ul.doc li.top_left {display:block;}
+#appnav li ul.draw li ul.fold li ul.doc li a.doc_closed {line-height:20px; color:#000; text-decoration:none; font-size:13px; font-weight:bold; padding:0 0 0 16px; cursor:pointer;
+	background: url("closedbook.jpg") no-repeat left center;text-indent: 6}
+#appnav li ul.draw ul.fold ul.doc li a.doc_open {line-height:20px; color:#000; text-decoration:none; font-size:13px; font-weight:bold; padding:0 0 0 16px; cursor:pointer;
+	background: url("openedbook.jpg") no-repeat left center;text-indent: 6}
+
+#appnav li a:hover {color:#fff;background-color:#AACCCC;}
+#appnav li ul.draw li a:hover {color:#888; background-color:#AACCCC;}
+#appnav li ul.draw li ul.fold li  a:hover {color:#888; background-color:#AACCCC;}
+#appnav li ul.draw li ul.fold li ul.doc li  a:hover {color:#888; background-color:#AACCCC;}
+
+#appnav li ul.rclass {padding:0; margin:0; list-style:none; padding-left: 16}
+#appnav li ul.rclass li.top_left {display:block;}
+#appnav li ul.rclass li a.rclass {line-height:20px; color:#000; text-decoration:none; font-size:13px; font-weight:bold; padding:0 0 0 16px; cursor:pointer;
+	background: url("tape.png") no-repeat left center;text-indent: 6}
+#appnav li ul.rclass li a:hover {color:#888; background-color:#AACCCC;}
+
+#appnav li ul.creport {padding:0; margin:0; list-style:none; padding-left: 16}
+#appnav li ul.creport li.top_left {display:block;}
+#appnav li ul.creport li a.creport {line-height:20px; color:#000; text-decoration:none; font-size:13px; font-weight:bold; padding:0 0 0 16px; cursor:pointer;
+	background: url("filetypes/cld.gif") no-repeat left center;text-indent: 6}
+#appnav li ul.creport li a:hover {color:#888; background-color:#AACCCC;}
+
+
+#devicenav {padding:0; margin:0; list-style:none; padding-left: 8;
+	background-color: #C7CEB5;}
+#devicenav li.top_left {display:block;}
+#devicenav li a.device {line-height:20px; color:#000; text-decoration:none; font-size:13px; font-weight:bold; padding:0 0 0 16px; cursor:pointer;background: url(disk.jpg) no-repeat left center;
+	text-indent: 12}
+#devicenav li ul {padding:0; margin:0; list-style:none; padding-left: 16}
+#devicenav li ul li.top_left {display:block;}
+#devicenav li ul li a.rclass {line-height:20px; color:#000; text-decoration:none; font-size:13px; font-weight:bold; padding:0 0 0 16px; cursor:pointer;
+	background: url("tape.png") no-repeat left center;text-indent: 6}
+
+#devicenav li a:hover {color:#888;background-color:#AACCCC;}
+
+
+#eventgroupnav {padding:0; margin:0; list-style:none; padding-left: 8;
+	background-color: #C7CEB5;}
+#eventgroupnav li.top_left {display:block;}
+#eventgroupnav li a.eventgroup {display:block;line-height:20px; color:#000; text-decoration:none; font-size:13px; font-weight:bold; padding:0 0 0 5px; cursor:pointer;background: url(workflows.jpg) no-repeat left center;
+	text-indent: 12}
+#eventgroupnav li ul {padding:0; margin:0; list-style:none; padding-left: 8}
+#eventgroupnav li ul li.top_left {display:block;}
+
+#eventgroupnav li a:hover {color:#888;background-color:#AACCCC;}
+
+#usergroupnav {padding:0; margin:0; list-style:none; padding-left: 5;}
+#usergroupnav li.top_left {display:block;}
+#usergroupnav li a.group {display:block;line-height:20px; color:#000; text-decoration:none; font-size:13px; font-weight:bold; padding:0 0 0 5px; cursor:pointer;background: url(group.gif) no-repeat left center;
+	text-indent: 12}
+#usergroupnav li a.user {display:block;line-height:20px; color:#000; text-decoration:none; font-size:13px; font-weight:bold; padding:0 0 0 5px; cursor:pointer;background: url(user.jpg) no-repeat left center;
+	text-indent: 12}
+
+#usergroupnav li ul {padding:0; margin:0; list-style:none; padding-left: 8}
+#usergroupnav li ul li.top_left {display:block;}
+
+#usergroupnav li a:hover {color:#888;}
+

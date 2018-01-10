@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+
+<tiles-definitions>
+
+	
+	<definition name="site/welcome" extends="sitepage">
+	    <put-attribute name="footer" value="/WEB-INF/views/site/footer.jsp" />	    
+		<put-attribute name="content" value="/WEB-INF/views/site/welcome.jsp" />
+		<put-attribute name="leftmenu" value="/WEB-INF/views/layouts/queryBlank.jsp" />		
+	</definition>
+
+	<definition name="site/page" extends="sitepage">
+	    <put-attribute name="footer" value="/WEB-INF/views/site/footer.jsp" />	    
+		<put-attribute name="leftmenu" value="/WEB-INF/views/site/leftmenu.jsp" />
+		<put-attribute name="content" value="/WEB-INF/views/site/content.jsp" />
+	</definition>
+	<definition name="site/template" templateExpression="/WEB-INF/views/site/template.jsp">
+	</definition>
+	<definition name="site/asset" extends="sitepage">
+	    
+	    <put-attribute name="topmenu" value="/WEB-INF/views/site/assetsmenu.jsp"/>
+	    <put-attribute name="content" value="/WEB-INF/views/site/assets.jsp"/>
+  
+	</definition>		
+	<definition name="site/browse" templateExpression="/WEB-INF/views/site/browse.jsp">
+	</definition>	
+	<definition name="site/media" templateExpression="/WEB-INF/views/site/media.jsp">
+	</definition>	
+	<definition name="site/folder" templateExpression="/WEB-INF/views/site/folders.jsp">
+	    </definition>
+	<definition name="site/page" templateExpression="/WEB-INF/views/site/pages.jsp">
+		</definition>
+	<definition name="site/pproperties" templateExpression="/WEB-INF/views/site/pproperties.jsp">
+		</definition>		
+	<definition name="site/createPage" templateExpression="/WEB-INF/views/site/createPage.jsp">
+		</definition>	
+	<definition name="site/editImage" templateExpression="/WEB-INF/views/site/editImage.jsp">
+		</definition>	
+	<definition name="site/deleteNode" templateExpression="/WEB-INF/views/site/deleteNode.jsp">
+		</definition>		
+	<definition name="site/deleteAsset" templateExpression="/WEB-INF/views/site/deleteAsset.jsp">
+		</definition>		
+	<definition name="site/deletePage" templateExpression="/WEB-INF/views/site/deletePage.jsp">
+		</definition>		
+	
+	<definition name="site/textEditor" templateExpression="/WEB-INF/views/site/textEditor.jsp">
+		</definition>		
+	<definition name="site/carousel" templateExpression="/WEB-INF/views/site/carousel.jsp">
+		</definition>	
+	<definition name="site/carousel-default" templateExpression="/WEB-INF/views/site/carousel-default.jsp">
+		</definition>	
+	<definition name="site/leftmenu" templateExpression="/WEB-INF/views/site/leftmenu.jsp">
+		</definition>				
+	<definition name="site/templates" templateExpression="/WEB-INF/views/site/templates.jsp">
+		</definition>	
+	<definition name="site/pages" templateExpression="/WEB-INF/views/site/selectPage.jsp">
+		</definition>
+	<definition name="site/suggestions" templateExpression="/WEB-INF/views/site/suggestions.jsp">
+		</definition>	
+	<definition name="site/editor" extends="sitepage">
+	    <put-attribute name="content" value="/WEB-INF/views/site/editor.jsp"/>
+	</definition>		
+	<definition name="site/template" extends="sitepage">
+	    <put-attribute name="content" value="/WEB-INF/views/site/templateEditor.jsp"/>
+	</definition>
+	<definition name="site/navmenu" templateExpression="/WEB-INF/views/wet/navmenu.jsp">
+	</definition>
+	<definition name="site/passcode" templateExpression="/WEB-INF/views/site/passcode.jsp">
+	</definition>		
+</tiles-definitions>
+
+

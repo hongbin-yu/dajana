@@ -1,0 +1,95 @@
+package com.filemark.jcr.service;
+
+import java.io.File;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.List;
+
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.web.multipart.MultipartFile;
+
+import com.filemark.jcr.model.Asset;
+import com.filemark.jcr.model.Chat;
+import com.filemark.jcr.model.Folder;
+import com.filemark.jcr.model.JcrForm;
+import com.filemark.jcr.model.Log;
+import com.filemark.jcr.model.Page;
+import com.filemark.jcr.model.SmartiNode;
+import com.filemark.jcr.model.User;
+import com.filemark.utils.ScanUploadForm;
+import com.filemark.utils.WebPage;
+
+public interface JcrServices {
+	public Object getObject(final String path) throws RepositoryException;
+	public List<Object> getObjects(final String path, final Class aclass) ;
+	public Object add(final Object obj) throws RepositoryException;
+	public Page add(final Page page) throws RepositoryException;
+	public String getOrCreateByPath(final String path,final String nodeType,final String username);
+	public String addNodes(final String path,final String nodeType, final String username) throws RepositoryException;
+	public Node addNode(final String path,final String name, final String nodeType) throws RepositoryException;
+	public String getUniquePath(final String path,final String name) throws RepositoryException;
+	public Object addOrUpdate(final SmartiNode obj) throws RepositoryException;
+	public void update(final Folder folder) throws RepositoryException;
+	public void updateFolderIcon(final String path) throws RepositoryException;
+	public String updateProperty(final String uid,final String name, final String value) throws RepositoryException;
+	public String updatePropertyByPath(final String path,final String name,final String value) throws RepositoryException;
+	public String deleteNode(final String path) throws RepositoryException;
+	public String deleteNodeAndOrphan(final String path) throws RepositoryException;
+	public void readAsset(final String path, final HttpServletResponse response);
+	public void readAsset(final String path, final OutputStream output);
+	public Node getNode(final String path) throws RepositoryException;
+	public String  getNodeById(final String uuid) throws RepositoryException;
+	public String getBreadcrumb(final String path,String permission);
+	public String getBreadcrumb(final String path,String permission,int depth);
+	public String getBreadcrumb(final String path);
+	public String getBreadcrumb(final Page page);
+	public WebPage<Folder> queryFolders(final String queryString, final long limit, final long offset);
+	public WebPage<Page> queryPages(final String queryString, final long limit, final long offset);
+	public WebPage<Chat> queryChats(final String queryString, final long limit, final long offset);
+	public WebPage<Page> queryPageContent(final String queryString, final long limit, final long offset);
+	public String getNavigation(final String path,final String groups) ;
+	public String getNavigation(final String path,final int level,final int max) ;
+	public String getPageNavigation(final String path,final int level);	
+	public String setPageNavigation(final String path,final int level,final int max);	
+	public String getSavedQueries(final String queryString) ;
+	public Folder getFolder(final String path) throws RepositoryException;
+	public Page getPage(final String path) throws RepositoryException;	
+	public Page getPageByUid(final String uid) throws RepositoryException;	
+	public Folder getFolder(final String path, String permission) throws RepositoryException;
+	public boolean nodeExsits(final String path);
+	public Node addFile(String path,String name, InputStream data, String mimeType);
+	public WebPage<Asset> searchAssets(final String queryString, final long limit, final long offset);
+	public WebPage<Page> searchSite(final String queryString, final long limit, final long offset);
+	public WebPage<Log> searchLog(final String queryString, final long limit, final long offset);
+	public Node addProperty(String path,String name, String content);
+	public long getCount(final String queryString);
+	public String getProperty(final String path,final String name);	
+	public void setProperty(final String path,final String name,final String value) ;
+	public String move(final String frompath,final String topath,final String username) ;
+	public void addUsagelog(String username,String message,String type);
+	public void createFile(String path,Integer x);
+	public String uploadAssets(String path, ScanUploadForm uploadForm, String username) throws RepositoryException;
+	public Asset importAsset(String path, String url, String username) throws RepositoryException;
+	public InputStream getInputStream(final String path);
+	public void exportSystem(final String path, final OutputStream out, final Boolean binary);
+	public void importSystem(final String path, final InputStream in,final int behavior ) ;
+	public WebPage<Object> queryObject(final String queryString, final long limit, final long offset);
+	public String getValidPath(final String path) throws RepositoryException;
+	public void  deleteNodes(final String queryString);
+	public String getAncestorPath(final String path,final int level) ;
+	public String archive(final String frompath);
+	public String getDomain();
+	public String getDevice();	
+	public void exportDocument(final String path, final OutputStream out,final Boolean binary);
+	public Asset getAssetById(String uid) throws RepositoryException;
+	public void assets2pdf(final List<Asset> assets,final OutputStream outputStream);
+	public void updateCalendar(String path, String name);
+	public void roateImage(final String path,final double angle) ;
+	public void autoRoateImage(final String path) ;	
+	public File getFile(String path) throws RepositoryException;
+	public String getHome();
+/*	public String extractWord(String path);*/
+}

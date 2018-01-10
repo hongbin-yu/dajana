@@ -1,0 +1,1670 @@
+
+[draggable] {
+    -moz-user-select: none;
+}
+html {
+    height: 100%;
+}
+body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    padding: 0;
+}
+#ContentWrapper {
+    background: rgba(0, 0, 0, 0) url("editor/css/resources/content-bg-texture.png") repeat scroll 0 0;
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+}
+#ContentFrame {
+    background-color: #ffffff;
+    border-right: medium none #d0d0d0;
+    bottom: 0;
+    box-sizing: border-box;
+    height: 100%;
+    overflow-y: hidden;
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+.hide-nosize, .hide-nosize * {
+    z-index: -1;
+}
+#InlineEditingUI {
+    display: none;
+    height: 100%;
+    pointer-events: none;
+    position: absolute;
+    width: 100%;
+    z-index: 601;
+}
+#InlineEditingUI .cq-RichText-ui, #InlineEditingUI .cq-imageeditor-ui {
+    height: 100%;
+    position: absolute;
+    width: 100%;
+}
+#InlineEditingUI .cq-imageeditor-ui {
+    pointer-events: auto;
+}
+#FullScreenWrapper {
+    background-color: #454545;
+    height: 100%;
+    left: 0;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 1100;
+}
+#FullScreenWrapper .coral-RichText-editorWrapper {
+    background-color: #eeeeee;
+    cursor: text;
+    overflow-y: scroll;
+    width: 100%;
+}
+#FullScreenWrapper .coral-RichText-editorWrapper .coral-RichText-editor {
+    padding: 0.75rem;
+}
+#FullScreenWrapper .coral-RichText-editorWrapper .is-edited {
+    background-color: #eeeeee;
+}
+#FullScreenWrapper .coral-RichText-editorWrapper .coral-RichText-editor .richtext-tableselection {
+    background-color: #3287d2;
+}
+#FullScreenWrapper .coral-RichText-editorWrapper .coral-RichText-sourceEditor {
+    border: 0 none;
+    box-sizing: border-box;
+    height: 100%;
+    outline: medium none;
+    resize: none;
+    width: 100%;
+}
+#FullScreenMask {
+    height: 100%;
+    position: absolute;
+    width: 100%;
+    z-index: 1000;
+}
+div.cq-draggable.cq-dragorigin {
+    background: rgba(255, 255, 255, 0.6) none repeat scroll 0 0;
+    outline: medium none;
+}
+div.cq-droptarget.cq-dragover {
+    overflow: visible;
+}
+#OverlayWrapper {
+    background-color: rgba(255, 0, 0, 0);
+    bottom: 0;
+    left: 0;
+    min-width: 100%;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 900;
+}
+#OverlayWrapper.is-hidden {
+    display: none;
+}
+#OverlayWrapper.is-hidden-children > .cq-Overlay {
+    display: none;
+}
+.cq-Overlay {
+    color: #dddddd;
+    font-size: 0.875rem;
+    line-height: 2.875rem;
+    position: absolute;
+    text-align: center;
+}
+.cq-Overlay:focus {
+    outline: 0 none;
+}
+.cq-Overlay.is-bordered, .cq-Overlay.is-active, .cq-Overlay.is-hover, .cq-Overlay.is-selected {
+    border: 0.125rem solid;
+    margin: -0.125rem;
+}
+.cq-Overlay.is-active, .cq-Overlay.is-hover, .cq-Overlay.is-selected {
+    border-color: #2583d8;
+    color: #2583d8;
+}
+.cq-Overlay.is-disabled {
+    border-width: 0;
+}
+.cq-Overlay.is-hidden {
+    display: none;
+}
+.cq-Overlay--placeholder {
+    border-color: #dddddd;
+    border-style: solid;
+    border-width: 0.125rem;
+    margin: -0.125rem;
+}
+.cq-Overlay--placeholder::before {
+    color: inherit;
+    content: attr(data-text);
+    display: inline-block;
+    height: 100%;
+    overflow: hidden;
+    padding: 0 2px;
+}
+.cq-Overlay.cq-Overlay--placeholder.is-disabled {
+    border-width: 0.125rem;
+}
+.cq-Overlay.cq-Overlay--placeholder.is-disabled.is-hover {
+    border-color: #dddddd;
+    color: #dddddd;
+}
+.cq-Overlay.is-active .cq-Overlay--placeholder:not(.is-selected), .cq-Overlay.is-selected .cq-Overlay--placeholder:not(.is-selected), .cq-Overlay.is-hover .cq-Overlay--placeholder:not(.is-selected) {
+    border: 0 none;
+    color: #2583d8;
+}
+.cq-Overlay-subdroptarget {
+    position: absolute;
+}
+.cq-Overlay-subdroptarget.cq-dragover {
+    background: #3287d2 none repeat scroll 0 0;
+}
+.cq-Overlay--component.cq-Overlay--insertBefore, .cq-Overlay--component.cq-Overlay--insertAfter {
+    border-left-width: 0;
+    border-right-width: 0;
+    border-style: solid;
+    z-index: 101;
+}
+.cq-Overlay--component.cq-Overlay--insertBefore {
+    border-bottom-width: 0;
+    border-top-color: #2583d8;
+    border-top-width: 0.125rem;
+    box-shadow: 0 0.0625rem 0 0 #fff inset;
+    margin-top: -0.125rem;
+}
+.cq-Overlay--component.cq-Overlay--insertAfter {
+    border-bottom-color: #2583d8;
+    border-bottom-width: 0.125rem;
+    border-top-width: 0;
+    box-shadow: 0 -0.0625rem 0 0 #fff inset;
+    margin-bottom: -0.125rem;
+}
+.cq-Overlay--component.cq-Overlay--insertBefore::after, .cq-Overlay--component.cq-Overlay--insertAfter::after {
+    background: #2583d8 none repeat scroll 0 0;
+    color: #ffffff;
+    height: 1.375rem;
+    left: 50%;
+    line-height: 22px;
+    margin-left: -1.375rem;
+    position: absolute;
+    text-align: center;
+    width: 2.75rem;
+}
+.cq-Overlay--component.cq-Overlay--insertBefore::after {
+    border-radius: 1.375rem 1.375rem 0 0;
+    content: "▲";
+    top: -1.5rem;
+}
+.cq-Overlay--component.cq-Overlay--insertAfter::after {
+    border-radius: 0 0 1.375rem 1.375rem;
+    bottom: -1.5rem;
+    content: "▼";
+}
+.cq-Overlay--component.cq-Overlay--placeholder.cq-Overlay--insertBefore, .cq-Overlay--component.cq-Overlay--placeholder.cq-Overlay--insertAfter {
+    border-left-width: 0.125rem;
+    border-right-width: 0.125rem;
+}
+.cq-Overlay--component.cq-Overlay--placeholder.cq-Overlay--insertBefore {
+    border-bottom-width: 0.125rem;
+}
+.cq-Overlay--component.cq-Overlay--placeholder.cq-Overlay--insertAfter {
+    border-top-width: 0.125rem;
+}
+.cq-Overlay::before {
+    z-index: 5;
+}
+.cq-Overlay > .cq-Overlay-subdroptarget {
+    z-index: 9;
+}
+.cq-Overlay > .cq-Overlay {
+    z-index: 10;
+}
+.cq-Overlay > .cq-Overlay > .cq-Overlay-subdroptarget {
+    z-index: 19;
+}
+.cq-Overlay > .cq-Overlay > .cq-Overlay {
+    z-index: 20;
+}
+.cq-Overlay > .cq-Overlay > .cq-Overlay > .cq-Overlay-subdroptarget {
+    z-index: 29;
+}
+.cq-Overlay > .cq-Overlay > .cq-Overlay > .cq-Overlay {
+    z-index: 30;
+}
+.cq-Overlay > .cq-Overlay > .cq-Overlay > .cq-Overlay > .cq-Overlay-subdroptarget {
+    z-index: 39;
+}
+.cq-Overlay > .cq-Overlay > .cq-Overlay > .cq-Overlay > .cq-Overlay {
+    z-index: 40;
+}
+.cq-Overlay > .cq-Overlay > .cq-Overlay > .cq-Overlay > .cq-Overlay > .cq-Overlay-subdroptarget {
+    z-index: 49;
+}
+.cq-Overlay > .cq-Overlay > .cq-Overlay > .cq-Overlay > .cq-Overlay > .cq-Overlay {
+    z-index: 50;
+}
+.cq-Overlay > .cq-Overlay > .cq-Overlay > .cq-Overlay > .cq-Overlay > .cq-Overlay > .cq-Overlay-subdroptarget {
+    z-index: 59;
+}
+.cq-Overlay > .cq-Overlay > .cq-Overlay > .cq-Overlay > .cq-Overlay > .cq-Overlay > .cq-Overlay {
+    z-index: 60;
+}
+.cq-Overlay > .cq-Overlay > .cq-Overlay > .cq-Overlay > .cq-Overlay > .cq-Overlay > .cq-Overlay > .cq-Overlay-subdroptarget {
+    z-index: 69;
+}
+#EditableToolbar {
+    background: #454545 none repeat scroll 0 0;
+    box-shadow: 0rem 0.1875rem 0.3125rem 0rem rgba(0, 0, 0, 0.3);
+    display: none;
+    left: 0;
+    position: absolute;
+    top: 3.125rem;
+    z-index: 600;
+}
+#EditableToolbar > button {
+    color: #ffffff;
+    height: 2.75rem;
+    min-width: 3.75rem;
+}
+#EditableToolbar > button > .coral-Icon, #EditableToolbar > button > .cq-EditableToolbar-text {
+    opacity: 0.6;
+}
+#EditableToolbar > button:hover > .coral-Icon, #EditableToolbar > button:hover > .cq-EditableToolbar-text {
+    opacity: 1;
+}
+#EditableToolbar > *:active, #EditableToolbar > .is-active {
+    color: #2583d8;
+    opacity: 1;
+}
+#EditableToolbar > button > .cq-EditableToolbar-text {
+    font-size: 13px;
+}
+.cq-EditableToolbar-text--left {
+    margin-right: 5px;
+}
+.cq-EditableToolbar-text--right {
+    margin-left: 5px;
+}
+#EditableToolbar > button.cq-EditableToolbar-button.cq-EditableToolbar-button--readOnly {
+    pointer-events: none;
+}
+#EditableToolbar > button.cq-EditableToolbar-button.cq-EditableToolbar-button--readOnly > .coral-Icon, #EditableToolbar > button.cq-EditableToolbar-button.cq-EditableToolbar-button--readOnly > .cq-EditableToolbar-text {
+    opacity: 1;
+}
+.cq-select-parent {
+    padding: 0;
+    position: absolute;
+    width: 15.625rem;
+}
+.cq-select-parent-list {
+    margin: 0;
+}
+.cq-select-parent-item {
+    height: 2.5rem;
+    line-height: 2.5rem;
+}
+.cq-select-parent-item + .cq-select-parent-item {
+    border-top: 0.0625rem solid rgb(200, 200, 200);
+}
+.cq-select-parent-item {
+    padding-left: 2.5rem;
+    padding-right: 0.9375rem;
+    position: relative;
+}
+.cq-select-parent-item.selected {
+    background-color: #2583d8;
+    color: white;
+}
+.cq-select-parent-item:hover {
+    background-color: #2583d8;
+    color: white;
+    cursor: pointer;
+}
+.cq-select-parent-color-hint {
+    border: 0.0625rem solid rgba(255, 255, 255, 0.8);
+    display: inline-block;
+    height: 1.25rem;
+    margin-left: 0.9375rem;
+    margin-right: 0.9375rem;
+    position: relative;
+    top: 0.5rem;
+    width: 1.5625rem;
+}
+.inlineeditor-selector.coral-Popover {
+    background: #454545 none repeat scroll 0 0;
+    border: medium none;
+    text-align: left;
+}
+.inlineeditor-selector-list {
+    background: #454545 none repeat scroll 0 0;
+    list-style-type: none;
+}
+.inlineeditor-selector-list-item {
+    background: #454545 none repeat scroll 0 0;
+    display: block;
+    padding: 0.625rem;
+    text-align: left;
+    text-decoration: none;
+}
+.inlineeditor-selector-list-item:hover {
+    cursor: pointer;
+    opacity: 1;
+}
+.inlineeditor-is-hover-subtarget {
+    background: rgb(50, 135, 210) none repeat scroll 0 0;
+    opacity: 0.5;
+}
+.editor-panel {
+    background: #eeeeee none repeat scroll 0 0;
+    bottom: 0;
+    display: block;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: transform 1.2s ease 0s;
+    width: 100%;
+}
+.editor-panel-content {
+    bottom: 0;
+    left: 0;
+    min-height: 0.0625rem;
+    overflow: scroll;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 800;
+}
+.editor-panel-content-with-header {
+    top: 2.75rem;
+}
+.editor-panel-header {
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 900;
+}
+.sidepanel-opened {
+    background-color: #eeeeee;
+    bottom: 0;
+    left: 0;
+    position: relative;
+    top: 0;
+    z-index: 1000;
+}
+.sidepanel-opened .sidepanel-content {
+    height: 100%;
+    overflow-y: hidden;
+}
+.sidepanel-closed.sidepanel-resizing {
+    display: none;
+}
+@media screen and (max-width: 1024px) {
+.sidepanel {
+    transition: transform 1.2s ease 0s;
+    width: 100%;
+}
+.sidepanel-sliding {
+    display: none;
+}
+.sidepanel-closed {
+    transform: translateX(-100%);
+}
+.sidepanel-opened {
+    transform: translateX(0px);
+}
+.sidepanel-opened .sidepanel-resizer {
+    display: none;
+}
+.sidepanel-header {
+    height: 2.75rem;
+}
+.sidepanel-header .header-action {
+    color: #ffffff;
+    display: inline-block;
+    float: right;
+    height: 2.75rem;
+    line-height: 2.75rem;
+    opacity: 0.9;
+    outline: medium none;
+    text-align: center;
+    vertical-align: top;
+    width: 2.75rem;
+}
+.sidepanel-header .header-action .coral-Icon {
+    color: #ffffff;
+    opacity: 0.9;
+}
+.sidepanel-header .sidepanel-header-title {
+    color: #e6e6e6;
+    display: none;
+    font-size: 1.25rem;
+    font-weight: lighter;
+    height: 2.75rem;
+    line-height: 2.75rem;
+    position: absolute;
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
+    width: 100%;
+}
+.sidepanel-content .toggle-sidepanel {
+    display: none;
+}
+.sidepanel-content .coral-TabPanel .coral-TabPanel-content {
+    display: table-cell;
+    position: absolute;
+    width: 100%;
+}
+.sidepanel-content .filter-panel {
+    float: left;
+    left: 0;
+    width: 18rem;
+}
+.sidepanel-content .filter-panel .componentfilter label {
+    line-height: 2.25rem;
+}
+.sidepanel-content .selected-filter-panel {
+    border-left: 0.0625rem solid rgba(0, 0, 0, 0.15);
+    box-sizing: border-box;
+    height: 2.625rem;
+    left: 18rem;
+    padding-left: 1rem;
+    padding-top: 0.25rem;
+    position: absolute;
+    top: -2.625rem;
+}
+.sidepanel-content .js-sidePanel-edit .selected-filter-panel .taglist {
+    margin-top: 0;
+}
+.sidepanel-content .js-sidePanel-edit .selected-filter-panel .taglist li {
+    margin-top: 0;
+}
+.sidepanel-content .js-sidePanel-edit .selected-filter-panel .taglist-clearall {
+    padding-left: 0.5rem;
+    padding-top: 0.45rem;
+}
+.sidepanel-content .content-panel {
+    border-left: 0.0625rem solid rgba(0, 0, 0, 0.15);
+    height: 100%;
+    overflow: hidden;
+}
+.sidepanel-content .coral-TabPanel .coral-TabPanel-navigation {
+    width: 18rem;
+}
+}
+@media screen and (min-width: 1025px) {
+.sidepanel {
+    transition: opacity 0.5s ease 0s;
+}
+.sidepanel .sidepanel-header {
+    display: none;
+}
+.sidepanel-content .js-sidePanel-empty {
+    border-color: rgba(0, 0, 0, 0.15);
+    border-style: solid solid none none;
+    border-width: 0.0625rem;
+    height: 100%;
+    position: relative;
+    top: 2.6875rem;
+}
+.sidepanel-opened {
+    max-width: 97.5%;
+    min-width: 25%;
+    width: 25%;
+}
+.sidepanel-closed {
+    opacity: 0;
+    width: 0;
+    z-index: 0;
+}
+.sidepanel-closed .sidepanel-content {
+    opacity: 0;
+}
+.sidepanel-opened .sidepanel-content {
+    opacity: 1;
+}
+.sidepanel-resizer {
+    background: rgba(238, 238, 238, 0) none repeat scroll 0 0;
+    cursor: col-resize;
+    display: block;
+    height: 100%;
+    position: absolute;
+    right: -1rem;
+    top: 0;
+    width: 1rem;
+    z-index: 901;
+}
+.sidepanel-resizer.is-dragging {
+    background: rgba(238, 238, 238, 0.7) none repeat scroll 0 0;
+}
+#Content {
+    transition: left 0.5s ease 0s, width 0.5s ease 0s;
+}
+.sidepanel-opened ~ #Content {
+    left: 25%;
+    width: 75%;
+}
+.sidepanel-content .js-sidePanel-edit .selected-filter-panel {
+    margin: 0 1rem;
+}
+.sidepanel-content .js-sidePanel-edit .selected-filter-panel .taglist-clearall {
+    margin: 0.625rem 0 0 0.5rem;
+}
+.sidepanel .content-panel {
+    left: 0.875rem;
+    margin: 0;
+    right: 0.875rem;
+}
+}
+.sidepanel-content .coral-TabPanel {
+    margin-top: 0.6rem;
+}
+.sidepanel-content .coral-TabPanel .coral-TabPanel-navigation {
+    padding-left: 1rem;
+}
+.sidepanel .coral-TabPanel .coral-TabPanel-content {
+    padding: 0;
+}
+.editor-panel-ignore {
+    display: none;
+}
+.sidepanel .filter-panel .coral-DecoratedTextfield {
+    width: 100%;
+}
+.sidepanel .filter-panel .coral-Autocomplete {
+    width: 100%;
+}
+.sidepanel .filter-panel .coral-PathBrowser {
+    width: 100%;
+}
+.sidepanel .filter-panel .coral-Form-field {
+    margin-bottom: 0;
+    margin-top: 0.4375rem;
+}
+.sidepanel .filter-panel .coral-Form-fieldwrapper:first-child .coral-Form-field {
+    margin-top: 0;
+}
+.sidepanel-opened .js-sidePanel-edit .selected-filter-panel {
+    display: inline-block;
+}
+.sidepanel .filter-panel .search input[type="text"] {
+    padding-right: 3.5rem;
+}
+.sidepanel .content-panel {
+    bottom: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+.sidepanel .content-panel .grid {
+    padding: 1rem;
+}
+.sidepanel .content-panel .grid a.label {
+    color: inherit;
+    text-decoration: inherit;
+}
+.sidepanel .content-panel > .emptyresult {
+    color: #525252;
+    display: none;
+    font-weight: lighter;
+    padding-top: 3rem;
+    text-align: center;
+    width: 100%;
+}
+.sidepanel .content-panel > .emptyresult > span {
+    display: block;
+}
+.sidepanel .content-panel > .emptyresult .noresults {
+    font-size: 1.5625rem;
+}
+.sidepanel .content-panel > .emptyresult .retry {
+    font-size: 1.125rem;
+    padding-top: 0.5rem;
+}
+.editor-EmulatorBar {
+    background-color: #f5f5f5;
+    border-bottom: 1px solid #d7d7d7;
+    display: none;
+    width: 100%;
+}
+.editor-EmulatorBar.is-visible {
+    display: block;
+}
+.editor-EmulatorBar-toolbar {
+    height: 48px;
+    position: relative;
+}
+.editor-EmulatorBar-toolbar-actions {
+    background-color: #ebebeb;
+    border-right: 1px solid #d7d7d7;
+    display: inline-block;
+    height: 48px;
+    left: 0;
+    line-height: 48px;
+    position: absolute;
+    top: 0;
+    z-index: 1;
+}
+.editor-EmulatorBar-toolbar-actions > button {
+    width: 44px;
+}
+.editor-EmulatorBar-toolbar-actions > button .coral-Icon {
+    line-height: 48px;
+}
+.editor-EmulatorDevicePopoverTrigger {
+}
+.editor-EmulatorDevicePopover {
+}
+.editor-EmulatorDeviceList-device {
+    text-align: left;
+    width: 100%;
+}
+.editor-EmulatorBar-switcher {
+    display: none;
+    height: 48px;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    white-space: nowrap;
+    width: 100%;
+}
+.editor-EmulatorBar-switcher.is-visible {
+    display: block;
+}
+.editor-EmulatorBar-switcher-device {
+    border-right: 1px solid #d0d0d0;
+    box-sizing: border-box;
+    color: #969696;
+    cursor: pointer;
+    display: inline-block;
+    height: 48px;
+    line-height: 48px;
+    padding: 0 12px;
+    text-align: right;
+    vertical-align: middle;
+}
+.editor-EmulatorBar-switcher-device--desktop {
+    position: absolute;
+    right: 0;
+}
+.editor-EmulatorBar-switcher-device:hover {
+    color: #4b4b4b;
+}
+.editor-EmulatorBar-switcher-device-text {
+    display: block;
+    min-width: 12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.editor-EmulatorBar-switcher-currentDevice {
+    pointer-events: none;
+    position: absolute;
+    z-index: 0;
+}
+.editor-EmulatorBar-ruler {
+    border-top: 1px solid #d0d0d0;
+    font-size: 0;
+    height: 18px;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.editor-EmulatorBar-ruler-block {
+    border-right: 1px solid #d0d0d0;
+    display: inline-block;
+    height: 18px;
+    position: relative;
+    width: 49px;
+}
+.editor-EmulatorBar-ruler-block::before {
+    color: #969696;
+    content: attr(data-display);
+    font-size: 10px;
+    left: 3px;
+    line-height: 18px;
+    position: absolute;
+}
+.editor-EmulatorBar-ruler-line {
+    background-color: #d0d0d0;
+    display: inline-block;
+    height: 3px;
+    margin-left: 4px;
+    margin-top: 15px;
+    width: 1px;
+}
+.editor-EmulatorBar-ruler-line:nth-child(2n) {
+    height: 4px;
+    margin-top: 14px;
+}
+.editor-EmulatorBadge {
+    font-size: 13px;
+}
+.editor-EmulatorBadge-icon {
+    padding-left: 10px;
+}
+.editor-EmulatorBar-breakpoint {
+    min-height: 0;
+    padding: 2px 8px;
+    position: absolute;
+    z-index: 2;
+}
+.editor-EmulatorBar-toolbar-currentWidth {
+    background-color: #d0d0d0;
+    bottom: -19px;
+    left: 100%;
+    margin-left: -1px;
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    width: 1px;
+}
+.editor-EmulatorBar-toolbar-currentHeight {
+    border-bottom: 2px dashed rgb(50, 110, 200);
+    left: 0;
+    pointer-events: none;
+    position: absolute;
+}
+.editor-GlobalBar {
+    background-color: #4b4b4b;
+    box-shadow: 0rem 0.0625rem 0.0625rem 0rem rgba(0, 0, 0, 0.4);
+}
+.coral-GlobalBar-main::after {
+    clear: both;
+    content: "";
+    display: table;
+}
+.editor-GlobalBar-pageTitle {
+    color: rgb(160, 160, 160);
+    line-height: 44px;
+    position: absolute;
+    text-align: center;
+    text-transform: uppercase;
+    width: 100%;
+    z-index: -1;
+}
+.editor-GlobalBar-item {
+    border: 1px solid transparent;
+    box-sizing: border-box;
+    color: rgb(160, 160, 160);
+    display: inline-block;
+    float: left;
+    height: 44px;
+    line-height: 44px;
+    min-width: 44px;
+    opacity: 0.9;
+    outline: medium none;
+    text-align: center;
+    vertical-align: top;
+}
+.editor-GlobalBar-item.is-selected {
+    color: rgb(255, 255, 255);
+    opacity: 0.9;
+}
+.editor-GlobalBar-item:hover {
+    color: rgb(255, 255, 255);
+    opacity: 1;
+}
+.editor-GlobalBar-item[disabled], .editor-GlobalBar-item.is-disabled {
+    display: none;
+}
+.editor-GlobalBar-item.editor-GlobalBar-item--badge {
+    height: 24px;
+    line-height: 1;
+    margin: 0 10px;
+    min-width: 0;
+    padding: 0;
+    text-align: center;
+    width: 24px;
+}
+.editor-GlobalBar-item > .coral-Icon, .editor-GlobalBar-item:hover > .coral-Icon {
+    color: inherit;
+    line-height: 42px;
+    opacity: 1;
+}
+.editor-GlobalBar-leftContainer {
+    float: left;
+}
+.editor-GlobalBar-centerContainer {
+}
+.editor-GlobalBar-rightContainer {
+    float: right;
+}
+.editor-GlobalBar-layerSwitcher {
+    margin-right: 25px;
+    min-width: 0;
+    width: 22px;
+}
+.editor-GlobalBar-previewTrigger {
+    margin-right: 20px;
+}
+.editor-GlobalBar-layerCurrent {
+    min-width: 0;
+    padding: 0 6px;
+}
+.editor-GlobalBar-layerSwitcherPopoverContent {
+}
+.editor-GlobalBar-layerSwitcherPopoverContent-trigger {
+    text-align: left;
+    width: 100%;
+}
+.endor-Badge.editor-GlobalBar-badge:not(.is-selected) {
+    background-color: #919191;
+}
+.editor-ResponsiveGrid {
+}
+.editor-ResponsiveGrid-overlay-resizeHandle {
+    background: #208ee5 none repeat scroll 0 0;
+    border: 2px solid #fff;
+    border-radius: 9px;
+    display: none;
+    height: 16px;
+    margin-top: -9px;
+    position: absolute;
+    top: 50%;
+    width: 16px;
+    z-index: 70;
+}
+.cq-Overlay.is-selected > .editor-ResponsiveGrid-overlay-resizeHandle {
+    display: block;
+}
+.editor-ResponsiveGrid-overlay-resizeHandle--left {
+    left: 0;
+    margin-left: -9px;
+}
+.editor-ResponsiveGrid-overlay-resizeHandle--right {
+    left: 100%;
+    margin-left: -9px;
+}
+.editor-ResponsiveGrid-unHideButton {
+    border-radius: 0;
+    left: 0;
+    position: absolute;
+    top: 0;
+}
+.editor-ResponsiveGrid-unHideButton {
+    background-color: #454545;
+    box-sizing: border-box;
+    color: #ffffff;
+    height: 44px;
+    min-width: 0;
+    width: 60px;
+    z-index: 300;
+}
+.editor-ResponsiveGrid-unHideButton > .coral-Icon {
+    opacity: 0.6;
+}
+.editor-ResponsiveGrid-unHideButton:hover > .coral-Icon {
+    opacity: 1;
+}
+.editor-ResponsiveGrid-overlayHiddenComponent {
+    background-color: rgba(135, 190, 255, 0.5);
+}
+.editor-ResponsiveGrid-resizeGrid {
+    pointer-events: none;
+}
+.editor-ResponsiveGrid-resizeGrid-column {
+    bottom: 0;
+    position: absolute;
+    top: 0;
+}
+.editor-ResponsiveGrid-resizeGrid-column:nth-of-type(2n) {
+    background: rgba(50, 135, 210, 0.2) none repeat scroll 0 0;
+}
+.InsertComponentDialog {
+}
+.InsertComponentDialog-components {
+    max-height: 400px;
+    overflow-y: scroll;
+    padding: 0;
+}
+.InsertComponentDialog-list {
+    border-radius: 0;
+    margin: 0;
+    max-height: none;
+    position: static;
+}
+.InsertComponentDialog-component {
+    border-bottom: 0 none;
+    border-left: 0 none;
+    border-right: 0 none;
+    color: #e6e6e6;
+    text-align: left;
+    width: 100%;
+}
+@media screen and (max-width: 1024px) {
+.sidepanel #components-filter {
+    padding: 1rem;
+    width: 16rem;
+}
+}
+@media screen and (min-width: 1025px) {
+.sidepanel .componentfilter {
+    width: 100%;
+}
+.sidepanel #components-filter {
+    padding: 1rem 1rem 0;
+}
+}
+.sidepanel .components.grid .card-component {
+    background: transparent none repeat scroll 0 0;
+    margin: 0;
+    max-width: 100%;
+    min-width: 30%;
+    padding-right: 0.875rem;
+}
+.sidepanel .components.grid .card-component[data-group^="."] {
+    display: none;
+}
+.sidepanel .components.grid .card-component > a {
+    height: 100%;
+    padding-top: 3rem;
+    pointer-events: none;
+}
+.sidepanel .components.grid .card-component > a > div.label {
+    background: #fff none repeat scroll 0 0;
+    font-weight: lighter;
+    margin-bottom: 0;
+    padding: 0.5rem 0;
+    position: relative;
+}
+.sidepanel .components.grid .card-component > a > div.label em {
+    font-size: 0.625rem;
+    font-style: normal;
+    padding: 0 0.375rem;
+    text-transform: uppercase;
+}
+.sidepanel .components.grid .card-component > a > div.label h4 {
+    color: #777777;
+    display: table-cell;
+    font-size: 1.2rem;
+    font-weight: normal;
+    line-height: 1.5rem;
+    padding: 0 0.375rem;
+    vertical-align: bottom;
+    white-space: normal;
+}
+.sidepanel .components.grid > div .card-component > a.card-green {
+    background: #649137 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n) .card-component:nth-child(3n-1) > a.card-green {
+    background: #7daf4b none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n-3) .card-component:nth-child(2n-3) > a.card-green {
+    background: #8cc350 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(2n-3) .card-component:nth-child(2n-6) > a.card-green {
+    background: #a5d273 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n-1) .card-component:nth-of-type(2n+1) > a.card-green {
+    background: #c8e1aa none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n-2) .card-component:nth-child(7n-4) > a.card-green {
+    background: #dcebcd none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div .card-component > a.card-lavender {
+    background: #3c466e none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n) .card-component:nth-child(3n-1) > a.card-lavender {
+    background: #465a87 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n-3) .card-component:nth-child(2n-3) > a.card-lavender {
+    background: #5a6eaa none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(2n-3) .card-component:nth-child(2n-6) > a.card-lavender {
+    background: #7d8cbe none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n-1) .card-component:nth-of-type(2n+1) > a.card-lavender {
+    background: #afb9d7 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n-2) .card-component:nth-child(7n-4) > a.card-lavender {
+    background: #c8d2e6 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div .card-component > a.card-purple {
+    background: #961e73 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n) .card-component:nth-child(3n-1) > a.card-purple {
+    background: #b93282 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n-3) .card-component:nth-child(2n-3) > a.card-purple {
+    background: #d755a5 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(2n-3) .card-component:nth-child(2n-6) > a.card-purple {
+    background: #e173b9 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n-1) .card-component:nth-of-type(2n+1) > a.card-purple {
+    background: #ebaad2 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n-2) .card-component:nth-child(7n-4) > a.card-purple {
+    background: #f5cde6 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div .card-component > a.card-cyan {
+    background: #00829b none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n) .card-component:nth-child(3n-1) > a.card-cyan {
+    background: #00a0be none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n-3) .card-component:nth-child(2n-3) > a.card-cyan {
+    background: #1ebed7 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(2n-3) .card-component:nth-child(2n-6) > a.card-cyan {
+    background: #78d7e6 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n-1) .card-component:nth-of-type(2n+1) > a.card-cyan {
+    background: #aae6f0 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n-2) .card-component:nth-child(7n-4) > a.card-cyan {
+    background: #beebf5 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div .card-component > a.card-ocher {
+    background: #c37300 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n) .card-component:nth-child(3n-1) > a.card-ocher {
+    background: #e18c00 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n-3) .card-component:nth-child(2n-3) > a.card-ocher {
+    background: #f0a01e none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(2n-3) .card-component:nth-child(2n-6) > a.card-ocher {
+    background: #f5b95a none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n-1) .card-component:nth-of-type(2n+1) > a.card-ocher {
+    background: #fad296 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n-2) .card-component:nth-child(7n-4) > a.card-ocher {
+    background: #fae6be none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div .card-component > a.card-violet {
+    background: #644ba0 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n) .card-component:nth-child(3n-1) > a.card-violet {
+    background: #826ee1 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n-3) .card-component:nth-child(2n-3) > a.card-violet {
+    background: #9b8ce6 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(2n-3) .card-component:nth-child(2n-6) > a.card-violet {
+    background: #b4aaeb none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n-1) .card-component:nth-of-type(2n+1) > a.card-violet {
+    background: #d2c8f5 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n-2) .card-component:nth-child(7n-4) > a.card-violet {
+    background: #e1dcfa none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div .card-component > a.card-mint {
+    background: #28826e none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n) .card-component:nth-child(3n-1) > a.card-mint {
+    background: #32a08c none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n-3) .card-component:nth-child(2n-3) > a.card-mint {
+    background: #3cb5a0 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(2n-3) .card-component:nth-child(2n-6) > a.card-mint {
+    background: #78c8be none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n-1) .card-component:nth-of-type(2n+1) > a.card-mint {
+    background: #aadcd7 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n-2) .card-component:nth-child(7n-4) > a.card-mint {
+    background: #cdebe6 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div .card-component > a.card-aqua {
+    background: #1e5a8c none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n) .card-component:nth-child(3n-1) > a.card-aqua {
+    background: #286eaf none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n-3) .card-component:nth-child(2n-3) > a.card-aqua {
+    background: #3287d2 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(2n-3) .card-component:nth-child(2n-6) > a.card-aqua {
+    background: #7dafe6 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n-1) .card-component:nth-of-type(2n+1) > a.card-aqua {
+    background: #aacdf0 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n-2) .card-component:nth-child(7n-4) > a.card-aqua {
+    background: #d2e6f5 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div .card-component > a.card-magenta {
+    background: #c81950 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n) .card-component:nth-child(3n-1) > a.card-magenta {
+    background: #dc3c69 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n-3) .card-component:nth-child(2n-3) > a.card-magenta {
+    background: #f0557d none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(2n-3) .card-component:nth-child(2n-6) > a.card-magenta {
+    background: #f5789b none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n-1) .card-component:nth-of-type(2n+1) > a.card-magenta {
+    background: #faafc3 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n-2) .card-component:nth-child(7n-4) > a.card-magenta {
+    background: #facddc none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div .card-component > a.card-frog {
+    background: #28826e none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n) .card-component:nth-child(3n-1) > a.card-frog {
+    background: #32a08c none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n-3) .card-component:nth-child(2n-3) > a.card-frog {
+    background: #3cb5a0 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(2n-3) .card-component:nth-child(2n-6) > a.card-frog {
+    background: #78c8be none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n-1) .card-component:nth-of-type(2n+1) > a.card-frog {
+    background: #aadcd7 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n-2) .card-component:nth-child(7n-4) > a.card-frog {
+    background: #cdebe6 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div .card-component > a.card-orange {
+    background: #be4b00 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n) .card-component:nth-child(3n-1) > a.card-orange {
+    background: #dc5f00 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n-3) .card-component:nth-child(2n-3) > a.card-orange {
+    background: #eb782d none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(2n-3) .card-component:nth-child(2n-6) > a.card-orange {
+    background: #f0965a none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n-1) .card-component:nth-of-type(2n+1) > a.card-orange {
+    background: #fabe9b none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n-2) .card-component:nth-child(7n-4) > a.card-orange {
+    background: #fad7be none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div .card-component > a.card-blue {
+    background: #0a78c8 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n) .card-component:nth-child(3n-1) > a.card-blue {
+    background: #4196e6 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n-3) .card-component:nth-child(2n-3) > a.card-blue {
+    background: #78b4f5 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(2n-3) .card-component:nth-child(2n-6) > a.card-blue {
+    background: #afd2fa none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n-1) .card-component:nth-of-type(2n+1) > a.card-blue {
+    background: #bedcfa none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n-2) .card-component:nth-child(7n-4) > a.card-blue {
+    background: #d7ebfa none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div .card-component > a.card-darkgreen {
+    background: #467d55 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n) .card-component:nth-child(3n-1) > a.card-darkgreen {
+    background: #50965a none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n-3) .card-component:nth-child(2n-3) > a.card-darkgreen {
+    background: #5faf69 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(2n-3) .card-component:nth-child(2n-6) > a.card-darkgreen {
+    background: #82c387 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n-1) .card-component:nth-of-type(2n+1) > a.card-darkgreen {
+    background: #b4dcb9 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n-2) .card-component:nth-child(7n-4) > a.card-darkgreen {
+    background: #d2ebd2 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div .card-component > a.card-fuchsia {
+    background: #822d87 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n) .card-component:nth-child(3n-1) > a.card-fuchsia {
+    background: #964196 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n-3) .card-component:nth-child(2n-3) > a.card-fuchsia {
+    background: #aa5faf none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(2n-3) .card-component:nth-child(2n-6) > a.card-fuchsia {
+    background: #c387be none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n-1) .card-component:nth-of-type(2n+1) > a.card-fuchsia {
+    background: #d7b4d2 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n-2) .card-component:nth-child(7n-4) > a.card-fuchsia {
+    background: #e6d2e6 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div .card-component > a.card-coral {
+    background: #d22d1e none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n) .card-component:nth-child(3n-1) > a.card-coral {
+    background: #f04641 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n-3) .card-component:nth-child(2n-3) > a.card-coral {
+    background: #fa5a50 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(2n-3) .card-component:nth-child(2n-6) > a.card-coral {
+    background: #fa7873 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n-1) .card-component:nth-of-type(2n+1) > a.card-coral {
+    background: #faaaaa none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n-2) .card-component:nth-child(7n-4) > a.card-coral {
+    background: #facdcd none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div .card-component > a.card-yellow {
+    background: #d29600 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n) .card-component:nth-child(3n-1) > a.card-yellow {
+    background: #e6b43c none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n-3) .card-component:nth-child(2n-3) > a.card-yellow {
+    background: #f5c841 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(2n-3) .card-component:nth-child(2n-6) > a.card-yellow {
+    background: #fad269 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n-1) .card-component:nth-of-type(2n+1) > a.card-yellow {
+    background: #fae6a5 none repeat scroll 0 0;
+}
+.sidepanel .components.grid > div:nth-child(3n-2) .card-component:nth-child(7n-4) > a.card-yellow {
+    background: #faf0c8 none repeat scroll 0 0;
+}
+.sidepanel-opened .js-sidePanel-edit .selected-filter-panel .taglist-clearall {
+    float: left;
+}
+.sidepanel-opened .js-sidePanel-edit .grid .card-asset {
+    background-color: #ffffff;
+    max-width: 100%;
+    min-height: 5.875rem;
+    min-width: 30%;
+}
+.sidepanel-opened .js-sidePanel-edit .resultspinner {
+    background-position: center center;
+    background-repeat: no-repeat;
+    border-bottom-left-radius: 0.1875rem;
+    display: block;
+    padding: 0.975rem 0;
+    text-align: center;
+    width: 100%;
+}
+.sidepanel-opened .js-sidePanel-edit .resultspinner .status {
+    color: #888888;
+    font-size: 1rem;
+    font-weight: lighter;
+    padding-top: 0.625rem;
+    text-align: center;
+}
+.sidepanel-opened .js-sidePanel-edit .loadmore {
+    text-align: center;
+}
+@media screen and (min-width: 1025px) {
+.sidepanel-opened .assetfinder-content-container .card-asset:not(.card-asset--showLabel) .card .label {
+    background-color: #000000;
+    display: block;
+    height: 100%;
+    min-height: 5.875rem;
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    transition: opacity 0.2s ease 0s;
+}
+.sidepanel-opened .assetfinder-content-container .card-asset:not(.card-asset--showLabel) .card:hover .label {
+    cursor: pointer;
+    display: block;
+    opacity: 0.7;
+}
+.sidepanel-opened .assetfinder-content-container .card-asset:not(.card-asset--showLabel) .card .label > h4 {
+    color: white;
+    font-size: 0.8125rem;
+}
+.sidepanel-opened .assetfinder-content-container .card-asset:not(.card-asset--showLabel) .card .label p {
+    color: #bbbbbb;
+    font-size: 0.8125rem;
+    font-weight: normal;
+    line-height: 1.625rem;
+}
+.sidepanel-opened .assetfinder-content-container .card-asset:not(.card-asset--showLabel) .card .label .info {
+    border-top: 0.0625rem solid #bbbbbb;
+    margin: 0.5625rem;
+    padding-top: 1rem;
+}
+.sidepanel-opened .assetfinder-content-container .card-asset:not(.card-asset--showLabel) .card .label .info p {
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%;
+}
+}
+@media screen and (max-width: 1024px) {
+.sidepanel-content .filter-panel .assetfilter label {
+    line-height: 2.25rem;
+}
+}
+.sidepanel-opened .js-sidePanel-edit .rail-view {
+    display: none;
+}
+.sidepanel-opened .js-sidePanel-edit .rail-view.active {
+    display: block;
+}
+.sidepanel-opened #assetfinder-filter {
+    padding: 1rem;
+}
+.sidepanel #assetfinder-filter-detail {
+    padding: 0rem 1rem;
+}
+.sidepanel-tab-assets .coral-Collapsible {
+    background: inherit;
+}
+.sidepanel-tab-assets .coral-Collapsible ul {
+    display: table;
+    list-style: outside none none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+.sidepanel-tab-assets #assetfinder-filter-detail .assetfilter.coral-Collapsible--block[style*="display: none;"] + .coral-Collapsible--block {
+    border-top: 0.0625rem solid #dfdfdf;
+}
+.sidepanel-tab-assets #assetfinder-filter-detail .assetfilter:not([style*="display: none;"]):not(.coral-Collapsible) + .coral-Collapsible--block {
+    border-top: medium none;
+}
+.sidepanel-tab-assets .coral-Collapsible:not(.coral-Collapsible--singlecolumn) .coral-Form-fieldwrapper {
+    display: inline-block;
+    float: left;
+    width: 7.5rem;
+}
+.sidepanel-tab-assets .coral-Collapsible:not(.coral-Collapsible--singlecolumn) .coral-Form-fieldwrapper--singleline {
+    display: inline-block;
+    float: left;
+    width: 9rem;
+}
+.sidepanel-tab-assets .coral-Collapsible .coral-Form-field {
+    margin-top: 0;
+}
+.sidepanel-tab-assets .filter-panel .range-predicate:not(.coral-Collapsible-content) {
+    margin-bottom: 0.7rem;
+    width: 14.0625rem;
+}
+.sidepanel-tab-assets .filter-panel .range-predicate input {
+    min-width: 3rem;
+    width: 4.5rem;
+}
+.sidepanel-tab-assets .filter-panel .range-predicate .js-coral-validation-error {
+    margin-left: 0.375rem;
+    margin-top: 0.5rem;
+}
+.sidepanel-tab-assets .filter-panel .range-predicate .max-range-val {
+    display: inline-block;
+    margin: 0.3rem;
+    min-width: 3rem;
+    vertical-align: middle;
+}
+.sidepanel-tab-assets .filter-panel .range-predicate .min-range-val {
+    display: inline-block;
+    margin: 0.3rem 0.3rem 0.3rem 0;
+    min-width: 3rem;
+    vertical-align: middle;
+}
+.sidepanel-tab-assets .slider-predicate ul.coral-Slider-tickLabels {
+    display: none;
+}
+.sidepanel-tab-assets .daterange-predicate:not(.coral-Collapsible--singlecolumn) .coral-Form-fieldwrapper {
+    display: block;
+    float: none;
+}
+.card-asset[data-type="Paragraphs"] .image {
+    max-height: 225px;
+    min-height: 80px;
+    overflow: hidden;
+    position: relative;
+}
+.card-asset[data-type="Paragraphs"] .image::after {
+    bottom: 0;
+    content: " ";
+    cursor: pointer;
+    height: 100%;
+    left: 0;
+    position: absolute;
+    width: 100%;
+}
+.card-asset[data-type="Paragraphs"] .image p, .card-asset[data-type="Paragraphs"] .image h1, .card-asset[data-type="Paragraphs"] .image h2, .card-asset[data-type="Paragraphs"] .image h3 {
+    font-size: inherit;
+    margin: 0.375rem 0.625rem;
+}
+.card-asset[data-type="Paragraphs"] .image .title, .card-asset[data-type="Paragraphs"] .image .more {
+    display: block;
+}
+.cq-Tree .cq-Tree-level {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+.cq-Tree .cq-Tree-level .cq-Tree-level {
+    margin: 0.625rem -2rem -0.25rem -1.125rem;
+}
+.cq-Tree .cq-Tree-level .cq-Tree-level .cq-Tree-item {
+    margin: 0 1rem 0 1.5rem;
+}
+.cq-Tree .cq-Tree-level .cq-Tree-level .cq-Tree-item:first-of-type {
+    border-top: 0.0625rem solid #f3f3f3;
+}
+.cq-Tree .cq-Tree-level .cq-Tree-level .cq-Tree-item:last-of-type {
+    border-bottom: medium none;
+    margin-bottom: -1rem;
+}
+.cq-Tree .cq-Tree-item {
+    background: #e8e8e8 none repeat scroll 0 0;
+    border-color: currentcolor currentcolor #f3f3f3;
+    border-style: none none solid;
+    border-width: medium medium 0.0625rem;
+    margin: 0;
+}
+.cq-Tree .cq-Tree-itemHeader {
+    background: #e8e8e8 none repeat scroll 0 0;
+    font-size: 0.875rem;
+    font-weight: normal;
+    line-height: 1.375rem;
+    margin: 0;
+}
+.cq-Tree .cq-Tree-itemHeader:hover, .cq-Tree .cq-Tree-itemHeader:hover:focus {
+    background: #eeeeee none repeat scroll 0 0;
+}
+.cq-Tree .cq-Tree-itemHeader:focus {
+    background: #e8e8e8 none repeat scroll 0 0;
+}
+.cq-Tree .cq-Tree-itemChildCount {
+    color: #969696;
+    font-weight: normal;
+    padding-left: 0.5rem;
+}
+.cq-Tree.cq-Tree--withDetails .cq-Tree-itemHeader {
+    cursor: pointer;
+    padding: 0.4375rem 2rem 0.4375rem 0.9375rem;
+}
+.cq-Tree.cq-Tree--withDetails .cq-Tree-itemHeader .u-coral-pullRight {
+    margin: 0.25rem -0.9375rem 0 0;
+}
+.u-scrollable {
+    overflow: auto;
+}
+.u-emptyMessage {
+    color: #969696;
+    font-style: italic;
+    padding: 1em;
+}
+.cq-Timer {
+    background: rgba(150, 150, 150, 0.3) none repeat scroll 0 0;
+    border-radius: 0.1875rem;
+    box-sizing: border-box;
+    color: #4b4b4b;
+    display: inline-block;
+    font-family: adobe-clean,Helvetica,Arial,sans-serif;
+    font-size: 0.75rem;
+    height: 1.5rem;
+    line-height: 1rem;
+    margin: 0;
+    padding: 0.25rem 0.5rem 0;
+    text-align: center;
+}
+.cq-Timer--bad {
+    background-color: #fffa85;
+}
+.cq-Timer--horrible {
+    background-color: #ffa75f;
+}
+.u-preFormatted {
+    display: block;
+    font-size: 0.75rem;
+    line-height: 0.875rem;
+    white-space: pre;
+}
+.coral-TabPanel-tab.coral-TabPanel-tab--icon i.is-error {
+    color: #fa786e;
+}
+.coral-TabPanel-tab.coral-TabPanel-tab--icon.is-active i.is-error, .coral-TabPanel-tab.coral-TabPanel-tab--icon i.is-error:hover {
+    color: #fa483e;
+}
+.sidepanel-opened .coral-TabPanel.cq-DeveloperRail {
+    margin-top: 0.4375rem;
+}
+.cq-DeveloperRail .cq-DeveloperRail-listItem {
+    background-color: #e8e8e8;
+    border-bottom: 0.0625rem solid #f3f3f3;
+    font-size: 0.875rem;
+    line-height: 1.375rem;
+    padding: 0.4375rem 2rem 0.4375rem 0.9375rem;
+}
+.cq-DeveloperRail .cq-DeveloperRail-listItem:hover {
+    background-color: #eeeeee;
+}
+.cq-DeveloperRail .cq-DeveloperRail-listItem .u-coral-pullRight {
+    margin: 0.25rem -0.9375rem 0 0;
+}
+.cq-DeveloperRail .cq-DeveloperRail-detailsTitle {
+    background-color: #e8e8e8;
+    border-bottom: 0.0625rem solid #f3f3f3;
+    cursor: pointer;
+    font-weight: normal;
+    line-height: 1.375rem;
+    margin: 0;
+    padding: 0.4375rem 1rem 0.625rem 0.9375rem;
+}
+.cq-DeveloperRail .cq-DeveloperRail-detailsTitle.is-error {
+    background-color: #fa786e;
+}
+.cq-DeveloperRail .cq-DeveloperRail-detailsTitle .coral-Icon {
+    margin-right: 0.5rem;
+}
+.cq-DeveloperRail .cq-DeveloperRail-detailsSection {
+    background-color: #e8e8e8;
+    border-bottom: 0.0625rem solid #f3f3f3;
+    padding: 0.4375rem 0 0.4375rem 0.9375rem;
+}
+.cq-DeveloperRail .cq-DeveloperRail-detailsSectionHeader {
+    color: #969696;
+    font-size: 0.75rem;
+    margin: 0;
+    text-transform: uppercase;
+}
+.cq-DeveloperRail .cq-DeveloperRail-detailsSectionContent {
+    list-style-type: none;
+    margin: 0;
+    padding: 0.4375rem 0 0.4375rem 0.9375rem;
+}
+.cq-DeveloperRail .cq-DeveloperRail-detailsSectionContentListItem {
+    padding: 0.25rem 0;
+}
+.cq-DeveloperRail .cq-DeveloperRail-actionTrigger {
+    color: #303030;
+    cursor: pointer;
+    font-style: normal;
+    margin: 0.125rem 0 0 1.375rem;
+    opacity: 0.75;
+    text-decoration: none;
+}
+.cq-DeveloperRail .cq-DeveloperRail-actionTrigger.is-error {
+    color: #fa483e;
+}
+.cq-DeveloperRail .cq-DeveloperRail-actionTrigger:hover {
+    opacity: 1;
+}
+.cq-DeveloperRail .cq-DeveloperRail-actionTrigger.cq-DeveloperRail-actionTrigger--defaultAction::before {
+    color: #2583d8;
+}
+.cq-DeveloperRail .coral-Icon.js-toggle-demo-mode.is-active {
+    color: #2583d8;
+}
+.cq-Tree.cq-Tree--componentTree .cq-Tree-item.is-selected > .cq-Tree-itemHeader {
+    color: #2583d8;
+}
+.cq-Tree.cq-Tree--componentTree .cq-Tree-item.is-selected > .cq-Tree-itemHeader .coral-Icon::before {
+    color: #2583d8;
+}
+.cq-Tree.cq-Tree--componentTree .cq-Tree-item.is-active > .cq-Tree-itemHeader .cq-Timer.is-childless {
+    display: none;
+}
+.cq-TestCase-flag {
+    float: left;
+    padding: 0.3125rem 0.5rem 0 0;
+}
+.cq-TestCase-flag::before, .cq-TestCase-flag:hover::before {
+    color: #969696;
+}
+.cq-TestCase-flag.is-passed::before, .cq-TestCase-flag.is-passed:hover::before {
+    color: #50af20;
+}
+.cq-TestCase-flag.is-failed::before, .cq-TestCase-flag.is-failed:hover::before {
+    color: #fa483e;
+}
+.cq-TestCase-step {
+    margin: 0.5rem 0 0.5rem 1.5rem;
+    padding-top: 0.25rem;
+}
+.pageinfo-unpublishconfirm {
+    display: none;
+}
+.editor-PageInfo {
+}
+.editor-PageInfo-action {
+    text-align: left;
+    width: 100%;
+}
+.editor-PageInfo-text {
+    color: rgb(150, 150, 150);
+    line-height: 1.5em;
+}
+.editor-PageInfoAction {
+}
+.editor-PageInfoAction-header {
+    border-bottom: 0.0625rem solid rgb(200, 200, 200);
+    height: 2.875rem;
+    line-height: 2.875rem;
+    padding-left: 0.9375rem;
+}
+.editor-PageInfoAction-content {
+    padding: 0.9375rem;
+}
+.editor-PageInfoAction-buttons {
+    padding-top: 0.9375rem;
+}
+.editor-PageInfoAction-buttons-button {
+    min-width: 0;
+}
+.cq-workflow-start-modal .coral-Modal-body {
+    overflow: visible;
+}
+
+.js-sidePanel-edit .rail-switch {
+    display: none;
+}

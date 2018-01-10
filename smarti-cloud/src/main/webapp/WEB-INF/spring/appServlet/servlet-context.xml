@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/mvc"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
+	<beans:bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer" id="propertyConfigurer"> 
+	     <beans:property name="location"> <beans:value>classpath:/smarti-admin.properties</beans:value> 
+	     </beans:property> 
+	 </beans:bean>	
+	<!-- Enables the Spring MVC @Controller programming model -->
+	<annotation-driven />
+
+	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
+	<resources mapping="/resources/**" location="/resources/" />
+
+			
+	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
+<!-- 	<beans:bean class="org.springframework.web.servlet.view.ResourceBundleViewResolver">
+		<beans:property name="basename" value="views" />
+	</beans:bean> -->
+	<beans:bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+    	<!-- max file size in bytes -->    
+    	<beans:property name="maxUploadSize" value="20000000" />    
+    	<!-- other properties... -->
+	</beans:bean>
+	<beans:bean class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+	    <beans:property name="viewClass" value="org.springframework.web.servlet.view.tiles2.TilesView"/>
+	</beans:bean>
+	
+
+	<beans:bean class="org.springframework.web.servlet.view.tiles2.TilesConfigurer">
+		<beans:property name="definitions" value="/WEB-INF/views/**/tiles.xml" />
+	</beans:bean>
+	<beans:bean class="org.springframework.context.support.ResourceBundleMessageSource" id="messageSource">
+	    <beans:property name="basename" value="messages"></beans:property>
+	</beans:bean>
+	
+	<context:component-scan base-package="com.filemark.controller" />
+	<context:component-scan base-package="com.filemark.model" />
+
+
+    <beans:bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+             <beans:property name="dataSource" ref="dataSource"/>         
+             <beans:property name="mappingDirectoryLocations" value="classpath:/cfg/${smarti.vendor}/"/>
+             <beans:property name="hibernateProperties">            
+             	<beans:props>
+             	    <beans:prop key="hibernate.dialect">${jdbc.dialect}</beans:prop>
+             	    <beans:prop key="hibernate.show_sql">false</beans:prop>
+             	    <beans:prop key="hibernate.jdbc.use_scrollable_resultset">true</beans:prop> 
+               		<beans:prop key="hibernate.max_fetch_depth">3</beans:prop>
+               		<beans:prop key="hibernate.cache.use_second_level_cache">true</beans:prop>
+               		<beans:prop key="hibernate.cache.region.factory_class">net.sf.ehcache.hibernate.EhCacheRegionFactory</beans:prop>
+					<!-- HSQL no batch update -->
+					<beans:prop key="hibernate.jdbc.factory_class">org.hibernate.jdbc.NonBatchingBatcherFactory</beans:prop> 
+               		 <!--update or false, do not create here!!! -->
+                	<beans:prop key="hibernate.hbm2ddl.auto">update</beans:prop>
+                	
+	                <!--  single mode -->
+	
+	                <beans:prop key="hibernate.search.default.directory_provider">org.hibernate.search.store.FSDirectoryProvider</beans:prop>
+	                <beans:prop key="hibernate.search.default.indexBase">${smarti.root}/indexes</beans:prop>
+					<!-- automatic optimization -->	
+	                <beans:prop key="hibernate.search.default.optimizer.operation_limit.max">1000</beans:prop>
+	                <beans:prop key="hibernate.search.default.optimizer.transaction_limit.max">100</beans:prop>                	
+                 </beans:props>    
+             </beans:property>
+		
+        <beans:property name="entityCacheStrategies">
+            <beans:props>
+                <!--beans:prop key="com.filemark.model.App">nonstrict-read-write</beans:prop>
+                <beans:prop key="com.filemark.model.AppConfig">nonstrict-read-write</beans:prop>
+                <beans:prop key="com.filemark.model.Device">nonstrict-read-write</beans:prop>
+                <beans:prop key="com.filemark.model.RecordClass">nonstrict-read-write</beans:prop>
+                <beans:prop key="com.filemark.model.ColdReport">nonstrict-read-write</beans:prop>
+                <beans:prop key="com.filemark.model.ColdForms">nonstrict-read-write</beans:prop>
+                <beans:prop key="com.filemark.model.ColdFields">nonstrict-read-write</beans:prop>
+                <beans:prop key="com.filemark.model.ColdFieldinfo">nonstrict-read-write</beans:prop>
+                <beans:prop key="com.filemark.model.Savednames">nonstrict-read-write</beans:prop-->
+            </beans:props>
+        </beans:property>
+        
+        <!-- Hibernate Search Event listener -->
+
+		<beans:property name="eventListeners">
+			<beans:map>
+	
+		        <beans:entry key="post-update" value-ref="searchListener"/>
+
+		        <beans:entry key="post-insert" value-ref="searchListener"/>
+
+		        <beans:entry key="post-delete" value-ref="searchListener"/>
+
+		        <beans:entry key="post-collection-recreate" value-ref="searchListener"/>
+
+		        <beans:entry key="post-collection-remove" value-ref="searchListener"/>
+
+		        <beans:entry key="post-collection-update" value-ref="searchListener"/>
+		        
+		        <beans:entry key="flush" value-ref="flushListener"/>
+			</beans:map>
+		</beans:property>	         
+    </beans:bean>
+	<beans:bean id="searchListener" class="org.hibernate.search.event.FullTextIndexEventListener"/>
+	<beans:bean id="flushListener"  class="com.filemark.utils.DefaultFullTextSearchFlushEventListener"/>
+    
+    
+   	<beans:bean id="querySystemSetting" class="com.filemark.utils.QueryCustomSetting" >
+ 	</beans:bean>
+ 
+ 	<beans:bean id="queryCustomSetting" class="com.filemark.utils.QueryCustomSetting" scope="session">
+ 		<beans:constructor-arg ref="querySystemSetting"></beans:constructor-arg>
+ 		<aop:scoped-proxy/> 
+ 	</beans:bean>
+  	<beans:bean id="scannerSetting" class="com.filemark.utils.ScannerSetting" scope="session">
+ 		<aop:scoped-proxy/> 
+ 	</beans:bean>	
+ 	<beans:bean id="pdfService" class="com.filemark.serviceImpl.SmartiPdfServiceManagerImpl">
+		<beans:property name="reports">
+			<beans:value>${catalina.home}/reports</beans:value>
+		</beans:property>	
+		<beans:property name="img2pdf">	
+			<beans:value>${catalina.home}/image2pdf/img2pdf.exe</beans:value>
+		</beans:property> 
+		<beans:property name="pcl2pdf">	
+			<beans:value>"C:\Program Files (x86)\PageTech\PCLTSDK_870\PclXform.exe" "C:\Program Files (x86)\PageTech\PCLTSDK_870\default.tpt" inp="%1%" inf="%2%" outp="%3%" outf="%4%"</beans:value>
+		</beans:property> 
+		<beans:property name="OCRIMG" value="false"/>
+		<beans:property name="uri" value="http://localhost:8088/smarti/"/>
+	</beans:bean>
+	     
+      <tx:annotation-driven transaction-manager="transactionManager"/>
+           
+      <beans:bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">        
+      			<beans:property name="sessionFactory" ref="sessionFactory"/>    
+      </beans:bean>	
+	
+	  <beans:bean id="queryService" class="com.filemark.serviceImpl.QueryServiceImpl"/>
+	  <beans:bean id="indexService" class="com.filemark.serviceImpl.IndexServiceImpl">
+	  	<!-- beans:property name="barcodeSDK">
+			<beans:value>${catalina.home}/webapps/smarti/resources/applet/DTKBarReader.dll</beans:value>
+		</beans:property-->	 
+	  </beans:bean>
+	  <beans:bean id="coldIndexService" class="com.filemark.serviceImpl.ColdIndexServiceImpl"/>
+	  <beans:bean id="databaseService" class="com.filemark.serviceImpl.DatabaseServiceImpl"/>
+	  <beans:bean id="eventgroupService" class="com.filemark.serviceImpl.EventgroupServiceImpl"/>
+	  <beans:bean id="schedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+			<beans:property name="targetObject"><beans:ref bean="eventgroupService"/></beans:property>
+			<beans:property name="targetMethod"><beans:value>runScheduledQueue</beans:value></beans:property>
+	  </beans:bean>
+	  <beans:bean id="simpleTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+			<beans:property name="jobDetail"><beans:ref bean="schedule"/></beans:property>
+			<beans:property name="startDelay" value="180000"></beans:property>
+			<beans:property name="repeatInterval" value="1800000"></beans:property>
+	  </beans:bean>
+	  
+		<beans:bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">  
+		<beans:property name="waitForJobsToCompleteOnShutdown" value="true"></beans:property>
+		<beans:property name="triggers">
+			<beans:list>
+				<beans:ref  bean="simpleTrigger"/>
+			</beans:list>
+		</beans:property>
+		</beans:bean>  
+
+	  
+</beans:beans>

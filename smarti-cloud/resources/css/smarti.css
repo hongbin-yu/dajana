@@ -1,0 +1,27 @@
+@charset "utf-8";
+<style>
+img.com.filemark.model.Pages{
+	content:url("../resources/images/com.filemark.model.Pages.gif");
+	
+}
+
+img.Folder{
+	content:url("../resources/images/Folder.gif");
+	
+}
+
+button.shu{
+	background-img:url("../resources/images/security/shu.png");
+	
+}
+
+.button{
+	background :url("../resources/images/security/mouse.png");
+	
+}
+
+button.niu{
+	background-img:url("../resources/images/security/niu.png");
+	
+}
+</style>	
