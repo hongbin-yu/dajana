@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+
+<tiles-definitions>
+
+    <definition name="chat/mychat" extends="contentpage">
+        <put-attribute name="topmenu" value="/WEB-INF/views/chat/topmenu.jsp" />        
+        <put-attribute name="content" value="/WEB-INF/views/chat/mychats.jsp" />
+	</definition>
+	<definition name="chat/comments" templateExpression="/WEB-INF/views/chat/comments.jsp">
+	</definition>	
+	<definition name="chat/asset" extends="sitepage">
+	    
+	    <put-attribute name="topmenu" value="/WEB-INF/views/chat/assetsmenu.jsp"/>
+	    <put-attribute name="content" value="/WEB-INF/views/chat/assets.jsp"/>
+  
+	</definition>
+	<definition name="chat/asset_readonly" extends="sitepage">
+	    
+	    <put-attribute name="topmenu" value="/WEB-INF/views/chat/assetsmenu.jsp"/>
+	    <put-attribute name="content" value="/WEB-INF/views/chat/assets_readonly.jsp"/>
+  
+	</definition>			
+</tiles-definitions>

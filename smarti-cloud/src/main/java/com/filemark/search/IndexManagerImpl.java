@@ -37,13 +37,12 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.RAMDirectory;
-import org.hibernate.SessionFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.filemark.jcr.model.Folder;
 import com.filemark.jcr.service.JcrServices;
 import com.filemark.runnable.ThreadManager;
-import com.filemark.search.operation.InitRepository;
+//import com.filemark.search.operation.InitRepository;
 import com.filemark.search.operation.IndexOperation;
 import com.filemark.search.operation.WriteToIndexOperation;
 

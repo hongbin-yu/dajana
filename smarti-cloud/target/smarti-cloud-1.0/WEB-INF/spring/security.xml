@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<http pattern="/publish/**" security="none" />
+	<http pattern="/resources/**" security="none" />
+	<http pattern="/protected/**" security="none" />
+	<http pattern="/content/**" security="none" />	
+	<http pattern="/templates/**" security="none" />		
+	<http pattern="/myip/**" security="none" />		
+	<http pattern="/uinfo/**" security="none" />
+	<http pattern="/myhost/**" security="none" />				
+	<http pattern="/published/**" security="none" />	
+	<http pattern="/login/**" security="none" />
+	<http pattern="/error404" security="none" />
+	<http pattern="/signin" security="none" />	
+	<http pattern="/" security="none" />									
+<http use-expressions="true">
+		<!-- Authentication policy -->
+		<form-login login-page="/login" login-processing-url="/signin/authenticate" authentication-failure-url="/signin?error=bad_credentials" default-target-url="/admin/usermanager.html"/>
+		<logout logout-url="/signout" delete-cookies="JSESSIONID" />
+		<intercept-url pattern="/favicon.ico" access="permitAll" />
+		<intercept-url pattern="/resources/**" access="permitAll" />
+		<intercept-url pattern="/content/**" access="permitAll" />	
+		<intercept-url pattern="/published/**" access="permitAll" />	
+		<intercept-url pattern="/protected/**" access="isAuthenticated()" />			
+		<intercept-url pattern="/signin" access="permitAll" />
+		<intercept-url pattern="/signup" access="permitAll" />
+		<intercept-url pattern="/edit**" access="hasAnyRole('ROLE_USER','ROLE_ADMINISTRATOR')" />
+		<intercept-url pattern="/browse**" access="hasAnyRole('ROLE_USER','ROLE_ADMINISTRATOR')" />
+		<intercept-url pattern="/assets**" access="hasAnyRole('ROLE_USER','ROLE_ADMINISTRATOR')" />
+		<intercept-url pattern="/image**" access="hasAnyRole('ROLE_USER','ROLE_ADMINISTRATOR')" />
+		<intercept-url pattern="/file**" access="hasAnyRole('ROLE_USER','ROLE_ADMINISTRATOR')"  />
+		<intercept-url pattern="/update**" access="hasAnyRole('ROLE_USER','ROLE_ADMINISTRATOR')"  />
+		<intercept-url pattern="/publish**" access="hasAnyRole('ROLE_USER','ROLE_ADMINISTRATOR')"  />
+		<intercept-url pattern="/delete**" access="hasAnyRole('ROLE_USER','ROLE_ADMINISTRATOR')"  />
+		<intercept-url pattern="/remove**" access="hasAnyRole('ROLE_ADMINISTRATOR')"  />
+		<intercept-url pattern="/admin/**" access="hasAnyRole('ROLE_ADMINISTRATOR')"  />
+		<intercept-url pattern="/preview**" access="hasAnyRole('ROLE_USER','ROLE_ADMINISTRATOR')"  />
+		<intercept-url pattern="/view**" access="hasAnyRole('ROLE_USER','ROLE_ADMINISTRATOR')"  />
+		<intercept-url pattern="/create**" access="hasAnyRole('ROLE_USER','ROLE_ADMINISTRATOR')"  />
+		<intercept-url pattern="/menu**" access="hasAnyRole('ROLE_USER','ROLE_ADMINISTRATOR')"  />
+		<intercept-url pattern="/folder**" access="hasAnyRole('ROLE_USER','ROLE_ADMINISTRATOR')"  />
+		<intercept-url pattern="/media**" access="hasAnyRole('ROLE_USER','ROLE_ADMINISTRATOR')"  />
+		<intercept-url pattern="/*" access="permitAll" />	
+		<intercept-url pattern="/**/*" access="hasAnyRole('ROLE_USER','ROLE_ADMINISTRATOR')"  />
+		<access-denied-handler/>										
+	</http>
+
+	<authentication-manager alias = "authenticationManager">
+ 		<authentication-provider>
+		<user-service>
+ 		      <user name="home" password="dajana.ca" authorities="ROLE_USER, ROLE_ADMINISTRATOR" />
+ 		      <user name="templates" password="dajana.ca" authorities="ROLE_USER, ROLE_ADMINISTRATOR" />
+ 		      <user name="components" password="dajana.ca" authorities="ROLE_USER, ROLE_ADMINISTRATOR" />
+		</user-service> 		
+ 		</authentication-provider>
+
+<!-- 	    <authentication-provider> -->
+<!-- 			<jdbc-user-service data-source-ref="dataSource"  -->
+<!-- 							users-by-username-query="select USER_NAME, PASSWORD, 'true' from FMDBA.SMARTIUSERS where USER_NAME = ?" -->
+<!-- 							authorities-by-username-query="select MEMBER_NAME, GROUP_NAME from FMDBA.SMARTIMEMBERS where MEMBER_NAME = ?"/> -->
+		
+<!--  		</authentication-provider> -->
+
+		<authentication-provider user-service-ref="jcrUserDetail">
+		    
+		</authentication-provider>
+
+<!-- 		<authentication-provider ref="ldapAuthenticationProvider" /> -->
+	</authentication-manager>
+
+	<beans:bean id="jcrUserDetail" class="com.filemark.jcr.serviceImpl.JcrUserDetailImpl">
+	    <beans:property name="jcrService" ref="jcrService"></beans:property>
+	</beans:bean>
+	
+    	<!-- LDAP -->
+<!-- 	<ldap-server 
+		id="contextSource" 
+		url="ldap://${smarti.ldapServer}/"
+		manager-dn="${smarti.managerDn}"
+		manager-password="${smarti.managerPassword}"/> 
+		   	
+	<beans:bean id="ldapAuthenticationProvider" class="org.springframework.security.ldap.authentication.LdapAuthenticationProvider">
+		<beans:constructor-arg>
+			the bind authenticator will first lookup the user using the service account credentials, then 
+				 attempt to bind the user with their password once found
+			<beans:bean id="bindAuthenticator" class="org.springframework.security.ldap.authentication.BindAuthenticator">
+				<beans:constructor-arg ref="contextSource" />
+				<beans:property name="userSearch" ref="userSearch" />
+			</beans:bean>
+		</beans:constructor-arg>
+		<beans:constructor-arg>
+			<beans:bean class="org.springframework.security.ldap.userdetails.DefaultLdapAuthoritiesPopulator">
+				<beans:constructor-arg ref="contextSource" />
+				<beans:constructor-arg value="${smarti.groupUnit}" /> group search base
+				<property name="defaultRole" value="ROLE_USER" /> 
+					You can add a default role to everyone if needed
+				<beans:property name="searchSubtree" value="true" />
+				<beans:property name="ignorePartialResultException" value="true" />
+				<beans:property name="groupSearchFilter" value="(member={0})" />
+			</beans:bean>
+		</beans:constructor-arg>
+	</beans:bean>
+	<beans:bean id="userSearch" class="org.springframework.security.ldap.search.FilterBasedLdapUserSearch">
+		<beans:constructor-arg index="0" value="${smarti.userUnit}" />
+		<beans:constructor-arg index="1" value="(sAMAccountName={0})" />
+		<beans:constructor-arg index="2" ref="contextSource" />
+		<beans:property name="searchSubtree" value="true" />
+	</beans:bean> -->
+			
+</beans:beans>
