@@ -368,9 +368,12 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.sun.media</groupId>
+<!-- 			<groupId>com.sun.media</groupId> -->
+			<groupId>local</groupId>
 			<artifactId>jai_imageio</artifactId>
 			<version>1.1</version>
+			<scope>system</scope>
+			<systemPath>${localpath}/jai_imageio/1.1/jai_imageio-1.1.jar</systemPath>			
 		</dependency>
 
 		<dependency>
