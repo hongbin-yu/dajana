@@ -10,6 +10,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 
+@SuppressWarnings("rawtypes")
 public class SmartiConfig {
 	   
     private static String default_config = "/com/filemark/config/smarti.properties";

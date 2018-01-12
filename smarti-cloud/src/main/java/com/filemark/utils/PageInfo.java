@@ -5,7 +5,11 @@ package com.filemark.utils;
 
 public class PageInfo implements java.io.Serializable {
 
-	 //  Page Types
+	 /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	//  Page Types
     public static final int typeAFP = 3;
 	public static final int typeCOLD = 0;
 	public static final int typeIMAGE = 1;

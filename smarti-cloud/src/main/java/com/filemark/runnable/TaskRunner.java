@@ -57,7 +57,7 @@ public class TaskRunner {
         Thread.currentThread().setContextClassLoader(cl);
 
         // Go!
-        Class taskClass = cl.loadClass(taskClassName);
+        Class<?> taskClass = cl.loadClass(taskClassName);
         Runnable task = (Runnable)taskClass.newInstance();
         task.run();
     }

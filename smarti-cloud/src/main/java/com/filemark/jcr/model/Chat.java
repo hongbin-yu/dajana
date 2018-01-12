@@ -11,6 +11,10 @@ import org.apache.jackrabbit.ocm.mapper.impl.annotation.Node;
 @Node(jcrMixinTypes = "mix:referenceable")
 public class Chat implements SmartiNode, Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	@Field(uuid=true)
 	protected String uid;
 	@Field(path=true)	

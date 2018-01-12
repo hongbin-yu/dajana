@@ -29,7 +29,11 @@ import java.util.Date;
  */
 public class TaskLock implements Serializable {
     
-    private String id = UUIDGenerator.generateUUID();
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private String id = UUIDGenerator.generateUUID();
     private String name = null;
     private Date timeAquired = null;
     private int timeLeased = 0;

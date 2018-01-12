@@ -35,6 +35,7 @@ import com.filemark.utils.QueryCustomSetting;
 
 
 public class BaseController {
+	@SuppressWarnings("unused")
 	private static final Logger logger = LoggerFactory.getLogger(BaseController.class);
 	@Inject
 	protected JcrServices jcrService;
@@ -208,20 +209,21 @@ public class BaseController {
 
 		return result;
 	} 
+	@SuppressWarnings("unused")
 	private String getPublicIpAddress() {
 	    String res = null;
 	    try {
 	        String localhost = InetAddress.getLocalHost().getHostAddress();
 	        Enumeration<NetworkInterface> e = NetworkInterface.getNetworkInterfaces();
 	        while (e.hasMoreElements()) {
-	            NetworkInterface ni = (NetworkInterface) e.nextElement();
+	            NetworkInterface ni = e.nextElement();
 	            if(ni.isLoopback())
 	                continue;
 	            if(ni.isPointToPoint())
 	                continue;
 	            Enumeration<InetAddress> addresses = ni.getInetAddresses();
 	            while(addresses.hasMoreElements()) {
-	                InetAddress address = (InetAddress) addresses.nextElement();
+	                InetAddress address = addresses.nextElement();
 	                if(address instanceof Inet4Address) {
 	                    String ip = address.getHostAddress();
 	                    if(!ip.equals(localhost))

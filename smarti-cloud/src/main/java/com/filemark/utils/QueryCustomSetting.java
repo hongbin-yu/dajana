@@ -1,18 +1,7 @@
 package com.filemark.utils;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-
-
-
-
-
 
 import org.apache.lucene.search.BooleanQuery;
 import org.slf4j.Logger;
@@ -22,10 +11,15 @@ import org.slf4j.LoggerFactory;
 
 public class QueryCustomSetting implements java.io.Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String appsSecurity;
 	private Map<String,Object> repository;
 	private int menuSize = 10;
 	private int pageSize = 10 ;
+	@SuppressWarnings("unused")
 	private int maxClauseSet =1024;
 	private int maxPageToOpen =1000;
 	private int displayLevel = 4;
@@ -34,6 +28,7 @@ public class QueryCustomSetting implements java.io.Serializable {
 	private String drawSort = "draw.name ASC";
 	private String foldSort = "fold.name ASC";
 	private String docSort = "doc.name ASC";
+	@SuppressWarnings("unused")
 	private static final Logger logger = LoggerFactory.getLogger(QueryCustomSetting.class);
 	
 	public QueryCustomSetting() {
@@ -69,29 +64,6 @@ public class QueryCustomSetting implements java.io.Serializable {
 
 
 
-	private String getFilterValue(String field, String operator, String value) {
-		String op = operator.toLowerCase();
-		String va = value.toLowerCase();
-		if (va.indexOf(" ")>0)
-			va = "\""+va+"\"";
-		String operatorValue = va;
-		if ("begins".equals(op)) {
-			operatorValue=va+"*";
-		} else if (operator.equals(">") || operator.equals(">=")) {
-			operatorValue="["+va+" TO ZZZZ]";
-		} else if (operator.equals("<") || operator.equals("<=")) {
-			operatorValue="[0000"+" TO "+va+"]";;
-		}else if ("between".equals(op)) {
-			operatorValue="["+va.replace("and", "TO")+"]";
-		}
-
-		return operatorValue;
-	}
-
-
-
-	
-	
 	public String getAppsSecurity() {
 		return appsSecurity;
 	}

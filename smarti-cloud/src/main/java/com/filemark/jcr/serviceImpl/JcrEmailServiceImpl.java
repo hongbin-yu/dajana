@@ -1,9 +1,7 @@
 package com.filemark.jcr.serviceImpl;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Locale;
 import java.util.Properties;
 
 import javax.inject.Inject;
@@ -20,7 +18,8 @@ import javax.mail.URLName;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.mail.MailSendException;
@@ -30,17 +29,13 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import com.filemark.jcr.service.JcrIndexService;
 import com.filemark.jcr.service.JcrServices;
 import com.filemark.jcr.service.jcrEmailService;
-import com.lowagie.text.Document;
-import com.lowagie.text.pdf.PdfContentByte;
-import com.lowagie.text.pdf.PdfCopy;
-import com.lowagie.text.pdf.PdfOutline;
 import com.sun.mail.pop3.POP3SSLStore;
 
 public class JcrEmailServiceImpl implements jcrEmailService {
 	
 		private String mailServer;
 		private int pop3Port = 101;
-		Logger log = Logger.getLogger(this.getClass());
+		private static final Logger log = LoggerFactory.getLogger(JcrEmailServiceImpl.class);
 		private String emailFolder = "INBOX";
 	    Store store = null;
 	    Folder folder = null;

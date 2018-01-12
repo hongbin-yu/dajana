@@ -1922,7 +1922,7 @@ public class SiteController extends BaseController {
 		for (Element e:doc.getElementsByTag("img")) {
 			String src = e.attr("src");
 			if(urls.containsKey(src)) {
-				e.attr(src, (String)urls.get(src));
+				e.attr(src, urls.get(src));
 				continue;
 			}
 			if(!src.startsWith("http") && src.indexOf("viewimage?uid=")>=0) {
@@ -1947,7 +1947,7 @@ public class SiteController extends BaseController {
 		for (Element e:doc.getElementsByTag("a")) {
 			String href = e.attr("href");
 			if(urls.containsKey(href)) {
-				e.attr(href, (String)urls.get(href));
+				e.attr(href, urls.get(href));
 				continue;
 			}
 			if(!href.startsWith("http") && href.indexOf("viewimage?uid=")>=0) {

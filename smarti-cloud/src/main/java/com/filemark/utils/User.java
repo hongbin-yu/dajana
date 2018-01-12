@@ -12,6 +12,10 @@ import com.filemark.jcr.model.SmartiNode;
 
 @Node
 public class User implements SmartiNode, java.io.Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private int id;
 	@Field
 	private String userName;

@@ -65,7 +65,8 @@ public class ContinuousWorkerThread extends WorkerThread {
      *
      * If we ever get interrupted then we quit.
      */
-    public void run() {
+
+	public void run() {
         
         mLogger.info(this.id+" Started.");
         
@@ -78,7 +79,7 @@ public class ContinuousWorkerThread extends WorkerThread {
             // job is done, lets sleep it off for a bit
             try {
                 mLogger.debug(this.id+" SLEEPING for "+this.sleepTime+" milliseconds ...");
-                this.sleep(this.sleepTime);
+                ContinuousWorkerThread.sleep(this.sleepTime);
             } catch (InterruptedException e) {
                 mLogger.info(this.id+" INTERRUPT: "+e.getMessage());
                 break;

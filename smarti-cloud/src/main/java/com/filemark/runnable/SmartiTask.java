@@ -124,7 +124,8 @@ public abstract class SmartiTask implements Runnable {
         Properties taskProps = new Properties();
         
         String key = null;
-        Enumeration keys = SmartiConfig.keys();
+        @SuppressWarnings("rawtypes")
+		Enumeration keys = SmartiConfig.keys();
         while(keys.hasMoreElements()) {
             key = (String) keys.nextElement();
             

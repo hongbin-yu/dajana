@@ -98,7 +98,7 @@ public class SearchOperation extends ReadFromIndexOperation {
      */
     public SearchOperation(IndexManager mgr) {
         // TODO: finish moving  IndexManager to backend, so this cast is not needed
-        super((IndexManager)mgr);
+        super(mgr);
     }
     
     //~ Methods ================================================================

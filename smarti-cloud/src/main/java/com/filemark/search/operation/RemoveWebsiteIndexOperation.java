@@ -78,7 +78,8 @@ public class RemoveWebsiteIndexOperation extends WriteToIndexOperation {
 
                 
                 if (term != null) {
-                    int count = reader.deleteDocuments(term);
+                    @SuppressWarnings("deprecation")
+					int count = reader.deleteDocuments(term);
                     mLogger.debug(reader.directory().toString()+" deleting "+term +",count = "+count);
                 }
             }

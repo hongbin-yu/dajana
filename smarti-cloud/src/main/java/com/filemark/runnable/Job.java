@@ -41,12 +41,12 @@ public interface Job {
     /**
      * Pass in input to be used for the job.
      */
-    public void input(Map input);
+    public void input( Map<?, ?> input);
     
     
     /**
      * Get any output from the job.
      */
-    public Map output();
+    public Map<?, ?> output();
     
 }

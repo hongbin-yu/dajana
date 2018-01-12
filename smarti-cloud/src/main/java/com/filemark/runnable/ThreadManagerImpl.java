@@ -52,7 +52,7 @@ public abstract class ThreadManagerImpl implements ThreadManager {
                 log.info("Initializing task: "+taskName);
                 
                 try {
-                    Class taskClass = Class.forName(taskClassName);
+                    Class<?> taskClass = Class.forName(taskClassName);
                     SmartiTask task = (SmartiTask) taskClass.newInstance();
                     task.init(taskName);
                     
@@ -99,13 +99,13 @@ public abstract class ThreadManagerImpl implements ThreadManager {
     
     public void executeInBackground(Runnable runnable)
             throws InterruptedException {
-        Future task = serviceScheduler.submit(runnable);
+        serviceScheduler.submit(runnable);
     }
     
     
     public void executeInForeground(Runnable runnable)
             throws InterruptedException {
-        Future task = serviceScheduler.submit(runnable);
+        Future<?> task = serviceScheduler.submit(runnable);
         
         // since this task is really meant to be executed within this calling 
         // thread, here we can add a little code here to loop until it realizes 

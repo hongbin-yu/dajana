@@ -9,22 +9,18 @@ import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import com.filemark.jcr.model.Asset;
 import com.filemark.jcr.model.Chat;
 import com.filemark.jcr.model.Folder;
-import com.filemark.jcr.model.JcrForm;
 import com.filemark.jcr.model.Log;
 import com.filemark.jcr.model.Page;
 import com.filemark.jcr.model.SmartiNode;
-import com.filemark.jcr.model.User;
 import com.filemark.utils.ScanUploadForm;
 import com.filemark.utils.WebPage;
 
 public interface JcrServices {
 	public Object getObject(final String path) throws RepositoryException;
-	public List<Object> getObjects(final String path, final Class aclass) ;
+	public List<Object> getObjects(final String path, final Class<?> aclass) ;
 	public Object add(final Object obj) throws RepositoryException;
 	public Page add(final Page page) throws RepositoryException;
 	public String getOrCreateByPath(final String path,final String nodeType,final String username);

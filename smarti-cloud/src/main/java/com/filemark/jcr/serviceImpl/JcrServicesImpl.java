@@ -487,7 +487,7 @@ public class JcrServicesImpl implements JcrServices {
 	
 
 	@SuppressWarnings("unchecked")
-	public List<Object> getObjects(final String path, final Class aclass) {
+	public List<Object> getObjects(final String path, final Class<?> aclass) {
 		return (List<Object>) jcrTemplate.execute(new JcrCallback() { 
         	public List<Object> doInJcr(Session session) throws RepositoryException { 
         		ObjectContentManager ocm = new  ObjectContentManagerImpl(session, mapper);
@@ -809,7 +809,7 @@ public class JcrServicesImpl implements JcrServices {
                while(!session.nodeExists(existingpath) && existingpath.length()>0) {
             	   existingpath = existingpath.substring(0, existingpath.lastIndexOf("/"));
                };
-               Node root = session.getRootNode();
+               session.getRootNode();
                Node node = session.getNode(existingpath);
                String groups = "";
                if(node.hasProperty("groups")) {
@@ -824,13 +824,12 @@ public class JcrServicesImpl implements JcrServices {
 	           		}
            	   
                }
-               String title="";
                if(node.hasProperty("Title"))
-                  title = node.getProperty("Title").getString();
-               else if(node.hasProperty("name")) {
-            	   title = node.getProperty("name").getString();            	   
+				node.getProperty("Title").getString();
+			else if(node.hasProperty("name")) {
+            	   node.getProperty("name").getString();            	   
                }else {
-            	   title = node.getName();    
+            	   node.getName();    
                }
                breadcrumb = "<li><a href=\""+node.getPath()+(node.getDepth()>1?".html":"")+"\">"+getTitle(node)+"</a>"+(node.getDepth()>3?" <a href=\""+node.getPath()+".pdf?mp=100\" target=\"_blank\"><img src=\""+Folder.root+"/resources/images/com.filemark.model.Pages.gif\" title=\"open all pdf\" alt=\"open all pdf\"></a>":"")+"</li>";
                while(node.getDepth() > 1) {
@@ -849,11 +848,11 @@ public class JcrServicesImpl implements JcrServices {
                    }
 
                    if(node.hasProperty("Title"))
-                       title = node.getProperty("Title").getString();
-                    else if(node.hasProperty("name")) {
-                 	   title = node.getProperty("name").getString();            	   
+					node.getProperty("Title").getString();
+				else if(node.hasProperty("name")) {
+                 	   node.getProperty("name").getString();            	   
                     }else {
-                 	   title = node.getName();    
+                 	   node.getName();    
                     }
 
             		   breadcrumb = "<li><a href=\""+node.getPath()+(node.getDepth()>1?".html":"")+"\">"+getTitle(node)+"</a></li>"+breadcrumb;
@@ -876,7 +875,7 @@ public class JcrServicesImpl implements JcrServices {
                while(!session.nodeExists(existingpath) && existingpath.length()>0) {
             	   existingpath = existingpath.substring(0, existingpath.lastIndexOf("/"));
                };
-               Node root = session.getRootNode();
+               session.getRootNode();
                Node node = session.getNode(existingpath);
                String groups = "";
                if(node.hasProperty("groups")) {
@@ -891,13 +890,12 @@ public class JcrServicesImpl implements JcrServices {
 	           		}
            	   
                }
-               String title="";
                if(node.hasProperty("Title"))
-                  title = node.getProperty("Title").getString();
-               else if(node.hasProperty("name")) {
-            	   title = node.getProperty("name").getString();            	   
+				node.getProperty("Title").getString();
+			else if(node.hasProperty("name")) {
+            	   node.getProperty("name").getString();            	   
                }else {
-            	   title = node.getName();    
+            	   node.getName();    
                }
                breadcrumb = "<li>"+(node.getDepth()<depth?"<a href=\""+node.getPath()+(node.getDepth()>1?".html":"")+"\">"+getTitle(node)+"</a>":"")+(node.getDepth()>3?" <a href=\""+node.getPath()+".pdf?mp=100\" target=\"_blank\"><img src=\""+Folder.root+"/resources/images/com.filemark.model.Pages.gif\" title=\"open all pdf\" alt=\"open all pdf\"></a>":"")+"</li>";
                while(node.getDepth() > 1) {
@@ -916,11 +914,11 @@ public class JcrServicesImpl implements JcrServices {
                    }
                    if(node.getDepth()<=depth) {
                    if(node.hasProperty("Title"))
-                       title = node.getProperty("Title").getString();
-                    else if(node.hasProperty("name")) {
-                 	   title = node.getProperty("name").getString();            	   
+					node.getProperty("Title").getString();
+				else if(node.hasProperty("name")) {
+                 	   node.getProperty("name").getString();            	   
                     }else {
-                 	   title = node.getName();    
+                 	   node.getName();    
                     }
 
             		   breadcrumb = "<li><a href=\"/"+node.getPath()+(node.getDepth()>1?".html":"")+"\">"+getTitle(node)+"</a></li>"+breadcrumb;
@@ -1315,9 +1313,8 @@ public class JcrServicesImpl implements JcrServices {
 						}
 				        int numPages = reader.getNumberOfPages();
 				        PdfImportedPage pdfPage = null;
-				        PdfOutline outline = null;
-			    		String title = asset.getTitle();
-			    		outline = new PdfOutline(root, 
+				        String title = asset.getTitle();
+			    		new PdfOutline(root, 
 								PdfAction.gotoLocalPage(pageCount, new PdfDestination(PdfDestination.FIT), copy),StringEscapeUtils.escapeXml(title));
 
 
@@ -1352,9 +1349,7 @@ public class JcrServicesImpl implements JcrServices {
 	public void convertPDFtoPDF(OutputStream outputStream, InputStream inputStream) throws IOException, DocumentException {
 		PdfCopy copy = null;
 		Document doc = null;
-		PdfOutline root = null;
 		PdfContentByte cb =null;
-		int pageCount = 1;
 		PdfReader reader = new PdfReader(inputStream);
 		
 		if (doc ==null) {
@@ -1363,8 +1358,8 @@ public class JcrServicesImpl implements JcrServices {
 			copy = new PdfCopy(doc, outputStream);
 			doc.open();
 			cb = copy.getDirectContent();
-			pageCount = copy.getCurrentPageNumber();
-			root = cb.getRootOutline();
+			copy.getCurrentPageNumber();
+			cb.getRootOutline();
 		
 
 		}
@@ -1377,7 +1372,6 @@ public class JcrServicesImpl implements JcrServices {
 	        copy.addPage(pdfPage);
 	    }
         
-        pageCount +=numPages;
         inputStream.close();
 	   				
 	}
@@ -1387,7 +1381,7 @@ public class JcrServicesImpl implements JcrServices {
 		com.itextpdf.text.Document pdfDoc = null;
 		com.itextpdf.text.Image img = null;
 		byte[] data = new byte[inputStream.available()];
-		float fontSize = 10.0f,space = 10.0f;
+		float space = 10.0f;
 
 		Resource resource = new ClassPathResource(asianFont);
 		
@@ -1429,7 +1423,8 @@ public class JcrServicesImpl implements JcrServices {
 	         
 	 }
 	
-	 public void convertTifToPDF(OutputStream output, InputStream inputStream, String description) throws Exception{
+	 @SuppressWarnings("null")
+	public void convertTifToPDF(OutputStream output, InputStream inputStream, String description) throws Exception{
 		 com.lowagie.text.Document pdfDoc = null;	
 		 com.lowagie.text.Image img = null;    
 
@@ -1439,7 +1434,7 @@ public class JcrServicesImpl implements JcrServices {
 	      int total = TiffImage.getNumberOfPages(inFile);//dec.getNumPages( );
 
 	      pdfDoc = new com.lowagie.text.Document(new Rectangle(img.getWidth(),img.getHeight()), 0, 0, 0, 0 );
-	      PdfWriter pdfWriter = PdfWriter.getInstance( pdfDoc, output);
+	      PdfWriter.getInstance( pdfDoc, output);
 	
 	      pdfDoc.open( );
 
@@ -1507,11 +1502,10 @@ public class JcrServicesImpl implements JcrServices {
     				        int numPages = reader.getNumberOfPages();
     				        PdfImportedPage pdfPage = null;
     				        String pathPath = getAncestorPath(node.getPath(), 8);
-    				        PdfOutline outline = null;
     				        if(pathPath.indexOf("/pageses/page")>0) {
         				        Page page = (Page)getObject(pathPath);
         			    		String title = page.getTitle();
-        			    		outline = new PdfOutline(root, 
+        			    		new PdfOutline(root, 
         								PdfAction.gotoLocalPage(pageCount, new PdfDestination(PdfDestination.FIT), copy),StringEscapeUtils.escapeXml(title));
     				        	
     				        }
@@ -1845,7 +1839,8 @@ public class JcrServicesImpl implements JcrServices {
      * Since some methods like toolkit.getImage() are asynchronous, this
      * method should be called to load them completely.
      */
-    private void loadCompletely (java.awt.Image img)
+    @SuppressWarnings("unused")
+	private void loadCompletely (java.awt.Image img)
     {
         MediaTracker tracker = new MediaTracker(new JPanel());
         tracker.addImage(img, 0);
@@ -1908,7 +1903,7 @@ public class JcrServicesImpl implements JcrServices {
 		return (WebPage<Page>) jcrTemplate.execute(new JcrCallback() { 
         	public WebPage <Page>doInJcr(Session session) throws RepositoryException, IOException { 
         		QueryManager queryManager = session.getWorkspace().getQueryManager();
-        		ObjectContentManager ocm = new  ObjectContentManagerImpl(session, mapper);        		
+        		new  ObjectContentManagerImpl(session, mapper);        		
         		QueryImpl q = (QueryImpl)queryManager.createQuery(queryString, Query.JCR_SQL2);
         		
         		QueryResult result = q.execute();
@@ -2129,7 +2124,6 @@ public class JcrServicesImpl implements JcrServices {
 		return (String)jcrTemplate.execute(new JcrCallback() { 
 	    	public String doInJcr(final Session session) throws RepositoryException, IOException { 
 	    		String result="";	
-	    		int count=0;
 	    		for (MultipartFile multipartFile : uploadForm.getFile()) {
 	        		String fileName = multipartFile.getOriginalFilename();
 	        		if(fileName==null || "".equals(fileName)) {
@@ -2160,7 +2154,6 @@ public class JcrServicesImpl implements JcrServices {
 	        		add(asset);
         			try {
 	    					addFile(assetPath,"original",multipartFile.getInputStream(),multipartFile.getContentType());
-							count++;
 							result = asset.getPath();
 							Node folder = getNode(path);
 							folder.setProperty("lastModified", Calendar.getInstance());
@@ -2181,7 +2174,6 @@ public class JcrServicesImpl implements JcrServices {
 		return (Asset)jcrTemplate.execute(new JcrCallback() { 
 	    	public Asset doInJcr(final Session session) throws RepositoryException, IOException { 
         		Asset asset = new Asset();	
-	    		int count=0;
 	    		String nodeName = url.substring(url.lastIndexOf("/")+1, url.length());
                 URL url_img = new URL(url);
                 URLConnection uc = url_img.openConnection();
@@ -2201,7 +2193,6 @@ public class JcrServicesImpl implements JcrServices {
         		add(asset);
     			try {
     					addFile(assetPath,"original",is,mineType);
-						count++;
 						Node folder = getNode(path);
 						folder.setProperty("lastModified", Calendar.getInstance());
 						folder.setProperty("changed", "true");

@@ -249,7 +249,8 @@ public class IndexManagerImpl implements IndexManager {
         return new StandardAnalyzer(null);
     }
 
-    private void scheduleIndexOperation(final Runnable op) {
+    @SuppressWarnings("unused")
+	private void scheduleIndexOperation(final Runnable op) {
         try {
             // only if search is enabled
             if(this.searchEnabled) {
@@ -340,7 +341,8 @@ public class IndexManagerImpl implements IndexManager {
         return directory;
     }
     
-    private void createIndex(Directory dir) {
+    @SuppressWarnings("deprecation")
+	private void createIndex(Directory dir) {
         IndexWriter writer = null;
         
         try {
@@ -359,7 +361,8 @@ public class IndexManagerImpl implements IndexManager {
     
     private IndexOperation getSaveIndexOperation() {
         return new WriteToIndexOperation(this) {
-            public void doRun() {
+            @SuppressWarnings("deprecation")
+			public void doRun() {
                 Directory dir = getIndexDirectory();
                 Directory fsdir = getFSDirectory(true);
                 
