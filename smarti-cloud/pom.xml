@@ -28,18 +28,18 @@
 	        	<!--  url>http://repo1.maven.org/maven2</url-->
 	        </repository>
 
-<!-- 	        <repository>
+<!--  	        <repository>
 		        <id>springbyexample.org</id>
 		        <name>Spring by Example</name>
 		        <url>http://www.springbyexample.org/maven/repo</url>
-		    </repository> -->
-
+		    </repository>
+ -->
 	    	    
-<!-- 		    <repository>
+ 		    <repository>
 		        <id>springframework.org</id>
 		        <name>Spring extension</name>
 		        <url>http://repository.pentaho.org/artifactory/repo</url>
-		    </repository>	 -->
+		    </repository>
 	        <repository>
 	        	<id>local-repository</id>
 	        	<name>local</name>
@@ -500,7 +500,8 @@
 		</dependency>
 
 		<dependency>
-		    <groupId>org.springframework</groupId>
+		    <groupId>local</groupId>
+<!-- 		    <groupId>org.springframework</groupId> -->
 		    <artifactId>se-jcr</artifactId>
 		    <version>0.9</version>
 		    <exclusions>
