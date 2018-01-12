@@ -31,15 +31,15 @@
 		    </repository> -->
 
 	    	    
-		    <repository>
+<!-- 		    <repository>
 		        <id>springframework.org</id>
 		        <name>Spring extension</name>
 		        <url>http://repository.pentaho.org/artifactory/repo</url>
-		    </repository>	
+		    </repository>	 -->
 	        <repository>
 	        	<id>local-repository</id>
 	        	<name>local</name>
-	        	<url>file://${project.basedir}\\src\\lib</url>
+	        	<url>file:${project.basedir}/src/lib</url>
 	        </repository>		             
 	</repositories>	
 	<dependencies>
