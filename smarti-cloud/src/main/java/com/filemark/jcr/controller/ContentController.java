@@ -20,7 +20,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import com.filemark.sso.JwtUtil;
 import javax.imageio.ImageIO;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
@@ -242,17 +242,30 @@ public class ContentController extends BaseController {
 			String path = paths.split(".passcode")[0];
 			HttpSession session = request.getSession();
 			Page currentpage = new Page();
-			currentpage = jcrService.getPage(path);
+			Gson gson = new Gson();
+			File json = new File(jcrService.getHome()+path+".json");
+			if(json.exists()) {
+				InputStream is = new FileInputStream(json);
+				currentpage = gson.fromJson(new InputStreamReader(is,"UTF-8"), Page.class);
+				is.close();
+			}
 			model.addAttribute("username", session.getAttribute("username"));
 			model.addAttribute("site", site);
 			model.addAttribute("path", path);
 			model.addAttribute("title", currentpage.getTitle());
 			if(currentpage.getPasscode() !=null && !"".equals(currentpage.getPasscode())) {
-				if(passcode==null || !passcode.equals(currentpage.getPasscode())) {
+				String pagePasscode = currentpage.getPasscode();
+				if("true".equals(currentpage.getSecured())) {
+					//logger.debug("passcode before="+pagePasscode);
+					pagePasscode = JwtUtil.decode(pagePasscode);
+					//logger.debug("passcode after="+pagePasscode);
+				}
+				if(passcode==null || !passcode.equals(pagePasscode)) {
+					model.addAttribute("message", "error");
 					return "content/passcode";
 				}else {
-					session.setAttribute(path, passcode);
-					session.setAttribute(passcode, path);
+					session.setAttribute(path, pagePasscode);
+					session.setAttribute(pagePasscode, path);
 					return "redirect:"+path+".html";
 				}
 			}else {
@@ -262,11 +275,7 @@ public class ContentController extends BaseController {
 		} catch (UnsupportedEncodingException e) {
 			logger.error(e.getMessage());
 			throw new Exception("\u8DEF\u5F84\u51FA\u9519!");
-		} catch (RepositoryException e) {
-			logger.error(e.getMessage());
-			throw new Exception("\u9875\u9762\u6CA1\u627E\u5230!");
-		}
-
+		} 
 	}
    	
 	@RequestMapping(value = {"/content/{site}","/content/{site}.html","/content/{site}/**/*","/content/{site}/**/*.html","/content/{site}/*.html"}, method = RequestMethod.GET)
@@ -308,10 +317,14 @@ public class ContentController extends BaseController {
 			}
 			String navigation = currentpage.getNavigation(),breadcrumb=currentpage.getBreadcrumb(),content=currentpage.getContent(),menuPath=currentpage.getMenuPath();
 			String page_passcode = currentpage.getPasscode();
+			if("true".equals(currentpage.getSecured())) {
+				page_passcode = JwtUtil.decode(page_passcode);
+				content = JwtUtil.decode(content);
+			}
 			if(page_passcode !=null && !"".equals(page_passcode)) {
 				HttpSession session = request.getSession();
 				String parent_path = (String)session.getAttribute(page_passcode);
-				String passcode = (String)session.getAttribute(parent_path);				
+				String passcode = (String)session.getAttribute(parent_path);
 				if(passcode==null || parent_path==null || !passcode.equals(page_passcode)) {
 					model.addAttribute("path", path);
 					model.addAttribute("title", currentpage.getTitle());

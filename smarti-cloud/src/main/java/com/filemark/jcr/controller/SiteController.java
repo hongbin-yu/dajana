@@ -7,7 +7,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -27,21 +26,16 @@ import java.util.Map;
 
 import javax.activation.MimetypesFileTypeMap;
 import javax.inject.Inject;
-import javax.jcr.Node;
 import javax.jcr.RepositoryException;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.jackrabbit.commons.JcrUtils;
 import org.apache.poi.util.IOUtils;
 import org.apache.tika.mime.MimeType;
 import org.apache.tika.mime.MimeTypeException;
 import org.apache.tika.mime.MimeTypes;
-import org.jfree.util.Log;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -50,7 +44,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -64,7 +57,6 @@ import com.filemark.jcr.model.Folder;
 import com.filemark.jcr.model.Page;
 import com.filemark.jcr.service.AssetManager;
 import com.filemark.sso.JwtUtil;
-import com.filemark.utils.DjnUtils;
 import com.filemark.utils.ScanUploadForm;
 import com.filemark.utils.WebPage;
 import com.google.gson.Gson;
@@ -1292,10 +1284,10 @@ public class SiteController extends BaseController {
 			Gson gson = new Gson();
 			File json = new File(jcrService.getHome()+page.getPath()+".json");
 			if(page.getPasscode()!=null && !"".equals(page.getPasscode()) && "true".equals(page.getSecured())) {
-				content = JwtUtil.generateToken(page.getPasscode(), content);
+				content = JwtUtil.encode(content);
 			}
 			if("true".equals(page.getSecured()))
-				page.setPasscode(JwtUtil.generateToken(page.getPasscode(), page.getPasscode()));
+				page.setPasscode(JwtUtil.encode(page.getPasscode()));
 			page.setContent(content);
 			page.setBreadcrumb(breadcrumb);
 			page.setNavigation(navigation);

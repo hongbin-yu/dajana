@@ -1,5 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" session="false" %>
 <c:set var="contentPath"><c:url value="/"></c:url></c:set>
 
@@ -26,9 +27,8 @@
     </head>
 
     <body class="splash" vocab="http://schema.org/" typeof="WebPage">
-		
-        
-<div id="bg"><img id="splash-image" src='<c:url value="/resources/images/changcheng.jpg"></c:url>' alt=""></div><main role="main" property="mainContentOfPage">
+	        
+<div id="bg"><img id="splash-image" src='<c:url value="/resources/images/splash4.jpg"></c:url>' alt=""></div><main role="main" property="mainContentOfPage">
 <div class="sp-hb">
 <div class="sp-bx col-xs-12">
 <h1 property="name" class="wb-inv">dajana.cn</h1>
@@ -39,9 +39,18 @@
 </div>
 <div class="row">
 <section class="col-xs-12">
+<c:if test="${message eq 'error'}">
+<section class="alert alert-warning">
+<h3><spring:message code="djn.passcode_fail"/>!</h3>
+<div class="error">
+  	<spring:message code="djn.passcode_error"/>!
+ </div>
+</section>
+</c:if>
+
 <form action='<c:url value="${path}.passcode"></c:url>' method="POST" >
 <div class="form-group wb-frmvld">
-	<label for="order">${title }-口令:<input class="form-control" required="required" id="passcode" type="password" name="passcode" value="${page.passcode }" size="35"  uid="${page.uid }" onchange="updateProperty(this)"/></label>
+	<label for="order">${title }-口令:<input class="form-control" required="required" id="passcode" type="password" name="passcode" value="" size="35"/></label>
     <button type="submit" class="btn btn-primary">确认</button>
 </div>	
 </form>

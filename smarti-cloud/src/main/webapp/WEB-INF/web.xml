@@ -79,9 +79,9 @@
 
 
 	<!-- License manager -->
-    <listener>
+<!--     <listener>
 		<listener-class>com.filemark.utils.LicenseManager</listener-class>
-	</listener>
+	</listener> -->
 	<!-- Creates the Spring Container shared by all Servlets and Filters -->
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>

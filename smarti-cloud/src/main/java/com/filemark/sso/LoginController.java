@@ -172,7 +172,7 @@ public class LoginController extends BaseController {
 		request.setAttribute("signingKey", user.getSigningKey());  
         String token = JwtUtil.generateToken(signingKey, token_author);
         String domain =(user.getHost()==null || "".equals(user.getHost()))? request.getServerName():user.getHost();
-        domain = domain.replaceAll(".*\\.(?=.*\\.)", "");
+        //domain = domain.replaceAll(".*\\.(?=.*\\.)", "");
         CookieUtil.create(httpServletResponse, jwtTokenCookieName, token, false, -1, domain);
 /*        if(user.getHost()!=null && !"".equals(user.getHost())) {
            CookieUtil.create(httpServletResponse, jwtTokenCookieName, token, false, -1, user.getHost());
