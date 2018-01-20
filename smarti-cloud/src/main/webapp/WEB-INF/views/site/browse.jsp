@@ -93,7 +93,7 @@ ${path }</label>
 		<a class="wb-lbx-edit" href="<c:url value='{link}'></c:url>" target="_BLANK"><imgreplace id="<c:url value='viewimage?uid={uid}&w=4'></c:url>" src="<c:url value='{icon}'></c:url>" class="img-responsive" draggable="true"/></a>
 	</div>
 	<details>
-		<summary><img title="点击打开或合上编辑窗口" src='<c:url value="/resources/images/editIcon.gif"></c:url>'>{title}</summary>
+		<summary><span class="glyphicon glyphicon-edit">{title}</span></summary>
 		<a class="wb-lbx" title="删除它" href="<c:url value="/delete.html?uid={uid}&redirect=/assets.html?path=${folder.path }"/>"><span class="glyphicon glyphicon-remove">删除</span></a>
 		<div class="form-group">
 		<label for="title{uid}">标题&nbsp;</label><input class="form-control" id="title{uid}" name="jcr:title" value="" size="25" uid="{uid}"  onchange="updateNode(this)"/>

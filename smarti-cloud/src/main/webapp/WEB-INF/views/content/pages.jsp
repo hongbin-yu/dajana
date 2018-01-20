@@ -2,7 +2,7 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" session="false" %>
-<c:if test="${page.showLeftmenu}">
+<c:if test="${page.showLeftmenu=='true'}">
 <div class="container">
 <div class="row">
         <main role="main" property="mainContentOfPage" class="col-md-9 col-md-push-3">
@@ -16,7 +16,7 @@
 </div>
 </div>
 </c:if>
-<c:if test="${!page.showLeftmenu}">
+<c:if test="${page.showLeftmenu!='true'}">
         <main role="main" property="mainContentOfPage" class="container">
 			 ${content }
 			 <%@include file="../wet/pagedetails.jsp" %>		

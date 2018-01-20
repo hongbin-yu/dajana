@@ -22,7 +22,7 @@
         <h3 class="wb-navcurr"><img alt=""  width="32" class="img-responsive pull-right" src="<c:url value="/resources/images/usericon.png"></c:url>"> 用户目录</h3>
         <ul class="list-group menu list-unstyled">
 	        <c:forEach items="${users.items}" var="item" varStatus="loop">
-	            <li class="list-group-item"><a href='<c:url value="/admin/usereditor.html?path=${item.path}"></c:url>'>${item.title}</a><a href="javascript:deleteUser('${item.path}')"><img title="点击删除" class="pull-right" src='<c:url value="/resources/images/cut.gif"></c:url>'></a>
+	            <li class="list-group-item"><a href='<c:url value="/admin/usereditor.html?path=${item.path}"></c:url>'>${item.title}</a><a href="javascript:deleteUser('${item.path}')"><span class="glyphicon glyphicon-trash pull-right"></span></a>
 	            </li>           
 	        </c:forEach> 
         </ul>

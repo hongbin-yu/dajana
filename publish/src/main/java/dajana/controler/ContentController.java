@@ -13,11 +13,15 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.Inet4Address;
+import java.net.InetAddress;
 import java.net.MalformedURLException;
+import java.net.NetworkInterface;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
@@ -425,5 +429,61 @@ public class ContentController {
 		}	
 		logger.debug(result);
 		return null;
+	}	
+	
+	@SuppressWarnings("unused")
+	private String getPublicIpAddress() {
+	    String res = null;
+	    try {
+	        String localhost = InetAddress.getLocalHost().getHostAddress();
+	        Enumeration<NetworkInterface> e = NetworkInterface.getNetworkInterfaces();
+	        while (e.hasMoreElements()) {
+	            NetworkInterface ni = e.nextElement();
+	            if(ni.isLoopback())
+	                continue;
+	            if(ni.isPointToPoint())
+	                continue;
+	            Enumeration<InetAddress> addresses = ni.getInetAddresses();
+	            while(addresses.hasMoreElements()) {
+	                InetAddress address = addresses.nextElement();
+	                if(address instanceof Inet4Address) {
+	                    String ip = address.getHostAddress();
+	                    if(!ip.equals(localhost))
+	                        System.out.println((res = ip));
+	                }
+	            }
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return res;
+	}
+
+	private static final String[] IP_HEADER_CANDIDATES = { 
+	    "X-Forwarded-For",
+	    "Proxy-Client-IP",
+	    "WL-Proxy-Client-IP",
+	    "HTTP_X_FORWARDED_FOR",
+	    "HTTP_X_FORWARDED",
+	    "HTTP_X_CLUSTER_CLIENT_IP",
+	    "HTTP_CLIENT_IP",
+	    "HTTP_FORWARDED_FOR",
+	    "HTTP_FORWARDED",
+	    "HTTP_VIA",
+	    "REMOTE_ADDR" };
+	
+	public static String getClientIpAddress(HttpServletRequest request) {
+	    for (String header : IP_HEADER_CANDIDATES) {
+	        String ip = request.getHeader(header);
+	        if (ip != null && ip.length() != 0 && !"unknown".equalsIgnoreCase(ip)) {
+	            return ip;
+	        }
+	    }
+	    return request.getRemoteAddr();
+	}
+
+	public static boolean isIntranet(HttpServletRequest request) {
+		String ip = getClientIpAddress(request);
+		return (ip.startsWith("192.") || ip.startsWith("172.")  || ip.startsWith("10.") || ip.startsWith("0:0:") || ip.startsWith("127.") );
 	}	
 }

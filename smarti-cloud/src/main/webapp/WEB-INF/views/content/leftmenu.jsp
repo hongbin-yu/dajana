@@ -2,14 +2,15 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" session="false" %>
     <h2 id="wb-sec-h" class="wb-inv">左菜单</h2>
     <section class="list-group menu list-unstyled">
-        <h3 class="wb-navcurr">
-        <c:if test="${page.parent=='/content' }">
-        <a href='<c:url value="/content/home.html"></c:url>'><img src='<c:url value="/resources/images/arrowleft.png"/>'/>大家拿</a>
-        </c:if>
+<%--         <c:if test="${page.parent=='/content' }">
+        <a href='<c:url value="/content/home.html"></c:url>'><span class="glyphicon glyphicon-backward"></span>大家拿</a>
+        </c:if> --%>
         <c:if test="${page.parent!='/content' }">
-        <a href='<c:url value="${parent.path}.html"></c:url>'><img src='<c:url value="/resources/images/arrowleft.png"/>'/>${parent.title}</a>
-        </c:if>        
+        <h3 class="wb-navcurr">
+        <a href='<c:url value="${parent.path}.html"></c:url>'><span class="glyphicon glyphicon-backward"></span>${parent.title}</a>
         </h3>
+
+        </c:if>        
         <ul class="list-group menu list-unstyled">
         <c:forEach items="${menu.items}" var="item" varStatus="loop">
             <li>

@@ -37,7 +37,7 @@
         <h3 class="wb-navcurr"><img alt=""  width="32" class="img-responsive pull-right" src="<c:url value="/resources/images/cloud.jpg"></c:url>"> <a href='<c:url value="/admin/devicemanager.html"></c:url>'>装置目录</a></h3>
         <ul class="list-group menu list-unstyled">
 	        <c:forEach items="${devices.items}" var="item" varStatus="loop">
-	            <li class="list-group-item"><a href='<c:url value="/admin/deviceeditor.html?path=${item.path}"></c:url>'>${item.title} (${item.usage }M)</a><a href="javascript:disableDevice('${item.path}')"><img title="点击删除" class="pull-right" src='<c:url value="/resources/images/delete.gif"></c:url>'></a>
+	            <li class="list-group-item"><a href='<c:url value="/admin/deviceeditor.html?path=${item.path}"></c:url>'>${item.title} (${item.usage }M)</a><a href="javascript:disableDevice('${item.path}')"><span class="glyphicon glyphicon-trash pull-right"></span></a>
 	            </li>           
 	        </c:forEach> 
         </ul>
