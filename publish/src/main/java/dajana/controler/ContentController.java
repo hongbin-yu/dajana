@@ -186,6 +186,15 @@ public class ContentController {
 				return "redirect:"+currentpage.getRedirectTo();
 			}	
 			navigation = FileUtils.readFileToString(new File(this.publish_home+menuPath+"/navimenu.html"),"UTF-8");
+			if("true".equals(currentpage.getShowLeftmenu())) {
+				File leftmenu = new File(this.publish_home+path+"/leftmenu.html");
+				if(leftmenu.exists()) {
+					model.put("leftmenu", FileUtils.readFileToString(leftmenu,"UTF-8"));
+				}else {
+					Document doc = Jsoup.parse(new URL(baseUrl+"/content/leftmenu.html?path="+path), 5000);
+					model.put("leftmenu",doc.body().html());					
+				}
+			}
 			currentpage.setNavigation(navigation);
 		} catch (UnsupportedEncodingException e) {
 			return "error500";
@@ -363,6 +372,14 @@ public class ContentController {
 				BufferedWriter bufferWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(json),"UTF-8"));
 				bufferWriter.write(jsonPage);
 				bufferWriter.close(); 
+				if("true".equals(page.getShowLeftmenu())) {
+					doc = Jsoup.parse(new URL("http://"+user.getHost()+":"+user.getPort()+"/content/leftmenu.html?path="+path), 5000);
+					File leftmenu = new File(publish_home+path+"/leftmenu.html");
+					bufferWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(leftmenu),"UTF-8"));
+					bufferWriter.write(doc.body().html());
+					bufferWriter.close(); 
+				}
+				
 				return page;
 				//logger.info(result);
 				//org.apache.commons.io.FileUtils.copyURLToFile(new URL("http://"+uinfos[1]+":"+uinfos[2]+path+".json"), json,1000,1000);

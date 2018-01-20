@@ -109,24 +109,49 @@
 </header>
 
 	
-        <main role="main" property="mainContentOfPage" class="container">
-		<span th:utext="${page.content}"></span>
-<div class="row pagedetails">
-	<div class="col-xs-12 mrgn-tp-lg">
-	<div class="col-sm-4">
-	    <dl id="wb-dtmd">
-	    <dt>修改日期:</dt>
-	    <dd><time th:text="${page.lastModifiedDate}"></time></dd>
-		</dl>
+<main th:if="${page.showLeftmenu!='true'}" role="main" property="mainContentOfPage" class="container">
+	<div th:utext="${page.content}"></div>
+	<div class="row pagedetails">
+		<div class="col-xs-12 mrgn-tp-lg">
+		<div class="col-sm-4">
+		    <dl id="wb-dtmd">
+		    <dt>修改日期:</dt>
+		    <dd><time th:text="${page.lastModifiedDate}"></time></dd>
+			</dl>
+		</div>
+	
+	    <div class="col-sm-3 mrgn-tp-sm pull-right">
+	        <a href='/content/home.shr?ref=home'  class="wb-lbx btn btn-default btn-block" id="wb-auto-7"><span class="glyphicon glyphicon-share"></span>分享此页</a>
+	    </div>	
+		</div>
 	</div>
-
-    <div class="col-sm-3 mrgn-tp-sm pull-right">
-        <a href='/content/home.shr?ref=home'  class="wb-lbx btn btn-default btn-block" id="wb-auto-7"><span class="glyphicon glyphicon-share"></span>分享此页</a>
-    </div>	
-	</div>
-</div>
 		
- 		</main>
+</main>
+<div th:if="${page.showLeftmenu=='true'}" class="container">
+<div class="row">
+  	<main role="main" property="mainContentOfPage" class="col-md-9 col-md-push-3">
+	<div th:utext="${page.content}"></div>
+	<div class="row pagedetails">
+		<div class="col-xs-12 mrgn-tp-lg">
+		<div class="col-sm-4">
+		    <dl id="wb-dtmd">
+		    <dt>修改日期:</dt>
+		    <dd><time th:text="${page.lastModifiedDate}"></time></dd>
+			</dl>
+		</div>
+	
+	    <div class="col-sm-3 mrgn-tp-sm pull-right">
+	        <a href='/content/home.shr?ref=home'  class="wb-lbx btn btn-default btn-block" id="wb-auto-7"><span class="glyphicon glyphicon-share"></span>分享此页</a>
+	    </div>	
+		</div>
+	</div>	
+ 	</main>
+     <nav class="wb-sec col-md-3 col-md-pull-9" typeof="SiteNavigationElement" id="wb-sec" role="navigation">
+         <div th:utext="${leftmenu}"></div>
+     </nav>
+        
+</div>
+</div> 		
 <footer role="contentinfo" id="wb-info">
 <nav role="navigation" class="container wb-navcurr">
 <h2>关于本网站</h2>

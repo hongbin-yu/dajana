@@ -592,12 +592,12 @@ public class ContentController extends BaseController {
 		}
 		String site = currentpage.getPath().split("/")[2];
 		String content = "/content/"+site;
-		String pagesQuery = "select * from [nt:base] AS s WHERE ISDESCENDANTNODE(["+content+"]) and ISCHILDNODE(["+currentpage.getParent()+"])  and s.ocm_classname='com.filemark.jcr.model.Page' order by s.order";
+		String pagesQuery = "select * from [nt:base] AS s WHERE ISDESCENDANTNODE(["+content+"]) and ISCHILDNODE(["+currentpage.getParent()+"]) and s.status like 'true' and s.ocm_classname='com.filemark.jcr.model.Page' order by s.order";
 		if(currentpage.getPath().equals(content) || currentpage.getPath().equals("/content")) {
-			pagesQuery = "select * from [nt:base] AS s WHERE ISSAMENODE([/content/"+site+"])  and s.ocm_classname='com.filemark.jcr.model.Page' order by s.order";
+			pagesQuery = "select * from [nt:base] AS s WHERE ISSAMENODE([/content/"+site+"]) and s.status like 'true' and  s.ocm_classname='com.filemark.jcr.model.Page' order by s.order";
 		}
 		WebPage<Page> pages = jcrService.queryPages(pagesQuery, 100, 0);
-		String childPagesQuery = "select * from [nt:base] AS s WHERE ISCHILDNODE(["+currentpage.getPath()+"]) and s.ocm_classname='com.filemark.jcr.model.Page' order by s.order";
+		String childPagesQuery = "select * from [nt:base] AS s WHERE ISCHILDNODE(["+currentpage.getPath()+"]) and s.status like 'true' and s.ocm_classname='com.filemark.jcr.model.Page' order by s.order";
 		WebPage<Page> children = jcrService.queryPages(childPagesQuery, 100, 0);
 		for(Page sibling:pages.getItems()) {
 			if(sibling.getPath().equals(currentpage.getPath())) {
@@ -619,7 +619,7 @@ public class ContentController extends BaseController {
 		if(path==null)
 			path = paths.replace(".json", "");
 
-		String pagesQuery = "select * from [nt:base] AS s WHERE ISCHILDNODE(["+path+"])" +" and s.delete not like 'true' and s.ocm_classname='com.filemark.jcr.model.Page' order by s.order";
+		String pagesQuery = "select * from [nt:base] AS s WHERE ISCHILDNODE(["+path+"])" +" and s.status like 'true' and s.ocm_classname='com.filemark.jcr.model.Page' order by s.order";
 		WebPage<Page> pages = jcrService.queryPageContent(pagesQuery, 100, 0);
 
 		
