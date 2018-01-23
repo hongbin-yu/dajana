@@ -180,34 +180,9 @@ public class LoginController extends BaseController {
         if(user.getHostIp()!=null && !"".equals(user.getHostIp())) {
             CookieUtil.create(httpServletResponse, jwtTokenCookieName, token, false, -1, user.getHostIp());
          }*/
-        if(redirect==null || "".equals(redirect)) {
+        if(redirect==null || "".equals(redirect) || "login".equals(redirect)) {
     		String content = "/content/"+user.getUserName();
-    		/*
-    		if(!jcrService.nodeExsits(content)) {//create root
-    			if(!jcrService.nodeExsits("/content")) {
-    				Page djn = new Page();
-    				djn.setPath("/content");
-    				djn.setParent("/");
-    				djn.setTitle("\u5927\u5BB6\u62FF");
-    				djn.setRedirectTo("http://www.dajana.cn");
-    				djn.setCreatedBy(user.getUserName());
-    				djn.setLastModified(Calendar.getInstance().getTime());
-    				jcrService.addOrUpdate(djn);				
-    			}
- 
-    			Page currentpage = new Page();
-    			currentpage.setPath(content);
-    			currentpage.setParent("/content");
-    			currentpage.setTitle(user.getTitle());
-    			currentpage.setCreatedBy(user.getUserName());
-    			currentpage.setLastModified(Calendar.getInstance().getTime());
-    			if(jcrService.nodeExsits("/content/templates")) {
-    				Page template = jcrService.getPage("/content/templates");
-    				currentpage.setContent(template.getContent());
-    				
-    			}
-    			jcrService.addOrUpdate(currentpage);
-    		}*/
+
     		if(user.getHost()!=null && !"".equals(user.getHost())) {
     			return "redirect:http://"+(user.getHost()+(user.getPort()==null || "".equals(user.getPort())?"":":"+user.getPort()) + content+".html");
     		}/*else if(user.getHostIp()!=null && !"".equals(user.getHostIp())) {
