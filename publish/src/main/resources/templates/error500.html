@@ -3,8 +3,7 @@
 
 <head>
 <meta http-equiv="Content-type" content="text/html;charset=UTF-8"/>
-<title>大家拿-此页没找到</title>
-<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+<title>大家拿-系统出错 (500)</title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
 <!-- Meta data -->
@@ -13,6 +12,8 @@
 
 <link href="http://dajana.ca/resources/images/favicon.ico" rel="icon" type="image/x-icon"/>
 <link rel="stylesheet" href="/resources/wet-boew/css/wet-boew.min.css"/>
+<link rel="stylesheet" href="/webjars/bootstrap/3.3.7/css/bootstrap.min.css"/>
+
 <link rel="stylesheet" href="/resources/wet-boew/css/theme.min.css"/>
 
 </head>
@@ -83,8 +84,10 @@
 </header>
 
         <main role="main" property="mainContentOfPage" class="container">
-    <h1>此页没找到</h1>
-    <p th:text="${error}">此页没找到</p>
+			 <p><a class="wb-lbx wb-init wb-lbx-inited" href="home/assets/home_0.jpg"></a></p> 
+    <h1>系统出错</h1>
+    <p th:text="${error}">系统出错</p>
+		
 </main>
 <footer role="contentinfo" id="wb-info">
 <nav role="navigation" class="container wb-navcurr"  data-ajax-replace='/templates/assets/html/replace.html'>
@@ -126,5 +129,8 @@
 <script src="/resources/wet-boew/js/jquery/2.1.4/jquery.min.js"></script>
 <script src="/resources/wet-boew/js/wet-boew.min.js"></script>
 <script src="/resources/wet-boew/js/theme.min.js"></script>
+<script type="text/javascript"
+		src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
 </body>
 </html>

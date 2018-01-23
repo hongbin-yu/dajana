@@ -113,6 +113,7 @@ public class Page implements Serializable{
 	}
 
 	public String getDescription() {
+		if(this.description == null) return "";
 		return description;
 	}
 
@@ -302,6 +303,7 @@ public class Page implements Serializable{
 	}
 
 	public String getKeywords() {
+		if(this.keywords == null) return "";
 		return keywords;
 	}
 

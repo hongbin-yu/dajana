@@ -1,4 +1,5 @@
 eclipse.preferences.version=1
+encoding//resources/error404.html=UTF-8
 encoding//resources/error500.html=UTF-8
 encoding//src/main/java/com/filemark/jcr/controller/ContentController.java=UTF-8
 encoding//src/main/java/com/filemark/jcr/controller/ProtectedController.java=UTF-8

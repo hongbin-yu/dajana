@@ -282,10 +282,10 @@ function syncChat() {
 				    
 				    if(path.indexOf("/content/"+c.createdBy)>=0) {
 					    html = '<div id="'+c.uid+'" class="panel panel-default"><header class="panel-heading">';
-						html +='<h5 class="panel-title">'+c.createdBy+' <span class="small text-left">'+cDate.toISOString()+'</span><a href="javascript:removeTag('+"'"+c.uid+"'"+')"><img title="\u70B9\u51FB\u5220\u9664" class="pull-right" src="'+contentPath+'/resources/images/cut.gif"></a></h5>';
+						html +='<h5 class="panel-title">'+c.createdBy+' <span class="small text-left">'+cDate.toISOString()+'</span><a href="javascript:removeTag('+"'"+c.uid+"'"+')"><button title="\u70B9\u51FB\u5220\u9664" class="btn btn-warning btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span></button></a></h5>';
 		    		}else {
 					    html = '<div id="'+c.uid+'" class="panel panel-success"><header class="panel-heading">';
-						html +='<h5 class="panel-title">'+c.createdBy+' <span class="small">'+cDate.toISOString()+'</span><a href="javascript:removeTag('+"'"+c.uid+"'"+')"><img title="\u70B9\u51FB\u5220\u9664" class="pull-right" src="'+contentPath+'/resources/images/cut.gif"></a></h5>';
+						html +='<h5 class="panel-title">'+c.createdBy+' <span class="small">'+cDate.toISOString()+'</span><a href="javascript:removeTag('+"'"+c.uid+"'"+')"><button title="\u70B9\u51FB\u5220\u9664" class="btn btn-warning btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span></button></a></h5>';
 						
 					}
 					html +='</header><div class="panel-body">'+c.content+'</div></div><div class="clearfix"></div>';
