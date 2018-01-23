@@ -63,7 +63,7 @@ public class ContentController {
 	@Value("${sso.url}")
 	private String sso_ur = "http://sso.dajana.ca";
 	@Value("${base.url}")
-	private String baseUrl = "http://dajana.ca:8888";	
+	private String baseUrl = "http://117.26.129.34:8888";	
 	@Value("${cacheTime.page}")
 	private long cacheTime = 7200000;
 	@Value("${base.log}")
