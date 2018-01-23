@@ -84,7 +84,7 @@ public class LoginController extends BaseController {
     			securityContext.setAuthentication(auth);    			
     			HttpSession session = request.getSession(true);
     	        session.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);
-        		if(redirect !=null && !"".equals(redirect))
+        		if(redirect !=null && !"".equals(redirect) && !"login".equals(redirect))
         			return "redirect:"+redirect;
         		else if(!authors[0].equals(remoteHost)) {
         			return "redirect:http://"+authors[0]+"/site/editor.html?path=/content/"+authors[1];
