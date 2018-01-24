@@ -51,10 +51,10 @@
 		</div>
  		</main>
         <nav class="wb-sec col-md-3 col-md-pull-9" typeof="SiteNavigationElement" id="wb-sec" role="navigation">
-        <h3 class="wb-navcurr"><img alt=""  width="32" class="img-responsive pull-right" src="<c:url value="/resources/images/usericon.png"></c:url>"> 用户目录</h3>
+        <h3 class="wb-navcurr"><span class="glyphicon glyphicon-user"></span> 用户目录</h3>
         <ul class="list-group menu list-unstyled">
 	        <c:forEach items="${users.items}" var="item" varStatus="loop">
-	            <li id="${item.uid }" class="list-group-item"><a href='<c:url value="/admin/importuser.html?userName=${item.userName}"></c:url>'>${item.title}</a><img title="点击删除" onclick="javascript:removeTag('${item.uid}')" class="pull-right" src='<c:url value="/resources/images/cut.gif"></c:url>'></li>           
+	            <li id="${item.uid }" class="list-group-item"><a href='<c:url value="/admin/importuser.html?userName=${item.userName}"></c:url>'>${item.title}</a></li>           
 	        </c:forEach> 
         </ul>     
         </nav>

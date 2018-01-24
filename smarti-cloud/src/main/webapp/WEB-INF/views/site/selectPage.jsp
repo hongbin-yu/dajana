@@ -1,5 +1,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" session="false" %>
+<!DOCTYPE html><!--[if lt IE 9]><html class="no-js lt-ie9" lang="zh" dir="ltr"><![endif]--><!--[if gt IE 8]><!-->
+<html class="no-js" lang="zh" dir="ltr">
+<!--<![endif]-->
 <%@include file="../wet/header.jsp" %>
 <c:set var="contentPath"><c:url value="/"></c:url></c:set>
 <body class="secondary" vocab="http://schema.org/" typeof="WebPage">
@@ -7,29 +10,29 @@
   <nav class="wb-sec row" typeof="SiteNavigationElement" id="wb-sec" role="navigation">
     <h2 id="wb-sec-h" class="wb-inv">左菜单</h2>
     <section class="list-group menu list-unstyled">
-        <h3 class="wb-navcurr">
-        <c:if test="${page.parent=='/content' }">
-        <a href='<c:url value="/templates.html?path=${page.path }"></c:url>'><img src='<c:url value="/resources/images/arrowleft.png"/>'/>模板</a>
-        </c:if>
+<%--         <c:if test="${page.parent=='/content' }">
+        <a href='<c:url value="/templates.html?path=${page.path }"></c:url>'>模板</a>
+        </c:if> --%>
         <c:if test="${page.parent!='/content' }">
-        <a href="pages.html?path=${parent.path}"><img src='<c:url value="/resources/images/arrowleft.png"/>'/>${parent.title}</a>
+	        <h3 class="wb-navcurr">
+	        <a href="file.html?type=file&input=${input }&path=${parent.path}"><span class="glyphicon glyphicon-backward"></span>${parent.title}<button class="btn btn-default btn-xs pull-right" onclick="javascript:returnPage('${parent.path}','${parent.title}')"><span class="glyphicon glyphicon-ok pull-right"></span></button></a>
+	        </h3>
         </c:if>        
-        </h3>
         <ul class="list-group menu list-unstyled">
         <c:forEach items="${menu.items}" var="item" varStatus="loop">
             <c:if test="${item.childPages!=null}">
             <li>
-            <a class="list-group-item${item.cssClass }" href="pages.html?path=${item.path}">${item.title}</a>
+            <a class="list-group-item${item.cssClass }" href="file.html?type=file&input=${input }&path=${item.path}">${item.title} <button class="btn btn-default btn-xs pull-right" onclick="javascript:returnPage('${item.path}','${item.title}')"><span class="glyphicon glyphicon-ok pull-right"></span></button></a>
                 <ul class="list-group menu list-unstyled">
                     <c:forEach items="${item.childPages}" var="child" varStatus="loop">
-                    	<li class="list-group-item"><a href="pages.html?path=${child.path}">${child.title}</a><img title="插入模板" alt="" class="pull-right" src="<c:url value="/resources/images/play.png"></c:url>" onclick="javascript:returnPage('${child.path}','${child.title}')"></li>
+                    	<li class="list-group-item"><a href="file.html?type=file&input=${input }&path=${child.path}">${child.title}</a><button class="btn btn-default btn-xs pull-right" onclick="javascript:returnPage('${child.path}','${child.title}')"><span class="glyphicon glyphicon-ok pull-right"></span></button></li>
                     </c:forEach>
                 </ul>
             </li>           
             </c:if>
             <c:if test="${item.childPages==null}">
             <li class="list-group-item${item.cssClass }">
-	            <a href="pages.html?path=${item.path}">${item.title}</a><img title="插入模板" alt="" class="pull-right" src="<c:url value="/resources/images/play.png"></c:url>" onclick="javascript:returnPage('${item.path}','${item.title }')">
+	            <a href="file.html?type=file&input=${input }&path=${item.path}">${item.title}<button class="btn btn-default btn-xs pull-right" onclick="javascript:returnPage('${item.path}','${item.title}')"><span class="glyphicon glyphicon-ok pull-right"></span></button></a>
             </li>           
             </c:if>            
         </c:forEach>    
@@ -38,11 +41,11 @@
 </nav>    
 </main>
 <!--[if gte IE 9 | !IE ]><!-->
-<script src="<c:url value='/resources/dist/js/jquery/2.1.4/jquery.js'/>"></script>
-<script src="<c:url value='/resources/dist/js/wet-boew.min.js'/>"></script>
+<script src="<c:url value='/resources/wet-boew/js/jquery/2.1.4/jquery.js'/>"></script>
+<script src="<c:url value='/resources/wet-boew/js/wet-boew.min.js'/>"></script>
 <!--<![endif]-->
 <!--[if lt IE 9]>
-<script src="<c:url value='/resources/dist/js/ie8-wet-boew2.min.js'/>"></script>
+<script src="<c:url value='/resources/wet-boew/js/ie8-wet-boew2.min.js'/>"></script>
 <![endif]-->
 <script src="<c:url value='/resources/tinymce/tinymce.min.js'/>"></script>
 <script src="<c:url value='/resources/js/pageEditor.js'/>"></script>
@@ -112,3 +115,5 @@ function close() {
 
   }
 </script>
+</body>
+</html>

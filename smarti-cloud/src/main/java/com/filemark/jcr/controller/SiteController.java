@@ -718,7 +718,7 @@ public class SiteController extends BaseController {
 		model.addAttribute("page", currentpage);
 		return "site/templates";
 	}
-	@RequestMapping(value = {"/pages.html","file.html"}, method = RequestMethod.GET)
+	@RequestMapping(value = {"/site/pages.html","/site/file.html"}, method = RequestMethod.GET)
 	public String files(String path,String type, String input,String kw,Integer p,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
 		if(path==null) {
 			path="/content/"+getUsername();
