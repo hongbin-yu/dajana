@@ -126,7 +126,7 @@ public class ImageUtil
     	String s;
     	Process p;
     	int exit=0;
-    	String shellCommand = "convert "+infile+" -resize "+maxWidth+"X"+maxHeight+"\\> "+outfile;
+    	String shellCommand = "sudo convert "+infile+" -resize "+maxWidth+"X"+maxHeight+"\\> "+outfile;
 
         p = Runtime.getRuntime().exec(shellCommand);
         BufferedReader br = new BufferedReader(
@@ -145,7 +145,7 @@ public class ImageUtil
     	String s;
     	Process p;
     	int exit=0;
-    	String shellCommand = "convert "+infile+" -rotate "+angle+" "+outfile;
+    	String shellCommand = "sudo convert "+infile+" -rotate "+angle+" "+outfile;
 
         p = Runtime.getRuntime().exec(shellCommand);
         BufferedReader br = new BufferedReader(
