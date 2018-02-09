@@ -161,7 +161,7 @@ public class ImageUtil
     	pb.redirectErrorStream(true);
         p = pb.start();//Runtime.getRuntime().exec(shellCommand);
 
-        p = Runtime.getRuntime().exec(shellCommand);
+        //p = Runtime.getRuntime().exec(shellCommand);
         BufferedReader br = new BufferedReader(
             new InputStreamReader(p.getInputStream()));
         while ((s = br.readLine()) != null)
@@ -181,5 +181,34 @@ public class ImageUtil
         p.destroy();
         return exit;
     	
-    }    
+    } 
+    
+    public int limit(String folder,String ext, int maxWidth) throws IOException, InterruptedException {
+    	String s;
+    	Process p;
+    	int exit=0;
+    	ProcessBuilder pb = new ProcessBuilder("convert",folder+"/*."+ext+"["+maxWidth+"x>]","-resize",""+maxWidth+"x"+maxWidth,"-set","filename:base","%[base]","%[filename:base]."+ext);
+    	pb.redirectErrorStream(true);
+        p = pb.start();//Runtime.getRuntime().exec(shellCommand);
+
+
+        BufferedReader br = new BufferedReader(
+            new InputStreamReader(p.getInputStream()));
+        while ((s = br.readLine()) != null)
+            log.debug("line: " + s);
+        p.waitFor();
+        exit = p.exitValue();
+        if(exit !=0) {
+        	br = new BufferedReader(
+                    new InputStreamReader(p.getErrorStream()));
+                while ((s = br.readLine()) != null) {
+                    log.debug("line: " + s);
+                }
+        	log.error("convert exit: " + exit);
+        	
+        }
+        p.destroy();
+        return exit;
+    	
+    }       
 }

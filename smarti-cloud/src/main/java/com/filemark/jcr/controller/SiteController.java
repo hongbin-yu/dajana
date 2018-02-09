@@ -1431,7 +1431,7 @@ public class SiteController extends BaseController {
 			asset = jcrService.getAssetById(uid);
 			ImageUtil imageUtil = new ImageUtil();
 			Device device = (Device)jcrService.getObject(asset.getDevice());
-			String infile = device+asset.getPath();
+			String infile = device.getLocation()+asset.getPath();
 			if(imageUtil.rotate(infile, infile, angle)!=0) {
 				jcrService.roateImage(asset.getPath(), angle);
 				jcrService.createFile(asset.getPath(), 400);				
@@ -1984,7 +1984,15 @@ public class SiteController extends BaseController {
 				logger.debug("description is not found by class 'pagetag'");
 			}
 		}
-		
+		//limit size max 1200
+		ImageUtil imageUtil = new ImageUtil();
+		try {
+			imageUtil.limit(location, "jpg", 1200);
+		} catch (IOException e1) {
+			logger.error(e1.getMessage());
+		} catch (InterruptedException e1) {
+			logger.error(e1.getMessage());
+		}
 		
 		return doc.body().html();
 	}
