@@ -126,7 +126,7 @@ public class ImageUtil
     	String s;
     	Process p;
     	int exit=0;
-    	String shellCommand = "sudo convert "+infile+" -resize "+maxWidth+"X"+maxHeight+"\\> "+outfile;
+    	String shellCommand = "sudo convert "+infile+" -resize "+maxWidth+"x"+maxHeight+"\\> "+outfile;
 
         p = Runtime.getRuntime().exec(shellCommand);
         BufferedReader br = new BufferedReader(
@@ -135,7 +135,8 @@ public class ImageUtil
             log.debug("line: " + s);
         p.waitFor();
         exit = p.exitValue();
-        log.debug("convert exit: " + exit);
+        if(exit !=0)
+        	log.error(shellCommand+"; exit: " + exit);
         p.destroy();
         return exit;
     	

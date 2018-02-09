@@ -1607,6 +1607,7 @@ public class JcrServicesImpl implements JcrServices {
         			String outfile =file.getParentFile().getAbsolutePath()+ "/icon"+w+"-"+file.getName();
         			try {
 						if(imageUtil.convert(infile, outfile, w, h)!=0) {
+							
 							createFile(path,w);							
 						}
 					} catch (InterruptedException e) {
