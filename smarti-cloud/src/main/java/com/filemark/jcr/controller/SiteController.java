@@ -1436,7 +1436,7 @@ public class SiteController extends BaseController {
 				jcrService.roateImage(asset.getPath(), angle);
 				jcrService.createFile(asset.getPath(), 400);				
 			}else {
-				infile = jcrService.getHome()+"/icon/"+asset.getPath();
+				infile = jcrService.getHome()+"/icon400/"+asset.getPath();
 				if(imageUtil.rotate(infile, infile, angle)!=0)
 					jcrService.createIcon(asset.getPath(), 400, 300);				
 			}
