@@ -1604,7 +1604,11 @@ public class JcrServicesImpl implements JcrServices {
         		if(file !=null && file.exists()) {
         			ImageUtil imageUtil = new ImageUtil();
         			String infile = file.getAbsolutePath();
-        			String outfile =file.getParentFile().getAbsolutePath()+ "/icon"+w+"-"+file.getName();
+        			String outfile =home+ "/icon"+w+"/"+path;
+        			File out = new File(outfile);
+        			if(!out.getParentFile().exists()) {
+        				out.getParentFile().mkdirs();
+        			}
         			try {
 						if(imageUtil.convert(infile, outfile, w, h)!=0) {
 							

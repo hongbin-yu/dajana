@@ -1436,7 +1436,9 @@ public class SiteController extends BaseController {
 				jcrService.roateImage(asset.getPath(), angle);
 				jcrService.createFile(asset.getPath(), 400);				
 			}else {
-				jcrService.createIcon(asset.getPath(), 400, 300);				
+				infile = jcrService.getHome()+"/icon/"+asset.getPath();
+				if(imageUtil.rotate(infile, infile, angle)!=0)
+					jcrService.createIcon(asset.getPath(), 400, 300);				
 			}
 
 		}catch (Exception e){
@@ -1605,7 +1607,7 @@ public class SiteController extends BaseController {
 					Device device = (Device)jcrService.getObject(asset.getDevice());
 					file = new File(device.getLocation()+asset.getPath());
 					if(width!=null && file.exists()) {
-						File icon = new File(file.getParentFile().getAbsoluteFile()+"/icon"+width+"-"+file.getName());
+						File icon = new File(jcrService.getHome()+"/icon"+width+"/"+asset.getPath());
 						if(icon.exists()) {
 							file = icon;
 						}
