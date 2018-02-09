@@ -7,12 +7,22 @@ import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.filemark.jcr.serviceImpl.JcrServicesImpl;
+
 public class ImageUtil
 {
+	private final Logger log = LoggerFactory.getLogger(ImageUtil.class);
 
     /**
      * Takes a file, and resizes it to the given width and height, while keeping
@@ -111,4 +121,42 @@ public class ImageUtil
             throw new RuntimeException(ex);
         }
     }
+    
+    public int convert(String infile, String outfile,  int maxWidth,int maxHeight) throws IOException, InterruptedException {
+    	String s;
+    	Process p;
+    	int exit=0;
+    	String shellCommand = "convert "+infile+" -resize "+maxWidth+"X"+maxHeight+"\\> "+outfile;
+
+        p = Runtime.getRuntime().exec(shellCommand);
+        BufferedReader br = new BufferedReader(
+            new InputStreamReader(p.getInputStream()));
+        while ((s = br.readLine()) != null)
+            log.debug("line: " + s);
+        p.waitFor();
+        exit = p.exitValue();
+        log.debug("convert exit: " + exit);
+        p.destroy();
+        return exit;
+    	
+    }
+    
+    public int rotate(String infile, String outfile,  int angle) throws IOException, InterruptedException {
+    	String s;
+    	Process p;
+    	int exit=0;
+    	String shellCommand = "convert "+infile+" -rotate "+angle+" "+outfile;
+
+        p = Runtime.getRuntime().exec(shellCommand);
+        BufferedReader br = new BufferedReader(
+            new InputStreamReader(p.getInputStream()));
+        while ((s = br.readLine()) != null)
+            log.debug("line: " + s);
+        p.waitFor();
+        exit = p.exitValue();
+        log.debug("rotate exit: " + exit);
+        p.destroy();
+        return exit;
+    	
+    }    
 }

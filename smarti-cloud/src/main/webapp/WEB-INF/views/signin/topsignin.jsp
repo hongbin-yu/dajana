@@ -26,7 +26,7 @@
 <%-- <li><a href="/mycart.html" title="<authz:authentication property="name" />"><authz:authentication property="name" /><img title="<spring:message code="djn.shopping_cart"/>" alt="" src='<c:url value="/resources/images/mycart.png"></c:url>'><span class="badge"></span></a></li>
  --%></authz:authorize>
 <authz:authorize ifNotGranted="ROLE_USER">
-<li><a href="<c:url value="/signin"/>"><span class="glyphicon glyphicon-log-in"></span><spring:message code="djn.logincloud"/></a></li>
+<li><a href="<c:url value="/login"/>"><span class="glyphicon glyphicon-log-in"></span><spring:message code="djn.login"/></a></li>
 <li><a href="<c:url value="/signup"/>"><span class="glyphicon glyphicon-flag"></span><spring:message code="djn.register"/></a></li>
 </authz:authorize>
 </ul>

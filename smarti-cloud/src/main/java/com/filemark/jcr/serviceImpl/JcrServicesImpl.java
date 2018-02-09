@@ -73,6 +73,7 @@ import com.filemark.jcr.model.Log;
 import com.filemark.jcr.model.Page;
 import com.filemark.jcr.model.SmartiNode;
 import com.filemark.jcr.service.JcrServices;
+import com.filemark.utils.ImageUtil;
 import com.filemark.utils.ScanUploadForm;
 import com.filemark.utils.WebPage;
 import com.itextpdf.text.Element;
@@ -1595,6 +1596,30 @@ public class JcrServicesImpl implements JcrServices {
 		
 	}
 
+
+	public void createIcon(final String path, final Integer w,final Integer h) {
+		jcrTemplate.execute(new JcrCallback() { 
+        	public Object doInJcr(Session session) throws RepositoryException, IOException {
+        		File file = getFile(path);
+        		if(file !=null && file.exists()) {
+        			ImageUtil imageUtil = new ImageUtil();
+        			String infile = file.getAbsolutePath();
+        			String outfile =file.getParentFile().getAbsolutePath()+ "/icon"+w+"-"+file.getName();
+        			try {
+						if(imageUtil.convert(infile, outfile, w, h)!=0) {
+							createFile(path,w);							
+						}
+					} catch (InterruptedException e) {
+						log.error(e.getMessage());
+					}
+        		}
+        		return null;
+        	}
+		});
+
+		
+	}
+	
 	public void updateFolderIcon(final String path) {
 		jcrTemplate.execute(new JcrCallback() { 
         	public Object doInJcr(Session session) throws RepositoryException, IOException {
@@ -1744,8 +1769,12 @@ public class JcrServicesImpl implements JcrServices {
                 int width = image.getWidth();
                 //int width = jpegDirectory.getImageWidth();
                 int height = image.getHeight();
+                Node node = getNode(path);
+                node.setProperty("width", width);
+                node.setProperty("height", height);   
+                session.save();
                 //int height = jpegDirectory.getImageHeight();
-                log.info("Orientation="+orientation);
+                log.debug("Orientation="+orientation);
                 if(orientation == 1 || orientation >7) return null;
                 switch (orientation) {
                 case 1:

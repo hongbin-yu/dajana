@@ -57,6 +57,7 @@ import com.filemark.jcr.model.Folder;
 import com.filemark.jcr.model.Page;
 import com.filemark.jcr.service.AssetManager;
 import com.filemark.sso.JwtUtil;
+import com.filemark.utils.ImageUtil;
 import com.filemark.utils.ScanUploadForm;
 import com.filemark.utils.WebPage;
 import com.google.gson.Gson;
@@ -944,25 +945,18 @@ public class SiteController extends BaseController {
         				if(!file.getParentFile().exists()) {
         					file.getParentFile().mkdirs();
         				}
-        				//OutputStream output = new FileOutputStream(file,true);
         				InputStream in = multipartFile.getInputStream();
         				FileUtils.copyInputStreamToFile(in, file);
-/*        				byte[] buffer = new byte[8 * 1024];
-        				int byteToRead = 0;
-        				while((byteToRead = in.read(buffer)) != -1) {
-        					output.write(buffer,0,byteToRead);
-        				}*/
         				in.close();
-        				//output.close();
         			}else {
         				logger.debug("Writing jcr");
             			jcrService.addFile(assetPath,"original",multipartFile.getInputStream(),contentType);
         			}
         			logger.debug("Done");
-        			//logger.info("total="+total);
         			if(total == 1 && contentType != null && contentType.startsWith("image/") && proccess==null) {
         				jcrService.autoRoateImage(assetPath);
-        				jcrService.createFile(assetPath, 400);
+        				jcrService.createIcon(assetPath,400,300); 
+        				//jcrService.createFile(assetPath, 400);
         			}
         		}catch(Exception ej) {
         			logger.error(ej.getMessage());
@@ -1432,10 +1426,18 @@ public class SiteController extends BaseController {
 	@RequestMapping(value = {"/site/rotateImage.html","/protected/rotateImage.html"}, method = {RequestMethod.GET,RequestMethod.POST})
 	public @ResponseBody String  rotateImage(String uid,Integer angle, Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String result="";
+		Asset asset = null;
 		try {
-			Asset asset = jcrService.getAssetById(uid);
-			jcrService.roateImage(asset.getPath(), angle);
-			jcrService.createFile(asset.getPath(), 400);
+			asset = jcrService.getAssetById(uid);
+			ImageUtil imageUtil = new ImageUtil();
+			String infile = asset.getDevice()+asset.getPath();
+			if(imageUtil.rotate(infile, infile, angle)!=0) {
+				jcrService.roateImage(asset.getPath(), angle);
+				jcrService.createFile(asset.getPath(), 400);				
+			}else {
+				jcrService.createIcon(asset.getPath(), 400, 300);				
+			}
+
 		}catch (Exception e){
 			logger.error(e.getLocalizedMessage());
 			result = "error:"+e.getMessage();
@@ -1601,6 +1603,12 @@ public class SiteController extends BaseController {
 					File file = null;
 					Device device = (Device)jcrService.getObject(asset.getDevice());
 					file = new File(device.getLocation()+asset.getPath());
+					if(width!=null && file.exists()) {
+						File icon = new File(file.getParentFile().getAbsoluteFile()+"/icon"+width+"="+file.getName());
+						if(icon.exists()) {
+							file = icon;
+						}
+					}
 
 					FileInputStream in = new FileInputStream(file);
 					response.setContentType(asset.getContentType());

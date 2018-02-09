@@ -47,6 +47,11 @@ public class Asset implements SmartiNode, Serializable {
 	private Long size;
 	@Field
 	private String ext;	
+	@Field
+	private Long width;	
+	@Field
+	private Long height;
+	
 	private String ocm_classname;
 	private String nodeName;
 	private String parent;
@@ -256,6 +261,22 @@ public class Asset implements SmartiNode, Serializable {
 
 	public void setExt(String ext) {
 		this.ext = ext;
+	}
+
+	public Long getWidth() {
+		return width;
+	}
+
+	public void setWidth(Long width) {
+		this.width = width;
+	}
+
+	public Long getHeight() {
+		return height;
+	}
+
+	public void setHeight(Long height) {
+		this.height = height;
 	}
 
 

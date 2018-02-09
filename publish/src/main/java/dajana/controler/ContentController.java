@@ -30,19 +30,20 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import dajana.utils.JwtUtil;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
@@ -51,6 +52,7 @@ import com.itextpdf.text.pdf.BarcodeQRCode;
 
 import dajana.model.Page;
 import dajana.model.User;
+import dajana.utils.JwtUtil;
 
 @Controller
 public class ContentController {
@@ -70,12 +72,14 @@ public class ContentController {
 	private String logBase = "/var";	
 	@Value("${passcode.fail}")
 	private String passcode_fial ="The passcode is incorrect";
+
+	private static final Logger logger = LogManager.getLogger(ContentController.class);
+
 	
-	private Logger logger = Logger.getLogger(this.getClass());
-	
+
 	@RequestMapping(value = {"/","/content"})
 	public String welcome(HttpServletRequest request, HttpServletResponse response,Map<String, Object> model) {
-		model.put("message", this.message);
+		//model.put("message", this.message);
 
         String site = request.getServerName();
         String [] domains = site.split(".");
@@ -86,12 +90,12 @@ public class ContentController {
 
 		logger.info(site+"/content/"+subdomain);
 		
-		try {
+/*		try {
 			response.sendRedirect("/content/"+subdomain+".html");
 		} catch (IOException e) {
 			logger.error(e);
 			return "error";
-		}
+		}*/
 		return "welcome";
 	}
 
@@ -191,15 +195,19 @@ public class ContentController {
 				if(leftmenu.exists()) {
 					model.put("leftmenu", FileUtils.readFileToString(leftmenu,"UTF-8"));
 				}else {
-					Document doc = Jsoup.parse(new URL(baseUrl+"/content/leftmenu.html?path="+path), 5000);
-					model.put("leftmenu",doc.body().html());					
+					try {
+						Document doc = Jsoup.parse(new URL(baseUrl+"/content/leftmenu.html?path="+path), 5000);
+						model.put("leftmenu",doc.body().html());					
+					}catch(Exception io) {
+						model.put("leftmenu",io.getMessage());
+					}
 				}
 			}
 			currentpage.setNavigation(navigation);
 		} catch (UnsupportedEncodingException e) {
 			return "error500";
 		} catch (FileNotFoundException e) {
-			return "error404";
+			return "error/404";
 		} catch (IOException e) {
 			return "error500";
 		}finally {
@@ -211,7 +219,7 @@ public class ContentController {
 				}
 			}
 		}
-	
+
 		return "content";
 	}
 	
@@ -408,6 +416,7 @@ public class ContentController {
 		Gson gson = new Gson();
 		File juser = new File(publish_home+"/content/"+paths[2]+"/user.json");
 		try {
+			logger.info(this.sso_ur+"/uinfo/"+paths[2]);
 			String userinfo = org.apache.commons.io.IOUtils.toString(new URL(this.sso_ur+"/uinfo/"+paths[2]), "UTF-8");
 			result = "uinfo="+userinfo;
 			String uinfos[] = userinfo.split("/");

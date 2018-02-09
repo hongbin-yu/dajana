@@ -38,6 +38,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.filemark.jcr.model.Role;
 import com.filemark.jcr.model.User;
+import com.filemark.sso.CookieUtil;
 import com.filemark.sso.JwtUtil;
 
 
@@ -48,56 +49,11 @@ public class SigninController extends BaseController{
 
 	@RequestMapping(value="/signin", method=RequestMethod.GET)
 	public String signin(String redirect, HttpServletRequest request, HttpServletResponse response) {
-/*		if(redirect!=null && "signin".equals(redirect)) return "signin";
-        String username = JwtUtil.getSubject(request, jwtTokenCookieName, signingKey);
-        if(username != null){
-        	String authors[] = username.split("/");
-			Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-			User user = new User();
-			user.setUserName(authors[1]);
-        	if(authors[0]==null || "null".equals(authors[0])) {
-        		authors[0] = "";
-        	}			
-			user.setHost(authors[0]);
-			user.setTitle(authors[2]);
-			user.setSigningKey(authors[3]);			
-        	try {
-        		if(jcrService.nodeExsits("/system/users/"+authors[1].toLowerCase())) {
-        			user = (User)jcrService.getObject("/system/users/"+authors[1].toLowerCase());
 
-        			for(Role role:user.getRoles()) {
-        				authorities.add(new SimpleGrantedAuthority(this.getRolePrefix()+role.getRoleName().toUpperCase()));
-        			}
-        			
-        			
-        		}
-    			for(int i=3; i<authors.length; i++) {
-    				authorities.add(new SimpleGrantedAuthority(this.getRolePrefix()+authors[i].toUpperCase()));
-    				
-    			}
-				authorities.add(new SimpleGrantedAuthority(this.getRolePrefix()+"USER"));//default role
-				org.springframework.security.core.userdetails.User userdetails = new org.springframework.security.core.userdetails.User(user.getUserName(),user.getPassword(),true,true,true,true,authorities);
-				    			
-    			Authentication auth = 
-    			new UsernamePasswordAuthenticationToken(userdetails, null, authorities);
-    			SecurityContext securityContext = SecurityContextHolder.getContext();
-    			securityContext.setAuthentication(auth);    			
-    			HttpSession session = request.getSession(true);
-    	        session.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);
-    			request.setAttribute("usersite", user.getHost());
-    			request.setAttribute("username", user.getName());
-    			request.setAttribute("usertitle", user.getTitle());
-    			request.setAttribute("signingKey", user.getSigningKey());    			
-        		if(redirect !=null)
-        			return "redirect:"+redirect;
-        		else
-        			return "redirect:"+authors[0]+"/editor.html?path=/content/"+authors[1];
-
-        	} catch (RepositoryException e) {
-				Log.error(e.getMessage());
-			}
-        }*/
-				
+        String domain = request.getServerName().replaceAll(".*\\.(?=.*\\.)", "");
+        CookieUtil.clear(response, jwtTokenCookieName,domain);
+        request.getSession().invalidate();
+		
     	return "signin";		
 	}
 

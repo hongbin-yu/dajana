@@ -40,8 +40,14 @@ public class LoginController extends BaseController {
 
 
     @RequestMapping(value="/login",method = RequestMethod.GET)
-    public String login(Model model,HttpServletRequest request, String redirect,String info, Integer loginCount) throws UnsupportedEncodingException{
-    	if(redirect!=null && redirect.equals("")) return "login";
+    public String login(Model model,HttpServletRequest request,HttpServletResponse httpServletResponse, String redirect,String info, Integer loginCount) throws UnsupportedEncodingException{
+    	if(redirect!=null && redirect.equals("")) {
+            String domain = request.getServerName().replaceAll(".*\\.(?=.*\\.)", "");
+            CookieUtil.clear(httpServletResponse, jwtTokenCookieName,domain);
+            
+            request.getSession().invalidate();
+    		return "login";
+    	}
     	if(redirect!=null && redirect.equals("signin")) return "redirect:signin";    	
     	String lastIp = request.getRemoteAddr();
     	String remoteHost = request.getRemoteHost();
@@ -87,9 +93,9 @@ public class LoginController extends BaseController {
         		if(redirect !=null && !"".equals(redirect) && !"login".equals(redirect))
         			return "redirect:"+redirect;
         		else if(!authors[0].equals(remoteHost)) {
-        			return "redirect:http://"+authors[0]+"/site/editor.html?path=/content/"+authors[1];
+        			return "redirect:http://"+authors[0]+"/site/editor.html?path=/content/"+authors[2];
         		}else {
-        			return "redirect:/site/editor.html?path=/content/"+authors[1];
+        			return "redirect:/site/editor.html?path=/content/"+authors[2];
         			
         		}
 

@@ -7,7 +7,7 @@
 
 <main role="main" property="mainContentOfPage" class="container">
 <div class="col-md-9 col-md-push-3">
-<h2>登入本地网</h2>
+<h2>登入微云</h2>
 <c:if test="${param.error eq 'bad_credentials'}">
 <div class="container">
 <div class="col-md-4">

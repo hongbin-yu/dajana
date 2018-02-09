@@ -67,6 +67,7 @@ public interface JcrServices {
 	public String move(final String frompath,final String topath,final String username) ;
 	public void addUsagelog(String username,String message,String type);
 	public void createFile(String path,Integer x);
+	public void createIcon(String path,Integer w, Integer h);
 	public String uploadAssets(String path, ScanUploadForm uploadForm, String username) throws RepositoryException;
 	public Asset importAsset(String path, String url, String username) throws RepositoryException;
 	public InputStream getInputStream(final String path);

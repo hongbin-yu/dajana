@@ -337,41 +337,7 @@ public class ContentController extends BaseController {
 				return "redirect:"+currentpage.getRedirectTo();
 			}
 			navigation = FileUtils.readFileToString(new File(jcrService.getHome()+menuPath+"/navimenu.html"),"UTF-8");
-/*			int level = 2;
-			if(currentpage.getShowThememenu()!=null && "true".equals(currentpage.getShowThememenu()))
-				level++;
 
-			if(level == 3) {
-				String menuPath=jcrService.getAncestorPath(currentpage.getPath(), level);
-				navigation = FileUtils.readFileToString(new File(jcrService.getHome()+menuPath+"/menu.html"),"UTF-8");
-			}else {
-				File menuFile = new File(jcrService.getHome()+"/content/"+site+"/menu.html");
-				if(menuFile.exists())	
-					navigation = FileUtils.readFileToString(menuFile,"UTF-8");
-				else
-					navigation = "";
-			}
-			File fileBreadcrumb = new File(jcrService.getHome()+currentpage.getParent()+"/breadcrumb.html");
-			if(fileBreadcrumb.exists())
-				breadcrumb = FileUtils.readFileToString(fileBreadcrumb,"UTF-8");
-			File fileContent = new File(jcrService.getHome()+currentpage.getPath()+".html");
-			if(!"true".equals(currentpage.getStatus())) {
-				content=messageSource.getMessage("page_offline", null, "\u6B64\u9875\u5DF2\u4E0B\u7EBF！", this.localeResolver.resolveLocale(request));
-			}else if(fileContent.exists())
-				content = FileUtils.readFileToString(fileContent,"UTF-8");
-			if(navigation==null) {
-				navigation = "";
-			}
-			if(breadcrumb==null) {
-				breadcrumb = "";
-			}*/
-
-/*			if("true".equals(currentpage.getShowComment())) {
-				if(p==null) p=0;
-				String chatQuery = "select * from [nt:base] AS s WHERE ISCHILDNODE(["+currentpage.getPath()+"/comments"+"]) and s.ocm_classname='com.filemark.jcr.model.Chat' order by s.[jcr:lastModified] DESC";
-				WebPage<Chat> chats = jcrService.queryChats(chatQuery, 20, p);
-				model.addAttribute("chats",chats);
-			}*/
 			model.addAttribute("breadcrumb",breadcrumb);
 			model.addAttribute("site", site);
 			model.addAttribute("username", getUsername());
@@ -579,36 +545,43 @@ public class ContentController extends BaseController {
 
 	
 	@RequestMapping(value = {"/content/leftmenu.html"}, method = RequestMethod.GET)
-	public String leftmenu(String uid,String path,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public String leftmenu(String uid,String path,Model model,HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-    		
-		Page currentpage = new Page();
-		if(uid==null && path!=null) {
-			currentpage = jcrService.getPage(path.split(".html")[0]);
-		}else if(uid!=null) {
-			currentpage = jcrService.getPageByUid(uid); 
-		}else {
-			throw new Exception("Path is missing");
-		}
-		String site = currentpage.getPath().split("/")[2];
-		String content = "/content/"+site;
-		String pagesQuery = "select * from [nt:base] AS s WHERE ISDESCENDANTNODE(["+content+"]) and ISCHILDNODE(["+currentpage.getParent()+"]) and s.status like 'true' and s.ocm_classname='com.filemark.jcr.model.Page' order by s.order";
-		if(currentpage.getPath().equals(content) || currentpage.getPath().equals("/content")) {
-			pagesQuery = "select * from [nt:base] AS s WHERE ISSAMENODE([/content/"+site+"]) and s.status like 'true' and  s.ocm_classname='com.filemark.jcr.model.Page' order by s.order";
-		}
-		WebPage<Page> pages = jcrService.queryPages(pagesQuery, 100, 0);
-		String childPagesQuery = "select * from [nt:base] AS s WHERE ISCHILDNODE(["+currentpage.getPath()+"]) and s.status like 'true' and s.ocm_classname='com.filemark.jcr.model.Page' order by s.order";
-		WebPage<Page> children = jcrService.queryPages(childPagesQuery, 100, 0);
-		for(Page sibling:pages.getItems()) {
-			if(sibling.getPath().equals(currentpage.getPath())) {
-				sibling.setChildPages(children.getItems());
-				sibling.setShowChildren(true);
-				sibling.setCssClass(" wb-navcurr");
+		try {
+			Page currentpage = new Page();
+			if(uid==null && path!=null) {
+				currentpage = jcrService.getPage(path.split(".html")[0]);
+			}else if(uid!=null) {
+				currentpage = jcrService.getPageByUid(uid); 
+			}else {
+				throw new Exception("Path is missing");
 			}
+			String site = currentpage.getPath().split("/")[2];
+			String content = "/content/"+site;
+			String pagesQuery = "select * from [nt:base] AS s WHERE ISDESCENDANTNODE(["+content+"]) and ISCHILDNODE(["+currentpage.getParent()+"]) and s.status like 'true' and s.ocm_classname='com.filemark.jcr.model.Page' order by s.order";
+			if(currentpage.getPath().equals(content) || currentpage.getPath().equals("/content")) {
+				pagesQuery = "select * from [nt:base] AS s WHERE ISSAMENODE([/content/"+site+"]) and s.status like 'true' and  s.ocm_classname='com.filemark.jcr.model.Page' order by s.order";
+			}
+			WebPage<Page> pages = jcrService.queryPages(pagesQuery, 100, 0);
+			String childPagesQuery = "select * from [nt:base] AS s WHERE ISCHILDNODE(["+currentpage.getPath()+"]) and s.status like 'true' and s.ocm_classname='com.filemark.jcr.model.Page' order by s.order";
+			WebPage<Page> children = jcrService.queryPages(childPagesQuery, 100, 0);
+			for(Page sibling:pages.getItems()) {
+				if(sibling.getPath().equals(currentpage.getPath())) {
+					sibling.setChildPages(children.getItems());
+					sibling.setShowChildren(true);
+					sibling.setCssClass(" wb-navcurr");
+				}
+			}
+			model.addAttribute("parent",jcrService.getPage(currentpage.getParent()));
+			model.addAttribute("menu", pages); 
+			model.addAttribute("page", currentpage);			
+		}catch (Exception e) {
+			logger.error("Error:"+HttpServletResponse.SC_NOT_FOUND);
+			
+			response.sendError(HttpServletResponse.SC_NOT_FOUND);
+			return null;			
 		}
-		model.addAttribute("parent",jcrService.getPage(currentpage.getParent()));
-		model.addAttribute("menu", pages); 
-		model.addAttribute("page", currentpage);
+
 		return "content/leftmenu";
 	}	
 	@RequestMapping(value = {"/content/*.json"}, method = RequestMethod.GET)

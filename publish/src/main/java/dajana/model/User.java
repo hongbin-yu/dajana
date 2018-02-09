@@ -1,16 +1,21 @@
 package dajana.model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 
 
+@Entity
 public class User{
 	/**
 	 * 
 	 */
 	//private static final long serialVersionUID = 1L;
-
+    @GeneratedValue(strategy=GenerationType.AUTO)
 	protected String uid;
-
+    @Id
 	private String userName;
 
 	private String title;	
@@ -33,7 +38,7 @@ public class User{
 
 	private String signingKey = "SigningKey";
 	
-
+	private String enabled;
 
 	
 	public User() {
@@ -181,6 +186,14 @@ public class User{
 
 	public void setSigningKey(String signingKey) {
 		this.signingKey = signingKey;
+	}
+
+	public String getEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(String enabled) {
+		this.enabled = enabled;
 	}
 	
 }
