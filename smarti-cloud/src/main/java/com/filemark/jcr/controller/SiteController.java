@@ -1430,7 +1430,8 @@ public class SiteController extends BaseController {
 		try {
 			asset = jcrService.getAssetById(uid);
 			ImageUtil imageUtil = new ImageUtil();
-			String infile = asset.getDevice()+asset.getPath();
+			Device device = (Device)jcrService.getObject(asset.getDevice());
+			String infile = device+asset.getPath();
 			if(imageUtil.rotate(infile, infile, angle)!=0) {
 				jcrService.roateImage(asset.getPath(), angle);
 				jcrService.createFile(asset.getPath(), 400);				
