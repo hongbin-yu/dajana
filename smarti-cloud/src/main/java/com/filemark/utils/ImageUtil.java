@@ -138,8 +138,16 @@ public class ImageUtil
         }
         p.waitFor();
         exit = p.exitValue();
-        if(exit !=0)
+        if(exit !=0) {
+        	br = new BufferedReader(
+                    new InputStreamReader(p.getErrorStream()));
+                while ((s = br.readLine()) != null) {
+                    log.debug("line: " + s);
+                    result +=s;
+                }
         	log.error(shellCommand+"; exit: " + exit +","+result);
+        	
+        }
         p.destroy();
         return exit;
     	
