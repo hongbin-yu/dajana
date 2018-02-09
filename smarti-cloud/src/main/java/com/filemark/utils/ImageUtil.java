@@ -126,15 +126,14 @@ public class ImageUtil
     	String s;
     	Process p;
     	int exit=0;
-    	String result="";
-    	String shellCommand = "sudo convert "+infile+" -resize "+maxWidth+"x"+maxHeight+"\\> "+outfile;
-
-        p = Runtime.getRuntime().exec(shellCommand);
+    	String shellCommand = "convert "+infile+" -resize "+maxWidth+"x"+maxHeight+"\\> "+outfile;
+    	ProcessBuilder pb = new ProcessBuilder("convert",infile,"-resize",""+maxWidth+"x"+maxHeight+"\\>",outfile);
+    	pb.redirectErrorStream(true);
+        p = pb.start();//Runtime.getRuntime().exec(shellCommand);
         BufferedReader br = new BufferedReader(
             new InputStreamReader(p.getInputStream()));
         while ((s = br.readLine()) != null) {
             log.debug("line: " + s);
-            result +=s;
         }
         p.waitFor();
         exit = p.exitValue();
@@ -143,9 +142,9 @@ public class ImageUtil
                     new InputStreamReader(p.getErrorStream()));
                 while ((s = br.readLine()) != null) {
                     log.debug("line: " + s);
-                    result +=s;
                 }
-        	log.error(shellCommand+"; exit: " + exit +","+result);
+        	log.error(shellCommand);
+        	log.error("convert exit: " + exit);
         	
         }
         p.destroy();
@@ -157,7 +156,7 @@ public class ImageUtil
     	String s;
     	Process p;
     	int exit=0;
-    	String shellCommand = "sudo convert "+infile+" -rotate "+angle+" "+outfile;
+    	String shellCommand = "convert "+infile+" -rotate "+angle+" "+outfile;
 
         p = Runtime.getRuntime().exec(shellCommand);
         BufferedReader br = new BufferedReader(
