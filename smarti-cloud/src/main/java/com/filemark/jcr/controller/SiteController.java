@@ -1604,7 +1604,7 @@ public class SiteController extends BaseController {
 					Device device = (Device)jcrService.getObject(asset.getDevice());
 					file = new File(device.getLocation()+asset.getPath());
 					if(width!=null && file.exists()) {
-						File icon = new File(file.getParentFile().getAbsoluteFile()+"/icon"+width+"="+file.getName());
+						File icon = new File(file.getParentFile().getAbsoluteFile()+"/icon"+width+"-"+file.getName());
 						if(icon.exists()) {
 							file = icon;
 						}

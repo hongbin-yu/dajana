@@ -157,6 +157,9 @@ public class ImageUtil
     	Process p;
     	int exit=0;
     	String shellCommand = "convert "+infile+" -rotate "+angle+" "+outfile;
+    	ProcessBuilder pb = new ProcessBuilder("convert",infile,"-rotate",""+angle,outfile);
+    	pb.redirectErrorStream(true);
+        p = pb.start();//Runtime.getRuntime().exec(shellCommand);
 
         p = Runtime.getRuntime().exec(shellCommand);
         BufferedReader br = new BufferedReader(
@@ -165,7 +168,16 @@ public class ImageUtil
             log.debug("line: " + s);
         p.waitFor();
         exit = p.exitValue();
-        log.debug("rotate exit: " + exit);
+        if(exit !=0) {
+        	br = new BufferedReader(
+                    new InputStreamReader(p.getErrorStream()));
+                while ((s = br.readLine()) != null) {
+                    log.debug("line: " + s);
+                }
+        	log.error(shellCommand);
+        	log.error("convert exit: " + exit);
+        	
+        }
         p.destroy();
         return exit;
     	

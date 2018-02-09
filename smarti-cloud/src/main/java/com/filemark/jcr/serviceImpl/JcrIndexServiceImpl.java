@@ -35,7 +35,8 @@ public class JcrIndexServiceImpl implements JcrIndexService {
 			if(!jcrService.nodeExsits(asset.getPath()+"/file-400")) {
 				try {
 					jcrService.autoRoateImage(asset.getPath());
-					jcrService.createFile(asset.getPath(),400);
+					jcrService.createIcon(asset.getPath(), 400, 300);
+					//jcrService.createFile(asset.getPath(),400);
 				}catch(Exception r) {
 /*					try {
 						jcrService.deleteNode(asset.getPath());
