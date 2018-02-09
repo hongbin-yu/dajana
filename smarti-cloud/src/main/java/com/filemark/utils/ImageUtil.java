@@ -126,17 +126,20 @@ public class ImageUtil
     	String s;
     	Process p;
     	int exit=0;
+    	String result="";
     	String shellCommand = "sudo convert "+infile+" -resize "+maxWidth+"x"+maxHeight+"\\> "+outfile;
 
         p = Runtime.getRuntime().exec(shellCommand);
         BufferedReader br = new BufferedReader(
             new InputStreamReader(p.getInputStream()));
-        while ((s = br.readLine()) != null)
+        while ((s = br.readLine()) != null) {
             log.debug("line: " + s);
+            result +=s;
+        }
         p.waitFor();
         exit = p.exitValue();
         if(exit !=0)
-        	log.error(shellCommand+"; exit: " + exit);
+        	log.error(shellCommand+"; exit: " + exit +","+result);
         p.destroy();
         return exit;
     	
