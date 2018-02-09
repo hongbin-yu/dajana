@@ -1545,6 +1545,15 @@ public class SiteController extends BaseController {
 				parent.delete();
 			}
 		}
+		
+		File iconfile = new File(jcrService.getHome()+"/icon400/"+path);
+		if(iconfile!=null && iconfile.exists()) {
+			iconfile.delete();
+			File parent = iconfile.getParentFile();
+			if(parent.list().length == 0) {
+				parent.delete();
+			}
+		}		
 		return jcrService.deleteNode(path);
 	}
 
