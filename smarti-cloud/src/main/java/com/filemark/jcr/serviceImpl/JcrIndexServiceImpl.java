@@ -54,7 +54,8 @@ public class JcrIndexServiceImpl implements JcrIndexService {
 			}
 		}
 		Date end = new Date();
-		log.debug("Jcr Asset "+assets.getItems().size()+" updated at "+(end.getTime() - start.getTime())/100000);
+		if(assets.getItems().size()>0)
+			log.debug("Jcr Asset "+assets.getItems().size()+" updated at "+(end.getTime() - start.getTime())/100000);
 
 		String foldersQuery = "select * from [nt:base] AS s WHERE ISDESCENDANTNODE([/]) and s.delete not like 'true' and s.ocm_classname='com.filemark.jcr.model.Folder' and s.[changed] like 'true' order by s.path";
 		WebPage<Folder> folders = jcrService.queryFolders(foldersQuery, 100, 0);
@@ -66,24 +67,11 @@ public class JcrIndexServiceImpl implements JcrIndexService {
 				log.error(e.getMessage());
 			}
 		}
-		log.debug("Jcr Folder "+folders.getItems().size()+" updated at "+new Date());
+		if(folders.getItems().size()>0)
+			log.debug("Jcr Folder "+folders.getItems().size()+" updated at "+new Date());
 		
 
-		/*		@SuppressWarnings("unchecked")
-		List<Object> objects = (List<Object>)jcrService.getObjects(Folder.root+"/eventgroup//", Eventgroupnames.class);
-		for(Object object:objects) {
-			Eventgroupnames group = (Eventgroupnames)object;
-			String clusterId = group.getClusterId();
-			if(this.clusterId!=null &&  this.clusterId.equals(clusterId)) {
-				jcrService.addUsagelog(clusterId, group.getName() +" Jcr runScheduledQueue at "+new Date(), "Scheduled jobs");
-				try {
-					runSchedQueue(group);
-				} catch (RepositoryException e) {
-					log.error(e.getMessage());
-					jcrService.addUsagelog("FMDBA", e.getMessage(), "error");
-				}				
-			}
-		}*/
+
 	}
 	
 	

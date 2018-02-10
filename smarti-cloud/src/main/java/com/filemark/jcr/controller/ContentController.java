@@ -20,7 +20,9 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import com.filemark.sso.JwtUtil;
+
 import javax.imageio.ImageIO;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
@@ -48,6 +50,7 @@ import com.filemark.jcr.model.Chat;
 import com.filemark.jcr.model.News;
 import com.filemark.jcr.model.Page;
 import com.filemark.jcr.model.User;
+import com.filemark.utils.ImageUtil;
 import com.filemark.utils.WebPage;
 import com.google.gson.Gson;
 import com.itextpdf.text.Document;
@@ -276,11 +279,13 @@ public class ContentController extends BaseController {
 			logger.error(e.getMessage());
 			throw new Exception("\u8DEF\u5F84\u51FA\u9519!");
 		} 
+
 	}
    	
 	@RequestMapping(value = {"/content/{site}","/content/{site}.html","/content/{site}/**/*","/content/{site}/**/*.html","/content/{site}/*.html"}, method = RequestMethod.GET)
 	public String page(@PathVariable String site, String uid,Integer p, Model model,HttpServletRequest request, HttpServletResponse response) throws Exception  {
 		try {
+			ImageUtil.gpio("write","18","1");
 			String paths = URLDecoder.decode(request.getRequestURI(),"UTF-8");
 			if(!request.getContextPath().equals("/"))
 				paths = paths.replaceFirst(request.getContextPath(), "");
@@ -329,11 +334,13 @@ public class ContentController extends BaseController {
 					model.addAttribute("path", path);
 					model.addAttribute("title", currentpage.getTitle());
 					model.addAttribute("passcode", currentpage.getPasscode());
+					ImageUtil.gpio("write","18","0");
 					return "content/passcode";
 				}
 			}
 
 			if(currentpage.getRedirectTo() != null && !"".equals(currentpage.getRedirectTo())) {
+				ImageUtil.gpio("write","18","0");
 				return "redirect:"+currentpage.getRedirectTo();
 			}
 			navigation = FileUtils.readFileToString(new File(jcrService.getHome()+menuPath+"/navimenu.html"),"UTF-8");
@@ -348,15 +355,18 @@ public class ContentController extends BaseController {
 			model.addAttribute("origin", request.getRequestURL()+"?"+request.getQueryString());	
 		} catch (UnsupportedEncodingException e) {
 			logger.error(e.getMessage());
+			ImageUtil.gpio("write","18","0");
 			throw new Exception("\u8DEF\u5F84\u51FA\u9519!");
 		} catch (RepositoryException e) {
 			logger.error(e.getMessage());
+			ImageUtil.gpio("write","18","0");
 			throw new Exception("\u9875\u9762\u6CA1\u627E\u5230!");
 		} catch (IOException e) {
 			logger.error(e.getMessage());
+			ImageUtil.gpio("write","18","0");
 			throw new Exception(e.getMessage());			
 		}
-
+		ImageUtil.gpio("write","18","0");
 		return "content/page";
 	}
 	@RequestMapping(value = {"/content/{site}.menu","/content/{site}/**/*.menu","/content/{site}/*.menu"}, method = RequestMethod.GET)

@@ -1652,9 +1652,12 @@ public class JcrServicesImpl implements JcrServices {
         	    for(Asset asset : assets.getItems()) {
         	    	BufferedImage image = null;;
         	    	File file = getFile(asset.getPath());
-        	    	if(file !=null) {
+        	    	File icon = new File(home+"/icon400/"+asset.getPath());
+        	    	if(icon.exists()) {
+        	    		image = ImageIO.read(icon);
+        	    	}else if(file !=null) {
         	    		image = ImageIO.read(file);
-        	    	}else {
+        	    	}else if(session.nodeExists(asset.getPath()+"/original")){
             	    	Node node = getNode(asset.getPath()+"/original");
             	    	image = ImageIO.read(JcrUtils.readFile(node));        	    		
         	    	}
