@@ -80,16 +80,19 @@ public class ContentController extends BaseController {
   	    String simpleName = ex.getCause().getClass().getSimpleName();
   	    logger.info(simpleName);
   	    if (simpleName.equals("ClientAbortException") || simpleName.equals("SocketException")) {
+			ImageUtil.gpio("write","18","0");
   	    	return null;
   	    }
 		  modelAndView.addObject("navigation", getNavigation());
     	  //modelAndView.addObject("navigation",getNavigator(apps,contentPath));
     	  modelAndView.addObject("breadcrumb", jcrService.getBreadcrumb(paths[0]) );
       } catch(Exception e ) {
+		ImageUtil.gpio("write","18","0");
     	  logger.error(e.getMessage()); 
       }
       invalidCache();
       logger.error(ex.toString());
+	  ImageUtil.gpio("write","18","0");
       return modelAndView;
     }
     @RequestMapping(value = {"/*","/mysite"}, method = RequestMethod.GET)
@@ -309,10 +312,12 @@ public class ContentController extends BaseController {
 						response.setContentLength((int)file.length());
 						IOUtils.copy(in, response.getOutputStream());
 						in.close();
+						ImageUtil.gpio("write","18","0");
 						return null;
 					}else {
 						logger.error("Error:"+HttpServletResponse.SC_NOT_FOUND);
 						response.sendError(HttpServletResponse.SC_NOT_FOUND);
+						ImageUtil.gpio("write","18","0");
 						return null;
 					}
 				}

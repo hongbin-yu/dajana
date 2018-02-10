@@ -81,12 +81,14 @@ public class SiteController extends BaseController {
 	    String simpleName = ex.getCause().getClass().getSimpleName();
 	    //logger.info(simpleName);
 	    if (simpleName.equals("ClientAbortException") || simpleName.equals("SocketException")) {
+			ImageUtil.gpio("write","18","0");
 	    	return null;
 	    }
 	    request.getSession().invalidate();
 	    modelAndView.addObject("error",message);
 	    //modelAndView.addObject("breadcrumb", jcrService.getBreadcrumb(paths[0]));
 	    logger.error(ex.toString());
+		ImageUtil.gpio("write","18","0");
 	    return modelAndView;
     }
     
@@ -97,7 +99,7 @@ public class SiteController extends BaseController {
 	
 	@RequestMapping(value = {"/site/browse.html","/site/image.html"}, method = {RequestMethod.GET,RequestMethod.POST},produces = "text/plain;charset=UTF-8")
 	public String browse(String path,String type, String input,String kw,Integer p,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
-
+		ImageUtil.gpio("write","18","1");
 		String assetFolder = "/"+getUsername()+"/assets";
 		if(!jcrService.nodeExsits(assetFolder)) {
 			jcrService.addNodes(assetFolder, "nt:unstructured",getUsername());		
@@ -151,6 +153,7 @@ public class SiteController extends BaseController {
 		model.addAttribute("type", type);
 		model.addAttribute("input", input);		
 		model.addAttribute("kw", kw);	
+		ImageUtil.gpio("write","18","0");
 		return "site/browse";
 	}
 	
@@ -229,7 +232,7 @@ public class SiteController extends BaseController {
  	
 	@RequestMapping(value = {"/site/assets.html","/site/assets"}, method = {RequestMethod.GET,RequestMethod.POST},produces = "text/plain;charset=UTF-8")
 	public String assets(String path,String type, String input,String kw,Integer p,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
-
+		ImageUtil.gpio("write","18","1");
 		String assetFolder = "/"+getUsername()+"/assets";
 		if(!jcrService.nodeExsits(assetFolder)) {
 			jcrService.addNodes(assetFolder, "nt:unstructured",getUsername());		
@@ -297,6 +300,7 @@ public class SiteController extends BaseController {
 		model.addAttribute("type", type);
 		model.addAttribute("input", input);		
 		model.addAttribute("kw", kw);	
+		ImageUtil.gpio("write","18","0");
 		return "site/asset";
 	}
 	
@@ -1599,7 +1603,7 @@ public class SiteController extends BaseController {
 
 	@RequestMapping(value = {"/site/viewimage","/content/viewimage","/content/**/viewimage","/protected/viewimage","/protected/**/viewimage","/site/file","/site/file*.*","/content/file","/content/file*.*","/content/**/file","/content/**/file*.*"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public @ResponseBody String viewFile(String uid,String path,Integer w,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
-		
+		ImageUtil.gpio("write","18","1");		
 		Integer width = null;
 		if(w !=null && w <= 12) {
 			width = w*100;
@@ -1629,7 +1633,7 @@ public class SiteController extends BaseController {
 					response.setContentType(asset.getContentType());
 					IOUtils.copy(in, response.getOutputStream());
 					in.close();
-
+					ImageUtil.gpio("write","18","0");
 					return null;
 				}else  if(jcrService.nodeExsits(path+"/original")) {
 					response.setContentType(asset.getContentType());
@@ -1639,17 +1643,23 @@ public class SiteController extends BaseController {
 						response.setDateHeader("Last-Modified", asset.getOriginalDate().getTime());
 					
 					jcrService.readAsset(path+"/original",  response.getOutputStream());
+					ImageUtil.gpio("write","18","0");
 					return null;
-				}else 
+				}else {
+					ImageUtil.gpio("write","18","0");
 					return path +" original file not found";
-			}else
+				}
+			}else {
+				ImageUtil.gpio("write","18","0");
 				return path +" file not found";		
+			}
 
 		}catch(Exception e) {
 			logger.error("viewFile:"+e.getMessage());
+			ImageUtil.gpio("write","18","0");
 			return e.getMessage();
 		}
-
+		ImageUtil.gpio("write","18","0");
 		
 		return null;
 		
