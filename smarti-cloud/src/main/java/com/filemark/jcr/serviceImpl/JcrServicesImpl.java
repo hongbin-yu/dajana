@@ -1610,8 +1610,10 @@ public class JcrServicesImpl implements JcrServices {
         				out.getParentFile().mkdirs();
         			}
         			try {
-						if(imageUtil.convert(infile, outfile, w, h)!=0) {
-							
+        				int exit = imageUtil.convert(infile, outfile, w, h);
+        				if(exit==0)
+        					updatePropertyByPath(path, "updated", "true");
+        				else {
 							createFile(path,w);							
 						}
 					} catch (InterruptedException e) {

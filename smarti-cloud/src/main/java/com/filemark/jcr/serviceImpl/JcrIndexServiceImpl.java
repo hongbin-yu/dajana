@@ -1,5 +1,6 @@
 package com.filemark.jcr.serviceImpl;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -32,18 +33,13 @@ public class JcrIndexServiceImpl implements JcrIndexService {
 		WebPage<Asset> assets = jcrService.searchAssets(assetsQuery, 500, 0);
 		for(Asset asset:assets.getItems()) {
 			Thread.yield();
-			if(!jcrService.nodeExsits(asset.getPath()+"/file-400")) {
+			File icon = new File(jcrService.getHome()+"/icon400/"+asset.getPath());
+			if(!icon.exists()) {
 				try {
 					jcrService.autoRoateImage(asset.getPath());
 					jcrService.createIcon(asset.getPath(), 400, 300);
 					//jcrService.createFile(asset.getPath(),400);
 				}catch(Exception r) {
-/*					try {
-						jcrService.deleteNode(asset.getPath());
-						continue;
-					} catch (RepositoryException e) {
-						log.error(e.getMessage());
-					}*/
 					log.error(r.getMessage());
 				}
 			}
