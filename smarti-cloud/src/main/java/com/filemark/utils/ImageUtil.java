@@ -22,7 +22,7 @@ import com.filemark.jcr.serviceImpl.JcrServicesImpl;
 
 public class ImageUtil
 {
-	private final Logger log = LoggerFactory.getLogger(ImageUtil.class);
+	private final static Logger log = LoggerFactory.getLogger(ImageUtil.class);
 
     /**
      * Takes a file, and resizes it to the given width and height, while keeping
@@ -212,21 +212,39 @@ public class ImageUtil
     	
     }     
     
-    public static int exec(String command) {
+    public static int gpio(String action,String pin, String value) {
     	String s;
     	Process p;
     	int exit=0;    	
+    	ProcessBuilder pb = new ProcessBuilder("gpio","-g",action,pin,value);
+    	pb.redirectErrorStream(true);
+    	
         try {
-			p = Runtime.getRuntime().exec(command);
-	        p.waitFor();
-	        exit = p.exitValue(); 
-	        p.destroy();
+			p = pb.start();
+	        BufferedReader br = new BufferedReader(
+	                new InputStreamReader(p.getInputStream()));
+	            while ((s = br.readLine()) != null)
+	                log.debug("line: " + s);
+	            p.waitFor();
+	            exit = p.exitValue();
+	            if(exit !=0) {
+	            	br = new BufferedReader(
+	                        new InputStreamReader(p.getErrorStream()));
+	                    while ((s = br.readLine()) != null) {
+	                        log.debug("line: " + s);
+	                    }
+	            	log.error("convert exit: " + exit);
+	            	
+	            }
+	            p.destroy();
         } catch (IOException e) {
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}   	
-	
+			log.error("gpio :"+e.getMessage());;
+        } catch (InterruptedException e) {
+			log.error("gpio :"+e.getMessage());;
+		}
+
+
+
         return exit;
     }
 }

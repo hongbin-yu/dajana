@@ -31,6 +31,7 @@ import com.filemark.jcr.model.Folder;
 import com.filemark.jcr.model.Role;
 import com.filemark.jcr.model.User;
 import com.filemark.jcr.service.JcrServices;
+import com.filemark.utils.ImageUtil;
 import com.filemark.utils.QueryCustomSetting;
 
 
@@ -58,6 +59,7 @@ public class BaseController {
 				}
 			}
 			*/
+		ImageUtil.gpio("mode","18","output");
 	}
 
 	
