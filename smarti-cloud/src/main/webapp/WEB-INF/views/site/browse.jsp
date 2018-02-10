@@ -13,10 +13,10 @@
 <c:if test="${assets.availablePages>=1 }">
 <section class="wb-inview show-none bar-demo" data-inview="top-bar">
      <ul class="pager pagination-sm">
-     <li class='previous<c:if test="${assets.pageNumber==0}"> disabled</c:if>' ><a href="<c:url value='/browse.html?path=${path }&type=${type }&input=${input }&kw=${kw }&p=${assets.pageNumber-1}'/>"><span class="glyphicon glyphicon-chevron-left"></span></a></li>
+     <li class='previous<c:if test="${assets.pageNumber==0}"> disabled</c:if>' ><a href="<c:url value='/site/browse.html?path=${path }&type=${type }&input=${input }&kw=${kw }&p=${assets.pageNumber-1}'/>"><span class="glyphicon glyphicon-chevron-left"></span></a></li>
      <li class="text-center">${assets.pageNumber+1}/${assets.availablePages }(${assets.pageCount })</li>    
      <c:if test="${assets.pageNumber+1<assets.availablePages}">
-		<li class="next"><a id="nextpageb" href="<c:url value='/browse.html?path=${path}&type=${type }&input=${input }&kw=${kw }&p=${assets.pageNumber+1}'/>"><span class="glyphicon glyphicon-chevron-right"></span></a></li>
+		<li class="next"><a id="nextpageb" href="<c:url value='/site/browse.html?path=${path}&type=${type }&input=${input }&kw=${kw }&p=${assets.pageNumber+1}'/>"><span class="glyphicon glyphicon-chevron-right"></span></a></li>
      </c:if>    
      </ul>
 </section>
