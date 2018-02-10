@@ -210,5 +210,23 @@ public class ImageUtil
         p.destroy();
         return exit;
     	
-    }       
+    }     
+    
+    public static int exec(String command) {
+    	String s;
+    	Process p;
+    	int exit=0;    	
+        try {
+			p = Runtime.getRuntime().exec(command);
+	        p.waitFor();
+	        exit = p.exitValue(); 
+	        p.destroy();
+        } catch (IOException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}   	
+	
+        return exit;
+    }
 }

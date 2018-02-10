@@ -884,6 +884,7 @@ public class SiteController extends BaseController {
 		}
 		if(total == null) total = 1;
 		logger.debug("Uploading..");
+		ImageUtil.exec("gpio -g write 18 1");
 		try {
 			if(!jcrService.nodeExsits(path)) {
 				jcrService.addNodes(path, "nt:unstructured",getUsername());		
@@ -970,6 +971,7 @@ public class SiteController extends BaseController {
 			asset.setTitle("error:"+e.getMessage());
 			
 		}
+		ImageUtil.exec("gpio -g write 18 0");
 		return asset;
 	}	
 
