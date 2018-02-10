@@ -216,7 +216,7 @@ public class ImageUtil
     	String s;
     	Process p;
     	int exit=0;    	
-    	ProcessBuilder pb = new ProcessBuilder("gpio","-g",action,pin,value);
+    	ProcessBuilder pb = new ProcessBuilder("/usr/local/bin/gpio","-g",action,pin,value);
     	pb.redirectErrorStream(true);
     	
         try {
