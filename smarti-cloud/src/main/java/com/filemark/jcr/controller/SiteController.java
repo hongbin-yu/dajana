@@ -953,9 +953,9 @@ public class SiteController extends BaseController {
             			jcrService.addFile(assetPath,"original",multipartFile.getInputStream(),contentType);
         			}
         			logger.debug("Done");
-        			if(total == 1 && contentType != null && contentType.startsWith("image/") && proccess==null) {
+        			if(total < 100 && contentType != null && contentType.startsWith("image/") && proccess==null) {
         				jcrService.autoRoateImage(assetPath);
-        				jcrService.createIcon(assetPath,400,300); 
+        				jcrService.createIcon(assetPath,400,400); 
         				//jcrService.createFile(assetPath, 400);
         			}
         		}catch(Exception ej) {
@@ -1438,7 +1438,7 @@ public class SiteController extends BaseController {
 			}else {
 				infile = jcrService.getHome()+"/icon400/"+asset.getPath();
 				if(imageUtil.rotate(infile, infile, angle)!=0)
-					jcrService.createIcon(asset.getPath(), 400, 300);				
+					jcrService.createIcon(asset.getPath(), 400, 400);				
 			}
 
 		}catch (Exception e){
@@ -1624,21 +1624,9 @@ public class SiteController extends BaseController {
 
 					FileInputStream in = new FileInputStream(file);
 					response.setContentType(asset.getContentType());
-/*					if(asset.getSize()!=null)
-						response.setContentLength(asset.getSize().intValue());
-					if(asset.getOriginalDate()!=null)
-						response.setDateHeader("Last-Modified", asset.getOriginalDate().getTime());
-					
-					OutputStream output = response.getOutputStream();*/
 					IOUtils.copy(in, response.getOutputStream());
 					in.close();
-/*					byte[] buffer = new byte[8 * 1024];
-					int byteToRead = 0;
-					while((byteToRead = in.read(buffer)) != -1) {
-						output.write(buffer,0,byteToRead);
-					}
-					in.close();
-					output.close();	*/
+
 					return null;
 				}else  if(jcrService.nodeExsits(path+"/original")) {
 					response.setContentType(asset.getContentType());
@@ -1937,7 +1925,7 @@ public class SiteController extends BaseController {
 				e.attr(src, urls.get(src));
 				continue;
 			}
-			if(!src.startsWith("http") && src.indexOf("viewimage?uid=")>=0) {
+			if(!src.startsWith("http") && src.indexOf("viewimage?")>=0) {
 				try {
 					String filename = toFile(src,prefix+i,folder.getAbsolutePath(),path,allTypes);
 					i++;
@@ -1962,7 +1950,7 @@ public class SiteController extends BaseController {
 				e.attr(href, urls.get(href));
 				continue;
 			}
-			if(!href.startsWith("http") && href.indexOf("viewimage?uid=")>=0) {
+			if(!href.startsWith("http") && href.indexOf("viewimage?")>=0) {
 				try {
 					String filename = toFile(href,prefix+i,folder.getAbsolutePath(),path,allTypes);
 					i++;
@@ -2035,11 +2023,18 @@ public class SiteController extends BaseController {
 		    
 			FileOutputStream output = new FileOutputStream(assetFolder+"/"+filename+ext);
 			if(w != null) {
-				String filePath = asset.getPath()+"/file-"+w+"00";
-				int width = Integer.parseInt(w);
-				if(jcrService.nodeExsits(filePath))
-					jcrService.createFile(asset.getPath(), width);
-				jcrService.readAsset(filePath, output);
+				File icon = new File(jcrService.getHome()+"/icon"+w+"00/"+asset.getPath());
+				if(icon.exists()) {
+					FileInputStream in = new FileInputStream(icon);
+					IOUtils.copy(in, output);					
+				}else {
+					String filePath = asset.getPath()+"/file-"+w+"00";
+					int width = Integer.parseInt(w);
+					if(jcrService.nodeExsits(filePath))
+						jcrService.createFile(asset.getPath(), width);
+					jcrService.readAsset(filePath, output);					
+				}
+
 			}else if(asset.getDevice()!=null) {
 				File file = null;
 				Device device = (Device)jcrService.getObject(asset.getDevice());

@@ -197,7 +197,7 @@ public class Asset implements SmartiNode, Serializable {
 		}else if((contentType.equals("image/tiff") || contentType.equals("image/x-tiff") )) {
 			return "resources/images/pdf-icon.png";
 		}else if(contentType.startsWith("image/")) {
-			return "viewimage?uid="+uid+"&w=4";
+			return "viewimage?path="+path+"&w=4";
 		}else if(contentType.startsWith("video/")) {
 			return "resources/images/video-icon.png";			
 		}else if(contentType.startsWith("audio/")) {
@@ -233,9 +233,9 @@ public class Asset implements SmartiNode, Serializable {
 	}
 	public String getLink() {
 		if(contentType != null && (contentType.equals("image/tiff") || contentType.equals("image/x-tiff") )) {
-			return "viewpdf?uid="+uid;
+			return "viewpdf?path="+path;
 		}else {
-			return "viewimage?uid="+uid;
+			return "viewimage?path="+path;
 		}
 	}
 
