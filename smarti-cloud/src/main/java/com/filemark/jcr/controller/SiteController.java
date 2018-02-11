@@ -2063,7 +2063,7 @@ public class SiteController extends BaseController {
 				Device device = (Device)jcrService.getObject(asset.getDevice());
 				file = new File(device.getLocation()+asset.getPath());
 				FileInputStream in = new FileInputStream(file);
-				if(asset.getHeight()>1200 || asset.getWidth()>1200) {
+				if(asset.getHeight() !=null && asset.getWidth() !=null && (asset.getHeight()>1200 || asset.getWidth()>1200)) {
 					try {
 						ImageUtil.convert(file.getAbsolutePath(), assetFolder+"/"+filename+ext, 1200, 1200);
 					} catch (InterruptedException e) {
