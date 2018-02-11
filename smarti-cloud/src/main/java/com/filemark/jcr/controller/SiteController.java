@@ -1955,6 +1955,8 @@ public class SiteController extends BaseController {
 					String filename = toFile(src,prefix+i,folder.getAbsolutePath(),path,allTypes);
 					i++;
 					e.attr("src", location+filename);
+					e.removeAttr("height");
+					e.removeAttr("width");					
 					urls.put(src, location+filename);				    			
 				} catch (MalformedURLException e2) {
 					logger.error(e2.getMessage());
@@ -2073,7 +2075,9 @@ public class SiteController extends BaseController {
 				FileInputStream in = new FileInputStream(file);
 				if(asset.getHeight() !=null && asset.getWidth() !=null && (asset.getHeight()>1200 || asset.getWidth()>1200)) {
 					try {
-						ImageUtil.convert(file.getAbsolutePath(), assetFolder+"/"+filename+ext, 1200, 1200);
+						int exit = ImageUtil.convert(file.getAbsolutePath(), assetFolder+"/"+filename+ext, 1200, 1200);
+						if(exit !=0)
+							IOUtils.copy(in, output);
 					} catch (InterruptedException e) {
 						logger.error(e.getMessage());
 						IOUtils.copy(in, output);
