@@ -2032,8 +2032,14 @@ public class SiteController extends BaseController {
 		        query_pairs.put(URLDecoder.decode(pair.substring(0, idx), "UTF-8"), URLDecoder.decode(pair.substring(idx + 1), "UTF-8"));
 		    }
 		    String uid = query_pairs.get("uid");
+		    String spath = query_pairs.get("path");
 		    String w = query_pairs.get("w");
-			Asset asset = jcrService.getAssetById(uid);
+			Asset asset = null;
+			if(uid!=null)
+				asset = jcrService.getAssetById(uid);
+			else if(spath !=null) {
+				asset = (Asset)jcrService.getObject(spath);
+			}
 
 		    String ext =asset.getExt();		
 		    if(ext==null) {
