@@ -2008,7 +2008,7 @@ public class SiteController extends BaseController {
 		//limit size max 1200
 
 		try {
-			ImageUtil.limit(location, "jpg", 1200);
+			ImageUtil.limit(folder.getAbsolutePath(), "jpg", 1200);
 		} catch (IOException e1) {
 			logger.error(e1.getMessage());
 		} catch (InterruptedException e1) {
