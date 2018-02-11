@@ -1227,6 +1227,7 @@ public class SiteController extends BaseController {
 		if(value==null) value="true";
 		BufferedWriter bufferWriter = null;
 		try {
+			ImageUtil.gpio("write", "18", "1");
 			Page page = null;
 			//String template = getAssetContent("/templates/assets/structure/page.html");
 			if(uid !=null && !"".equals(uid)) {
@@ -1313,6 +1314,7 @@ public class SiteController extends BaseController {
 			result = "error:"+e.getMessage();
 			
 		}
+		ImageUtil.gpio("write", "18", "0");
 		return result;
 	}
 	
