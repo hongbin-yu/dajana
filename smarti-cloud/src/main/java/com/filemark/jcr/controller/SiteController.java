@@ -36,6 +36,7 @@ import org.apache.poi.util.IOUtils;
 import org.apache.tika.mime.MimeType;
 import org.apache.tika.mime.MimeTypeException;
 import org.apache.tika.mime.MimeTypes;
+import org.jfree.util.Log;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -2007,13 +2008,13 @@ public class SiteController extends BaseController {
 		}
 		//limit size max 1200
 
-		try {
+/*		try {
 			ImageUtil.limit(folder.getAbsolutePath(), "jpg", 1200);
 		} catch (IOException e1) {
 			logger.error(e1.getMessage());
 		} catch (InterruptedException e1) {
 			logger.error(e1.getMessage());
-		}
+		}*/
 		
 		return doc.body().html();
 	}
@@ -2062,7 +2063,16 @@ public class SiteController extends BaseController {
 				Device device = (Device)jcrService.getObject(asset.getDevice());
 				file = new File(device.getLocation()+asset.getPath());
 				FileInputStream in = new FileInputStream(file);
-				IOUtils.copy(in, output);
+				if(asset.getHeight()>1200 || asset.getWidth()>1200) {
+					try {
+						ImageUtil.convert(file.getAbsolutePath(), assetFolder+"/"+filename+ext, 1200, 1200);
+					} catch (InterruptedException e) {
+						logger.error(e.getMessage());
+						IOUtils.copy(in, output);
+					}
+					
+				}else 
+					IOUtils.copy(in, output);
 				in.close();
 			}else  if(jcrService.nodeExsits(path+"/original")) {
 				jcrService.readAsset(path+"/original", output);
