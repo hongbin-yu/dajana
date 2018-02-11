@@ -204,7 +204,7 @@ public class SiteController extends BaseController {
 	@RequestMapping(value = {"/site/passcode.html"}, method = RequestMethod.POST)
 	public String passcode(String path, String passcode, Model model,HttpServletRequest request, HttpServletResponse response) throws Exception  {
 		try {
-			String paths = URLDecoder.decode(request.getRequestURI(),"UTF-8");
+			//String paths = URLDecoder.decode(request.getRequestURI(),"UTF-8");
 			Folder currentNode = jcrService.getFolder(path);
 			model.addAttribute("path", path);
 			model.addAttribute("title", currentNode.getTitle());
@@ -219,10 +219,11 @@ public class SiteController extends BaseController {
 			}else {
 				return "redirect:"+"/site/passcode.html";
 			}
-	
+	/*
 		} catch (UnsupportedEncodingException e) {
 			logger.error(e.getMessage());
 			throw new Exception("\u8DEF\u5F84\u51FA\u9519!");
+			*/
 		} catch (RepositoryException e) {
 			logger.error(e.getMessage());
 			throw new Exception("\u9875\u9762\u6CA1\u627E\u5230!");
@@ -995,7 +996,7 @@ public class SiteController extends BaseController {
 		if(!jcrService.nodeExsits(path)) {
 			jcrService.addNodes(path, "nt:unstructured",getUsername());		
 		}
-		int count=0;
+		//int count=0;
 		Date start = new Date();
         URL url_img = new URL(url);
         URLConnection uc = url_img.openConnection();
@@ -1143,7 +1144,7 @@ public class SiteController extends BaseController {
 	
 	@RequestMapping(value = {"/site/importFolder.html"}, method = {RequestMethod.GET,RequestMethod.POST})
 	public @ResponseBody String folderImport(String path,String url,String override, Model model,HttpServletRequest request, HttpServletResponse response) {
-		Asset asset= new Asset();		
+		//Asset asset= new Asset();		
 		String userName = getUsername();
 		File folder = new File(url);
 		if(folder.exists()) {
@@ -1443,15 +1444,15 @@ public class SiteController extends BaseController {
 		Asset asset = null;
 		try {
 			asset = jcrService.getAssetById(uid);
-			ImageUtil imageUtil = new ImageUtil();
+
 			Device device = (Device)jcrService.getObject(asset.getDevice());
 			String infile = device.getLocation()+asset.getPath();
-			if(imageUtil.rotate(infile, infile, angle)!=0) {
+			if(ImageUtil.rotate(infile, infile, angle)!=0) {
 				jcrService.roateImage(asset.getPath(), angle);
 				jcrService.createFile(asset.getPath(), 400);				
 			}else {
 				infile = jcrService.getHome()+"/icon400/"+asset.getPath();
-				if(imageUtil.rotate(infile, infile, angle)!=0)
+				if(ImageUtil.rotate(infile, infile, angle)!=0)
 					jcrService.createIcon(asset.getPath(), 400, 400);				
 			}
 
@@ -1871,6 +1872,7 @@ public class SiteController extends BaseController {
 		}
 		return "site/suggestions";
 	}
+/*	
 	private String getAssetContent(String path) throws RepositoryException, IOException {
 		String content = null;
 		if(jcrService.nodeExsits(path)) {
@@ -1879,7 +1881,7 @@ public class SiteController extends BaseController {
 		}
 		return content;
 	}
-	
+	*/
 	private String getContent(Asset asset) throws RepositoryException, IOException {
 		String content = "";
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -2004,9 +2006,9 @@ public class SiteController extends BaseController {
 			}
 		}
 		//limit size max 1200
-		ImageUtil imageUtil = new ImageUtil();
+
 		try {
-			imageUtil.limit(location, "jpg", 1200);
+			ImageUtil.limit(location, "jpg", 1200);
 		} catch (IOException e1) {
 			logger.error(e1.getMessage());
 		} catch (InterruptedException e1) {

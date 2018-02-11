@@ -122,7 +122,7 @@ public class ImageUtil
         }
     }
     
-    public int convert(String infile, String outfile,  int maxWidth,int maxHeight) throws IOException, InterruptedException {
+    public static int convert(String infile, String outfile,  int maxWidth,int maxHeight) throws IOException, InterruptedException {
     	String s;
     	Process p;
     	int exit=0;
@@ -152,7 +152,7 @@ public class ImageUtil
     	
     }
     
-    public int rotate(String infile, String outfile,  int angle) throws IOException, InterruptedException {
+    public static int rotate(String infile, String outfile,  int angle) throws IOException, InterruptedException {
     	String s;
     	Process p;
     	int exit=0;
@@ -183,7 +183,7 @@ public class ImageUtil
     	
     } 
     
-    public int limit(String folder,String ext, int maxWidth) throws IOException, InterruptedException {
+    public static int limit(String folder,String ext, int maxWidth) throws IOException, InterruptedException {
     	String s;
     	Process p;
     	int exit=0;
