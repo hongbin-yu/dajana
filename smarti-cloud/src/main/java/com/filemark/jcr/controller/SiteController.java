@@ -461,6 +461,7 @@ public class SiteController extends BaseController {
 	public String editPage(String uid,String path,String input,String kw,Integer p,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String content = "/content/"+getUsername();
 		Page currentpage = new Page();
+		ImageUtil.gpio("write","18","1");
 		if(!jcrService.nodeExsits(content)) {//create root
 			if(!jcrService.nodeExsits("/content")) {
 				Page djn = new Page();
@@ -488,10 +489,13 @@ public class SiteController extends BaseController {
 			currentpage = jcrService.getPage(content);
 		}
 		if(!currentpage.getPath().startsWith(content)) {
-			if(getUsername()==null)
+			if(getUsername()==null) {
+				ImageUtil.gpio("write","18","0");
 				return "redirect:/mysite";
-			else			
+			} else	{		
+				ImageUtil.gpio("write","18","0");
 				return "redirect:/site/editor.html?path="+content;
+			}
 		}		
 		if(currentpage.getBreadcrumb()==null) {
 			currentpage.setBreadcrumb(jcrService.getBreadcrumb(currentpage.getPath()));
@@ -520,8 +524,11 @@ public class SiteController extends BaseController {
 		model.addAttribute("navigation", menu);
 		model.addAttribute("page", currentpage); 
 		model.addAttribute("origin", request.getRequestURL()+"?"+request.getQueryString());
-		if(currentpage.getPath().startsWith("/content/templates"))
+		if(currentpage.getPath().startsWith("/content/templates")) {
+			ImageUtil.gpio("write","18","0");
 			return "site/template";
+		}
+		ImageUtil.gpio("write","18","0");
 		return "site/editor";
 	}
 
