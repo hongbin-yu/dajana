@@ -28,7 +28,7 @@
 <li><button disabled class="btn btn-primary btn-xs" title="<spring:message code="djn.create_page"/>" onclick="javascript:ftrClose('<c:url value="/site/createPage.html?uid=${page.uid}"/>')"><span class="glyphicon glyphicon-plus"></span><spring:message code="djn.create"/></button></li>
 <c:if test="${page.status!='true' }">
 <li>
-<button class="btn btn-danger btn-xs" title="<spring:message code="djn.delete_page"/>" onclick="javascript:ftrClose('<c:url value="/deletePage.html?path=${page.path}&redirect=${page.parent }"/>')"><span class="glyphicon glyphicon-remove"></span><spring:message code="djn.delete"/></button>
+<button class="btn btn-danger btn-xs" title="<spring:message code="djn.delete_page"/>" onclick="javascript:ftrClose('<c:url value="/site/deletePage.html?path=${page.path}&redirect=${page.parent }"/>')"><span class="glyphicon glyphicon-remove"></span><spring:message code="djn.delete"/></button>
 </li>
 </c:if>
 <li><a href="<c:url value="${page.path }.html"/>"><span class="glyphicon glyphicon-open"></span><spring:message code="djn.goback"/></a></li>
