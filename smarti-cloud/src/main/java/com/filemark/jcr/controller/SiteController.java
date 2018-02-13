@@ -1093,7 +1093,7 @@ public class SiteController extends BaseController {
 
 		
 		if(contentType != null && contentType.startsWith("image/")) {
-			//jcrService.autoRoateImage(assetPath);
+			jcrService.autoRoateImage(assetPath);
 			
 			jcrService.createIcon(assetPath, 400,400);
 		}		

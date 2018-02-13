@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zh" dir="ltr" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8"/>
+<title>大家拿-此页没找到</title>
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<!-- Meta data -->
+<meta name="description" content=""/>
+<!-- Meta data-->
+
+<link href="http://dajana.ca/resources/images/favicon.ico" rel="icon" type="image/x-icon"/>
+<link rel="stylesheet" href="/resources/wet-boew/css/wet-boew.min.css"/>
+<link rel="stylesheet" href="/resources/wet-boew/css/theme.min.css"/>
+
+</head>
+<body>
+
+
+
+
+<ul id="wb-tphp">
+<li class="wb-slc">
+<a class="wb-sl" href="#wb-cont">跳到主内容</a>
+</li>
+<li class="wb-slc visible-sm visible-md visible-lg">
+<a class="wb-sl" href="#wb-info">跳到"关于本网站"</a>
+</li>
+</ul>
+<header role="banner">
+<div id="wb-bnr" class="container">
+<section id="wb-lng" class="visible-md visible-lg text-right">
+<h2>选择管理菜单</h2>
+<div class="row">
+<div class="col-md-12">
+<ul class="list-inline margin-bottom-none">
+</ul>
+</div>
+</div>
+</section>
+<div class="row">
+<div class="brand col-xs-8 col-sm-9 col-md-6">
+<a href="/">
+<object type="image/svg+xml" tabindex="-1" data="/resources/images/djnlogo.svg"></object>
+</a>
+</div>
+
+<section class="wb-mb-links col-xs-4 col-sm-3 visible-sm visible-xs" id="wb-glb-mn">
+<h2>选择管理菜单</h2>
+<ul class="list-inline text-right chvrn">
+<li><a href="#mb-pnl" title="Search and menus" aria-controls="mb-pnl" class="overlay-lnk" role="button"><span class="glyphicon glyphicon-search"><span class="glyphicon glyphicon-th-list"><span class="wb-inv">Search and menus</span></span></span></a></li>
+</ul>
+<div id="mb-pnl"></div>
+</section>
+<section id="wb-srch" class="col-xs-6 text-right visible-md visible-lg">
+<h2>查询</h2>
+<form action="?" method="get" name="cse-search-box" role="search" class="form-inline">
+<div class="form-group">
+<label for="wb-srch-q" class="wb-inv">查询</label>
+<input id="wb-srch-q" list="wb-srch-q-ac" class="wb-srch-q form-control" name="q" type="search" value="" size="27" maxlength="150" placeholder="输入关键词查询"/>
+<datalist id="wb-srch-q-ac">
+<!--[if lte IE 9]><select><![endif]-->
+<!--[if lte IE 9]></select><![endif]-->
+</datalist>
+</div>
+<div class="form-group submit">
+<button type="submit" id="wb-srch-sub" class="btn btn-primary btn-small" name="wb-srch-sub"><span class="glyphicon-search glyphicon"></span><span class="wb-inv">查询</span></button>
+</div>
+</form>
+</section>
+</div>
+</div>
+<nav role="navigation" id="wb-sm" data-trgt="mb-pnl" class="wb-menu visible-md visible-lg" style="border-top:8px solid #335075" typeof="SiteNavigationElement">
+</nav>
+<nav role="navigation" id="wb-bc" property="breadcrumb">
+	<h2>你在这里:</h2>
+	<div class="container">
+	<div class="row"><ol class="breadcrumb"><li><a href="http://localhost">大家拿</a></li><li><a href="/content/home.html">首页</a></li></ol></div>
+	</div>
+</nav>
+</header>
+
+        <main role="main" property="mainContentOfPage" class="container">
+    <h1>此页没找到</h1>
+    <p th:text="${error}">此页没找到</p>
+</main>
+<footer role="contentinfo" id="wb-info">
+<nav role="navigation" class="container wb-navcurr"  data-ajax-replace='/templates/assets/html/replace.html'>
+<h2>关于本网站</h2>
+<section class="col-sm-3">
+<h3>关于本网站</h3>
+<ul class="list-unstyled">
+<li><a href='/templates/assets/help/termnuse.html'>期限和使用</a></li>
+</ul>
+</section>
+<section class="col-sm-3">
+<h3>联系我们</h3>
+<ul class="list-unstyled">
+<li><a href='/templates/assets/help/qna.html'>问题与答案</a></li>
+</ul>
+</section>
+<section class="col-sm-3">
+<h3>客户服务</h3>
+<ul class="list-unstyled">
+<li><a href='/templates/assets/help/help.html'>在线帮助</a></li>
+</ul>
+</section>
+ <section class="col-xs-3 col-sm-3 text-right">
+	<object type="image/svg+xml" tabindex="-1" role="img" data="/resources/images/hongicon.svg" aria-label="优鸿网络"></object>
+</section>	
+</nav>
+
+<div class="brand">
+            <div class="container">
+    <div class="row">
+                    <div class="col-xs-6 visible-sm visible-xs tofpg text-center">
+                        <a href="#wb-cont">到页端 <span class="glyphicon glyphicon-chevron-up"></span></a>
+                    </div>
+               </div>
+				<div class="col-xs-6 col-md-12 text-center">优鸿网络版权所有 V1.3</div>
+           </div>
+</div>
+</footer>	
+<script src="/resources/wet-boew/js/jquery/2.1.4/jquery.min.js"></script>
+<script src="/resources/wet-boew/js/wet-boew.min.js"></script>
+<script src="/resources/wet-boew/js/theme.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,298 @@
+<!DOCTYPE html><!--[if lt IE 9]><html class="no-js lt-ie9" lang="zh" dir="ltr"><![endif]--><!--[if gt IE 8]><!-->
+<html class="no-js" lang="zh" dir="ltr" xmlns:th="http://www.thymeleaf.org">
+<!--<![endif]-->
+
+
+
+
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8"/>
+<title>大家拿-注册 </title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<!-- Meta data -->
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<meta name="author" content="大家拿"/>
+<!-- Meta data-->
+<!--[if gte IE 9 | !IE ]><!-->
+<link href="/resources/images/favicon.ico" rel="icon" type="image/x-icon"/>
+<link rel="stylesheet" href="/resources/wet-boew/css/wet-boew.min.css"/>
+<!--<![endif]-->
+<link rel="stylesheet" href="/webjars/bootstrap/3.3.7/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="/resources/wet-boew/css/theme.min.css"/>
+<!--[if lt IE 9]>
+<link href="/resources/images/favicon.ico"/>
+<link rel="stylesheet" href="/resources/wet-boew/css/ie8-wet-boew.min.css"/>
+<script src="/resources/wet-boew/js/jquery/1.11.1/jquery.min.js"></script>
+<script src="/resources/wet-boew/js/ie8-wet-boew.min.js"></script>
+<![endif]-->
+<noscript><link rel="stylesheet" href="/resources/wet-boew/css/noscript.min.css"/></noscript>
+<script>dataLayer1=[];</script>
+</head>
+
+<body class="secondary" vocab="http://schema.org/" typeof="WebPage">
+
+
+
+
+
+
+<ul id="wb-tphp">
+<li class="wb-slc">
+<a class="wb-sl" href="#wb-cont">跳到主内容</a>
+</li>
+<li class="wb-slc visible-sm visible-md visible-lg">
+<a class="wb-sl" href="#wb-info">跳到"关于本网站"</a>
+</li>
+</ul>
+<header role="banner">
+<div id="wb-bnr" class="container">
+<section id="wb-lng" class="visible-md visible-lg text-right">
+<h2>选择管理菜单</h2>
+<div class="row">
+<div class="col-md-12">
+<ul class="list-inline margin-bottom-none">
+
+
+<li><a href="/signin"><span class="glyphicon glyphicon-log-in"></span>登入</a></li>
+<li><a href="/signup"><span class="glyphicon glyphicon-flag"></span>注册</a></li>
+
+</ul>
+</div>
+</div>
+</section>
+<div class="row">
+<div class="brand col-xs-8 col-sm-9 col-md-6">
+<a href="/">
+<object type="image/svg+xml" tabindex="-1" data="/resources/images/djnlogo.svg"></object>
+</a>
+</div>
+
+<section id="wb-srch" class="col-xs-6 text-right visible-md visible-lg">
+<h2>查询</h2>
+<form action="#" method="post" name="cse-search-box" role="search" class="form-inline">
+<div class="form-group">
+<label for="wb-srch-q" class="wb-inv">查询</label>
+<input id="wb-srch-q" list="wb-srch-q-ac" class="wb-srch-q form-control" name="q" type="search" value="" size="27" maxlength="150" placeholder="输入关键词查询"/>
+<datalist id="wb-srch-q-ac">
+<!--[if lte IE 9]><select><![endif]-->
+<!--[if lte IE 9]></select><![endif]-->
+</datalist>
+</div>
+<div class="form-group submit">
+<button type="submit" id="wb-srch-sub" class="btn btn-primary btn-small" name="wb-srch-sub"><span class="glyphicon-search glyphicon"></span><span class="wb-inv">搜索</span></button>
+</div>
+</form>
+</section>
+</div>
+</div>
+
+<div class="container" id="header_message">
+</div>
+
+
+
+</header>
+
+
+
+
+
+
+<main role="main" property="mainContentOfPage" class="container">
+<div class="col-md-4 col-md-push-3">
+<h2>注册大家网</h2>
+
+
+
+<div class="wb-frmvld">
+	<form action='/signup' method="post" id="validation-signup">
+	<input type="hidden" id="count" name="count" value="0"/>
+	<input type="hidden" id="host" name="host" value=""/>
+		<div class="form-group">
+			<label for="title" class="required"><span class="field-name">网名</span> <strong class="required">(必需)</strong></label>
+			<input class="form-control" id="title" name="title" th:value="${user.title}" type="text" required="required" pattern=".{2,}" data-rule-minlength="2" size="40"  placeholder="输入笔名"/>
+		</div>
+		<div class="form-group">
+			<label for="email" class="required"><span class="field-name">电子邮件地址</span></label>
+			<input class="form-control" id="email" name="email"  th:value="${user.email}" pattern="email" type="email" size="40" placeholder="电子邮件地址为找回密码"/>
+		</div>
+		<div class="form-group">
+			<label for="phone" class="required"><span class="field-name">电话号码</span></label>
+			<input class="form-control" id="phoneNumber"  th:value="${user.phoneNumber}" name="phoneNumber" type="text" pattern="[0-9\-]{9,}" size="40" placeholder="电话号码为找回密码"/>
+		</div>
+		<div class="form-group">
+			<label for="userName" class="required"><span class="field-name">用户名</span> <strong class="required">(必需)</strong></label>
+			<input class="form-control" id="userName" name="userName"  th:value="${user.userName}" type="text" required="required" pattern="[A-Za-z0-9\s]{4,}" data-rule-alphanumeric="true" data-rule-minlength="4" size="40" placeholder="输入用户名(只能拼音字母和数字)"/>
+		</div>		
+		<div class="form-group">
+			<details id="details_pass">
+			<summary>
+			<label for="password">
+			<span class="field-name">密码</span> (从下列选择选择4个生肖为密码)
+			</label>
+			<input class="form-control" id="password" name="password" type="password" maxlength="32" size="40" pattern=".{4,}" data-rule-rangelength="[4,32]" placeholder="从下列选择选择4个生肖为密码"/>
+			</summary>
+			<div class="btn-group btn-group-justified">
+			<a class="btn btn-default" onclick="javascript:p('A0')"><img class="img-responsive" alt="" width="64" src='/resources/images/security/mouse.png'/></a>
+			<a class="btn btn-default" onclick="javascript:p('A1')"><img class="img-responsive" alt="" width="64" src='/resources/images/security/cow.png'/></a>
+			<a class="btn btn-default" onclick="javascript:p('A2')"><img class="img-responsive" alt="" width="64" src='/resources/images/security/tiger.png'/></a>
+			</div>
+			<div class="btn-group btn-group-justified">
+			<a class="btn btn-default" onclick="javascript:p('B0')"><img class="img-responsive" alt="" width="64" src='/resources/images/security/rabit.png'/></a>
+			<a class="btn btn-default" onclick="javascript:p('B1')"><img class="img-responsive" alt="" width="64" src='/resources/images/security/dragan.png'/></a>
+			<a class="btn btn-default" onclick="javascript:p('B2')"><img class="img-responsive" alt="" width="64" src='/resources/images/security/snake.png'/></a>
+			</div>
+			<div class="btn-group btn-group-justified">
+			<a class="btn btn-default" onclick="javascript:p('C0')"><img class="img-responsive" alt="" width="64" src='/resources/images/security/horse.png'/></a>
+			<a class="btn btn-default" onclick="javascript:p('C1')"><img class="img-responsive" alt="" width="64" src='/resources/images/security/sheep.png'/></a>
+			<a class="btn btn-default" onclick="javascript:p('C2')"><img class="img-responsive" alt="" width="64" src='/resources/images/security/monkey.png'/></a>
+			</div>
+			<div class="btn-group btn-group-justified">
+			<a class="btn btn-default" onclick="javascript:p('D0')"><img class="img-responsive" alt="" width="64" src='/resources/images/security/chiken.png'/></a>
+			<a class="btn btn-default" onclick="javascript:p('D1')"><img class="img-responsive" alt="" width="64" src='/resources/images/security/dog.png'/></a>
+			<a class="btn btn-default" onclick="javascript:p('D2')"><img class="img-responsive" alt="" width="64" src='/resources/images/security/pig.png'/></a>
+			</div>
+			</details>
+
+		<div class="clearfix"></div>
+		<details id="details_confirm">
+		<summary>
+			<label for="passwordconfirm">
+			<span class="field-name">验证</span> (重新选择以上选中的生肖)
+			</label>			
+			<input class="form-control" id="passwordconfirm" name="passwordconfirm" type="password" maxlength="32" size="40" pattern=".{4,}" data-rule-rangelength="[4,32]" data-rule-equalTo="#password" placeholder="从下列选择选择4个生肖验证密码"/>
+		</summary>
+			<div class="btn-group btn-group-justified">
+			<a class="btn btn-default" onclick="javascript:c('B2')"><img class="img-responsive" alt="" width="64" src='/resources/images/security/she.png'/></a>
+			<a class="btn btn-default" onclick="javascript:c('D2')"><img class="img-responsive" alt="" width="64" src='/resources/images/security/zhu.png'/></a>
+			<a class="btn btn-default" onclick="javascript:c('B1')"><img class="img-responsive" alt="" width="64" src='/resources/images/security/long.png'/></a>
+			</div>
+			<div class="btn-group btn-group-justified">
+			<a class="btn btn-default" onclick="javascript:c('C2')"><img class="img-responsive" alt="" width="64" src='/resources/images/security/hou.png'/></a>
+			<a class="btn btn-default" onclick="javascript:c('D0')"><img class="img-responsive" alt="" width="64" src='/resources/images/security/ji.png'/></a>
+			<a class="btn btn-default" onclick="javascript:c('A2')"><img class="img-responsive" alt="" width="64" src='/resources/images/security/fu.png'/></a>
+			</div>
+			<div class="btn-group btn-group-justified">
+			<a class="btn btn-default" onclick="javascript:c('B0')"><img class="img-responsive" alt="" width="64" src='/resources/images/security/tu.png'/></a>
+			<a class="btn btn-default" onclick="javascript:c('D1')"><img class="img-responsive" alt="" width="64" src='/resources/images/security/gou.png'/></a>
+			<a class="btn btn-default" onclick="javascript:c('C1')"><img class="img-responsive" alt="" width="64" src='/resources/images/security/yang.png'/></a>
+			</div>
+			<div class="btn-group btn-group-justified">
+			<a class="btn btn-default" onclick="javascript:c('A1')"><img class="img-responsive" alt="" width="64" src='/resources/images/security/niu.png'/></a>
+			<a class="btn btn-default" onclick="javascript:c('A0')"><img class="img-responsive" alt="" width="64" src='/resources/images/security/shu.png'/></a>
+			<a class="btn btn-default" onclick="javascript:c('C0')"><img class="img-responsive" alt="" width="64" src='/resources/images/security/ma.png'/></a>
+			</div>
+
+		</details>
+
+	<input type="submit" id="submit" value="确认" class="btn btn-primary"/> <input type="reset" value="重填" class="btn btn-default"/>
+</div>
+    </form>
+</div>
+
+
+</div>
+</main>
+<script type="text/javascript">
+
+function p(s) {
+	var v=$("#password").val();
+	if(v=="") {
+		count=0;
+		$("#count").val("0");
+	}
+	count = $("#count").val();
+	if(count==0) {
+		$("#password").val(s);		
+	}else {
+		$("#password").val(v+s);
+	}	
+
+	count++;
+	$("#count").val(count);
+	if(count==4) {
+		$("#details_pass").removeAttr("open");
+		$("#details_confirm").attr("open","open");
+		}	
+
+}
+function c(s) {
+	var v=$("#passwordconfirm").val();
+
+	count = $("#count").val();
+	if(count==4) {
+		$("#passwordconfirm").val(s);		
+	}else {
+		$("#passwordconfirm").val(v+s);
+	}	
+
+	count++;
+	$("#count").val(count);
+	if(count==8) {
+		$("#submit").click();
+		}
+
+}
+</script>	
+
+
+
+
+
+<footer role="contentinfo" id="wb-info">
+<nav role="navigation" class="container wb-navcurr">
+<h2>关于本网站</h2>
+<section class="col-sm-3">
+<h3>关于本网站</h3>
+<ul class="list-unstyled">
+<li><a href='/content/home/termnuse.html'>期限和使用</a></li>
+</ul>
+</section>
+<section class="col-sm-3">
+<h3>联系我们</h3>
+<ul class="list-unstyled">
+<li><a href='/content/home/qna.html'>问题与答案</a></li>
+</ul>
+</section>
+<section class="col-sm-3">
+<h3>客户服务</h3>
+<ul class="list-unstyled">
+<li><a href='/content/home/help.html'>在线帮助</a></li>
+</ul>
+</section>
+ <section class="col-sm-3">
+ <img title="扫描QR二维码" class="img-responsive" src="content/home.qrb?path=http://www.dajana.ca/signup" alt=""/>
+  </section>
+</nav>
+
+<div class="brand">
+            <div class="container">
+    <div class="row">
+                    <div class="col-xs-4 visible-sm visible-xs tofpg text-center">
+                        <a href="#wb-cont">到页端 <span class="glyphicon glyphicon-chevron-up"></span></a>
+                    </div>
+               </div>
+				<div class="col-xs-6 col-md-12 text-center">优鸿网络版权所有</div>
+	              
+           </div>
+</div>
+</footer>
+
+<!--[if gte IE 9 | !IE ]><!-->
+<script src="/resources/wet-boew/js/jquery/2.1.4/jquery.min.js"></script>
+<script src="/resources/wet-boew/js/wet-boew.min.js"></script>
+<!--<![endif]-->
+<!--[if lt IE 9]>
+<script src="/resources/dist/js/ie8-wet-boew2.min.js"></script>
+<![endif]-->
+<script src='/resources/wet-boew/js/theme.min.js'></script>
+<script src="/resources/tinymce/tinymce.min.js"></script>
+<script src="/resources/js/pageContent.js"></script>
+<script src="/resources/js/djn.js"></script>
+
+
+
+</body>
+</html>

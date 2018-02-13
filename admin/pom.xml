@@ -1,0 +1,161 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>dajana</groupId>
+  <artifactId>admin</artifactId>
+  <version>1.0.0</version>
+  <packaging>jar</packaging>
+	<parent>
+	    <groupId>org.springframework.boot</groupId>
+	    <artifactId>spring-boot-starter-parent</artifactId>
+	    <version>1.5.3.RELEASE</version>
+	    <relativePath />
+	</parent> 
+	<properties>
+			<localpath>${project.basedir}/src/lib/local</localpath>
+	</properties>
+  	<dependencies>
+  	    <!-- security -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <!-- thyme template -->  	    
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+
+		<!-- hot swapping, disable cache for template, enable live reload -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+		    <groupId>commons-io</groupId>
+		    <artifactId>commons-io</artifactId>
+		    <version>2.5</version>
+		</dependency>
+		<!-- for database -->
+		<dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<dependency>
+		    <groupId>org.hsqldb</groupId>
+		    <artifactId>hsqldb</artifactId>
+		    <scope>runtime</scope>
+		</dependency>		
+		<!-- Optional, for bootstrap -->
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>bootstrap</artifactId>
+			<version>3.3.7</version>
+		</dependency>
+		 <!--  Gson -->
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<!--  version>2.6.2</version-->
+		</dependency>
+		<!-- itextpdf -->
+		<dependency>
+		    <groupId>com.itextpdf</groupId>
+		    <artifactId>itextpdf</artifactId>
+		    <version>5.5.10</version>
+		</dependency>	
+		<!-- jsoup -->	
+		<dependency>
+		    <groupId>org.jsoup</groupId>
+		    <artifactId>jsoup</artifactId>
+		    <version>1.8.3</version>
+		</dependency>	
+		<!-- Jwt -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.6.0</version>
+        </dependency>	
+		<!-- h2 database -->
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+		</dependency>    
+		<!-- jackrabbit -->
+		<dependency>
+			<groupId>org.apache.jackrabbit</groupId>
+			<artifactId>jackrabbit-core</artifactId>
+			<version>2.10.1</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.apache.jackrabbit</groupId>
+			<artifactId>jackrabbit-api</artifactId>
+			<version>2.10.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.jackrabbit</groupId>
+			<artifactId>jackrabbit-jcr-commons</artifactId>
+			<version>2.10.1</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.jackrabbit</groupId>
+			<artifactId>jackrabbit-ocm</artifactId>
+			<version>1.5.3</version>
+		</dependency>
+
+					     
+		<!-- JCR 2.0 -->
+		<dependency>
+			<groupId>javax.jcr</groupId>
+			<artifactId>jcr</artifactId>
+			<version>2.0</version>
+		</dependency>		
+		<dependency>
+		    <groupId>local</groupId>
+<!-- 		    <groupId>org.springframework</groupId> -->
+		    <artifactId>se-jcr</artifactId>
+		    <version>0.9</version>
+		    <exclusions>
+			<exclusion>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring</artifactId>
+			</exclusion>
+			</exclusions>
+			<scope>system</scope>
+			<systemPath>${localpath}/se-jcr/0.9/se-jcr-0.9.jar</systemPath>
+		    			
+		</dependency>
+		
+		<dependency>
+			<groupId>local</groupId>
+			<artifactId>spring-modules-jcr</artifactId>
+			<type>jar</type>
+			<version>0.9</version>
+			<scope>system</scope>
+			<systemPath>${localpath}/spring-modules-jcr/0.9/spring-modules-jcr-0.9.jar</systemPath>				
+		</dependency>		
+											
+	</dependencies>	
+
+ 	<build>
+		<plugins>
+			<!-- Package as an executable jar/war -->
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			    <configuration>
+			        <executable>true</executable>
+			    </configuration>				
+			</plugin>
+		</plugins>
+		<resources>
+	        <resource>
+	            <directory>src/main/resources</directory>
+	            <filtering>true</filtering>
+	        </resource>
+	    </resources>
+	</build> 	
+</project>
