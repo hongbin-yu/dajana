@@ -81,15 +81,15 @@
 
 
 
-<script src='<c:url value="/resources/dist/js/jquery/2.1.4/jquery.min.js"></c:url>'></script>
-<script src='<c:url value="/resources/dist/wet-boew/js/wet-boew.min.js"></c:url>'></script>
+<script src='<c:url value="/resources/js/jquery/2.1.4/jquery.min.js"></c:url>'></script>
+<script src='<c:url value="/resources/wet-boew/js/wet-boew.min.js"></c:url>'></script>
 <!--<![endif]-->
 
 <!--[if lt IE 9]>
-        <script src='<c:url value="/resources/dist/wet-boew/js/ie8-wet-boew2.min.js"></c:url>'></script>
+        <script src='<c:url value="/resources/wet-boew/js/ie8-wet-boew2.min.js"></c:url>'></script>
 <![endif]-->
 
-<script src='<c:url value="/resources/dist/wet-boew/js/theme.min.js"></c:url>'></script>
+<script src='<c:url value="/resources/wet-boew/js/theme.min.js"></c:url>'></script>
     </body>
 </html>
 
