@@ -1787,7 +1787,7 @@ public class JcrServicesImpl implements JcrServices {
     	        orientation = exifIFD0Directory.getInt(ExifIFD0Directory.TAG_ORIENTATION);
             	AffineTransform affineTransform = new AffineTransform();
                 //int height = jpegDirectory.getImageHeight();
-                log.debug("Orientation="+orientation);
+                //log.debug("Orientation="+orientation);
                 if(orientation == 1 || orientation >7) return null;
                 switch (orientation) {
                 case 1:
@@ -1829,18 +1829,21 @@ public class JcrServicesImpl implements JcrServices {
                 	
                     break;
                 }  
-		        AffineTransformOp affineTransformOp = new AffineTransformOp(affineTransform, AffineTransformOp.TYPE_BILINEAR);  
-		        BufferedImage destinationImage = new BufferedImage(height,width, image.getType());
-		        destinationImage = affineTransformOp.filter(image, destinationImage);
-		        if(file != null && file.exists()) {
-		        	ImageIO.write(destinationImage, "jpg", file);
-		        }else {
-					ByteArrayOutputStream os = new ByteArrayOutputStream();
-					ImageIO.write(destinationImage, "jpeg", os);
-		   			InputStream is = new ByteArrayInputStream(os.toByteArray());				
-		   			addFile(path,"original",is,"image/jpeg");
-		   			is.close();
-		        }
+                if(orientation >1) {
+    		        AffineTransformOp affineTransformOp = new AffineTransformOp(affineTransform, AffineTransformOp.TYPE_BILINEAR);  
+    		        BufferedImage destinationImage = new BufferedImage(height,width, image.getType());
+    		        destinationImage = affineTransformOp.filter(image, destinationImage);
+    		        if(file != null && file.exists()) {
+    		        	ImageIO.write(destinationImage, "jpg", file);
+    		        }else {
+    					ByteArrayOutputStream os = new ByteArrayOutputStream();
+    					ImageIO.write(destinationImage, "jpeg", os);
+    		   			InputStream is = new ByteArrayInputStream(os.toByteArray());				
+    		   			addFile(path,"original",is,"image/jpeg");
+    		   			is.close();
+    		        }                	
+                }
+
                 node.setProperty("width", width);
                 node.setProperty("height", height);   
                 session.save();		        
