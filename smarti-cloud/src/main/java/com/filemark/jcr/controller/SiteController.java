@@ -910,7 +910,7 @@ public class SiteController extends BaseController {
 		}
 		if(total == null) total = 1;
 		logger.debug("Uploading..");
-
+		Date start = new Date();
 		ImageUtil.gpio("write","18","1");
 		try {
 			if(!jcrService.nodeExsits(path)) {
@@ -967,7 +967,7 @@ public class SiteController extends BaseController {
         			
         			if(asset.getDevice()!=null) {
         				Device device = (Device)jcrService.getObject(asset.getDevice());
-        				logger.debug("Writing device "+device.getPath() +":"+device.getLocation());
+        				//logger.debug("Writing device "+device.getPath() +":"+device.getLocation());
         				
         				File file = new File(device.getLocation()+asset.getPath());
         				if(!file.getParentFile().exists()) {
@@ -977,14 +977,17 @@ public class SiteController extends BaseController {
         				FileUtils.copyInputStreamToFile(in, file);
         				in.close();
         			}else {
-        				logger.debug("Writing jcr");
+        				//logger.debug("Writing jcr");
             			jcrService.addFile(assetPath,"original",multipartFile.getInputStream(),contentType);
         			}
-        			logger.debug("Done");
+        			//logger.debug("Done");
+        			asset.setTitle(asset.getTitle() +" -"+(new Date().getTime() - start.getTime()));
         			if(contentType != null && contentType.startsWith("image/") && proccess==null) {
         				jcrService.autoRoateImage(assetPath);
+            			asset.setTitle(asset.getTitle() +" -"+(new Date().getTime() - start.getTime()));
         				jcrService.createIcon(assetPath,400,400); 
         				//jcrService.createFile(assetPath, 400);
+            			asset.setTitle(asset.getTitle() +" -"+(new Date().getTime() - start.getTime()));
         			}
         		}catch(Exception ej) {
         			logger.error(ej.getMessage());
