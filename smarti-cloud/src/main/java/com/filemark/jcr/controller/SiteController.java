@@ -964,11 +964,11 @@ public class SiteController extends BaseController {
         		jcrService.updateCalendar(path,"lastModified");
         		jcrService.setProperty(path, "changed", "true");
         		try {
-        			
+        			String infile=null;
         			if(asset.getDevice()!=null) {
         				Device device = (Device)jcrService.getObject(asset.getDevice());
         				//logger.debug("Writing device "+device.getPath() +":"+device.getLocation());
-        				
+        				infile = device.getLocation()+asset.getPath();
         				File file = new File(device.getLocation()+asset.getPath());
         				if(!file.getParentFile().exists()) {
         					file.getParentFile().mkdirs();
@@ -983,7 +983,8 @@ public class SiteController extends BaseController {
         			//logger.debug("Done");
         			asset.setTitle(asset.getTitle() +" -"+(new Date().getTime() - start.getTime()));
         			if(contentType != null && contentType.startsWith("image/") && proccess==null) {
-        				jcrService.autoRoateImage(assetPath);
+        				if(ImageUtil.autoRotate(infile, infile)!=0);
+        					jcrService.autoRoateImage(assetPath);
             			asset.setTitle(asset.getTitle() +" -"+(new Date().getTime() - start.getTime()));
         				jcrService.createIcon(assetPath,400,400); 
         				//jcrService.createFile(assetPath, 400);

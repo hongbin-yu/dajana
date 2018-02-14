@@ -1602,7 +1602,6 @@ public class JcrServicesImpl implements JcrServices {
         	public Object doInJcr(Session session) throws RepositoryException, IOException {
         		File file = getFile(path);
         		if(file !=null && file.exists()) {
-        			ImageUtil imageUtil = new ImageUtil();
         			String infile = file.getAbsolutePath();
         			String outfile =home+ "/icon"+w+"/"+path;
         			File out = new File(outfile);
@@ -1610,7 +1609,7 @@ public class JcrServicesImpl implements JcrServices {
         				out.getParentFile().mkdirs();
         			}
         			try {
-        				int exit = imageUtil.convert(infile, outfile, w, h);
+        				int exit = ImageUtil.convert(infile, outfile, w, h);
         				if(exit==0)
         					updatePropertyByPath(path, "updated", "true");
         				else {
