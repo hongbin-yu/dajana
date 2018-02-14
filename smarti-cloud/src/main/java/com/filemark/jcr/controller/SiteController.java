@@ -1676,6 +1676,7 @@ public class SiteController extends BaseController {
 					}
 				}
 				FileInputStream in = new FileInputStream(outfile);
+				IOUtils.copy(in, response.getOutputStream());
 				in.close();
 				ImageUtil.HDDOff();			
 			}else if(path !=null  && jcrService.nodeExsits(path)) {

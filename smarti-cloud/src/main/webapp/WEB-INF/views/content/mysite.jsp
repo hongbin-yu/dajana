@@ -81,7 +81,7 @@
 
 
 
-<script src='<c:url value="/resources/js/jquery/2.1.4/jquery.min.js"></c:url>'></script>
+<script src='<c:url value="/resources/wet-boew/js/jquery/2.1.4/jquery.min.js"></c:url>'></script>
 <script src='<c:url value="/resources/wet-boew/js/wet-boew.min.js"></c:url>'></script>
 <!--<![endif]-->
 
