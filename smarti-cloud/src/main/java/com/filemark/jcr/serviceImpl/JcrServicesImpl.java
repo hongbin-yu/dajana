@@ -1754,26 +1754,26 @@ public class JcrServicesImpl implements JcrServices {
         	public Object doInJcr(Session session) throws RepositoryException, IOException {
         	BufferedImage image = null;
         	File file = getFile(path);
-    		
-        	if(file != null && file.exists()) {
-        		image = ImageIO.read(file);
-        	} else {
-        		Node node = getNode(path+"/original");
-				image = ImageIO.read(JcrUtils.readFile(node));        		
-        	}
+        	int width,height; 
             Node node = getNode(path);
-            int width = image.getWidth();
-            int height = image.getHeight();
-
-        	
+      	
 	        Metadata metadata = null;
 			try {
 				if(ImageUtil.autoRotate(file.getAbsolutePath(), file.getAbsolutePath())==0) {
-	                node.setProperty("width", width);
-	                node.setProperty("height", height);   
+	        		image = ImageIO.read(file);
+					node.setProperty("width", image.getWidth());
+	                node.setProperty("height", image.getHeight());   
 	                session.save();		
 	                return null;
 				}
+	        	if(file != null && file.exists()) {
+	        		image = ImageIO.read(file);
+	        	} else {
+	        		Node filenode = getNode(path+"/original");
+					image = ImageIO.read(JcrUtils.readFile(filenode));        		
+	        	}
+                width = image.getWidth();
+                height = image.getHeight();
 				if(file != null && file.exists())
 					metadata = ImageMetadataReader.readMetadata(file);
 				else {
