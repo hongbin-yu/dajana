@@ -1761,6 +1761,7 @@ public class JcrServicesImpl implements JcrServices {
 			try {
 				if(ImageUtil.autoRotate(file.getAbsolutePath(), file.getAbsolutePath())==0) {
 	        		image = ImageIO.read(file);
+
 					node.setProperty("width", image.getWidth());
 	                node.setProperty("height", image.getHeight());   
 	                session.save();		
