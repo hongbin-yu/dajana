@@ -23,7 +23,7 @@ import com.filemark.jcr.serviceImpl.JcrServicesImpl;
 public class ImageUtil
 {
 	private final static Logger log = LoggerFactory.getLogger(ImageUtil.class);
-
+	private static String HDDPIN = "18";
     /**
      * Takes a file, and resizes it to the given width and height, while keeping
      * original proportions. Note: It resizes a new file rather than resizing 
@@ -277,4 +277,11 @@ public class ImageUtil
 
         return exit;
     }
+    
+    public static int HDDOn() {
+    	return gpio("write", HDDPIN,"1");
+    }
+    public static int HDDOff() {
+    	return gpio("write", HDDPIN,"0");
+    }    
 }

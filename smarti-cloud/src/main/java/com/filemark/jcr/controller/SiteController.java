@@ -82,14 +82,14 @@ public class SiteController extends BaseController {
 	    String simpleName = ex.getCause().getClass().getSimpleName();
 	    //logger.info(simpleName);
 	    if (simpleName.equals("ClientAbortException") || simpleName.equals("SocketException")) {
-			ImageUtil.gpio("write","18","0");
+			ImageUtil.HDDOff();
 	    	return null;
 	    }
 	    request.getSession().invalidate();
 	    modelAndView.addObject("error",message);
 	    //modelAndView.addObject("breadcrumb", jcrService.getBreadcrumb(paths[0]));
 	    logger.error(ex.toString());
-		ImageUtil.gpio("write","18","0");
+		ImageUtil.HDDOff();
 	    return modelAndView;
     }
     
@@ -100,7 +100,7 @@ public class SiteController extends BaseController {
 	
 	@RequestMapping(value = {"/site/browse.html","/site/image.html"}, method = {RequestMethod.GET,RequestMethod.POST},produces = "text/plain;charset=UTF-8")
 	public String browse(String path,String type, String input,String kw,Integer p,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
-		ImageUtil.gpio("write","18","1");
+		ImageUtil.HDDOn();
 		String assetFolder = "/"+getUsername()+"/assets";
 		if(!jcrService.nodeExsits(assetFolder)) {
 			jcrService.addNodes(assetFolder, "nt:unstructured",getUsername());		
@@ -154,7 +154,7 @@ public class SiteController extends BaseController {
 		model.addAttribute("type", type);
 		model.addAttribute("input", input);		
 		model.addAttribute("kw", kw);	
-		ImageUtil.gpio("write","18","0");
+		ImageUtil.HDDOff();
 		return "site/browse";
 	}
 	
@@ -234,7 +234,7 @@ public class SiteController extends BaseController {
  	
 	@RequestMapping(value = {"/site/assets.html","/site/assets"}, method = {RequestMethod.GET,RequestMethod.POST},produces = "text/plain;charset=UTF-8")
 	public String assets(String path,String type, String input,String kw,Integer p,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
-		ImageUtil.gpio("write","18","1");
+		ImageUtil.HDDOn();
 		String assetFolder = "/"+getUsername()+"/assets";
 		if(!jcrService.nodeExsits(assetFolder)) {
 			jcrService.addNodes(assetFolder, "nt:unstructured",getUsername());		
@@ -302,13 +302,13 @@ public class SiteController extends BaseController {
 		model.addAttribute("type", type);
 		model.addAttribute("input", input);		
 		model.addAttribute("kw", kw);	
-		ImageUtil.gpio("write","18","0");
+		ImageUtil.HDDOff();
 		return "site/asset";
 	}
 	
 	@RequestMapping(value = {"/site/createPage.html"}, method = RequestMethod.GET)
 	public String createPageGet(String path,String uid,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
-		ImageUtil.gpio("write","18","1");
+		ImageUtil.HDDOn();
 		if(uid!=null) {
 			Page page = jcrService.getPageByUid(uid);
 			path = page.getPath();
@@ -338,7 +338,7 @@ public class SiteController extends BaseController {
 			model.addAttribute("templates", templates);
 		}	
 		model.addAttribute("path", path);
-		ImageUtil.gpio("write","18","0");
+		ImageUtil.HDDOff();
 		return "site/createPage";
 	}
 	
@@ -369,7 +369,7 @@ public class SiteController extends BaseController {
 	
 	@RequestMapping(value = {"/site/createPage.html"}, method = RequestMethod.POST)
 	public @ResponseBody String createPage(String path,String templatePath,Integer p,Page page,Model model,HttpServletRequest request, HttpServletResponse response) {
-		ImageUtil.gpio("write","18","1");
+		ImageUtil.HDDOn();
 		Page currentPage = null;
 		if(path==null) return "error:path is null";
 		page.setParent(path);
@@ -393,10 +393,10 @@ public class SiteController extends BaseController {
 			}
 			currentPage = jcrService.getPage(page.getPath());
 		} catch (Exception e) {
-			ImageUtil.gpio("write","18","0");
+			ImageUtil.HDDOff();
 			return "error:"+e.getMessage();
 		}
-		ImageUtil.gpio("write","18","0");
+		ImageUtil.HDDOff();
 		return currentPage.getPath();
 	}
 	@RequestMapping(value = {"/site/createFolder.html"}, method = RequestMethod.POST)
@@ -421,25 +421,25 @@ public class SiteController extends BaseController {
 	
 	@RequestMapping(value = {"/site/editpp.html","/editpp.html/**","/editpp.html/**/*.*"}, method = {RequestMethod.GET})
 	public String getPageProperties(String uid,String path,Page page, Model model,HttpServletRequest request, HttpServletResponse response) {
-		ImageUtil.gpio("write","18","1");
+		ImageUtil.HDDOn();
 		Page currentpage = new Page();
 		try {
 			if(uid!=null) path = jcrService.getNodeById(uid);
 			currentpage = jcrService.getPage(path);
 
 		} catch (RepositoryException e) {
-			ImageUtil.gpio("write","18","0");
+			ImageUtil.HDDOff();
 			model.addAttribute("message", "<div class=\"alert alert-danger\"><h2>&#22833;&#36133;</h2><p>"+e.getMessage()+"</p></div>");
 		}
 		
 		model.addAttribute("page", currentpage); 
-		ImageUtil.gpio("write","18","0");
+		ImageUtil.HDDOff();
 		return "site/pproperties";
 	}
 	@RequestMapping(value = {"/site/editpp.html"}, method = {RequestMethod.POST})
 	public String editPageProperties(String uid,String path,Page page, Model model,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
 		Page currentpage = new Page();
-		ImageUtil.gpio("write","18","1");
+		ImageUtil.HDDOn();
 		try {
 			if(uid!=null) path = jcrService.getNodeById(uid);
 			currentpage = jcrService.getPage(path);
@@ -455,10 +455,10 @@ public class SiteController extends BaseController {
 			}
 
 		} catch (RepositoryException e) {
-			ImageUtil.gpio("write","18","0");
+			ImageUtil.HDDOff();
 			model.addAttribute("error", "<h3>&#22833;&#36133;</h3><p>"+e.getMessage()+"</p>");
 		}
-		ImageUtil.gpio("write","18","0");
+		ImageUtil.HDDOff();
 		model.addAttribute("page", currentpage); 
 
 		return "redirect:/site/editor.html?uid="+currentpage.getUid();
@@ -468,7 +468,7 @@ public class SiteController extends BaseController {
 	public String editPage(String uid,String path,String input,String kw,Integer p,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String content = "/content/"+getUsername();
 		Page currentpage = new Page();
-		ImageUtil.gpio("write","18","1");
+		ImageUtil.HDDOn();
 		if(!jcrService.nodeExsits(content)) {//create root
 			if(!jcrService.nodeExsits("/content")) {
 				Page djn = new Page();
@@ -497,10 +497,10 @@ public class SiteController extends BaseController {
 		}
 		if(!currentpage.getPath().startsWith(content)) {
 			if(getUsername()==null) {
-				ImageUtil.gpio("write","18","0");
+				ImageUtil.HDDOff();
 				return "redirect:/mysite";
 			} else	{		
-				ImageUtil.gpio("write","18","0");
+				ImageUtil.HDDOff();
 				return "redirect:/site/editor.html?path="+content;
 			}
 		}		
@@ -532,10 +532,10 @@ public class SiteController extends BaseController {
 		model.addAttribute("page", currentpage); 
 		model.addAttribute("origin", request.getRequestURL()+"?"+request.getQueryString());
 		if(currentpage.getPath().startsWith("/content/templates")) {
-			ImageUtil.gpio("write","18","0");
+			ImageUtil.HDDOff();
 			return "site/template";
 		}
-		ImageUtil.gpio("write","18","0");
+		ImageUtil.HDDOff();
 		return "site/editor";
 	}
 
@@ -611,7 +611,7 @@ public class SiteController extends BaseController {
 	}
 	@RequestMapping(value = {"/site/menu.html"}, method = RequestMethod.GET)
 	public String menu(String uid,String path,String input,String kw,Integer p,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
-		ImageUtil.gpio("write","18","0");
+		ImageUtil.HDDOff();
 		String menu="";
 		String content = "/content/"+getUsername();
 		Page currentpage = new Page();
@@ -632,13 +632,13 @@ public class SiteController extends BaseController {
 		if(!request.getContextPath().equals("/")) {
 			menu = menu.replaceAll("/content/", request.getContextPath()+"/content/");
 		}
-		ImageUtil.gpio("write","18","0");
+		ImageUtil.HDDOff();
 		model.addAttribute("navigation", menu);
 		return "site/navmenu";
 	}
 	@RequestMapping(value = {"/site/preview.html"}, method = RequestMethod.GET)
 	public String previewPage(String uid,String path,String input,String kw,Integer p,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
-		ImageUtil.gpio("write","18","1");
+		ImageUtil.HDDOn();
 		String content = "/content/"+getUsername();
 		Page currentpage = new Page();
 
@@ -675,13 +675,13 @@ public class SiteController extends BaseController {
 		model.addAttribute("content",currentpage.getContent());
 		model.addAttribute("origin", request.getRequestURL()+"?"+request.getQueryString());
 
-		ImageUtil.gpio("write","18","0");	
+		ImageUtil.HDDOff();	
 		return "content/page";
 	}
 
 	@RequestMapping(value = {"/site/leftmenu.html","/leftmenu.html"}, method = RequestMethod.GET)
 	public String leftmenu(String uid,String path,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
-		ImageUtil.gpio("write","18","1");
+		ImageUtil.HDDOn();
 		String content = "/content/"+getUsername();		
 		Page currentpage = new Page();
 		if(uid==null && path!=null) {
@@ -709,13 +709,13 @@ public class SiteController extends BaseController {
 		model.addAttribute("parent",jcrService.getPage(currentpage.getParent()));
 		model.addAttribute("menu", pages); 
 		model.addAttribute("page", currentpage);
-		ImageUtil.gpio("write","18","0");
+		ImageUtil.HDDOff();
 		return "site/leftmenu";
 	}
 
 	@RequestMapping(value = {"/templates.html"}, method = RequestMethod.GET)
 	public String templates(String path,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
-		ImageUtil.gpio("write","18","1");
+		ImageUtil.HDDOn();
 		Page currentpage = new Page();
 		if(path==null || path.equals("/content"))
 			path = "/content/templates";
@@ -738,12 +738,12 @@ public class SiteController extends BaseController {
 		model.addAttribute("parent",jcrService.getPage(currentpage.getParent()));
 		model.addAttribute("menu", pages); 
 		model.addAttribute("page", currentpage);
-		ImageUtil.gpio("write","18","0");
+		ImageUtil.HDDOff();
 		return "site/templates";
 	}
 	@RequestMapping(value = {"/site/pages.html","/site/file.html"}, method = RequestMethod.GET)
 	public String files(String path,String type, String input,String kw,Integer p,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
-		ImageUtil.gpio("write","18","1");
+		ImageUtil.HDDOn();
 		if(path==null) {
 			path="/content/"+getUsername();
 		}
@@ -770,13 +770,13 @@ public class SiteController extends BaseController {
 		model.addAttribute("path", path);
 		model.addAttribute("type", type);
 		model.addAttribute("input", input);		
-		ImageUtil.gpio("write","18","0");
+		ImageUtil.HDDOff();
 		return "site/pages";
 	}	
 	
 	@RequestMapping(value = {"/site/page.html"}, method = RequestMethod.GET)
 	public String pages(String path,String type, String input,String kw,Integer p,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
-		ImageUtil.gpio("write","18","1");
+		ImageUtil.HDDOn();
 		String content = "/content/"+getUsername();
 		Page currentpage = new Page();
 		if(!jcrService.nodeExsits(content)) {//create root
@@ -829,13 +829,13 @@ public class SiteController extends BaseController {
 		model.addAttribute("type", type);
 		model.addAttribute("input", input);		
 		model.addAttribute("kw", kw);	
-		ImageUtil.gpio("write","18","0");
+		ImageUtil.HDDOff();
 		return "site/page";
 	}
 	
 	@RequestMapping(value = {"/site/folder.html"}, method = RequestMethod.GET)
 	public String folders(String uid,String path, String type, String input,String kw,Integer p,Integer m,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
-		ImageUtil.gpio("write","18","1");
+		ImageUtil.HDDOn();
 		String assetFolder = "/"+getUsername()+"/assets";
 
 		if(!jcrService.nodeExsits(assetFolder)) {//create root
@@ -874,7 +874,7 @@ public class SiteController extends BaseController {
 		model.addAttribute("type", type);
 		model.addAttribute("input", input);		
 		model.addAttribute("kw", kw);
-		ImageUtil.gpio("write","18","0");
+		ImageUtil.HDDOff();
 		return "site/folder";
 	}	
 	
@@ -911,7 +911,7 @@ public class SiteController extends BaseController {
 		if(total == null) total = 1;
 		logger.debug("Uploading..");
 		Date start = new Date();
-		ImageUtil.gpio("write","18","1");
+		ImageUtil.HDDOn();
 		try {
 			if(!jcrService.nodeExsits(path)) {
 				jcrService.addNodes(path, "nt:unstructured",getUsername());		
@@ -1001,7 +1001,7 @@ public class SiteController extends BaseController {
 			asset.setTitle("error:"+e.getMessage());
 			
 		}
-		ImageUtil.gpio("write","18","0");
+		ImageUtil.HDDOff();
 		return asset;
 	}	
 
@@ -1009,7 +1009,7 @@ public class SiteController extends BaseController {
 	public @ResponseBody Asset  assetsImport(String path,String url, String override,Model model,HttpServletRequest request, HttpServletResponse response) {
 		Asset asset= new Asset();
 		String username = getUsername();
-		ImageUtil.gpio("write","18","1");
+		ImageUtil.HDDOn();
 		try {
 		if(!jcrService.nodeExsits(path)) {
 			jcrService.addNodes(path, "nt:unstructured",getUsername());		
@@ -1027,7 +1027,7 @@ public class SiteController extends BaseController {
 			MimeType mimeType = allTypes.forName(asset.getContentType());
 		    ext = mimeType.getExtension(); 
 		} catch (MimeTypeException e1) {
-			ImageUtil.gpio("write","18","0");
+			ImageUtil.HDDOff();
 			logger.error(e1.getMessage());
 		}
 		
@@ -1102,12 +1102,12 @@ public class SiteController extends BaseController {
 		}		
 
 		}catch (Exception e){
-			ImageUtil.gpio("write","18","0");
+			ImageUtil.HDDOff();
 			logger.error("error:"+e.getMessage());
 			asset.setTitle("error:"+e.getMessage());
 			
 		}
-		ImageUtil.gpio("write","18","0");
+		ImageUtil.HDDOff();
 		return asset;
 	}
 
@@ -1115,7 +1115,7 @@ public class SiteController extends BaseController {
 	public @ResponseBody Asset  assetsImportMove(String path,String uid, Model model,HttpServletRequest request, HttpServletResponse response) {
 		Asset asset= new Asset();
 		String username = getUsername();
-		ImageUtil.gpio("write","18","1");
+		ImageUtil.HDDOn();
 		try {
 			asset = jcrService.getAssetById(uid);
 			//String names[]=asset.getPath().split("/");
@@ -1158,12 +1158,12 @@ public class SiteController extends BaseController {
 			}   
     		//jcrService.deleteNode(asset.getPath());
 		}catch (Exception e){
-			ImageUtil.gpio("write","18","0");
+			ImageUtil.HDDOff();
 			logger.error("error:"+e.getMessage());
 			asset.setTitle("error:"+e.getMessage());
 			
 		}
-		ImageUtil.gpio("write","18","0");
+		ImageUtil.HDDOff();
 		return asset;
 	}	
 	
@@ -1469,7 +1469,7 @@ public class SiteController extends BaseController {
 	public @ResponseBody String  rotateImage(String uid,Integer angle, Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String result="";
 		Asset asset = null;
-		ImageUtil.gpio("write","18","1");
+		ImageUtil.HDDOn();
 		try {
 			asset = jcrService.getAssetById(uid);
 
@@ -1486,17 +1486,17 @@ public class SiteController extends BaseController {
 
 		}catch (Exception e){
 			logger.error(e.getLocalizedMessage());
-			ImageUtil.gpio("write","18","0");
+			ImageUtil.HDDOff();
 			result = "error:"+e.getMessage();
 			
 		}
-		ImageUtil.gpio("write","18","0");
+		ImageUtil.HDDOff();
 		return result;
 	}	
 	
 	@RequestMapping(value = {"/site/delete.html","/protected/delete.html"}, method = RequestMethod.GET)
 	public String deleteNodeConfirm(String uid,String path,String redirect,Model model,HttpServletRequest request, HttpServletResponse response) {
-		ImageUtil.gpio("write","18","1");
+		ImageUtil.HDDOn();
 			try {
 				if(uid!=null && !uid.equals("")) {
 					path = jcrService.getNodeById(uid);
@@ -1506,17 +1506,17 @@ public class SiteController extends BaseController {
 				model.addAttribute("redirect", redirect);
 				model.addAttribute("smartiNode", jcrService.getObject(path));
 			} catch (RepositoryException e) {
-				ImageUtil.gpio("write","18","0");
+				ImageUtil.HDDOff();
 				model.addAttribute("error", "路径没找到"+path);
 			}
-		ImageUtil.gpio("write","18","0");
+		ImageUtil.HDDOff();
 		return "site/deleteNode";
 	}
 
 
 	@RequestMapping(value = {"/site/deleteasset.html","/protected/deleteasset.html"}, method = RequestMethod.GET)
 	public String deleteAssetConfirm(String uid,String path,String redirect,Model model,HttpServletRequest request, HttpServletResponse response) {
-		ImageUtil.gpio("write","18","1");
+		ImageUtil.HDDOn();
 			try {
 				if(uid!=null && !uid.equals("")) {
 					path = jcrService.getNodeById(uid);
@@ -1526,16 +1526,16 @@ public class SiteController extends BaseController {
 				model.addAttribute("redirect", redirect);
 				model.addAttribute("smartiNode", jcrService.getObject(path));
 			} catch (RepositoryException e) {
-				ImageUtil.gpio("write","18","0");
+				ImageUtil.HDDOff();
 				model.addAttribute("error", "路径没找到"+path);
 			}
-		ImageUtil.gpio("write","18","0");
+		ImageUtil.HDDOff();
 		return "site/deleteAsset";
 	}
 	
 	@RequestMapping(value = {"/site/deletePage.html"}, method = RequestMethod.GET)
 	public String deletePageConfirm(String uid,String path,String redirect,Model model,HttpServletRequest request, HttpServletResponse response) {
-		ImageUtil.gpio("write","18","1");
+		ImageUtil.HDDOn();
 			try {
 				if(uid!=null && !uid.equals("")) {
 					path = jcrService.getNodeById(uid);
@@ -1545,16 +1545,16 @@ public class SiteController extends BaseController {
 				model.addAttribute("redirect", redirect);
 				model.addAttribute("page", jcrService.getPage(path));
 			} catch (RepositoryException e) {
-				ImageUtil.gpio("write","18","0");
+				ImageUtil.HDDOff();
 				model.addAttribute("error", "路径没找到"+path);
 			}
-		ImageUtil.gpio("write","18","0");
+		ImageUtil.HDDOff();
 		return "site/deletePage";
 	} 
 	@RequestMapping(value = {"/site/deletePage.html"}, method = RequestMethod.POST)
 	public String deletePage(String uid,String path,String redirect,Model model,HttpServletRequest request, HttpServletResponse response) {
 		String result="";
-		ImageUtil.gpio("write","18","1");
+		ImageUtil.HDDOn();
 		if(uid!=null && !uid.equals("")) {
 			try {
 				path = jcrService.getNodeById(uid);
@@ -1563,15 +1563,15 @@ public class SiteController extends BaseController {
 				jcrService.deleteNode(path);
 			} catch (RepositoryException e) {
 				logger.error(e.getMessage());
-				ImageUtil.gpio("write","18","0");
+				ImageUtil.HDDOff();
 				result = "error:"+e.getMessage();
 			} catch (IOException e) {
-				ImageUtil.gpio("write","18","0");
+				ImageUtil.HDDOff();
 				logger.error(e.getMessage());
 				result = "error:"+e.getMessage();
 			}
 		}
-		ImageUtil.gpio("write","18","0");
+		ImageUtil.HDDOff();
 		return result;
 	} 
 
@@ -1587,7 +1587,7 @@ public class SiteController extends BaseController {
 
 	@RequestMapping(value = {"/site/deleteasset.html","/protected/deleteasset.html"}, method = RequestMethod.POST)
 	public @ResponseBody String deleteAsset(String uid,String path,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
-		ImageUtil.gpio("write","18","1");
+		ImageUtil.HDDOn();
 		if(uid!=null && !uid.equals("")) {
 			path = jcrService.getNodeById(uid);
 		}else if( path==null || "".equals(path)) {
@@ -1610,7 +1610,7 @@ public class SiteController extends BaseController {
 				parent.delete();
 			}
 		}		
-		ImageUtil.gpio("write","18","0");
+		ImageUtil.HDDOff();
 		return jcrService.deleteNode(path);
 	}
 
@@ -1653,7 +1653,7 @@ public class SiteController extends BaseController {
 
 	@RequestMapping(value = {"/site/viewimage","/content/viewimage","/content/**/viewimage","/protected/viewimage","/protected/**/viewimage","/site/file","/site/file*.*","/content/file","/content/file*.*","/content/**/file","/content/**/file*.*"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public @ResponseBody String viewFile(String uid,String path,Integer w,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
-		ImageUtil.gpio("write","18","1");		
+		ImageUtil.HDDOn();		
 		Integer width = null;
 		if(w !=null && w <= 12) {
 			width = w*100;
@@ -1673,17 +1673,22 @@ public class SiteController extends BaseController {
 					Device device = (Device)jcrService.getObject(asset.getDevice());
 					file = new File(device.getLocation()+asset.getPath());
 					if(width!=null && file.exists()) {
-						File icon = new File(jcrService.getHome()+"/icon"+width+"/"+asset.getPath());
-						if(icon.exists()) {
+						String iconfile = jcrService.getHome()+"/icon"+width+"/"+asset.getPath();
+						File icon = new File(iconfile);
+						
+						if(!icon.exists()) {
+							if(ImageUtil.convert(file.getAbsolutePath(), iconfile, width, width)==0)
+								file = icon;
+						}else 
 							file = icon;
-						}
+
 					}
 
 					FileInputStream in = new FileInputStream(file);
 					response.setContentType(asset.getContentType());
 					IOUtils.copy(in, response.getOutputStream());
 					in.close();
-					ImageUtil.gpio("write","18","0");
+					ImageUtil.HDDOff();
 					return null;
 				}else  if(jcrService.nodeExsits(path+"/original")) {
 					response.setContentType(asset.getContentType());
@@ -1693,23 +1698,23 @@ public class SiteController extends BaseController {
 						response.setDateHeader("Last-Modified", asset.getOriginalDate().getTime());
 					
 					jcrService.readAsset(path+"/original",  response.getOutputStream());
-					ImageUtil.gpio("write","18","0");
+					ImageUtil.HDDOff();
 					return null;
 				}else {
-					ImageUtil.gpio("write","18","0");
+					ImageUtil.HDDOff();
 					return path +" original file not found";
 				}
 			}else {
-				ImageUtil.gpio("write","18","0");
+				ImageUtil.HDDOff();
 				return path +" file not found";		
 			}
 
 		}catch(Exception e) {
 			logger.error("viewFile:"+e.getMessage());
-			ImageUtil.gpio("write","18","0");
+			ImageUtil.HDDOff();
 			return e.getMessage();
 		}
-		ImageUtil.gpio("write","18","0");
+		ImageUtil.HDDOff();
 		
 		return null;
 		
@@ -1787,7 +1792,7 @@ public class SiteController extends BaseController {
 	@RequestMapping(value = {"/site/viewpdf","/content/viewpdf","/content/**/viewpdf"}, method = {RequestMethod.GET})
 	public @ResponseBody String viewPdf(String uid[],HttpServletRequest request, HttpServletResponse response) throws IOException, RepositoryException {
 		List<Asset> assets = new ArrayList<Asset>();
-		ImageUtil.gpio("write","18","1");
+		ImageUtil.HDDOn();
 		try {
 			for(String id:uid) {
 				assets.add(jcrService.getAssetById(id));
@@ -1795,10 +1800,10 @@ public class SiteController extends BaseController {
 			jcrService.assets2pdf(assets, response.getOutputStream());			
 		}catch(Exception e) {
 			logger.error("viewPdf"+e.getMessage());
-			ImageUtil.gpio("write","18","0");
+			ImageUtil.HDDOff();
 			return "Error:"+e.getMessage();
 		}
-		ImageUtil.gpio("write","18","0");
+		ImageUtil.HDDOff();
 		return null;
 	}
 
@@ -1815,7 +1820,7 @@ public class SiteController extends BaseController {
 	}	*/
 	@RequestMapping(value = {"/site/viewf2p","/content/viewf2p","/content/**/viewf2p"}, method = {RequestMethod.GET})
 	public @ResponseBody String viewf2p(String path,HttpServletRequest request, HttpServletResponse response) throws IOException, RepositoryException {
-		ImageUtil.gpio("write","18","1");
+		ImageUtil.HDDOn();
 		try {
 			String assetsQuery = "select * from [nt:base] AS s WHERE ISCHILDNODE(["+path+"]) and s.delete not like 'true' and s.ocm_classname='com.filemark.jcr.model.Asset' order by s.lastModified desc, s.name";
 			WebPage<Asset> result = jcrService.searchAssets(assetsQuery, 100, 0);
@@ -1823,16 +1828,16 @@ public class SiteController extends BaseController {
 			jcrService.assets2pdf(result.getItems(), response.getOutputStream());			
 		}catch(Exception e) {
 			logger.error("viewf2p:"+e.getMessage());
-			ImageUtil.gpio("write","18","0");
+			ImageUtil.HDDOff();
 			return "Error:"+e.getMessage();
 		}
-		ImageUtil.gpio("write","18","0");
+		ImageUtil.HDDOff();
 		return null;
 	}
 	
 	@RequestMapping(value = {"/site/viewfolder"}, method = {RequestMethod.GET})
 	public @ResponseBody String viewFolder(String uid,String path,Integer w,HttpServletRequest request, HttpServletResponse response) throws IOException, RepositoryException {
-		ImageUtil.gpio("write","18","1");	
+		ImageUtil.HDDOn();	
 		Integer width = null;
 		if(w !=null && w <= 12) {
 			width = w*100;
@@ -1864,16 +1869,16 @@ public class SiteController extends BaseController {
 					}
 				}else
 					jcrService.readAsset(path+"/original", response);
-				ImageUtil.gpio("write","18","0");
+				ImageUtil.HDDOff();
 				return null;
 	
 			}else {
-				ImageUtil.gpio("write","18","0");
+				ImageUtil.HDDOff();
 				return path +" file not found";
 			}
 		}catch(Exception e) {
 			logger.error("viewFolder:"+e.getMessage());
-			ImageUtil.gpio("write","18","0");
+			ImageUtil.HDDOff();
 			return e.getMessage();
 		}
 		
