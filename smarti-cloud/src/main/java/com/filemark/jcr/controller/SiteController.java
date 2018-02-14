@@ -1663,7 +1663,22 @@ public class SiteController extends BaseController {
 		try {
 			if(path==null || "".equals(path))
 				path = jcrService.getNodeById(uid);
-			if(path !=null  && jcrService.nodeExsits(path)) {
+			
+			File outfile = new File(jcrService.getDevice()+path);
+			if(outfile.exists()) {
+				if(width !=null ) {
+					String icon = jcrService.getDevice()+"/icon/"+width+path;
+					File iconfile = new File(icon);
+					if(!iconfile.exists()) {
+						if(ImageUtil.convert(icon, icon, width, width)==0) {
+							outfile = iconfile;
+						}
+					}
+				}
+				FileInputStream in = new FileInputStream(outfile);
+				in.close();
+				ImageUtil.HDDOff();			
+			}else if(path !=null  && jcrService.nodeExsits(path)) {
 				Asset asset = (Asset)jcrService.getObject(path);
 				if(width!=null && jcrService.nodeExsits(path+"/file-"+width)) {
 					response.setContentType(asset.getContentType());
