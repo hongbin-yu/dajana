@@ -983,8 +983,7 @@ public class SiteController extends BaseController {
         			//logger.debug("Done");
         			asset.setTitle(asset.getTitle() +" -"+(new Date().getTime() - start.getTime()));
         			if(contentType != null && contentType.startsWith("image/") && proccess==null) {
-        				if(ImageUtil.autoRotate(infile, infile)!=0);
-        					jcrService.autoRoateImage(assetPath);
+       					jcrService.autoRoateImage(assetPath);
             			asset.setTitle(asset.getTitle() +" -"+(new Date().getTime() - start.getTime()));
         				jcrService.createIcon(assetPath,400,400); 
         				//jcrService.createFile(assetPath, 400);

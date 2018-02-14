@@ -1761,13 +1761,24 @@ public class JcrServicesImpl implements JcrServices {
         		Node node = getNode(path+"/original");
 				image = ImageIO.read(JcrUtils.readFile(node));        		
         	}
+            Node node = getNode(path);
+            int width = image.getWidth();
+            int height = image.getHeight();
+
+        	
 	        Metadata metadata = null;
 			try {
+				if(ImageUtil.autoRotate(file.getAbsolutePath(), file.getAbsolutePath())==0) {
+	                node.setProperty("width", width);
+	                node.setProperty("height", height);   
+	                session.save();		
+	                return null;
+				}
 				if(file != null && file.exists())
 					metadata = ImageMetadataReader.readMetadata(file);
 				else {
-					Node node = getNode(path+"/original");
-					metadata = ImageMetadataReader.readMetadata(JcrUtils.readFile(node));
+					Node imagenode = getNode(path+"/original");
+					metadata = ImageMetadataReader.readMetadata(JcrUtils.readFile(imagenode));
 				}
 				if (metadata==null) return null;
     	        ExifIFD0Directory exifIFD0Directory = metadata.getFirstDirectoryOfType(ExifIFD0Directory.class);
@@ -1775,13 +1786,6 @@ public class JcrServicesImpl implements JcrServices {
     	        int orientation = 1;
     	        orientation = exifIFD0Directory.getInt(ExifIFD0Directory.TAG_ORIENTATION);
             	AffineTransform affineTransform = new AffineTransform();
-                int width = image.getWidth();
-                //int width = jpegDirectory.getImageWidth();
-                int height = image.getHeight();
-                Node node = getNode(path);
-                node.setProperty("width", width);
-                node.setProperty("height", height);   
-                session.save();
                 //int height = jpegDirectory.getImageHeight();
                 log.debug("Orientation="+orientation);
                 if(orientation == 1 || orientation >7) return null;
@@ -1837,9 +1841,14 @@ public class JcrServicesImpl implements JcrServices {
 		   			addFile(path,"original",is,"image/jpeg");
 		   			is.close();
 		        }
+                node.setProperty("width", width);
+                node.setProperty("height", height);   
+                session.save();		        
 			} catch (ImageProcessingException e) {
 				log.error(e.getMessage());
 			} catch (MetadataException e) {
+				log.error(e.getMessage());
+			} catch (InterruptedException e) {
 				log.error(e.getMessage());
 			}
 
