@@ -1733,8 +1733,12 @@ public class SiteController extends BaseController {
 				width = 48;
 		}
 		try {
-
-			if(path !=null && jcrService.nodeExsits(path)) {
+			File outfile = new File(jcrService.getDevice()+path);
+			if(outfile.exists()) {
+				FileInputStream in = new FileInputStream(outfile);
+				IOUtils.copy(in, response.getOutputStream());	
+				in.close();
+			}else if(path !=null && jcrService.nodeExsits(path)) {
 				Asset asset = (Asset)jcrService.getObject(path);
 				if(width!=null && jcrService.nodeExsits(path+"/file-"+width)) {
 					response.setContentType(asset.getContentType());
@@ -1747,20 +1751,10 @@ public class SiteController extends BaseController {
 					FileInputStream in = new FileInputStream(file);
 					response.setContentType(asset.getContentType());
 					response.setContentLength((int)file.length());
-/*					if(asset.getSize()!=null)
-						response.setContentLength(asset.getSize().intValue());
-					if(asset.getOriginalDate()!=null)
-						response.setDateHeader("Last-Modified", asset.getOriginalDate().getTime());
-					OutputStream output = response.getOutputStream();*/
+
 					IOUtils.copy(in, response.getOutputStream());	
 					in.close();
-/*					byte[] buffer = new byte[8 * 1024];
-					int byteToRead = 0;
-					while((byteToRead = in.read(buffer)) != -1) {
-						output.write(buffer,0,byteToRead);
-					}
-					in.close();
-					output.close();	*/
+
 					return null;
 				}else  if(jcrService.nodeExsits(path+"/original")) {
 					response.setContentType(asset.getContentType());
