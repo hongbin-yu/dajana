@@ -1644,8 +1644,7 @@ public class SiteController extends BaseController {
 
 		return super.deleteNode(model, request, response);
 	} 
-	@RequestMapping(value = {"/site/doc2pdf.pdf",
-			}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
+	@RequestMapping(value = {"/site/doc2pdf.pdf"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public @ResponseBody String doc2pdf(String uid,String path,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
 		ImageUtil.HDDOn();	
 		if(path==null || "".equals(path))
@@ -1674,7 +1673,7 @@ public class SiteController extends BaseController {
 							}
 						}
 						FileInputStream in = new FileInputStream(file);
-						response.setContentType(asset.getContentType());
+						response.setContentType("application/pdf");
 						IOUtils.copy(in, response.getOutputStream());
 						in.close();						
 					}
