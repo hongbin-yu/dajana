@@ -167,6 +167,7 @@
          <beans:property name="domain" value="${smarti.domain}"/>
          <beans:property name="home" value="${smarti.home}"/>
          <beans:property name="device" value="${smarti.device}"/>         
+         <beans:property name="workingDir" value="${smarti.workingDir}"/>   
          <beans:property name="asianFont" value="/fonts/NotoSansCJKsc-Regular.otf">
          </beans:property>    
     </beans:bean>

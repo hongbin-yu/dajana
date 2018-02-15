@@ -107,7 +107,8 @@ public class JcrServicesImpl implements JcrServices {
 	private String device=null;	
     private String asianFont;
     private String home;
-
+    private String workingDir;
+    
 	@SuppressWarnings("unchecked")
 	public WebPage<Asset> searchAssets(final String queryString, final long limit,final long offset) {
 		return (WebPage<Asset>) jcrTemplate.execute(new JcrCallback() { 
@@ -2549,6 +2550,26 @@ public class JcrServicesImpl implements JcrServices {
 		ImageUtil.gpio("mode","18","output");
 		ImageUtil.HDDOn();
 		this.device = device;
+	}
+
+
+	public String getWorkingDir() {
+		return workingDir;
+	}
+
+
+	public void setWorkingDir(String workingDir) {
+		this.workingDir = workingDir;
+		File dir = new File(workingDir);
+		if(dir.exists() || dir.mkdirs()) {
+			boolean result = (System.setProperty("user.dir", dir.getAbsolutePath()) != null);
+			log.debug("Working Dir is set:"+result);
+		}
+	}
+
+
+	public Logger getLog() {
+		return log;
 	}
 
 
