@@ -1647,52 +1647,50 @@ public class SiteController extends BaseController {
 	@RequestMapping(value = {"/site/doc2pdf.pdf"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public @ResponseBody String doc2pdf(String uid,String path,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
 		ImageUtil.HDDOn();	
-		if(path==null || "".equals(path))
-			try {
-				if(uid !=null)
-					path = jcrService.getNodeById(uid);
-				if(path !=null  && jcrService.nodeExsits(path)) {
-					Asset asset = (Asset)jcrService.getObject(path);
-					if(asset.getDevice()!=null) {
-						File file = null;
-						Device device = (Device)jcrService.getObject(asset.getDevice());
-						String docfile = device.getLocation()+asset.getPath();
-						String pdffile = device.getLocation()+asset.getPath().replaceFirst(".doc", ".pdf").replaceFirst(".docx", ".pdf").replaceFirst(".rtf", ".pdf");
-						logger.debug(pdffile);
-						file = new File(pdffile);
-						if(!file.exists()) {
-							try {
-								int exit = ImageUtil.doc2pdf(docfile, file.getParentFile().getAbsolutePath());
-								if(exit != 0) {
-									ImageUtil.HDDOff();
-									return "doc2pdf exit:"+exit;									
-								}
-							} catch (InterruptedException e) {
-								logger.error("doc2pdf:"+e.getMessage());
+		try {
+			if(uid !=null)
+				path = jcrService.getNodeById(uid);
+			if(path !=null  && jcrService.nodeExsits(path)) {
+				Asset asset = (Asset)jcrService.getObject(path);
+				if(asset.getDevice()!=null) {
+					File file = null;
+					Device device = (Device)jcrService.getObject(asset.getDevice());
+					String docfile = device.getLocation()+asset.getPath();
+					String pdffile = device.getLocation()+asset.getPath().replaceFirst(".doc", ".pdf").replaceFirst(".docx", ".pdf").replaceFirst(".rtf", ".pdf");
+					logger.debug(pdffile);
+					file = new File(pdffile);
+					if(!file.exists()) {
+						try {
+							int exit = ImageUtil.doc2pdf(docfile, file.getParentFile().getAbsolutePath());
+							if(exit != 0) {
 								ImageUtil.HDDOff();
-								return e.getMessage();
+								return "doc2pdf exit:"+exit;									
 							}
+						} catch (InterruptedException e) {
+							logger.error("doc2pdf:"+e.getMessage());
+							ImageUtil.HDDOff();
+							return e.getMessage();
 						}
-						FileInputStream in = new FileInputStream(file);
-						response.setContentType("application/pdf");
-						IOUtils.copy(in, response.getOutputStream());
-						in.close();						
 					}
+					FileInputStream in = new FileInputStream(file);
+					response.setContentType("application/pdf");
+					IOUtils.copy(in, response.getOutputStream());
+					in.close();						
 				}
-			} catch (RepositoryException e) {
-				logger.error("doc2pdf:"+e.getMessage());
-				ImageUtil.HDDOff();
-				return e.getMessage();
-			} catch (FileNotFoundException e) {
-				logger.error("doc2pdf:"+e.getMessage());
-				ImageUtil.HDDOff();
-				return e.getMessage();
-			} catch (IOException e) {
-				logger.error("doc2pdf:"+e.getMessage());
-				ImageUtil.HDDOff();
-				return e.getMessage();
 			}
-		
+		} catch (RepositoryException e) {
+			logger.error("doc2pdf:"+e.getMessage());
+			ImageUtil.HDDOff();
+			return e.getMessage();
+		} catch (FileNotFoundException e) {
+			logger.error("doc2pdf:"+e.getMessage());
+			ImageUtil.HDDOff();
+			return e.getMessage();
+		} catch (IOException e) {
+			logger.error("doc2pdf:"+e.getMessage());
+			ImageUtil.HDDOff();
+			return e.getMessage();
+		}
 
 		ImageUtil.HDDOff();
 		return null;
