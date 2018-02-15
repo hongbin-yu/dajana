@@ -1661,7 +1661,7 @@ public class SiteController extends BaseController {
 			
 			if(path !=null  && jcrService.nodeExsits(path)) {
 				Asset asset = (Asset)jcrService.getObject(path);
-				if(asset.getWidth() == null) {
+				if(asset.getWidth() == null && asset.getContentType().startsWith("image/")) {
 					jcrService.autoRoateImage(path);
 				}
 				if(width!=null && jcrService.nodeExsits(path+"/file-"+width)) {
