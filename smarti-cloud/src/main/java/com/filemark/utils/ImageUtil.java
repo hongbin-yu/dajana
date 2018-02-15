@@ -342,7 +342,7 @@ public class ImageUtil
     	Process p;
     	int exit=0;
     	
-    	ProcessBuilder pb = new ProcessBuilder("cd /mnt/device/workingdir && lowriter","--convert-to","pdf:writer_pdf_Export","--outdir",outdir,filename);
+    	ProcessBuilder pb = new ProcessBuilder("cd",outdir,"&&","lowriter","--convert-to","pdf:writer_pdf_Export",filename);
     	pb.redirectErrorStream(true);
         p = pb.start();//Runtime.getRuntime().exec(shellCommand);
 
