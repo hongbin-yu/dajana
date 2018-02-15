@@ -223,7 +223,7 @@ public class Asset implements SmartiNode, Serializable {
 		}
 	}
 
-	public boolean getDoc2Pdf() {
+	public boolean getDoc2pdf() {
 		if(contentType != null && ("application/vnd.ms-word".equals(contentType) || "application/msword".equals(contentType) || path.endsWith(".doc") || path.endsWith(".docx"))) {
 			return true;
 		}else {	

@@ -1650,7 +1650,8 @@ public class SiteController extends BaseController {
 		ImageUtil.HDDOn();	
 		if(path==null || "".equals(path))
 			try {
-				path = jcrService.getNodeById(uid);
+				if(uid !=null)
+					path = jcrService.getNodeById(uid);
 				if(path !=null  && jcrService.nodeExsits(path)) {
 					Asset asset = (Asset)jcrService.getObject(path);
 					if(asset.getDevice()!=null) {
@@ -1687,7 +1688,7 @@ public class SiteController extends BaseController {
 				ImageUtil.HDDOff();
 				return e.getMessage();
 			} catch (IOException e) {
-				logger.error("viewFile:"+e.getMessage());
+				logger.error("doc2pdf:"+e.getMessage());
 				ImageUtil.HDDOff();
 				return e.getMessage();
 			}
@@ -1833,7 +1834,7 @@ public class SiteController extends BaseController {
 		return null;
 		
 	} 	
-	@RequestMapping(value = {"/site/viewpdf","/site/view.pdf","/content/viewpdf","/content/**/viewpdf"}, method = {RequestMethod.GET})
+	@RequestMapping(value = {"/site/viewpdf","/site/viewpdf.pdf","/content/viewpdf","/content/**/viewpdf"}, method = {RequestMethod.GET})
 	public @ResponseBody String viewPdf(String uid[],HttpServletRequest request, HttpServletResponse response) throws IOException, RepositoryException {
 		List<Asset> assets = new ArrayList<Asset>();
 		ImageUtil.HDDOn();
