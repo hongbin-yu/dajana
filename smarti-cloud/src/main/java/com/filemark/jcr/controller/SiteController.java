@@ -1667,7 +1667,7 @@ public class SiteController extends BaseController {
 			File outfile = new File(jcrService.getDevice()+path);
 			if(outfile.exists()) {
 				if(width !=null ) {
-					String icon = jcrService.getDevice()+"/icon/"+width+path;
+					String icon = jcrService.getHome()+"/icon"+width+path;
 					File iconfile = new File(icon);
 					if(!iconfile.exists()) {
 						if(ImageUtil.convert(icon, icon, width, width)==0) {
@@ -1689,7 +1689,7 @@ public class SiteController extends BaseController {
 					Device device = (Device)jcrService.getObject(asset.getDevice());
 					file = new File(device.getLocation()+asset.getPath());
 					if(width!=null && file.exists()) {
-						String iconfile = jcrService.getHome()+"/icon"+width+"/"+asset.getPath();
+						String iconfile = jcrService.getHome()+"/icon"+width+asset.getPath();
 						File icon = new File(iconfile);
 						
 						if(!icon.exists()) {

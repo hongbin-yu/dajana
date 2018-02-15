@@ -1603,7 +1603,7 @@ public class JcrServicesImpl implements JcrServices {
         		File file = getFile(path);
         		if(file !=null && file.exists()) {
         			String infile = file.getAbsolutePath();
-        			String outfile =home+ "/icon"+w+"/"+path;
+        			String outfile =home+ "/icon"+w+path;
         			File out = new File(outfile);
         			if(!out.getParentFile().exists()) {
         				out.getParentFile().mkdirs();
