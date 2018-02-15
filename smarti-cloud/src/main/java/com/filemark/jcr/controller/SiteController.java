@@ -981,13 +981,13 @@ public class SiteController extends BaseController {
             			jcrService.addFile(assetPath,"original",multipartFile.getInputStream(),contentType);
         			}
         			//logger.debug("Done");
-        			asset.setTitle(asset.getTitle() +" -"+(new Date().getTime() - start.getTime()));
+        			asset.setTitle(asset.getTitle() +" - "+(new Date().getTime() - start.getTime()));
         			if(total <5 && contentType != null && contentType.startsWith("image/") && proccess==null) {
        					jcrService.autoRoateImage(assetPath);
-            			asset.setTitle(asset.getTitle() +" -"+(new Date().getTime() - start.getTime()));
-        				jcrService.createIcon(assetPath,400,400); 
+            			asset.setTitle(asset.getTitle() +" - "+(new Date().getTime() - start.getTime()));
+        				//jcrService.createIcon(assetPath,400,400); 
         				//jcrService.createFile(assetPath, 400);
-            			asset.setTitle(asset.getTitle() +" -"+(new Date().getTime() - start.getTime()));
+            			//asset.setTitle(asset.getTitle() +" -"+(new Date().getTime() - start.getTime()));
         			}
         		}catch(Exception ej) {
         			logger.error(ej.getMessage());
@@ -1071,12 +1071,7 @@ public class SiteController extends BaseController {
 			if(!file.getParentFile().exists()) {
 				file.getParentFile().mkdirs();
 			}
-/*			OutputStream output = new FileOutputStream(file,true);
-			byte[] buffer = new byte[8 * 1024];
-			int byteToRead = 0;
-			while((byteToRead = is.read(buffer)) != -1) {
-				output.write(buffer,0,byteToRead);
-			}*/
+
 			is.close();
 			FileUtils.copyURLToFile(url_img, file);
 			//FileUtils.copyInputStreamToFile(is, file);

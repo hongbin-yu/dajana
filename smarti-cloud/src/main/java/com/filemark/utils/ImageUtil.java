@@ -127,7 +127,7 @@ public class ImageUtil
     	Process p;
     	int exit=0;
     	String shellCommand = "convert "+infile+" -resize "+maxWidth+"x"+maxHeight+"\\> "+outfile;
-    	ProcessBuilder pb = new ProcessBuilder("convert",infile,"-resize",maxWidth+"x"+maxHeight,outfile);
+    	ProcessBuilder pb = new ProcessBuilder("convert",infile,"-resize",maxWidth+"x"+maxHeight+"\\> ",outfile);
     	pb.redirectErrorStream(true);
         p = pb.start();//Runtime.getRuntime().exec(shellCommand);
         BufferedReader br = new BufferedReader(
@@ -211,7 +211,66 @@ public class ImageUtil
         return exit;
     	
     }     
-    
+
+    public static String oreintation(String infile) throws IOException, InterruptedException {
+    	String s;
+    	Process p;
+    	int exit=0;
+    	String orientation="";
+    	ProcessBuilder pb = new ProcessBuilder("identify","-format","%[orientation]",infile);
+    	pb.redirectErrorStream(true);
+        p = pb.start();//Runtime.getRuntime().exec(shellCommand);
+
+        BufferedReader br = new BufferedReader(
+            new InputStreamReader(p.getInputStream()));
+        while ((s = br.readLine()) != null)
+            orientation+=s;
+        p.waitFor();
+        exit = p.exitValue();
+        if(exit !=0) {
+        	br = new BufferedReader(
+                    new InputStreamReader(p.getErrorStream()));
+                while ((s = br.readLine()) != null) {
+                    log.debug("line: " + s);
+                }
+
+        	log.error("convert exit: " + exit);
+        	
+        }
+        p.destroy();
+        return orientation;
+    	
+    }
+
+    public static String getWidthxHeight(String infile) throws IOException, InterruptedException {
+    	String s;
+    	Process p;
+    	int exit=0;
+    	String orientation="";
+    	ProcessBuilder pb = new ProcessBuilder("identify","-format","%wx%h",infile);
+    	pb.redirectErrorStream(true);
+        p = pb.start();//Runtime.getRuntime().exec(shellCommand);
+
+        BufferedReader br = new BufferedReader(
+            new InputStreamReader(p.getInputStream()));
+        while ((s = br.readLine()) != null)
+            orientation+=s;
+        p.waitFor();
+        exit = p.exitValue();
+        if(exit !=0) {
+        	br = new BufferedReader(
+                    new InputStreamReader(p.getErrorStream()));
+                while ((s = br.readLine()) != null) {
+                    log.debug("line: " + s);
+                }
+
+        	log.error("convert exit: " + exit);
+        	
+        }
+        p.destroy();
+        return orientation;
+    	
+    }    
     public static int limit(String folder,String ext, int maxWidth) throws IOException, InterruptedException {
     	String s;
     	Process p;

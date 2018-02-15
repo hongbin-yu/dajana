@@ -1756,17 +1756,12 @@ public class JcrServicesImpl implements JcrServices {
         	File file = getFile(path);
         	int width,height; 
             Node node = getNode(path);
-      	
+      	    String infile = file.getAbsolutePath();
 	        Metadata metadata = null;
 			try {
-				if(ImageUtil.autoRotate(file.getAbsolutePath(), file.getAbsolutePath())==0) {
-	        		image = ImageIO.read(file);
+				//String sorientation=ImageUtil.oreintation(infile);
+				//String wxh=ImageUtil.getWidthxHeight(infile);
 
-					node.setProperty("width", image.getWidth());
-	                node.setProperty("height", image.getHeight());   
-	                session.save();		
-	                return null;
-				}
 	        	if(file != null && file.exists()) {
 	        		image = ImageIO.read(file);
 	        	} else {
@@ -1789,7 +1784,22 @@ public class JcrServicesImpl implements JcrServices {
             	AffineTransform affineTransform = new AffineTransform();
                 //int height = jpegDirectory.getImageHeight();
                 //log.debug("Orientation="+orientation);
-                if(orientation == 1 || orientation >7) return null;
+                if(orientation == 1 || orientation >7) {
+					node.setProperty("width", image.getWidth());
+	                node.setProperty("height", image.getHeight());   
+	                session.save();		                	
+                	return null;
+                }
+                
+				if(ImageUtil.autoRotate(infile, infile)==0) {
+	        		image = ImageIO.read(file);
+
+					node.setProperty("width", image.getWidth());
+	                node.setProperty("height", image.getHeight());   
+	                session.save();		
+	                return null;
+				}
+				
                 switch (orientation) {
                 case 1:
                 	
