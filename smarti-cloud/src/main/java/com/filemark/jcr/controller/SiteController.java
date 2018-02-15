@@ -1656,7 +1656,7 @@ public class SiteController extends BaseController {
 					File file = null;
 					Device device = (Device)jcrService.getObject(asset.getDevice());
 					String docfile = device.getLocation()+asset.getPath();
-					String pdffile = device.getLocation()+asset.getPath().replaceFirst(".doc", ".pdf").replaceFirst(".docx", ".pdf").replaceFirst(".rtf", ".pdf");
+					String pdffile = device.getLocation()+asset.getPath().replaceFirst(".docx", ".pdf").replaceFirst(".doc", ".pdf").replaceFirst(".rtf", ".pdf");
 					logger.debug(pdffile);
 					file = new File(pdffile);
 					if(!file.exists()) {
