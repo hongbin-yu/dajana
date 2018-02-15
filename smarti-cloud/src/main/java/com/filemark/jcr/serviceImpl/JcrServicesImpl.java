@@ -1759,9 +1759,33 @@ public class JcrServicesImpl implements JcrServices {
       	    String infile = file.getAbsolutePath();
 	        Metadata metadata = null;
 			try {
-				//String sorientation=ImageUtil.oreintation(infile);
-				//String wxh=ImageUtil.getWidthxHeight(infile);
+				String sorientation=ImageUtil.oreintation(infile);
+				log.debug("linux orientation="+sorientation);
 
+				if("2,3,4,5,6,7".indexOf(sorientation)>=0) {
+					if(ImageUtil.autoRotate(infile, infile)==0) {
+						String wxh=ImageUtil.getWidthxHeight(infile);
+						log.debug("linux wxh="+wxh);
+						if(wxh.indexOf("x")>0) {
+							String w_h[] = wxh.split("x");
+							node.setProperty("width", Long.parseLong(w_h[0]));
+			                node.setProperty("height", Long.parseLong(w_h[1]));  		
+			                session.save();		                	
+		                	return null;  
+						}
+					}
+				}else {
+					String wxh=ImageUtil.getWidthxHeight(infile);
+					log.debug("linux wxh="+wxh);
+					if(wxh.indexOf("x")>0) {
+						String w_h[] = wxh.split("x");
+						node.setProperty("width", Long.parseLong(w_h[0]));
+		                node.setProperty("height", Long.parseLong(w_h[1]));  		
+		                session.save();		                	
+	                	return null;  
+					}
+				}
+				
 	        	if(file != null && file.exists()) {
 	        		image = ImageIO.read(file);
 	        	} else {
