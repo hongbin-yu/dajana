@@ -1664,22 +1664,7 @@ public class SiteController extends BaseController {
 			if(path==null || "".equals(path))
 				path = jcrService.getNodeById(uid);
 			
-			File outfile = new File(jcrService.getDevice()+path);
-			if(outfile.exists()) {
-				if(width !=null ) {
-					String icon = jcrService.getHome()+"/icon"+width+path;
-					File iconfile = new File(icon);
-					if(!iconfile.exists()) {
-						if(ImageUtil.convert(icon, icon, width, width)==0) {
-							outfile = iconfile;
-						}
-					}
-				}
-				FileInputStream in = new FileInputStream(outfile);
-				IOUtils.copy(in, response.getOutputStream());
-				in.close();
-				ImageUtil.HDDOff();			
-			}else if(path !=null  && jcrService.nodeExsits(path)) {
+			if(path !=null  && jcrService.nodeExsits(path)) {
 				Asset asset = (Asset)jcrService.getObject(path);
 				if(width!=null && jcrService.nodeExsits(path+"/file-"+width)) {
 					response.setContentType(asset.getContentType());
