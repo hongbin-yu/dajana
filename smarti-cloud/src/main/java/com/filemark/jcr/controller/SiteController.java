@@ -1661,7 +1661,7 @@ public class SiteController extends BaseController {
 					file = new File(pdffile);
 					if(!file.exists()) {
 						try {
-							int exit = ImageUtil.doc2pdf(docfile, file.getParentFile().getAbsolutePath());
+							int exit = ImageUtil.doc2pdf(file.getName(), file.getParentFile().getAbsolutePath());
 							if(exit != 0) {
 								ImageUtil.HDDOff();
 								return "doc2pdf exit:"+exit;									
