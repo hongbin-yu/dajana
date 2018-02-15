@@ -341,10 +341,11 @@ public class ImageUtil
     	String s;
     	Process p;
     	int exit=0;
-    	
-    	ProcessBuilder pb = new ProcessBuilder("cd",outdir,"&&","lowriter","--convert-to","pdf:writer_pdf_Export",filename);
-    	pb.redirectErrorStream(true);
-        p = pb.start();//Runtime.getRuntime().exec(shellCommand);
+    	File dir = new File(outdir);
+    	String evn[] = {"--convert-to","pdf:writer_pdf_Export","--outdir",outdir,filename};
+    	//ProcessBuilder pb = new ProcessBuilder("lowriter",env,dir);
+    	//pb.redirectErrorStream(true);
+        p = Runtime.getRuntime().exec("lowriter",evn,dir);
 
 
         BufferedReader br = new BufferedReader(
