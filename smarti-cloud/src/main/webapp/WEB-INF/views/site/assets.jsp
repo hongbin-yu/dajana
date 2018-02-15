@@ -195,6 +195,9 @@
         <c:if test="${item.pdf}">
 		<input type="checkbox" class="checkbox" name="puid" value="${item.uid }"><a title="<spring:message code="djn.open"/>PDF" href="<c:url value="viewpdf?uid=${item.uid}"/>" target="_BLANK"><span class="glyphicon glyphicon-open"></span> <spring:message code="djn.open"/>PDF</a>
 		</c:if>
+        <c:if test="${item.doc2pdf}">
+		<input type="checkbox" class="checkbox" name="puid" value="${item.uid }"><a title="<spring:message code="djn.open"/>PDF" href="<c:url value="doc2pdf?path=${item.path}"/>" target="_BLANK"><span class="glyphicon glyphicon-open"></span> <spring:message code="djn.open"/>PDF</a>
+		</c:if>		
         <c:if test="${item.text}">
 			<a  class="wb-lbx" title="<spring:message code="djn.edit"/>" href="<c:url value="texteditor.html?uid=${item.uid}"/>"><span class="glyphicon glyphicon-pencil"></span><spring:message code="djn.onlineEdit"/></a>
 		</c:if>

@@ -1644,7 +1644,58 @@ public class SiteController extends BaseController {
 
 		return super.deleteNode(model, request, response);
 	} 
+	@RequestMapping(value = {"/site/doc2pdf.pdf",
+			}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
+	public @ResponseBody String doc2pdf(String uid,String path,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
+		ImageUtil.HDDOn();	
+		if(path==null || "".equals(path))
+			try {
+				path = jcrService.getNodeById(uid);
+				if(path !=null  && jcrService.nodeExsits(path)) {
+					Asset asset = (Asset)jcrService.getObject(path);
+					if(asset.getDevice()!=null) {
+						File file = null;
+						Device device = (Device)jcrService.getObject(asset.getDevice());
+						String docfile = device.getLocation()+asset.getPath();
+						String pdffile = device.getLocation()+asset.getPath().replaceFirst(".doc", ".pdf").replaceFirst(".docx", ".pdf").replaceFirst(".rtf", ".pdf");
+						file = new File(pdffile);
+						if(!file.exists()) {
+							try {
+								int exit = ImageUtil.doc2pdf(docfile, file.getParentFile().getAbsolutePath());
+								if(exit != 0) {
+									ImageUtil.HDDOff();
+									return "doc2pdf exit:"+exit;									
+								}
+							} catch (InterruptedException e) {
+								logger.error("doc2pdf:"+e.getMessage());
+								ImageUtil.HDDOff();
+								return e.getMessage();
+							}
+						}
+						FileInputStream in = new FileInputStream(file);
+						response.setContentType(asset.getContentType());
+						IOUtils.copy(in, response.getOutputStream());
+						in.close();						
+					}
+				}
+			} catch (RepositoryException e) {
+				logger.error("doc2pdf:"+e.getMessage());
+				ImageUtil.HDDOff();
+				return e.getMessage();
+			} catch (FileNotFoundException e) {
+				logger.error("doc2pdf:"+e.getMessage());
+				ImageUtil.HDDOff();
+				return e.getMessage();
+			} catch (IOException e) {
+				logger.error("viewFile:"+e.getMessage());
+				ImageUtil.HDDOff();
+				return e.getMessage();
+			}
+		
 
+		ImageUtil.HDDOff();
+		return null;
+	}
 
 	@RequestMapping(value = {"/site/viewimage","/content/viewimage","/content/**/viewimage","/protected/viewimage","/protected/**/viewimage","/site/file","/site/file*.*","/content/file","/content/file*.*","/content/**/file","/content/**/file*.*"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public @ResponseBody String viewFile(String uid,String path,Integer w,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
@@ -1782,7 +1833,7 @@ public class SiteController extends BaseController {
 		return null;
 		
 	} 	
-	@RequestMapping(value = {"/site/viewpdf","/content/viewpdf","/content/**/viewpdf"}, method = {RequestMethod.GET})
+	@RequestMapping(value = {"/site/viewpdf","/site/view.pdf","/content/viewpdf","/content/**/viewpdf"}, method = {RequestMethod.GET})
 	public @ResponseBody String viewPdf(String uid[],HttpServletRequest request, HttpServletResponse response) throws IOException, RepositoryException {
 		List<Asset> assets = new ArrayList<Asset>();
 		ImageUtil.HDDOn();
@@ -1811,7 +1862,7 @@ public class SiteController extends BaseController {
 		}
 
 	}	*/
-	@RequestMapping(value = {"/site/viewf2p","/content/viewf2p","/content/**/viewf2p"}, method = {RequestMethod.GET})
+	@RequestMapping(value = {"/site/viewf2p","/site/viewf2p.pdf","/content/viewf2p","/content/**/viewf2p"}, method = {RequestMethod.GET})
 	public @ResponseBody String viewf2p(String path,HttpServletRequest request, HttpServletResponse response) throws IOException, RepositoryException {
 		ImageUtil.HDDOn();
 		try {

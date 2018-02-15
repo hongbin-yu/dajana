@@ -336,7 +336,65 @@ public class ImageUtil
 
         return exit;
     }
-    
+
+    public static int doc2pdf(String filename,String outdir) throws IOException, InterruptedException {
+    	String s;
+    	Process p;
+    	int exit=0;
+    	ProcessBuilder pb = new ProcessBuilder("lowrite","--convert-to pdf:writer_pdf_Export",outdir,filename);
+    	pb.redirectErrorStream(true);
+        p = pb.start();//Runtime.getRuntime().exec(shellCommand);
+
+
+        BufferedReader br = new BufferedReader(
+            new InputStreamReader(p.getInputStream()));
+        while ((s = br.readLine()) != null)
+            log.debug("line: " + s);
+        p.waitFor();
+        exit = p.exitValue();
+        if(exit !=0) {
+        	br = new BufferedReader(
+                    new InputStreamReader(p.getErrorStream()));
+                while ((s = br.readLine()) != null) {
+                    log.debug("line: " + s);
+                }
+        	log.error("convert exit: " + exit);
+        	
+        }
+        p.destroy();
+        return exit;
+    	
+    }     
+
+    public static int doc2html(String filename,String outdir) throws IOException, InterruptedException {
+    	String s;
+    	Process p;
+    	int exit=0;
+    	ProcessBuilder pb = new ProcessBuilder("lowrite","--convert-to html:XHTML file:UTF8",outdir,filename);
+    	pb.redirectErrorStream(true);
+        p = pb.start();//Runtime.getRuntime().exec(shellCommand);
+
+
+        BufferedReader br = new BufferedReader(
+            new InputStreamReader(p.getInputStream()));
+        while ((s = br.readLine()) != null)
+            log.debug("line: " + s);
+        p.waitFor();
+        exit = p.exitValue();
+        if(exit !=0) {
+        	br = new BufferedReader(
+                    new InputStreamReader(p.getErrorStream()));
+                while ((s = br.readLine()) != null) {
+                    log.debug("line: " + s);
+                }
+        	log.error("convert exit: " + exit);
+        	
+        }
+        p.destroy();
+        return exit;
+    	
+    }     
+   
     public static int HDDOn() {
     	return gpio("write", HDDPIN,"1");
     }

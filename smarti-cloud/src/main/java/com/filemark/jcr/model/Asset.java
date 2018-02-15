@@ -216,14 +216,20 @@ public class Asset implements SmartiNode, Serializable {
 	}
 
 	public boolean getPdf() {
-		if(contentType != null && (contentType.equals("image/tiff") || contentType.equals("image/x-tiff") )) {
-			return true;
-		}else if(contentType != null && contentType.startsWith("image/")) {
+		if(contentType != null && contentType.startsWith("image/")) {
 			return true;
 		}else {	
 			return false;
 		}
 	}
+
+	public boolean getDoc2Pdf() {
+		if(contentType != null && ("application/vnd.ms-word".equals(contentType) || "application/msword".equals(contentType) || path.endsWith(".doc") || path.endsWith(".docx"))) {
+			return true;
+		}else {	
+			return false;
+		}
+	}	
 	public boolean getText() {
 		if(contentType != null && (contentType.startsWith("text/") || contentType.startsWith("application/json"))) {
 			return true;
