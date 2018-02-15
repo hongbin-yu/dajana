@@ -127,7 +127,7 @@ public class ImageUtil
     	Process p;
     	int exit=0;
     	String shellCommand = "convert "+infile+" -resize "+maxWidth+"x"+maxHeight+"\\> "+outfile;
-    	ProcessBuilder pb = new ProcessBuilder("convert",infile,"-resize",maxWidth+"x"+maxHeight+"\\> ",outfile);
+    	ProcessBuilder pb = new ProcessBuilder("convert",infile,"-resize",maxWidth+"x"+maxHeight,outfile);
     	pb.redirectErrorStream(true);
         p = pb.start();//Runtime.getRuntime().exec(shellCommand);
         BufferedReader br = new BufferedReader(
@@ -217,7 +217,7 @@ public class ImageUtil
     	Process p;
     	int exit=0;
     	String orientation="";
-    	ProcessBuilder pb = new ProcessBuilder("identify","-format","%[orientation]",infile);
+    	ProcessBuilder pb = new ProcessBuilder("identify","-format","%[EXIF:orientation]",infile);
     	pb.redirectErrorStream(true);
         p = pb.start();//Runtime.getRuntime().exec(shellCommand);
 
