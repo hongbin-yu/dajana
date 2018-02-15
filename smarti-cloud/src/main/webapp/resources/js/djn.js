@@ -550,7 +550,7 @@ function uploadFile(file) {
 				    var speed = 0;
 				    speed = fileSize*8/(end.getTime() - start.getTime());
 	                selDiv.innerHTML ="<section id=\""+file.name+"\"><h5>"+file.name+"("+(speed/1000).toFixed(2)+" MB/s)</h5><progress class=\"full-width\" value=\""+fileSize +"\" max=\""+fileSize+"\"><span class=\"wb-inv\">"+100+"%</span></progress></section>";
-		    		selDiv.innerHTML += "<section class=\"alert alert-success\"><h3 class=\"5\">"+(i+1)+i18n("document_uploaded")+i18n("success")+"</h3></section>";
+		    		selDiv.innerHTML += "<section class=\"alert alert-success\"><h3 class=\"5\">"+(i+1)+"/"+total+i18n("document_uploaded")+i18n("success")+"</h3></section>";
 
 		    		var html = $("#div_uid").html();
 				    html = html.split("{uid}").join(data.uid);
