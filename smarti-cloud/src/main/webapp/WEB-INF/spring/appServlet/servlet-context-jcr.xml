@@ -141,7 +141,7 @@
 	  <beans:bean id="assetManager" class="com.filemark.jcr.serviceImpl.AssetManagerImpl"/>
 	  
 	  <beans:bean id="threadManager" class="com.filemark.search.IndexThreadManagerImpl"/>
-	  <beans:bean id="indexManager" class="com.filemark.search.IndexManagerImpl" init-method="initialize" destroy-method="shutdown">
+<!-- 	  <beans:bean id="indexManager" class="com.filemark.search.IndexManagerImpl" init-method="initialize" destroy-method="shutdown">
 			<beans:property name="indexDir">
 			    <beans:value>${smarti.root}</beans:value>
 			</beans:property>
@@ -149,7 +149,7 @@
 			    <beans:value>${smarti.searchEnabled}</beans:value>
 			</beans:property>			
 			
-	  </beans:bean>
+	  </beans:bean> -->
 	  <beans:bean id="schedule" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
 			<beans:property name="targetObject" ref="jcrIndexService">
 			    
