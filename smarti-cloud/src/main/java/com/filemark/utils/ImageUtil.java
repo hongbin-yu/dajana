@@ -341,7 +341,7 @@ public class ImageUtil
     	String s;
     	Process p;
     	int exit=0;
-    	ProcessBuilder pb = new ProcessBuilder("lowrite","--convert-to","pdf:writer_pdf_Export","--outdir",outdir,filename);
+    	ProcessBuilder pb = new ProcessBuilder("lowriter","--convert-to","pdf:writer_pdf_Export","--outdir",outdir,filename);
     	pb.redirectErrorStream(true);
         p = pb.start();//Runtime.getRuntime().exec(shellCommand);
 
@@ -370,7 +370,7 @@ public class ImageUtil
     	String s;
     	Process p;
     	int exit=0;
-    	ProcessBuilder pb = new ProcessBuilder("lowrite","--convert-to html:XHTML file:UTF8",outdir,filename);
+    	ProcessBuilder pb = new ProcessBuilder("lowriter","--convert-to html:XHTML file:UTF8",outdir,filename);
     	pb.redirectErrorStream(true);
         p = pb.start();//Runtime.getRuntime().exec(shellCommand);
 
