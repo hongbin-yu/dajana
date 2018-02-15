@@ -59,7 +59,7 @@ public class BaseController {
 				}
 			}
 			*/
-		ImageUtil.gpio("mode","18","output");
+		ImageUtil.HDDOff();
 	}
 
 	

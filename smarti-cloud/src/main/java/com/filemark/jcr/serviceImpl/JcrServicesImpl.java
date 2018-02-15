@@ -2546,6 +2546,8 @@ public class JcrServicesImpl implements JcrServices {
 
 
 	public void setDevice(String device) {
+		ImageUtil.gpio("mode","18","output");
+		ImageUtil.HDDOn();
 		this.device = device;
 	}
 

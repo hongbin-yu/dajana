@@ -14,7 +14,7 @@
 	<beans:bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer" id="propertyConfigurer"> 
 	     <beans:property name="location"> 
 	         <!-- beans:value>file:${catalina.home}/conf/smarti-admin.properties</beans:value--> 
-	         <beans:value>classpath:/smarti-admin.properties</beans:value> 	     </beans:property> 
+	     <beans:value>classpath:/smarti-admin.properties</beans:value> 	     </beans:property> 
 	 </beans:bean>
 	 	
 	<!-- Root Context: defines shared resources visible to all other web components -->
