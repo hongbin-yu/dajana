@@ -348,7 +348,7 @@ public class ImageUtil
     	pb.directory(dir);
         p =pb.start();//Runtime.getRuntime().exec(cmd);
 
-
+        log.debug("doc2pdf:"+outdir+"/"+filename);
         BufferedReader br = new BufferedReader(
             new InputStreamReader(p.getInputStream()));
         while ((s = br.readLine()) != null)
