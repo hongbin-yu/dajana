@@ -6,12 +6,17 @@
 <%--         <c:if test="${page.parent=='/content' }">
         <a href='<c:url value="/content/templates.html"></c:url>'><img alt="" src='<c:url value="/resources/images/arrowleft.png"/>'/>模板</a>
         </c:if> --%>
+        <a href="#wb-cont"><button class="btn btn-default pull-right" onclick="javascript:setDataView('data-inview','left-bar')"><span class="glyphicon glyphicon-th-large pull-right"></span></button></a>  
+
+        <h3>
         <c:if test="${page.parent!='/content' }">
-        <h3 class="wb-navcurr">
-        <a href='<c:url value="editor.html?path=${parent.path}"></c:url>'><span class="glyphicon glyphicon-backward"></span>${parent.title}</a>
+        <a href='<c:url value="editor.html?path=${parent.path}"></c:url>'>${parent.title}<span class="glyphicon glyphicon-backward"></span>
+        </a>
+        </c:if> 
+        <c:if test="${page.parent=='/content' }">
+        ${page.title}
+        </c:if>               
         </h3>
-        </c:if>        
-<button class="btn btn-default btn-xs pull-left" onclick="javascript:setDataView('data-inview','left-bar')"><span class="glyphicon glyphicon-th-large pull-right"></span></button>  
         <ul class="list-group menu list-unstyled">
         <c:forEach items="${menu.items}" var="item" varStatus="loop">
             <li>

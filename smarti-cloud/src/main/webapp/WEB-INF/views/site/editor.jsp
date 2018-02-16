@@ -4,14 +4,14 @@
 
 <div class="container">
 <div class="row">
-        <main role="main" property="mainContentOfPage" class="col-md-9 col-md-push-3">
+        <main id="wb-cont" role="main" property="mainContentOfPage" class="col-md-9 col-md-push-3">
         	
 	        <c:if test="${page.redirectTo!=null && page.redirectTo!=''}">
-	        <h1 id="wb-cont">${page.title }</h1>
+	        <h1>${page.title }</h1>
 	        <p>此页重定向到 <a href="${page.redirectTo }">${page.redirectTo }</a></p>
 	        </c:if>
 	         <c:if test="${page.redirectTo==null || page.redirectTo==''}">
-			 <div class="caneditable" property="content" id="${page.uid }" onfocus="javascript:setDataView('data-inview','left-bar')">${page.content }</div>
+			 <div class="caneditable" property="content" id="${page.uid }">${page.content }</div>
 			 </c:if>
 			 <%@include file="../wet/pagedetails.jsp" %>		
  		</main>

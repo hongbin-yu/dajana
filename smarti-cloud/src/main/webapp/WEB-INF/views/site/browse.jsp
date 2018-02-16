@@ -127,9 +127,9 @@ ${path }</label>
 <details>
 	<summary><span class="glyphicon glyphicon-edit"></span>${item.path}</summary>
 	<div class="row">
-	<div class="checkbox">
+<%-- 	<div class="checkbox">
 	<label for="delete${item.uid }"><input type="checkbox" class="form-editable" name="delete" value="true" id="delete${item.uid }" uid="${item.uid}" onchange="javascript:updateNode(this)"><span class="glyphicon glyphicon-trash"></span> 删除</label>
-	</div>
+	</div> --%>
 	<div class="form-group">
 	<label for="title${item.uid }">标题&nbsp;</label><input class="form-control" id="title${item.uid }" name="jcr:title" value="${item.title}" size="24" uid="${item.uid}" onchange="javascript:updateNode(this)"/>
 	</div>
