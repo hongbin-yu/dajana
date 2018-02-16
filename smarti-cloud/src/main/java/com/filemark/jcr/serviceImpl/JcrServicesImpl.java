@@ -1585,11 +1585,12 @@ public class JcrServicesImpl implements JcrServices {
         			return null;
         		}
         		BufferedImage resizedImg = scaleBufferedImage(image,x);
-    			ByteArrayOutputStream os = new ByteArrayOutputStream();
+    			//ByteArrayOutputStream os = new ByteArrayOutputStream();
+        		OutputStream os = new FileOutputStream(home+"/icon"+x+path);
     			ImageIO.write(resizedImg, "jpeg", os);
-       			InputStream is = new ByteArrayInputStream(os.toByteArray());
+       			//InputStream is = new ByteArrayInputStream(os.toByteArray());
     			//String mineType = node.getParent().getProperty("contentType").getString();
-    			addFile(path,"file-"+x,is,"image/jpeg");
+    			//addFile(path,"file-"+x,is,"image/jpeg");
         		return null;
         	}
 		});

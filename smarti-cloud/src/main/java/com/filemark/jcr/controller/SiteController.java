@@ -1706,18 +1706,29 @@ public class SiteController extends BaseController {
 				width = 48;
 		}
 		try {
-			if(path==null || "".equals(path))
+			if(uid!=null && (path==null || "".equals(path)))
 				path = jcrService.getNodeById(uid);
-			
+
+			File outFile = new File((width==null?jcrService.getDevice():jcrService.getHome()+"/icon"+width)+path);
+			if(outFile.exists()) {
+				logger.debug("output:"+outFile.getAbsolutePath());
+				FileInputStream in = new FileInputStream(outFile);
+				IOUtils.copy(in, response.getOutputStream());
+				in.close();
+				ImageUtil.HDDOff();
+				return null;					
+			}
+
 			if(path !=null  && jcrService.nodeExsits(path)) {
 				Asset asset = (Asset)jcrService.getObject(path);
 				if(asset.getWidth() == null && asset.getContentType().startsWith("image/")) {
 					jcrService.autoRoateImage(path);
 				}
-				if(width!=null && jcrService.nodeExsits(path+"/file-"+width)) {
+/*				if(width!=null && jcrService.nodeExsits(path+"/file-"+width)) {
 					response.setContentType(asset.getContentType());
 					jcrService.readAsset(path+"/file-"+width, response.getOutputStream());
-				}else if(asset.getDevice()!=null) {
+				}else */
+				if(asset.getDevice()!=null) {
 					File file = null;
 					Device device = (Device)jcrService.getObject(asset.getDevice());
 					file = new File(device.getLocation()+asset.getPath());
@@ -1726,9 +1737,8 @@ public class SiteController extends BaseController {
 						File icon = new File(iconfile);
 						
 						if(!icon.exists()) {
-							if(ImageUtil.convert(file.getAbsolutePath(), iconfile, width, width)==0)
-								file = icon;
-						}else 
+								jcrService.createIcon(path, width,width);
+						}
 							file = icon;
 
 					}
@@ -1763,9 +1773,7 @@ public class SiteController extends BaseController {
 			ImageUtil.HDDOff();
 			return e.getMessage();
 		}
-		ImageUtil.HDDOff();
 		
-		return null;
 		
 	} 
 	
