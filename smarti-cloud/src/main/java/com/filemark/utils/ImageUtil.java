@@ -289,7 +289,7 @@ public class ImageUtil
     	String s;
     	Process p;
     	int exit=1;
-    	ProcessBuilder pb = new ProcessBuilder("convert",folder+"/*."+ext+"["+maxWidth+"x>]","-resize",""+maxWidth+"x"+maxWidth,"-set","filename:base","%[base]","%[filename:base]."+ext);
+    	ProcessBuilder pb = new ProcessBuilder("/usr/bin/convert",folder+"/*."+ext+"["+maxWidth+"x>]","-resize",""+maxWidth+"x"+maxWidth,"-set","filename:base","%[base]","%[filename:base]."+ext);
     	pb.redirectErrorStream(true);
         try {    	
 	        p = pb.start();//Runtime.getRuntime().exec(shellCommand);
@@ -361,7 +361,7 @@ public class ImageUtil
     public static int doc2pdf(String filename,String outdir) throws IOException, InterruptedException {
     	String s;
     	Process p;
-    	int exit=0;
+    	int exit=1;
     	File dir = new File(outdir);
     	String cmd[] = {"sh -c cd "+outdir+" && lowriter","--convert-to","pdf:writer_pdf_Export","--outdir",outdir,filename};
     	ProcessBuilder pb = new ProcessBuilder("libreoffice","--invisible","--convert-to","pdf","--outdir",outdir, filename);

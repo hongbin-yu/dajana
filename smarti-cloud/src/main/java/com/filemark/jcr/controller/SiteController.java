@@ -1149,7 +1149,7 @@ public class SiteController extends BaseController {
     			jcrService.addFile(topath, "original", is, contentType);
     		}
 			if(contentType != null && contentType.startsWith("image/")) {
-				jcrService.createFile(topath, 400);
+				jcrService.createIcon(topath, 400,400);
 			}   
     		//jcrService.deleteNode(asset.getPath());
 		}catch (Exception e){
@@ -1661,7 +1661,7 @@ public class SiteController extends BaseController {
 					file = new File(pdffile);
 					if(!file.exists()) {
 						try {
-							int exit = ImageUtil.doc2pdf(file.getName(), file.getParentFile().getAbsolutePath());
+							int exit = ImageUtil.doc2pdf(file.getAbsolutePath(), file.getParentFile().getAbsolutePath());
 							if(exit != 0) {
 								ImageUtil.HDDOff();
 								return "doc2pdf exit:"+exit;									
