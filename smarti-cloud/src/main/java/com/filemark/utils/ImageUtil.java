@@ -364,7 +364,9 @@ public class ImageUtil
     	int exit=1;
     	File dir = new File(outdir);
     	String cmd[] = {"sh -c cd "+outdir+" && lowriter","--convert-to","pdf:writer_pdf_Export","--outdir",outdir,filename};
-    	ProcessBuilder pb = new ProcessBuilder("libreoffice","--invisible","--convert-to","pdf","--outdir",outdir, filename);
+    	//ProcessBuilder pb = new ProcessBuilder("libreoffice","--invisible","--convert-to","pdf","--outdir",outdir, filename);
+    	ProcessBuilder pb = new ProcessBuilder("/var/lib/tomcat8/conf/doc2pdf.sh",outdir, filename);
+
     	pb.redirectErrorStream(true);
     	pb.directory(dir);
         p =pb.start();//Runtime.getRuntime().exec(cmd);
