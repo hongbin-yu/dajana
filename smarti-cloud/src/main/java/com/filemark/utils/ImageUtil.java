@@ -360,10 +360,37 @@ public class ImageUtil
     }
 
     public static int doc2pdf(String filename,String outdir) throws IOException, InterruptedException {
-    	FileWriter writer = new FileWriter("/var/lib/tomcat8/conf/doc2pdf.sh",true);
-    	writer.write("lowriter --convert-to pdf:writer_pdf_Export --outdir "+outdir+" "+filename+"\r\n");
-    	writer.close();
-        return 0;
+    	String s;
+    	Process p;
+    	int exit=1;
+    	File dir = new File(outdir);
+    	String cmd[] = {"sh -c cd "+outdir+" && lowriter","--convert-to","pdf:writer_pdf_Export","--outdir",outdir,filename};
+    	//ProcessBuilder pb = new ProcessBuilder("libreoffice","--invisible","--convert-to","pdf","--outdir",outdir, filename);
+    	ProcessBuilder pb = new ProcessBuilder("/var/lib/tomcat8/conf/doc2pdf.sh",outdir, filename);
+    	pb.redirectErrorStream(true);
+    	pb.directory(dir);
+        p =pb.start();//Runtime.getRuntime().exec(cmd);
+
+        log.debug("doc2pdf:"+outdir+"/"+filename);
+        BufferedReader br = new BufferedReader(
+            new InputStreamReader(p.getInputStream()));
+        while ((s = br.readLine()) != null)
+            log.debug("line: " + s);
+        p.waitFor();
+        exit = p.exitValue();
+        if(exit !=0) {
+        	br = new BufferedReader(
+                    new InputStreamReader(p.getErrorStream()));
+                while ((s = br.readLine()) != null) {
+                    log.debug("line: " + s);
+                }
+        	log.error("convert exit: " + exit);
+        	FileWriter writer = new FileWriter("/var/lib/tomcat8/conf/doc2pdf.sh",true);
+        	writer.write("lowriter --convert-to pdf:writer_pdf_Export --outdir "+outdir+" "+filename+"\r\n");
+        	writer.close();        	
+        }
+        p.destroy();
+        return exit;
     	
     }     
 

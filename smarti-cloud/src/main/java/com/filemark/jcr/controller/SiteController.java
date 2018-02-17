@@ -1655,13 +1655,12 @@ public class SiteController extends BaseController {
 				if(asset.getDevice()!=null) {
 					File file = null;
 					Device device = (Device)jcrService.getObject(asset.getDevice());
-					String docfile = device.getLocation()+asset.getPath();
-					String pdffile = device.getLocation()+asset.getPath().replaceFirst(".docx", ".pdf").replaceFirst(".doc", ".pdf").replaceFirst(".rtf", ".pdf");
-					logger.debug(pdffile);
-					file = new File(pdffile);
+					String docname = device.getLocation()+asset.getPath();
+					String pdfname = device.getLocation()+asset.getPath().replaceFirst(".docx", ".pdf").replaceFirst(".doc", ".pdf").replaceFirst(".rtf", ".pdf");
+					file = new File(pdfname);
 					if(!file.exists()) {
 						try {
-							int exit = ImageUtil.doc2pdf(file.getAbsolutePath(), file.getParentFile().getAbsolutePath());
+							int exit = ImageUtil.doc2pdf(docname, file.getParentFile().getAbsolutePath());
 							if(exit != 0) {
 								ImageUtil.HDDOff();
 								return "doc2pdf exit:"+exit;									
