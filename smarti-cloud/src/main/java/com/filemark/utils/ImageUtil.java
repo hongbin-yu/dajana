@@ -8,6 +8,7 @@ import java.awt.Toolkit;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -388,8 +389,10 @@ public class ImageUtil
         }
         p.destroy();*/
 
-	    	FileWriter writer = new FileWriter("/var/lib/tomcat8/conf/doc2pdf.sh",true);
-	    	writer.write("cd "+outdir+" && lowriter --convert-to pdf:writer_pdf_Export --outdir "+outdir+" "+filename+"\r\n");
+    		BufferedWriter writer = new BufferedWriter(new FileWriter("/var/lib/tomcat8/conf/doc2pdf.sh",true));
+
+	    	writer.write("cd "+outdir+" && lowriter --convert-to pdf:writer_pdf_Export --outdir "+outdir+" "+filename);
+	    	writer.newLine();
 	    	writer.close();     
 
         return exit;

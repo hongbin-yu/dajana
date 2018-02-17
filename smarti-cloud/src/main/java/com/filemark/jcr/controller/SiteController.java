@@ -986,13 +986,7 @@ public class SiteController extends BaseController {
         			}
         			//logger.debug("Done");
         			asset.setTitle(asset.getTitle() +" - "+(new Date().getTime() - start.getTime()));
-        			//if(total <5 && contentType != null && contentType.startsWith("image/") && proccess==null) {
-       					//jcrService.autoRoateImage(assetPath);
-            			//asset.setTitle(asset.getTitle() +" - "+(new Date().getTime() - start.getTime()));
-        				//jcrService.createIcon(assetPath,400,400); 
-        				//jcrService.createFile(assetPath, 400);
-            			//asset.setTitle(asset.getTitle() +" -"+(new Date().getTime() - start.getTime()));
-        			//}
+
 
         		}catch(Exception ej) {
         			logger.error(ej.getMessage());
@@ -1668,7 +1662,7 @@ public class SiteController extends BaseController {
 							int exit = ImageUtil.doc2pdf(docname, file.getParentFile().getAbsolutePath());
 							if(exit != 0) {
 								ImageUtil.HDDOff();
-								return "doc2pdf exit:"+exit;									
+								return "文件转换将在15分钟内完成！";									
 							}
 						} catch (InterruptedException e) {
 							logger.error("doc2pdf:"+e.getMessage());
