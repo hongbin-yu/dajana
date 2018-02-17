@@ -363,7 +363,7 @@ public class ImageUtil
     	String s;
     	Process p;
     	int exit=1;
-    	File dir = new File(outdir);
+/*    	File dir = new File(outdir);
     	String cmd[] = {"sh -c cd "+outdir+" && lowriter","--convert-to","pdf:writer_pdf_Export","--outdir",outdir,filename};
     	//ProcessBuilder pb = new ProcessBuilder("libreoffice","--invisible","--convert-to","pdf","--outdir",outdir, filename);
     	ProcessBuilder pb = new ProcessBuilder("/var/lib/tomcat8/conf/doc2pdf.sh",outdir, filename);
@@ -385,11 +385,13 @@ public class ImageUtil
                     log.debug("line: " + s);
                 }
         	log.error("convert exit: " + exit);
-        	FileWriter writer = new FileWriter("/var/lib/tomcat8/conf/doc2pdf.sh",true);
-        	writer.write("lowriter --convert-to pdf:writer_pdf_Export --outdir "+outdir+" "+filename+"\r\n");
-        	writer.close();        	
         }
-        p.destroy();
+        p.destroy();*/
+
+	    	FileWriter writer = new FileWriter("/var/lib/tomcat8/conf/doc2pdf.sh",true);
+	    	writer.write("lowriter --convert-to pdf:writer_pdf_Export --outdir "+outdir+" "+filename+"\r\n");
+	    	writer.close();     
+
         return exit;
     	
     }     
