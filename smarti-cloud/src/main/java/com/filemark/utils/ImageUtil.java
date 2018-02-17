@@ -361,44 +361,33 @@ public class ImageUtil
     }
 
     public static int doc2pdf(String filename,String outdir) throws IOException, InterruptedException {
-    	String s;
-    	Process p;
     	int exit=1;
-/*    	File dir = new File(outdir);
-    	String cmd[] = {"sh -c cd "+outdir+" && lowriter","--convert-to","pdf:writer_pdf_Export","--outdir",outdir,filename};
-    	//ProcessBuilder pb = new ProcessBuilder("libreoffice","--invisible","--convert-to","pdf","--outdir",outdir, filename);
-    	ProcessBuilder pb = new ProcessBuilder("/var/lib/tomcat8/conf/doc2pdf.sh",outdir, filename);
-    	pb.redirectErrorStream(true);
-    	pb.directory(dir);
-        p =pb.start();//Runtime.getRuntime().exec(cmd);
 
-        log.debug("doc2pdf:"+outdir+"/"+filename);
-        BufferedReader br = new BufferedReader(
-            new InputStreamReader(p.getInputStream()));
-        while ((s = br.readLine()) != null)
-            log.debug("line: " + s);
-        p.waitFor();
-        exit = p.exitValue();
-        if(exit !=0) {
-        	br = new BufferedReader(
-                    new InputStreamReader(p.getErrorStream()));
-                while ((s = br.readLine()) != null) {
-                    log.debug("line: " + s);
-                }
-        	log.error("convert exit: " + exit);
-        }
-        p.destroy();*/
+		BufferedWriter writer = new BufferedWriter(new FileWriter("/var/lib/tomcat8/conf/doc2pdf.sh",true));
 
-    		BufferedWriter writer = new BufferedWriter(new FileWriter("/var/lib/tomcat8/conf/doc2pdf.sh",true));
-
-	    	writer.write("cd "+outdir+" && lowriter --convert-to pdf:writer_pdf_Export --outdir "+outdir+" "+filename);
-	    	writer.newLine();
-	    	writer.close();     
+    	writer.write("cd "+outdir+" && lowriter --convert-to pdf:writer_pdf_Export --outdir "+outdir+" "+filename);
+    	writer.newLine();
+    	writer.close();     
 
         return exit;
     	
     }     
 
+    public static int video2mp4(String filename,String device) throws IOException, InterruptedException {
+    	int exit=1;
+    	String output = device+filename+".mp4";
+    	String icon = device+"/publish/icon400"+filename+".jpeg";
+		BufferedWriter writer = new BufferedWriter(new FileWriter("/var/lib/tomcat8/conf/video2mp4.sh",true));
+
+    	writer.write("ffmpeg -i "+device+filename +" -s 400X300 -c:v libx264 -preset ultrafast "+output);
+    	writer.write("ffmpeg -ss 00:00:03 -i "+output +" -s 400X300 -vframes 1 "+icon);
+
+    	writer.newLine();
+    	writer.close();    
+
+        return exit;
+    	
+    }    
     public static int doc2html(String filename,String outdir) throws IOException, InterruptedException {
     	String s;
     	Process p;

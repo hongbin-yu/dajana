@@ -746,6 +746,15 @@ function ftrClose(url) {
 	                       			]
 	                       		]);
 }
+
+function toggle(source) {
+	  checkboxes = document.getElementsByName('puid');
+	  for(var i=0, n=checkboxes.length;i<n;i++) {
+		  checkboxes[i].checked = source.checked;
+	  }
+
+}
+
 document.addEventListener("dragenter", function(event) {
 	var id = event.target.id;
 	if(id)

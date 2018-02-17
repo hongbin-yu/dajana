@@ -976,10 +976,15 @@ public class SiteController extends BaseController {
         				InputStream in = multipartFile.getInputStream();
         				FileUtils.copyInputStreamToFile(in, file);
         				in.close();
-	           			 if("application/vnd.ms-word".equals(contentType) || "application/msword".equals(contentType) || assetPath.endsWith(".doc") || assetPath.endsWith(".docx")) {	
+	           			if("application/vnd.ms-word".equals(contentType) || "application/msword".equals(contentType) || assetPath.endsWith(".doc") || assetPath.endsWith(".docx")) {	
 	           				 logger.debug("doc2pdf:"+file.getAbsolutePath());
 	        				 ImageUtil.doc2pdf(file.getAbsolutePath(), file.getParentFile().getAbsolutePath());
-	        			 }        				
+	        			}        				
+	           			if(contentType!=null && contentType.startsWith("video/")) {	
+	           				 logger.debug("video2mp4:"+file.getAbsolutePath());
+	        				 ImageUtil.video2mp4(asset.getPath(), device.getLocation());
+	        			}        				
+
         			}else {
         				//logger.debug("Writing jcr");
             			jcrService.addFile(assetPath,"original",multipartFile.getInputStream(),contentType);
@@ -1813,10 +1818,6 @@ public class SiteController extends BaseController {
 					return null;
 				}else  if(jcrService.nodeExsits(path+"/original")) {
 					response.setContentType(asset.getContentType());
-/*					if(asset.getSize()!=null)
-						response.setContentLength(asset.getSize().intValue());*/
-/*					if(asset.getOriginalDate()!=null)
-						response.setDateHeader("Last-Modified", asset.getOriginalDate().getTime());*/
 					OutputStream output = response.getOutputStream();
 					jcrService.readAsset(path+"/original",  output);
 					output.close();
