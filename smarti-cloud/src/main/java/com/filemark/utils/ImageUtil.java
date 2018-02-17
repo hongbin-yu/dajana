@@ -379,9 +379,9 @@ public class ImageUtil
     	String icon = device+"/publish/icon400"+filename+".jpeg";
 		BufferedWriter writer = new BufferedWriter(new FileWriter("/var/lib/tomcat8/conf/video2mp4.sh",true));
 
-    	writer.write("ffmpeg -i "+device+filename +" -s 400X300 -c:v libx264 -preset ultrafast "+output);
+    	writer.write("ffmpeg -i "+device+filename +" -nostats -nostdin -s 400X300 -c:v libx264 -preset ultrafast "+output);
     	writer.newLine();
-    	writer.write("ffmpeg -ss 00:00:03 -i "+output +" -s 400X300 -vframes 1 "+icon);
+    	writer.write("ffmpeg -ss 00:00:03 -i "+output +" -nostats -nostdin -s 400X300 -vframes 1 "+icon);
     	writer.newLine();
     	writer.close();    
 
