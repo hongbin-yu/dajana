@@ -976,6 +976,9 @@ public class SiteController extends BaseController {
         				InputStream in = multipartFile.getInputStream();
         				FileUtils.copyInputStreamToFile(in, file);
         				in.close();
+	           			 if("application/vnd.ms-word".equals(contentType) || "application/msword".equals(contentType) || path.endsWith(".doc") || path.endsWith(".docx")) {	
+	        				 ImageUtil.doc2pdf(file.getAbsolutePath(), file.getParentFile().getAbsolutePath());
+	        			 }        				
         			}else {
         				//logger.debug("Writing jcr");
             			jcrService.addFile(assetPath,"original",multipartFile.getInputStream(),contentType);
@@ -989,6 +992,7 @@ public class SiteController extends BaseController {
         				//jcrService.createFile(assetPath, 400);
             			//asset.setTitle(asset.getTitle() +" -"+(new Date().getTime() - start.getTime()));
         			//}
+
         		}catch(Exception ej) {
         			logger.error(ej.getMessage());
         			jcrService.updatePropertyByPath(assetPath, "description", ej.getMessage());
