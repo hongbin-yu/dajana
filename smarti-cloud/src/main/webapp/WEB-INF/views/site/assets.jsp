@@ -10,8 +10,8 @@
         <main role="main" property="mainContentOfPage" class="container">
 	    <div class="col-md-4 well" id="wb-sec">
 		    <section>
-		        <h3><c:if test="${folder.name!='assets' }"><a href="assets.html?path=${folder.parent}"><span class="glyphicon glyphicon-backward"></span>${folder.parent}</a></c:if>
-		        <a href="?path=${folder.path}"><span class="glyphicon glyphicon-refresh"></span>${folder.path}</a>
+		        <h3><c:if test="${folder.name!='assets' }"><a href="assets.html?path=${folder.parent}&type=${type}"><span class="glyphicon glyphicon-backward"></span>${folder.parent}</a></c:if>
+		        <a href="?path=${folder.path}&type=${type}"><span class="glyphicon glyphicon-refresh"></span>${folder.path}</a>
 		        </h3>
             <details id="${folder.uid }">
             <summary>${folder.title}</summary>

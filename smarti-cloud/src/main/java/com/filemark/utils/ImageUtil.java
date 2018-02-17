@@ -389,7 +389,7 @@ public class ImageUtil
         p.destroy();*/
 
 	    	FileWriter writer = new FileWriter("/var/lib/tomcat8/conf/doc2pdf.sh",true);
-	    	writer.write("lowriter --convert-to pdf:writer_pdf_Export --outdir "+outdir+" "+filename+"\r\n");
+	    	writer.write("cd "+outdir+" && lowriter --convert-to pdf:writer_pdf_Export --outdir "+outdir+" "+filename+"\r\n");
 	    	writer.close();     
 
         return exit;
