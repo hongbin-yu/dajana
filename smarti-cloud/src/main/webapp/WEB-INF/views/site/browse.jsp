@@ -117,19 +117,22 @@ ${path }</label>
 </div>
 <c:forEach items="${assets.items }" var="item" varStatus="loop">
 <div id="${item.uid}" class="col-md-4">
-<%--         <c:if test="${item.pdf}">id="<c:url value='/viewimage?uid=${item.uid}'></c:url>" 
-		<a title="打开PDF" href="<c:url value="/viewpdf?uid=${item.uid}"/>" target="_BLANK"><img title="点击打开PDF" src='<c:url value="/resources/images/pdf.gif"></c:url>'></a>
-		</c:if> 		--%>
+		<c:if test="${item.mp4}">
+			<video poster="video2jpg.jpg?path=${item.path }" controls="controls" width="300" height="200" preload="none">
+			<source type="video/mp4" src="video.mp4?path=${item.path }"/>
+			</video>
+			<button class="bnt bnt-default" title="点击选择此视频" onclick='javascript:returnFileUrl("video.mp4?path=${item.path}","${item.uid}")'><span class="glyphicon glyphicon-film"></span>${item.title}<span class="glyphicon glyphicon-ok pull-right"></span></button>
+		</c:if>
+		<c:if test="${!item.mp4}">
 		<a class="${item.cssClass }-edit" id="href${item.uid }" href="<c:url value='${item.link}'></c:url>">		
 		<img src="<c:url value='${item.icon }'></c:url>" class="img-responsive" draggable="true" onclick="javascript:returnFileUrl('${item.link}','${item.uid }')"/>
 		${item.description}
 		</a>
+		</c:if>
+
 <details>
 	<summary><span class="glyphicon glyphicon-edit"></span>${item.path}</summary>
 	<div class="row">
-<%-- 	<div class="checkbox">
-	<label for="delete${item.uid }"><input type="checkbox" class="form-editable" name="delete" value="true" id="delete${item.uid }" uid="${item.uid}" onchange="javascript:updateNode(this)"><span class="glyphicon glyphicon-trash"></span> 删除</label>
-	</div> --%>
 	<div class="form-group">
 	<label for="title${item.uid }">标题&nbsp;</label><input class="form-control" id="title${item.uid }" name="jcr:title" value="${item.title}" size="24" uid="${item.uid}" onchange="javascript:updateNode(this)"/>
 	</div>
