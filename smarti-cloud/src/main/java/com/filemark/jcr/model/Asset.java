@@ -55,8 +55,6 @@ public class Asset implements SmartiNode, Serializable {
 	private Long height;
 	@Field
 	private String icon;
-	@Field
-	private String pdf;
 	
 	private String ocm_classname;
 	private String nodeName;
@@ -201,10 +199,6 @@ public class Asset implements SmartiNode, Serializable {
 		this.icon = icon;
 	}
 
-	public void setPdf(String pdf) {
-		this.pdf = pdf;
-	}
-
 	public String getIcon() {
 		if(icon !=null) {
 			return icon;
@@ -232,11 +226,11 @@ public class Asset implements SmartiNode, Serializable {
 		}
 	}
 
-	public String getPdf() {
+	public boolean getPdf() {
 		if(contentType != null && contentType.startsWith("image/")) {
-			return "pdf";
+			return true;
 		}else {	
-			return null;
+			return false;
 		}
 	}
 
