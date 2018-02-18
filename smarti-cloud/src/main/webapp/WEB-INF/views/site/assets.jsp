@@ -209,8 +209,7 @@
 					<source type="video/mp4" src="video.mp4?path=${item.path }"/>
 				</video>
 				<figcaption>
-					<h3>${item.title}</h3>
-					<p>${item.description }	</p>
+					<p>${item.title }</p>
 				</figcaption>
 			
 			</figure>
