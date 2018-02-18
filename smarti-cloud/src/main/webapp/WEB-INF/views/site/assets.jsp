@@ -204,12 +204,13 @@
 			<a  class="wb-lbx" title="<spring:message code="djn.edit"/>" href="<c:url value="texteditor.html?uid=${item.uid}"/>"><span class="glyphicon glyphicon-pencil"></span><spring:message code="djn.onlineEdit"/></a>
 		</c:if>
 	</div>
-		<c:if test="${!item.mp4}">
+		<c:if test="${item.mp4}">
 		<figure class="wb-mltmd">
 				<video poster="video2jpg.jpg?path=${item.path }" title="${item.title }"  controls="controls" width="400" height="300" preload="none">
 					<source type="video/mp4" src="video.mp4?path=${item.path }"/>
 				</video>
 				<figcaption>
+					<p>${item.title }</p>
 					<p>${item.title }</p>
 				</figcaption>
 		</figure>
