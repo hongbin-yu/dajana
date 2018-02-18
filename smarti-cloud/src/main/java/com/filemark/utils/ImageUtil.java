@@ -214,6 +214,40 @@ public class ImageUtil
     	
     }     
 
+    public static int pdf2jpg(String infile, String outfile) {
+    	String s;
+    	Process p;
+    	int exit=1;
+    	ProcessBuilder pb = new ProcessBuilder("/usr/bin/convert","-density 400",infile+"[0]",outfile);
+    	pb.redirectErrorStream(true);
+        try {
+	        p = pb.start();//Runtime.getRuntime().exec(shellCommand);
+	
+	        BufferedReader br = new BufferedReader(
+	            new InputStreamReader(p.getInputStream()));
+	        while ((s = br.readLine()) != null)
+	            log.debug("line: " + s);
+	        p.waitFor();
+	        exit = p.exitValue();
+	        if(exit !=0) {
+	        	br = new BufferedReader(
+	                    new InputStreamReader(p.getErrorStream()));
+	                while ((s = br.readLine()) != null) {
+	                    log.debug("line: " + s);
+	                }
+	
+	        	log.error("convert exit: " + exit);
+	        	
+	        }
+	        p.destroy();
+        } catch (IOException e) {
+			log.error("pdf2jpg :"+e.getMessage());;
+        } catch (InterruptedException e) {
+			log.error("pdf2jpg :"+e.getMessage());;
+		}
+        return exit;
+    	
+    }    
     public static String oreintation(String infile) {
     	String s;
     	Process p;
@@ -379,9 +413,9 @@ public class ImageUtil
     	String icon = device+"/publish/icon400"+filename+".jpeg";
 		BufferedWriter writer = new BufferedWriter(new FileWriter("/var/lib/tomcat8/conf/video2mp4.sh",true));
 
-    	writer.write("ffmpeg -i "+device+filename +" -nostats -nostdin -s 400X300 -c:v libx264 -preset ultrafast "+output);
+    	writer.write("ffmpeg -i "+device+filename +" -nostats -nostdin -s 600X400 -c:v libx264 -preset ultrafast "+output);
     	writer.newLine();
-    	writer.write("ffmpeg -ss 00:00:03 -i "+output +" -nostats -nostdin -s 400X300 -vframes 1 "+icon);
+    	writer.write("ffmpeg -ss 00:00:03 -i "+output +" -nostats -nostdin -s 400X400 -vframes 1 "+icon);
     	writer.newLine();
     	writer.close();    
 

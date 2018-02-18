@@ -1699,6 +1699,114 @@ public class SiteController extends BaseController {
 		return null;
 	}
 
+	@RequestMapping(value = {"/site/pdf2jpg.jpg"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
+	public @ResponseBody String pdf2jpg(String path,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
+		ImageUtil.HDDOn();	
+		try {
+			if(path==null) {
+				response.sendRedirect("/resources/images/pdf-icon.png");									
+
+			}
+			File file = null;
+			String jpgname = jcrService.getHome()+"/icon400"+path+".jpg";
+			String pdfname = jcrService.getDevice()+path;
+			file = new File(jpgname);
+			if(!file.exists()) {
+
+				int exit = ImageUtil.pdf2jpg(pdfname, jpgname);
+				if(exit != 0) {
+					response.sendRedirect("/resources/images/pdf-icon.png");									
+				}
+
+			}
+			FileInputStream in = new FileInputStream(file);
+			response.setContentType("image/jpeg");
+			IOUtils.copy(in, response.getOutputStream());
+			in.close();						
+		} catch (FileNotFoundException e) {
+			logger.error("doc2pdf:"+e.getMessage());
+			ImageUtil.HDDOff();
+			return e.getMessage();
+		} catch (IOException e) {
+			logger.error("doc2pdf:"+e.getMessage());
+			ImageUtil.HDDOff();
+			return e.getMessage();
+		}
+
+		ImageUtil.HDDOff();
+		return null;
+	}
+	
+	@RequestMapping(value = {"/site/doc2jpg.jpg"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
+	public @ResponseBody String doc2jpg(String path,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
+		ImageUtil.HDDOn();	
+
+		try {
+			if(path==null) {
+				response.sendRedirect("/resources/images/word-icon.png");									
+
+			}
+			File file = null;
+			String jpgname = jcrService.getHome()+"/icon400"+path+".jpg";
+			String pdfname = jcrService.getDevice()+path.replaceFirst(".docx", ".pdf").replaceFirst(".doc",".pdf");
+			file = new File(jpgname);
+			if(!file.exists()) {
+
+				int exit = ImageUtil.pdf2jpg(pdfname, jpgname);
+				if(exit != 0) {
+					response.sendRedirect("/resources/images/word-icon.png");									
+				}
+
+			}
+			FileInputStream in = new FileInputStream(file);
+			response.setContentType("image/jpeg");
+			IOUtils.copy(in, response.getOutputStream());
+			in.close();						
+		} catch (FileNotFoundException e) {
+			logger.error("doc2pdf:"+e.getMessage());
+			ImageUtil.HDDOff();
+			return e.getMessage();
+		} catch (IOException e) {
+			logger.error("doc2pdf:"+e.getMessage());
+			ImageUtil.HDDOff();
+			return e.getMessage();
+		}
+
+		ImageUtil.HDDOff();
+		return null;
+	}	
+	@RequestMapping(value = {"/site/video2jpg.jpg"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
+	public @ResponseBody String video2jpg(String path,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
+		ImageUtil.HDDOn();	
+		try {
+			if(path==null) {
+				response.sendRedirect("/resources/images/video-icon.png.png");									
+				
+			}
+			File file = null;
+			String jpgname = jcrService.getHome()+"/icon400"+path+".jpeg";
+			file = new File(jpgname);
+			if(!file.exists()) {
+				response.sendRedirect("/resources/images/video-icon.png.png");									
+			}
+			FileInputStream in = new FileInputStream(file);
+			response.setContentType("image/jpeg");
+			IOUtils.copy(in, response.getOutputStream());
+			in.close();						
+		} catch (FileNotFoundException e) {
+			logger.error("doc2pdf:"+e.getMessage());
+			ImageUtil.HDDOff();
+			return e.getMessage();
+		} catch (IOException e) {
+			logger.error("doc2pdf:"+e.getMessage());
+			ImageUtil.HDDOff();
+			return e.getMessage();
+		}
+
+		ImageUtil.HDDOff();
+		return null;
+	}	
+		
 	@RequestMapping(value = {"/site/viewimage","/content/viewimage","/content/**/viewimage","/protected/viewimage","/protected/**/viewimage","/site/file","/site/file*.*","/content/file","/content/file*.*","/content/**/file","/content/**/file*.*"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public @ResponseBody String viewFile(String uid,String path,Integer w,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
 		ImageUtil.HDDOn();		
