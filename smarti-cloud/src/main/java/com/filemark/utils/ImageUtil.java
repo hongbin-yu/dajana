@@ -218,7 +218,7 @@ public class ImageUtil
     	String s;
     	Process p;
     	int exit=1;
-    	ProcessBuilder pb = new ProcessBuilder("/usr/bin/convert","-background","white","-colorspace","sRGB", infile+"[0]","-scale","400x400",outfile);
+    	ProcessBuilder pb = new ProcessBuilder("/usr/bin/convert","-colorspace", infile+"[0]","-scale","400x400","sRGB","-background","white","-flatten",outfile);
     	pb.redirectErrorStream(true);
         try {
 	        p = pb.start();//Runtime.getRuntime().exec(shellCommand);
