@@ -211,11 +211,10 @@
 				</video>
 				<figcaption>
 					<p>${item.title }</p>
-					<p>${item.title }</p>
 				</figcaption>
 		</figure>
 		</c:if>
-		<c:if test="${item.mp4}">
+		<c:if test="${!item.mp4}">
 	    <a class="${item.cssClass }" href="<c:url value='${item.link}'></c:url>">
 			<img id="img${item.uid}" src="<c:url value='${item.icon }'></c:url>" class="img-responsive" draggable="true"/>
 		</a>

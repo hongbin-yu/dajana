@@ -415,7 +415,7 @@ public class ImageUtil
 
     	writer.write("ffmpeg -i "+device+filename +" -nostats -nostdin -s 600X400 -c:v libx264 -preset ultrafast "+output);
     	writer.newLine();
-    	writer.write("ffmpeg -ss 00:00:03 -i "+output +" -nostats -nostdin -s 400X400 -vframes 1 "+icon);
+    	writer.write("ffmpeg -ss 00:00:02 -i "+output +" -nostats -nostdin -s 400X300 -vframes 1 "+icon);
     	writer.newLine();
     	writer.close();    
 
