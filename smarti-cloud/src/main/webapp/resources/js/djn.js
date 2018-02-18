@@ -750,7 +750,8 @@ function ftrClose(url) {
 function toggle(source) {
 	  checkboxes = document.getElementsByName('puid');
 	  for(var i=0, n=checkboxes.length;i<n;i++) {
-		  checkboxes[i].checked = source.checked;
+		  if(checkboxes[i].value !='{uid}')
+			  checkboxes[i].checked = source.checked;
 	  }
 
 }

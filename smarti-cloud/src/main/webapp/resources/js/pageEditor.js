@@ -651,11 +651,10 @@ function openPdf() {
 }
 
 function deleteFiles() {
-	if(confirm(i18n("are_you_sure_delete")+"?")) {
-		var uids = document.getElementsByName("puid");
+	var uids = document.getElementsByName("puid");
 		var url = "";
 		for(var i = 0; i<uids.length; i++) {
-			if(uids[i].checked) {
+			if(uids[i].checked && uids[i].value !='{uid}') {
 				if(url =="")
 					url+="?uid="+uids[i].value;
 				else
@@ -665,9 +664,10 @@ function deleteFiles() {
 				
 		}
 		if(url =="") {
-			alert("æ²¡æœ‰é€‰æ‹©æ–‡ä»¶ï¼�");
+			alert("没有选择文件！");
 			return ;
 		}
+		if(confirm(i18n("are_you_sure_delete")+"?")) {
 	    $.ajax({
 		    url: 'deleteassets.html'+url,
 		    type: "POST", 
