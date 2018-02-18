@@ -256,7 +256,7 @@ public class Asset implements SmartiNode, Serializable {
 		if(contentType != null && (contentType.equals("image/tiff") || contentType.equals("image/x-tiff") )) {
 			return "viewpdf?path="+path;
 		}else if(contentType.startsWith("video/")) {
-			return "video.mp4?path="+path+".mp4";
+			return "video.mp4?path="+path;
 		}else{
 			return "viewimage?path="+path;
 		}

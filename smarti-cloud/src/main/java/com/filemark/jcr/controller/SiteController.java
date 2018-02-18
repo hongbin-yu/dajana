@@ -1806,7 +1806,36 @@ public class SiteController extends BaseController {
 		ImageUtil.HDDOff();
 		return null;
 	}	
-		
+	@RequestMapping(value = {"/site/video.mp4"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
+	public @ResponseBody String video2mp4(String path,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
+		ImageUtil.HDDOn();	
+		try {
+			File mp4File = new File(jcrService.getDevice()+path+".mp4");
+			if(mp4File.exists()) {
+				FileInputStream in = new FileInputStream(mp4File);
+				response.setContentType("video/mp4");
+				IOUtils.copy(in, response.getOutputStream());
+				in.close();					
+			}else {
+				File file = new File(jcrService.getDevice()+path);
+				FileInputStream in = new FileInputStream(file);
+				IOUtils.copy(in, response.getOutputStream());
+				in.close();					
+			}
+					
+		} catch (FileNotFoundException e) {
+			logger.error("video2mp4:"+e.getMessage());
+			ImageUtil.HDDOff();
+			return e.getMessage();
+		} catch (IOException e) {
+			logger.error("video2mp4:"+e.getMessage());
+			ImageUtil.HDDOff();
+			return e.getMessage();
+		}
+
+		ImageUtil.HDDOff();
+		return null;
+	}			
 	@RequestMapping(value = {"/site/viewimage","/content/viewimage","/content/**/viewimage","/protected/viewimage","/protected/**/viewimage","/site/file","/site/file*.*","/content/file","/content/file*.*","/content/**/file","/content/**/file*.*"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public @ResponseBody String viewFile(String uid,String path,Integer w,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
 		ImageUtil.HDDOn();		
