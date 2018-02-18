@@ -1748,7 +1748,7 @@ public class SiteController extends BaseController {
 			}
 			File file = null;
 			String jpgname = jcrService.getHome()+"/icon400"+path+".jpg";
-			String pdfname = jcrService.getDevice()+path.replaceFirst(".docx", ".pdf").replaceFirst(".doc",".pdf");
+			String pdfname = jcrService.getDevice()+path.replaceFirst(".docx", ".pdf").replaceFirst(".doc",".pdf").replaceFirst(".rtf", ".pdf");
 			file = new File(jpgname);
 			if(!file.exists()) {
 
