@@ -1787,7 +1787,7 @@ public class SiteController extends BaseController {
 			String jpgname = jcrService.getHome()+"/icon400"+path+".jpg";
 			file = new File(jpgname);
 			if(!file.exists()) {
-				response.sendRedirect("/resources/images/video-icon.png.png");									
+				response.sendRedirect("/resources/images/video-icon.png");									
 			}
 			FileInputStream in = new FileInputStream(file);
 			response.setContentType("image/jpeg");
