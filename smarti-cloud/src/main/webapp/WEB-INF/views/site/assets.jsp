@@ -203,18 +203,18 @@
         <c:if test="${item.text}">
 			<a  class="wb-lbx" title="<spring:message code="djn.edit"/>" href="<c:url value="texteditor.html?uid=${item.uid}"/>"><span class="glyphicon glyphicon-pencil"></span><spring:message code="djn.onlineEdit"/></a>
 		</c:if>
-		<c:if test="${item.mp4}">
-			<figure draggable="true">
-				<video poster="video2jpg.jpg?path=${item.path }" title="${item.title }">
+	</div>
+		<c:if test="${!item.mp4}">
+		<figure class="wb-mltmd">
+				<video poster="video2jpg.jpg?path=${item.path }" title="${item.title }"  controls="controls" width="400" height="300" preload="none">
 					<source type="video/mp4" src="video.mp4?path=${item.path }"/>
 				</video>
 				<figcaption>
 					<p>${item.title }</p>
 				</figcaption>
-			
-			</figure>
+		</figure>
 		</c:if>
-		<c:if test="${!item.mp4}">
+		<c:if test="${item.mp4}">
 	    <a class="${item.cssClass }" href="<c:url value='${item.link}'></c:url>">
 			<img id="img${item.uid}" src="<c:url value='${item.icon }'></c:url>" class="img-responsive" draggable="true"/>
 		</a>
@@ -222,7 +222,7 @@
 
 		<div class="panel panel-default description" id="description${item.uid }" property="description"  uid="${item.uid}" placeholder="description">${item.description}</div>
 
-	</div>
+
 	<details>
 		<summary><span class="glyphicon glyphicon-edit"></span> ${item.title}</summary>
 		<span class="glyphicon glyphicon-remove"></span>
