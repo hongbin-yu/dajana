@@ -1,5 +1,6 @@
 package com.filemark.jcr.model;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -16,6 +17,7 @@ public class Asset implements SmartiNode, Serializable {
 	/**
 	 * 
 	 */
+	private static String devicePath="/mnt/device";
 	private static final long serialVersionUID = 1L;
 	@Field(uuid=true)
 	protected String uid;
@@ -244,7 +246,21 @@ public class Asset implements SmartiNode, Serializable {
 		}else {	
 			return false;
 		}
-	}	
+	}
+	
+	public boolean getMp4() {
+		
+		if(contentType != null && contentType.startsWith("video/")) {
+			String mp4 = devicePath+path+".mp4";
+			if(new File(mp4).exists()) {
+				return true;
+			}
+
+		}
+		
+		return false;
+	}
+	
 	public boolean getText() {
 		if(contentType != null && (contentType.startsWith("text/") || contentType.startsWith("application/json"))) {
 			return true;
