@@ -203,7 +203,6 @@
         <c:if test="${item.text}">
 			<a  class="wb-lbx" title="<spring:message code="djn.edit"/>" href="<c:url value="texteditor.html?uid=${item.uid}"/>"><span class="glyphicon glyphicon-pencil"></span><spring:message code="djn.onlineEdit"/></a>
 		</c:if>
-	</div>
 		<c:if test="${item.mp4}">
 		<figure class="wb-mltmd">
 				<video poster="video2jpg.jpg?path=${item.path }" title="${item.title }"  controls="controls" width="400" height="300" preload="none">
@@ -222,7 +221,7 @@
 
 		<div class="panel panel-default description" id="description${item.uid }" property="description"  uid="${item.uid}" placeholder="description">${item.description}</div>
 
-
+	</div>
 	<details>
 		<summary><span class="glyphicon glyphicon-edit"></span> ${item.title}</summary>
 		<span class="glyphicon glyphicon-remove"></span>
