@@ -205,7 +205,7 @@
 		</c:if>
 		<c:if test="${item.mp4}">
 		<figure class="wb-mltmd">
-				<video poster="video2jpg.jpg?path=${item.path }" title="${item.title }"  controls="controls" width="400" height="300" preload="none">
+				<video poster="video2jpg.jpg?path=${item.path }" title="${item.title }"  controls="controls" preload="none">
 					<source type="video/mp4" src="video.mp4?path=${item.path }"/>
 				</video>
 				<figcaption>
