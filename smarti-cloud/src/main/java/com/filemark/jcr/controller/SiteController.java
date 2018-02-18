@@ -1780,11 +1780,11 @@ public class SiteController extends BaseController {
 		ImageUtil.HDDOn();	
 		try {
 			if(path==null) {
-				response.sendRedirect("/resources/images/video-icon.png.png");									
+				response.sendRedirect("/resources/images/video-icon.png");									
 				
 			}
 			File file = null;
-			String jpgname = jcrService.getHome()+"/icon400"+path+".jpeg";
+			String jpgname = jcrService.getHome()+"/icon400"+path+".jpg";
 			file = new File(jpgname);
 			if(!file.exists()) {
 				response.sendRedirect("/resources/images/video-icon.png.png");									

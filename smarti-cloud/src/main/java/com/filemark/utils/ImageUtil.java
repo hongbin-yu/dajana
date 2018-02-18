@@ -410,7 +410,7 @@ public class ImageUtil
     public static int video2mp4(String filename,String device) throws IOException, InterruptedException {
     	int exit=1;
     	String output = device+filename+".mp4";
-    	String icon = device+"/publish/icon400"+filename+".jpeg";
+    	String icon = device+"/publish/icon400"+filename+".jpg";
 		BufferedWriter writer = new BufferedWriter(new FileWriter("/var/lib/tomcat8/conf/video2mp4.sh",true));
 
     	writer.write("ffmpeg -i "+device+filename +" -nostats -nostdin -s 600X400 -c:v libx264 -preset ultrafast "+output);
