@@ -88,32 +88,11 @@ ${path }<!-- img title="点击插入连续播放" alt="" class="pull-right" src=
 <c:set var="sources">${sources}<source type="${item.contentType}" src="viewimage?uid=${item.uid }"></c:set>
 <div id="${item.uid}" class="col-md-4">
 
-	<video  controls="controls" width="200" height="100" preload="none">
-	<source type="${item.contentType }" src="viewimage?uid=${item.uid }"/>
+	<video poster="video2jpg.jpg?path=${item.path }" controls="controls" width="400" height="300" preload="none">
+	<source type="video/mp4" src="video.mp4?path=${item.path }"/>
 	</video>
+	<button class="bnt bnt-default" title="点击选择此视频" onclick='javascript:returnFileUrl("video.mp4?path=${item.path}","${item.uid}")'><span class="glyphicon glyphicon-film"></span>${item.title}<span class="glyphicon glyphicon-ok pull-right"></span></button>
 
-	<a title="点击选择此视频" href='javascript:returnFileUrl("viewimage?uid=${item.uid}","${item.uid}")'><img id="${item.uid}" src="<c:url value="/resources/images/play.png"></c:url>" class="img-responsive pull-right"/></a>
-<details>
-	<summary><img title="点击打开或合上编辑窗口" src='<c:url value="/resources/images/editIcon.gif"></c:url>'>${item.path}</summary>
-	<div class="row">
-	<div class="checkbox">
-	<label for="delete${item.uid }"><input type="checkbox" class="form-editable" name="delete" value="true" id="delete${item.uid }" uid="${item.uid}"> 删除</label>
-	</div>
-	<div class="form-group">
-	<label for="title${item.uid }">标题&nbsp;</label><input class="form-control, form-editable" id="title${item.uid }" name="jcr:title" value="${item.title}" size="24" uid="${item.uid}"/>
-	</div>
-	<div class="form-group">
-	<label for="url${item.uid }">作者&nbsp;</label><input class="form-control, form-editable" id="url${item.uid }" name="url" value="${item.url}" size="24" uid="${item.uid}"/>
-	</div>
-	<div class="form-group">
-	<label for="contentType${item.uid }">类型&nbsp;</label><input class="form-control, form-editable" id="contentType${item.uid }" name="contentType" value="${item.contentType}" size="24" uid="${item.uid}" disabled/>
-	</div>
-	<div class="form-group">
-	<label for="description${item.uid }">描述 </label><br/>
-	<textarea class="form-control, form-editable" id="description${item.uid }" name="description" cols="22"  uid="${item.uid}">${item.description}</textarea>
-	</div>
-	</div>
-</details>
 
 </div>
 <c:if test="${(loop.index + 2) % 3 ==1  }"><div class="clearfix"></div></c:if>
