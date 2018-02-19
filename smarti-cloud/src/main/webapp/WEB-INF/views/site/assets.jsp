@@ -10,8 +10,9 @@
         <main role="main" property="mainContentOfPage" class="container">
 	    <div class="col-md-4 well" id="wb-sec">
 		    <section>
-
-		    	<input class="btn btn-default pull-right" type="checkbox" onClick="toggle(this)" title="选择切换"/>
+				<div class="checkbox btn btn-default pull-right">
+		    		<label for="toggle"><input id="toggle" type="checkbox" onClick="toggle(this)" title="选择切换"/>全选切换</label>
+				</div>
 		        <h3><c:if test="${folder.name!='assets' }"><a href="assets.html?path=${folder.parent}&type=${type}"><span class="glyphicon glyphicon-backward"></span>${folder.parent}</a></c:if>
 		        <a href="?path=${folder.path}&type=${type}" title="刷屏"><span class="glyphicon glyphicon-refresh"></span>${folder.path}</a>
 		        </h3>
