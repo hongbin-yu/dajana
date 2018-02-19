@@ -215,9 +215,9 @@ public class Asset implements SmartiNode, Serializable {
 			return "resources/images/audio-icon.png";	
 		}else if("application/pdf".equals(contentType)){
 			return "pdf2jpg.jpg?path="+path;//"resources/images/pdf-icon.png";
-		}else if("application/vnd.ms-word".equals(contentType) || "application/msword".equals(contentType) || path.endsWith(".doc") || path.endsWith(".docx")) {	
+		}else if(path.endsWith(".doc") || path.endsWith(".docx")) {	
 			return "doc2jpg.jpg?path="+path;
-		}else if("application/vnd.ms-excel".equals(contentType) || "application/vnd.openformats-officedocument.spreadsheetml.sheet".equals(contentType) || "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet".equals(contentType)) {
+		}else if(path.endsWith(".xls") || path.endsWith(".xlsx")) {
 			if(getDoc2pdf()) {
 				return "pdf2jpg.jpg?path="+path;
 			}
