@@ -219,7 +219,7 @@ public class Asset implements SmartiNode, Serializable {
 			return "doc2jpg.jpg?path="+path;
 		}else if(path.endsWith(".xls") || path.endsWith(".xlsx")) {
 			if(getDoc2pdf()) {
-				return "pdf2jpg.jpg?path="+path;
+				return "doc2jpg.jpg?path="+path;
 			}
 			return "resources/images/excel-icon.png";
 		}else if(path.endsWith(".zip")) {

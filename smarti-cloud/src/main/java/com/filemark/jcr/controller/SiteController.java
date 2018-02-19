@@ -1766,13 +1766,18 @@ public class SiteController extends BaseController {
 			
 			File file = null;
 			String jpgname = jcrService.getHome()+"/icon400"+path+".jpg";
-			String pdfname = jcrService.getDevice()+path.replaceFirst(".docx", ".pdf").replaceFirst(".doc",".pdf").replaceFirst(".rtf", ".pdf");
+			String pdfpath = path.substring(0, path.lastIndexOf("."))+".pdf";
+			String pdfname = jcrService.getDevice()+ pdfpath;
 			file = new File(jpgname);
 			if(!file.exists()) {
 
 				int exit = ImageUtil.pdf2jpg(pdfname, jpgname);
 				if(exit != 0) {
-					response.sendRedirect("/resources/images/word-icon.png");									
+				    if(path.endsWith(".doc") || path.endsWith(".docx")) {	
+						response.sendRedirect("/resources/images/word-icon.png");	
+				    }else if(path.endsWith(".xls") || path.endsWith(".xlsx")) {
+				    	response.sendRedirect("resources/images/excel-icon.png");
+				    }				
 				}
 
 			}
