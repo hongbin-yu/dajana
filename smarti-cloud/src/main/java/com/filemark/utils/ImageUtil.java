@@ -407,6 +407,18 @@ public class ImageUtil
     	
     }     
 
+    public static int xls2pdf(String filename,String outdir) throws IOException, InterruptedException {
+    	int exit=1;
+
+		BufferedWriter writer = new BufferedWriter(new FileWriter("/var/lib/tomcat8/conf/doc2pdf.sh",true));
+
+    	writer.write("cd "+outdir+" && libreoffice --headless --convert-to pdf --outdir "+outdir+" "+filename);
+    	writer.newLine();
+    	writer.close();     
+
+        return exit;
+    	
+    }       
     public static int video2mp4(String filename,String device) throws IOException, InterruptedException {
     	int exit=1;
     	String output = device+filename+".mp4";
