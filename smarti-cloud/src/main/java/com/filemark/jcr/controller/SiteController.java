@@ -976,7 +976,7 @@ public class SiteController extends BaseController {
         				InputStream in = multipartFile.getInputStream();
         				FileUtils.copyInputStreamToFile(in, file);
         				in.close();
-	           			if("application/vnd.ms-word".equals(contentType) || "application/msword".equals(contentType) || assetPath.endsWith(".doc") || assetPath.endsWith(".docx")) {	
+	           			if("application/vnd.ms-word".equals(contentType) || "application/vnd.ms-excel".equals(contentType) || "application/msword".equals(contentType) || assetPath.endsWith(".doc") || assetPath.endsWith(".docx")) {	
 	           				 logger.debug("doc2pdf:"+file.getAbsolutePath());
 	        				 ImageUtil.doc2pdf(file.getAbsolutePath(), file.getParentFile().getAbsolutePath());
 	        			}        				
