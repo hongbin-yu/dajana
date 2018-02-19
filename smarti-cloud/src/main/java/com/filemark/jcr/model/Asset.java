@@ -218,10 +218,10 @@ public class Asset implements SmartiNode, Serializable {
 		}else if(path.endsWith(".doc") || path.endsWith(".docx")) {	
 			return "doc2jpg.jpg?path="+path;
 		}else if(path.toLowerCase().endsWith(".xls") || path.toLowerCase().endsWith(".xlsx") ||  path.toLowerCase().endsWith(".cvs")  || path.toLowerCase().endsWith(".rtf")) {
-			if(getDoc2pdf()) {
-				return "doc2jpg.jpg?path="+path;
-			}
-			return "resources/images/excel-icon.png";
+			//if(getDoc2pdf()) {
+			return "doc2jpg.jpg?path="+path;
+			//}
+			//return "resources/images/excel-icon.png";
 		}else if(path.endsWith(".zip")) {
 			return "resources/images/zip-icon.png";
 		}else {	
