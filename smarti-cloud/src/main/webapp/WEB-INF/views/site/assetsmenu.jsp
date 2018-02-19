@@ -21,6 +21,7 @@
 <ul class="list-inline margin-bottom-none">
 <authz:authorize ifAnyGranted="ROLE_USER,ROLE_ADMINISTRATOR,ROLE_OWNER">
 <li><a title="<spring:message code="djn.website"></spring:message>" href="<c:url value="/site/editor.html"/>"><span class="glyphicon glyphicon-globe"></span><spring:message code="djn.website"></spring:message></a></li>
+<li><a title="<spring:message code="djn.b2c"></spring:message>" href="<c:url value="/site/b2c.html"/>"><span class="glyphicon glyphicon-gift"></span><spring:message code="djn.b2c"></spring:message></a></li>
 <li><a href='<c:url value="/protected/chat.html"></c:url>' title="<spring:message code="djn.online_chat"></spring:message>"><span class="glyphicon glyphicon-envelope"></span><spring:message code="djn.chat"></spring:message><span class="badge"></span></a></li>
 <li><a href="javascript:openPdf()" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-open"></span>PDF</a>
 <li><a href="javascript:deleteFiles()" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-remove"></span><spring:message code="djn.delete"></spring:message></a>

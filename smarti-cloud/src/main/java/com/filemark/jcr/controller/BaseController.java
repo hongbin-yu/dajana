@@ -27,6 +27,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
+import com.filemark.jcr.model.Asset;
 import com.filemark.jcr.model.Folder;
 import com.filemark.jcr.model.Role;
 import com.filemark.jcr.model.User;
@@ -59,6 +60,7 @@ public class BaseController {
 				}
 			}
 			*/
+		Asset.setDevicePath(jcrService.getDevice());
 		ImageUtil.HDDOff();
 	}
 

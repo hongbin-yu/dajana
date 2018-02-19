@@ -976,7 +976,7 @@ public class SiteController extends BaseController {
         				InputStream in = multipartFile.getInputStream();
         				FileUtils.copyInputStreamToFile(in, file);
         				in.close();
-	           			if("application/vnd.ms-word".equals(contentType) || "application/vnd.ms-excel".equals(contentType) || "application/msword".equals(contentType) || assetPath.endsWith(".doc") || assetPath.endsWith(".docx")) {	
+	           			if("application/vnd.ms-powerpoint".equals(contentType) || contentType.startsWith("application/vnd.openformats-officedocument") || "application/vnd.ms-word".equals(contentType) || "application/vnd.ms-excel".equals(contentType) || "application/msword".equals(contentType) || assetPath.endsWith(".doc") || assetPath.endsWith(".docx")) {	
 	           				 logger.debug("doc2pdf:"+file.getAbsolutePath());
 	        				 ImageUtil.doc2pdf(file.getAbsolutePath(), file.getParentFile().getAbsolutePath());
 	        			}        				
@@ -1649,11 +1649,22 @@ public class SiteController extends BaseController {
 		return super.deleteNode(model, request, response);
 	} 
 	@RequestMapping(value = {"/site/doc2pdf.pdf"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
-	public @ResponseBody String doc2pdf(String uid,String path,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
+	public @ResponseBody String doc2pdf(String path,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
 		ImageUtil.HDDOn();	
 		try {
-			if(uid !=null)
-				path = jcrService.getNodeById(uid);
+			String pdfpath = path.substring(0, path.lastIndexOf("."))+".pdf";
+
+
+			File pdffile = new File(jcrService.getDevice()+pdfpath);
+			if(pdffile.exists()) {
+				FileInputStream in = new FileInputStream(pdffile);
+				response.setContentType("application/pdf");
+				IOUtils.copy(in, response.getOutputStream());
+				in.close();	
+				return null;
+			}
+
+
 			if(path !=null  && jcrService.nodeExsits(path)) {
 				Asset asset = (Asset)jcrService.getObject(path);
 				if(asset.getDevice()!=null) {
@@ -1746,6 +1757,7 @@ public class SiteController extends BaseController {
 				response.sendRedirect("/resources/images/word-icon.png");									
 
 			}
+			
 			File file = null;
 			String jpgname = jcrService.getHome()+"/icon400"+path+".jpg";
 			String pdfname = jcrService.getDevice()+path.replaceFirst(".docx", ".pdf").replaceFirst(".doc",".pdf").replaceFirst(".rtf", ".pdf");

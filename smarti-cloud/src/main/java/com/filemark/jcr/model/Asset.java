@@ -235,11 +235,15 @@ public class Asset implements SmartiNode, Serializable {
 	}
 
 	public boolean getDoc2pdf() {
-		if(contentType != null && ("application/vnd.ms-word".equals(contentType) || "application/msword".equals(contentType) || path.endsWith(".doc") || path.endsWith(".docx"))) {
-			return true;
-		}else {	
+		///if(contentType != null && ("application/vnd.ms-word".equals(contentType) || "application/msword".equals(contentType) || path.endsWith(".doc") || path.endsWith(".docx"))) {
+		//	return true;
+		//}else {	
+			String pdfpath = path.substring(0, path.lastIndexOf("."))+".pdf";
+			File pdffile = new File(devicePath+pdfpath);
+			if(pdffile.exists()) 
+				return true;
 			return false;
-		}
+		//}
 	}
 	
 	public boolean getMp4() {
@@ -310,6 +314,14 @@ public class Asset implements SmartiNode, Serializable {
 
 	public void setHeight(Long height) {
 		this.height = height;
+	}
+
+	public static String getDevicePath() {
+		return devicePath;
+	}
+
+	public static void setDevicePath(String devicePath) {
+		Asset.devicePath = devicePath;
 	}
 
 
