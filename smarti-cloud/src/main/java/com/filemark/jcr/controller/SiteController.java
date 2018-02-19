@@ -1722,9 +1722,11 @@ public class SiteController extends BaseController {
 				response.sendRedirect("/resources/images/pdf-icon.png");									
 
 			}
+			String pdfpath = path.substring(0, path.lastIndexOf("."))+".pdf";
+
 			File file = null;
 			String jpgname = jcrService.getHome()+"/icon400"+path+".jpg";
-			String pdfname = jcrService.getDevice()+path;
+			String pdfname = jcrService.getDevice()+pdfpath;
 			file = new File(jpgname);
 			if(!file.exists()) {
 
