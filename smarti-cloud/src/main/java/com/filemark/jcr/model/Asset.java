@@ -200,9 +200,9 @@ public class Asset implements SmartiNode, Serializable {
 	}
 
 	public String getIcon() {
-		if(icon !=null) {
-			return icon;
-		}
+		//if(icon !=null) {
+			//return icon;
+		//}
 		if(contentType == null) {
 			return "resources/images/document-icon.png";
 		}else if((contentType.equals("image/tiff") || contentType.equals("image/x-tiff") )) {
