@@ -121,7 +121,7 @@ ${path }</label>
 			<video poster="video2jpg.jpg?path=${item.path }" controls="controls" width="300" height="200" preload="none">
 			<source type="video/mp4" src="video.mp4?path=${item.path }"/>
 			</video>
-			<button class="bnt bnt-default" title="点击选择此视频" onclick='javascript:returnFileUrl("video.mp4?path=${item.path}","${item.uid}")'><span class="glyphicon glyphicon-film"></span>${item.title}<span class="glyphicon glyphicon-ok pull-right"></span></button>
+			<button class="bnt bnt-primary" title="点击选择此视频" onclick='javascript:returnFileUrl("video.mp4?path=${item.path}","${item.uid}","video2jpg.jpg?path=${item.path }")'><span class="glyphicon glyphicon-film"></span>${item.title}<span class="glyphicon glyphicon-ok pull-right"></span></button>
 		</c:if>
 		<c:if test="${!item.mp4}">
 		<a class="${item.cssClass }-edit" id="href${item.uid }" href="<c:url value='${item.link}'></c:url>">		
@@ -287,6 +287,71 @@ function returnFileUrl(fileUrl,uid) {
 
 }
 
+function returnFileUrl(fileUrl,uid,poster) {
+	//preventDefault();
+	var message = win.document.getElementById("header_message");
+	if(message) {
+		message.innerHTML="<section class=\"alert alert-success\"><h3>资源已加入</h3></section>";
+
+		}
+	if(input && input!="") {
+		win.document.getElementById(input).value = fileUrl;
+		
+		close();
+	} else {
+		var e_title = document.getElementById("title"+uid);
+		var e_url = document.getElementById("url"+uid);
+		var e_desc = document.getElementById("description"+uid);
+		var e_type = document.getElementById("contentType"+uid).value;
+		var e_size = document.getElementById("size"+uid).value;
+		if(e_type.indexOf("image/")>=0) {
+			tinyMCE.activeEditor.selection.setContent('<img class="img-responsive" alt="" src="'+fileUrl+'">');
+		}else if(e_type.indexOf("video/")>=0) {
+			var html = "<figure class=\"wb-mltmd-edit editable\"><video poster=\""+poster+"\" title=\""+e_title.value+"\" preload=\"none\">";
+			if(e_size>10000000) {
+				html +="<source type=\"video/mp4\" src=\""+fileUrl+"\"/>";
+			}else {
+				html +="<source type=\"video/mp4\" src=\""+fileUrl+"\"/>";
+			}
+			html +="</video><figcaption class=\"editable\"><p>"+e_desc.innerHTML+"</p></figcaption></figure>";
+			tinyMCE.activeEditor.selection.setContent(html);
+		} else if(e_type.indexOf("audio/")>=0) {
+			var html = "<audio controls=\"controls\">";
+			html +="<source type=\""+e_type+"\" src=\""+fileUrl+"\"/>";
+			html +="</audio>";
+			tinyMCE.activeEditor.selection.setContent(html);
+		}else if(e_type.indexOf("msword")>=0) {
+		     $.ajax({
+				    url: contentPath+"/importWord.html?path="+fileUrl,
+				    type: "GET", //ADDED THIS LINE
+				    // THIS MUST BE DONE FOR FILE UPLOADING
+				    contentType: "text/html",
+				    processData: false,
+				    success: function(data) {
+				    	tinyMCE.activeEditor.selection.setContent(data);
+				    },
+				    error: function() {
+					    alert("出错："+fileUrl);
+
+				    }
+				    // ... Other options like success and etc
+				}); 	    
+		} else {
+			var html = $("#href"+uid).html();
+			html = "<a title='下载' href='file?uid="+uid+"'>"+html+"</a><p><a title='下载' href='file?uid="+uid+"'>"+e_title.value+"("+e_size+")</a><p>";
+			tinyMCE.activeEditor.selection.setContent(html);
+			}
+		
+		if(e_url && e_url.value != "") {
+			tinyMCE.activeEditor.insertContent("<a href=\""+e_url.value+">"+"<h3 class=\"h5\">"+e_url.value+"</h3></a>");
+			}
+		if(e_desc && e_desc.value !="") {
+			tinyMCE.activeEditor.insertContent(e_desc.innerHTML);
+			}
+		tinyMCE.activeEditor.setDirty(true);
+	}
+
+}
 function returnCarousel(fileUrl) {
 	var message = win.document.getElementById("header_message");
 	if(message) {

@@ -263,11 +263,11 @@ public class Asset implements SmartiNode, Serializable {
 	public boolean getMp4() {
 		
 		if(contentType != null && contentType.startsWith("video/")) {
-			String mp4 = devicePath+path+".mp4";
+/*			String mp4 = devicePath+path+".mp4";
 			if(new File(mp4).exists()) {
 				return true;
-			}
-
+			}*/
+			return true;
 		}
 		
 		return false;
