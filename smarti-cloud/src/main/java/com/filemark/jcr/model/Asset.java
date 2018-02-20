@@ -244,10 +244,15 @@ public class Asset implements SmartiNode, Serializable {
 		///if(contentType != null && ("application/vnd.ms-word".equals(contentType) || "application/msword".equals(contentType) || path.endsWith(".doc") || path.endsWith(".docx"))) {
 		//	return true;
 		//}else {	
-			String pdfpath = path.substring(0, path.lastIndexOf("."))+".pdf";
-			File pdffile = new File(devicePath+pdfpath);
-			if(pdffile.exists()) 
-				return true;
+		    if(new Date().getTime() - lastModified.getTime()>3600000) {
+		    	return true;
+		    }
+		    if(path.lastIndexOf(".")>0) {
+				String pdfpath = path.substring(0, path.lastIndexOf("."))+".pdf";
+				File pdffile = new File(devicePath+pdfpath);
+				if(pdffile.exists()) 
+					return true;
+		    }
 			return false;
 		//}
 	}
@@ -299,9 +304,6 @@ public class Asset implements SmartiNode, Serializable {
 	}
 
 	public String getExt() {
-		if(ext==null) {
-			path.substring(path.lastIndexOf("."));
-		}
 		return ext;
 	}
 

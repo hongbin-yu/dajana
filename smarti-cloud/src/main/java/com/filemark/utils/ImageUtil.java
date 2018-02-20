@@ -124,63 +124,75 @@ public class ImageUtil
         }
     }
     
-    public static int convert(String infile, String outfile,  int maxWidth,int maxHeight) throws IOException, InterruptedException {
+    public static int convert(String infile, String outfile,  int maxWidth,int maxHeight) {
     	String s;
     	Process p;
-    	int exit=0;
+    	int exit=1;
     	String shellCommand = "/usr/bin/convert "+infile+" -resize "+maxWidth+"x"+maxHeight+"\\> "+outfile;
     	ProcessBuilder pb = new ProcessBuilder("/usr/bin/convert",infile,"-resize",maxWidth+"x"+maxHeight,outfile);
     	pb.redirectErrorStream(true);
-        p = pb.start();//Runtime.getRuntime().exec(shellCommand);
-        BufferedReader br = new BufferedReader(
-            new InputStreamReader(p.getInputStream()));
-        while ((s = br.readLine()) != null) {
-            log.debug("line: " + s);
-        }
-        p.waitFor();
-        exit = p.exitValue();
-        if(exit !=0) {
-        	br = new BufferedReader(
-                    new InputStreamReader(p.getErrorStream()));
-                while ((s = br.readLine()) != null) {
-                    log.debug("line: " + s);
-                }
-        	log.error(shellCommand);
-        	log.error("convert exit: " + exit);
-        	
-        }
-        p.destroy();
-        return exit;
-    	
-    }
+	    try {	
+	        p = pb.start();//Runtime.getRuntime().exec(shellCommand);
+	        BufferedReader br = new BufferedReader(
+	            new InputStreamReader(p.getInputStream()));
+	        while ((s = br.readLine()) != null) {
+	            log.debug("line: " + s);
+	        }
+	        p.waitFor();
+	        exit = p.exitValue();
+	        if(exit !=0) {
+	        	br = new BufferedReader(
+	                    new InputStreamReader(p.getErrorStream()));
+	                while ((s = br.readLine()) != null) {
+	                    log.debug("line: " + s);
+	                }
+	        	log.error(shellCommand);
+	        	log.error("convert exit: " + exit);
+	        	
+	        }
+	        p.destroy();
+	    } catch (IOException e) {
+			log.error("pdf2jpg :"+e.getMessage());;
+	    } catch (InterruptedException e) {
+			log.error("pdf2jpg :"+e.getMessage());;
+		}
+	        return exit;
+	    	
+	    }
     
-    public static int rotate(String infile, String outfile,  int angle) throws IOException, InterruptedException {
+    public static int rotate(String infile, String outfile,  int angle) {
     	String s;
     	Process p;
-    	int exit=0;
+    	int exit=1;
     	String shellCommand = "/usr/bin/convert "+infile+" -rotate "+angle+" "+outfile;
     	ProcessBuilder pb = new ProcessBuilder("/usr/bin/convert",infile,"-rotate",""+angle,outfile);
     	pb.redirectErrorStream(true);
-        p = pb.start();//Runtime.getRuntime().exec(shellCommand);
-
-        //p = Runtime.getRuntime().exec(shellCommand);
-        BufferedReader br = new BufferedReader(
-            new InputStreamReader(p.getInputStream()));
-        while ((s = br.readLine()) != null)
-            log.debug("line: " + s);
-        p.waitFor();
-        exit = p.exitValue();
-        if(exit !=0) {
-        	br = new BufferedReader(
-                    new InputStreamReader(p.getErrorStream()));
-                while ((s = br.readLine()) != null) {
-                    log.debug("line: " + s);
-                }
-        	log.error(shellCommand);
-        	log.error("convert exit: " + exit);
-        	
-        }
-        p.destroy();
+        try {
+	        p = pb.start();//Runtime.getRuntime().exec(shellCommand);
+	
+	        //p = Runtime.getRuntime().exec(shellCommand);
+	        BufferedReader br = new BufferedReader(
+	            new InputStreamReader(p.getInputStream()));
+	        while ((s = br.readLine()) != null)
+	            log.debug("line: " + s);
+	        p.waitFor();
+	        exit = p.exitValue();
+	        if(exit !=0) {
+	        	br = new BufferedReader(
+	                    new InputStreamReader(p.getErrorStream()));
+	                while ((s = br.readLine()) != null) {
+	                    log.debug("line: " + s);
+	                }
+	        	log.error(shellCommand);
+	        	log.error("convert exit: " + exit);
+	        	
+	        }
+	        p.destroy();
+        } catch (IOException e) {
+			log.error("rotate :"+e.getMessage());;
+        } catch (InterruptedException e) {
+			log.error("rotate :"+e.getMessage());;
+		}
         return exit;
     	
     }
@@ -188,28 +200,34 @@ public class ImageUtil
     public static int autoRotate(String infile, String outfile) throws IOException, InterruptedException {
     	String s;
     	Process p;
-    	int exit=0;
+    	int exit=1;
     	ProcessBuilder pb = new ProcessBuilder("/usr/bin/convert",infile,"-auto-orient",outfile);
     	pb.redirectErrorStream(true);
-        p = pb.start();//Runtime.getRuntime().exec(shellCommand);
-
-        BufferedReader br = new BufferedReader(
-            new InputStreamReader(p.getInputStream()));
-        while ((s = br.readLine()) != null)
-            log.debug("line: " + s);
-        p.waitFor();
-        exit = p.exitValue();
-        if(exit !=0) {
-        	br = new BufferedReader(
-                    new InputStreamReader(p.getErrorStream()));
-                while ((s = br.readLine()) != null) {
-                    log.debug("line: " + s);
-                }
-
-        	log.error("convert exit: " + exit);
-        	
-        }
-        p.destroy();
+    	try {
+	        p = pb.start();//Runtime.getRuntime().exec(shellCommand);
+	
+	        BufferedReader br = new BufferedReader(
+	            new InputStreamReader(p.getInputStream()));
+	        while ((s = br.readLine()) != null)
+	            log.debug("line: " + s);
+	        p.waitFor();
+	        exit = p.exitValue();
+	        if(exit !=0) {
+	        	br = new BufferedReader(
+	                    new InputStreamReader(p.getErrorStream()));
+	                while ((s = br.readLine()) != null) {
+	                    log.debug("line: " + s);
+	                }
+	
+	        	log.error("convert exit: " + exit);
+	        	
+	        }
+	        p.destroy();
+        } catch (IOException e) {
+			log.error("autorotate :"+e.getMessage());;
+        } catch (InterruptedException e) {
+			log.error("autorotate :"+e.getMessage());;
+		}
         return exit;
     	
     }     

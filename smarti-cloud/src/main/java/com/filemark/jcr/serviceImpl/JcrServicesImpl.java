@@ -1589,6 +1589,7 @@ public class JcrServicesImpl implements JcrServices {
         		OutputStream os = new FileOutputStream(home+"/icon"+x+path);
     			ImageIO.write(resizedImg, "jpeg", os);
     			updatePropertyByPath(path, "icon", home+"/icon"+x+path);
+    			os.close();
        			//InputStream is = new ByteArrayInputStream(os.toByteArray());
     			//String mineType = node.getParent().getProperty("contentType").getString();
     			//addFile(path,"file-"+x,is,"image/jpeg");
@@ -1611,17 +1612,15 @@ public class JcrServicesImpl implements JcrServices {
         			if(!out.getParentFile().exists()) {
         				out.getParentFile().mkdirs();
         			}
-        			try {
-        				int exit = ImageUtil.convert(infile, outfile, w, h);
-        				if(exit==0) {
-        					updatePropertyByPath(path, "icon", outfile);
-        					updatePropertyByPath(path, "updated", "true");
-        				} else {
-							createFile(path,w);							
-						}
-					} catch (InterruptedException e) {
-						log.error(e.getMessage());
+
+    				int exit = ImageUtil.convert(infile, outfile, w, h);
+    				if(exit==0) {
+    					updatePropertyByPath(path, "icon", outfile);
+    					updatePropertyByPath(path, "updated", "true");
+    				} else {
+						createFile(path,w);							
 					}
+
         		}
         		return null;
         	}

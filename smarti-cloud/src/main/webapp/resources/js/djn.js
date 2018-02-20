@@ -228,8 +228,8 @@ function drop(ev) {
 	    		items[i].getAsString(function (s) {
 	    	    	if(s.indexOf("http")>=0 && imported[s]==null) {
 	    			    imported[s] = true;   
-	    	    		if(s.indexOf("viewimage?uid=")>0){
-	    	    			  var uid = s.split("viewimage?uid=")[1];
+	    	    		if(s.indexOf("viewimage?path=")>0){
+	    	    			  var uid = s.split("viewimage?path=")[1];
 	    	    			  uid = uid.split("&")[0];
 	  	    	    		  selDiv.innerHTML=  "<section class=\"alert alert-info\"><h2 class=\"h3\">"+i18n("proccess")+"</h2><p><img alt='' src='"+contentPath+"/resources/images/ui-anim_basic_16x16.gif'/> "+s+"</p></section>";
 	    	    			  $.ajax({
@@ -241,7 +241,7 @@ function drop(ev) {
 		    					    	if(data.title.indexOf("error:")>=0)
 		    						        selDiv.innerHTML=  "<section class=\"alert alert-warning\"><h2 class=\"h3\">"+i18n("fail")+"</h2><p>"+data.title+"</p></section>"; // 
 		    					    	else {
-		    					    		$("#"+uid).remove();
+		    					    		//$("#"+uid).remove();
 		    							    selDiv.innerHTML = "<section class=\"alert alert-success\"><h2 class=\"4\">"+i18n("success")+"</h2><p>"+data.title+"</p></section>";
 		    							    var html = $("#div_uid").html();
 		    							    html = html.split("{uid}").join(data.uid);
@@ -315,8 +315,8 @@ function drop(ev) {
 		    		 }
 			    	    	if(url !=null && url.indexOf("http")>=0 && imported[url]==null) {
 			    	    		imported[url] = true;
-			    	    		if(url.indexOf("viewimage?uid=")>0){
-			    	    			  var uid = url.split("viewimage?uid=")[1];
+			    	    		if(url.indexOf("viewimage?path=")>0 || url.indexOf("file/")>0){
+			    	    			  var uid = url.split("?path=")[1];
 			    	    			  uid = uid.split("&")[0];
 			    	    			  selDiv.innerHTML=  "<section class=\"alert alert-info\"><h2 class=\"h3\">"+i18n("upload")+"</h2><p><img alt='' src='"+contentPath+"/resources/images/ui-anim_basic_16x16.gif'/> "+url+"</p></section>";
 			    			      $.ajax({
@@ -328,7 +328,7 @@ function drop(ev) {
 				    					    	if(data.title.indexOf("error:")>=0)
 				    						        selDiv.innerHTML=  "<section class=\"alert alert-warning\"><h2 class=\"h3\">"+i18n("fail")+"</h2><p>"+data.title+"</p></section>"; // 
 				    					    	else {
-				    					    		$("#"+uid).remove();
+				    					    		//$("#"+uid).remove();
 				    							    selDiv.innerHTML = "<section class=\"alert alert-success\"><h2 class=\"4\">"+i18n("success")+"</h2><p>"+data.title+"</p></section>";
 				    							    var html = $("#div_uid").html();
 				    							    html = html.split("{uid}").join(data.uid);

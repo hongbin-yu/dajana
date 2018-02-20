@@ -1120,7 +1120,7 @@ public class SiteController extends BaseController {
 		String username = getUsername();
 		ImageUtil.HDDOn();
 		try {
-			asset = jcrService.getAssetById(uid);
+			asset = (Asset)jcrService.getObject(uid);//jcrService.getAssetById(uid);
 			//String names[]=asset.getPath().split("/");
 			//String nodeName = asset.getPath().split("/")[names.length-1];
 			//String frompath = asset.getPath();
@@ -1605,13 +1605,16 @@ public class SiteController extends BaseController {
 			}
 		}
 		File pdficon = new File(jcrService.getHome()+"/icon400/"+path+".jpg");
-		File pdffile = new File(jcrService.getDevice()+path.substring(0,path.lastIndexOf("."))+".pdf");
+		if(path.lastIndexOf(".")>0) {
+			File pdffile = new File(jcrService.getDevice()+path.substring(0,path.lastIndexOf("."))+".pdf");
+			if(pdffile.exists()) {
+				pdffile.delete();
+			}					
+		}
 		if(pdficon.exists()) {
 			pdficon.delete();
 		}
-		if(pdffile.exists()) {
-			pdffile.delete();
-		}
+
 		File iconfile = new File(jcrService.getHome()+"/icon400/"+path);
 		if(iconfile!=null && iconfile.exists()) {
 			iconfile.delete();
@@ -1631,12 +1634,14 @@ public class SiteController extends BaseController {
 				Asset asset = jcrService.getAssetById(id);
 				File file = jcrService.getFile(asset.getPath());
 				File pdficon = new File(jcrService.getHome()+"/icon400/"+asset.getPath()+".jpg");
-				File pdffile = new File(jcrService.getDevice()+asset.getPath().substring(0,asset.getPath().lastIndexOf("."))+".pdf");
+				if(asset.getPath().lastIndexOf(".")>0) {
+					File pdffile = new File(jcrService.getDevice()+asset.getPath().substring(0,asset.getPath().lastIndexOf("."))+".pdf");
+					if(pdffile.exists()) {
+						pdffile.delete();
+					}
+				}
 				if(pdficon.exists()) {
 					pdficon.delete();
-				}
-				if(pdffile.exists()) {
-					pdffile.delete();
 				}
 				File iconfile = new File(jcrService.getHome()+"/icon400/"+asset.getPath());
 				if(iconfile!=null && iconfile.exists()) {
@@ -1928,7 +1933,7 @@ public class SiteController extends BaseController {
 						File icon = new File(iconfile);
 						
 						if(!icon.exists()) {
-								jcrService.createIcon(path, width,width);
+							jcrService.createIcon(path, width,width);
 						}
 							file = icon;
 
@@ -2363,15 +2368,10 @@ public class SiteController extends BaseController {
 				file = new File(device.getLocation()+asset.getPath());
 				FileInputStream in = new FileInputStream(file);
 				if(asset.getHeight() !=null && asset.getWidth() !=null && (asset.getHeight()>1200 || asset.getWidth()>1200)) {
-					try {
-						int exit = ImageUtil.convert(file.getAbsolutePath(), assetFolder+"/"+filename+ext, 1200, 1200);
-						if(exit !=0)
-							IOUtils.copy(in, output);
-					} catch (InterruptedException e) {
-						logger.error(e.getMessage());
+					int exit = ImageUtil.convert(file.getAbsolutePath(), assetFolder+"/"+filename+ext, 1200, 1200);
+					if(exit !=0)
 						IOUtils.copy(in, output);
-					}
-					
+				
 				}else 
 					IOUtils.copy(in, output);
 				in.close();
