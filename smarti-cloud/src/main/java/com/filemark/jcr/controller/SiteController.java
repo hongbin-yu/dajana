@@ -1604,7 +1604,7 @@ public class SiteController extends BaseController {
 				parent.delete();
 			}
 		}
-		File pdficon = new File(jcrService.getHome()+"/icon400/"+path+".pdf");
+		File pdficon = new File(jcrService.getHome()+"/icon400/"+path+".jpg");
 		File pdffile = new File(jcrService.getDevice()+path.substring(0,path.lastIndexOf("."))+".pdf");
 		if(pdficon.exists()) {
 			pdficon.delete();
@@ -1630,7 +1630,7 @@ public class SiteController extends BaseController {
 			for(String id:uid) {
 				Asset asset = jcrService.getAssetById(id);
 				File file = jcrService.getFile(asset.getPath());
-				File pdficon = new File(jcrService.getHome()+"/icon400/"+asset.getPath()+".pdf");
+				File pdficon = new File(jcrService.getHome()+"/icon400/"+asset.getPath()+".jpg");
 				File pdffile = new File(jcrService.getDevice()+asset.getPath().substring(0,asset.getPath().lastIndexOf("."))+".pdf");
 				if(pdficon.exists()) {
 					pdficon.delete();
