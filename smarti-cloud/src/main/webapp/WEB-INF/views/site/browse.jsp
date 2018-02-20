@@ -241,11 +241,11 @@ function returnFileUrl(fileUrl,uid) {
 		if(e_type.indexOf("image/")>=0) {
 			tinyMCE.activeEditor.selection.setContent('<img class="img-responsive" alt="" src="'+fileUrl+'">');
 		}else if(e_type.indexOf("video/")>=0) {
-			var html = "<figure class=\"wb-mltmd-edit editable\"><video title=\""+e_title.value+"\">";
+			var html = "<figure class=\"wb-mltmd-edit editable\"><video title=\""+e_title.value+"\" preload=\"none\">";
 			if(e_size>10000000) {
-				html +="<source type=\""+e_type+"\" src=\""+fileUrl+"\"/>";
+				html +="<source type=\"video/mp4\" src=\""+fileUrl+"\"/>";
 			}else {
-				html +="<source type=\""+e_type+"\" src=\""+fileUrl+"\"/>";
+				html +="<source type=\"video/mp4\" src=\""+fileUrl+"\"/>";
 			}
 			html +="</video><figcaption class=\"editable\"><p>"+e_desc.innerHTML+"</p></figcaption></figure>";
 			tinyMCE.activeEditor.selection.setContent(html);
