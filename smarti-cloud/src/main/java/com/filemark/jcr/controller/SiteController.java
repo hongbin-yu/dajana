@@ -1782,9 +1782,13 @@ public class SiteController extends BaseController {
 				if(exit != 0) {
 				    if(path.endsWith(".doc") || path.endsWith(".docx")) {	
 						response.sendRedirect("/resources/images/word-icon.png");	
-				    }else if(path.endsWith(".xls") || path.endsWith(".xlsx")) {
+				    }else if(path.endsWith(".xls") || path.endsWith(".xlsx") || path.endsWith(".csv") || path.endsWith(".rtf")) {
 				    	response.sendRedirect("resources/images/excel-icon.png");
-				    }				
+				    }else if(path.endsWith(".ppt")) {
+				    	response.sendRedirect("resources/images/ppt-icon.png");
+				    }else {
+				    	response.sendRedirect("resources/images/document-icon.png");
+				    }
 				}
 
 			}
