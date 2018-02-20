@@ -1630,6 +1630,22 @@ public class SiteController extends BaseController {
 			for(String id:uid) {
 				Asset asset = jcrService.getAssetById(id);
 				File file = jcrService.getFile(asset.getPath());
+				File pdficon = new File(jcrService.getHome()+"/icon400/"+asset.getPath()+".pdf");
+				File pdffile = new File(jcrService.getDevice()+asset.getPath().substring(0,asset.getPath().lastIndexOf("."))+".pdf");
+				if(pdficon.exists()) {
+					pdficon.delete();
+				}
+				if(pdffile.exists()) {
+					pdffile.delete();
+				}
+				File iconfile = new File(jcrService.getHome()+"/icon400/"+asset.getPath());
+				if(iconfile!=null && iconfile.exists()) {
+					iconfile.delete();
+					File parent = iconfile.getParentFile();
+					if(parent.list().length == 0) {
+						parent.delete();
+					}
+				}						
 				if(file!=null && file.exists()) {
 					file.delete();
 					File parent = file.getParentFile();
@@ -1637,6 +1653,7 @@ public class SiteController extends BaseController {
 						parent.delete();
 					}
 				}
+				
 				jcrService.deleteNode(asset.getPath());
 			}
 		}else {
