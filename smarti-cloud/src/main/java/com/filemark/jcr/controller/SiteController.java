@@ -1866,7 +1866,7 @@ public class SiteController extends BaseController {
 		ImageUtil.HDDOff();
 		return null;
 	}			
-	@RequestMapping(value = {"/site/viewimage","/content/viewimage","/content/**/viewimage","/protected/viewimage","/protected/**/viewimage","/site/file","/site/file*.*","/content/file","/content/file*.*","/content/**/file","/content/**/file*.*"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
+	@RequestMapping(value = {"/site/file/*.*","/site/viewimage","/content/viewimage","/content/**/viewimage","/protected/viewimage","/protected/**/viewimage","/site/file","/site/file*.*","/content/file","/content/file*.*","/content/**/file","/content/**/file*.*"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public @ResponseBody String viewFile(String uid,String path,Integer w,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
 		ImageUtil.HDDOn();		
 		Integer width = null;
@@ -2218,7 +2218,7 @@ public class SiteController extends BaseController {
 				e.attr(src, urls.get(src));
 				continue;
 			}
-			if(!src.startsWith("http") && src.indexOf("viewimage?")>=0) {
+			if(!src.startsWith("http") && (src.indexOf("viewimage?")>=0 || src.indexOf("file/")>0)) {
 				try {
 					String filename = toFile(src,prefix+i,folder.getAbsolutePath(),path,allTypes);
 					i++;
@@ -2245,7 +2245,7 @@ public class SiteController extends BaseController {
 				e.attr(href, urls.get(href));
 				continue;
 			}
-			if(!href.startsWith("http") && href.indexOf("viewimage?")>=0) {
+			if(!href.startsWith("http") && (href.indexOf("viewimage?")>=0  || href.indexOf("file/")>0)) {
 				try {
 					String filename = toFile(href,prefix+i,folder.getAbsolutePath(),path,allTypes);
 					i++;

@@ -92,6 +92,9 @@ public class Asset implements SmartiNode, Serializable {
 		this.title = title;
 	}
 	public String getName() {
+		if(name==null) {
+		   return path.substring(path.lastIndexOf("/")+1);	
+		}
 		return name;
 	}
 	public void setName(String name) {
@@ -275,7 +278,7 @@ public class Asset implements SmartiNode, Serializable {
 		}else if(contentType.startsWith("video/")) {
 			return "video.mp4?path="+path;
 		}else{
-			return "viewimage?path="+path;
+			return "file/"+getName()+"?path="+path;
 		}
 	}
 
@@ -296,6 +299,9 @@ public class Asset implements SmartiNode, Serializable {
 	}
 
 	public String getExt() {
+		if(ext==null) {
+			path.substring(path.lastIndexOf("."));
+		}
 		return ext;
 	}
 
