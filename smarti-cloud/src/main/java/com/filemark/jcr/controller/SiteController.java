@@ -928,7 +928,7 @@ public class SiteController extends BaseController {
         		}
         		String assetPath = fileName;
         		if(!fileName.matches("(\\w|\\.|\\-|\\s|_)+")) {
-        			assetPath = path+"/"+new Date().getTime()+ext;
+        			assetPath = path+"/"+new Date().getTime()+"-"+fileName;
         			//fileName = DjnUtils.Iso2Uft8(fileName);
         		}else {
         			
@@ -937,7 +937,7 @@ public class SiteController extends BaseController {
 	        				asset = (Asset)jcrService.getObject(path+"/"+fileName);
 	        				assetPath = path+"/"+fileName;
         				}else {
-        					assetPath = path+"/"+new Date().getTime()+ext;
+        					assetPath = path+"/"+new Date().getTime()+"-"+fileName;
         				}
         			}else {
         				assetPath = jcrService.getUniquePath(path, fileName);
