@@ -928,7 +928,7 @@ public class SiteController extends BaseController {
         		}
         		String assetPath = fileName;
         		if(!fileName.matches("(\\w|\\.|\\-|\\s|_)+")) {
-        			assetPath = path+"/"+new Date().getTime()+"-"+fileName;
+        			assetPath = path+"/"+new Date().getTime()+"."+ext;
         			//fileName = DjnUtils.Iso2Uft8(fileName);
         		}else {
         			
