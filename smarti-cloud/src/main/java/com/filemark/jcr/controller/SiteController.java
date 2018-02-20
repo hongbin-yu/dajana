@@ -1604,7 +1604,14 @@ public class SiteController extends BaseController {
 				parent.delete();
 			}
 		}
-		
+		File pdficon = new File(jcrService.getHome()+"/icon400/"+path+".pdf");
+		File pdffile = new File(jcrService.getDevice()+path.substring(0,path.lastIndexOf("."))+".pdf");
+		if(pdficon.exists()) {
+			pdficon.delete();
+		}
+		if(pdffile.exists()) {
+			pdffile.delete();
+		}
 		File iconfile = new File(jcrService.getHome()+"/icon400/"+path);
 		if(iconfile!=null && iconfile.exists()) {
 			iconfile.delete();
