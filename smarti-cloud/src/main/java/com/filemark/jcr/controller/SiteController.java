@@ -2446,12 +2446,16 @@ public class SiteController extends BaseController {
 				
 				if(file.exists()) {
 					FileInputStream in = new FileInputStream(file);
-/*					if(asset.getHeight() !=null && asset.getWidth() !=null && (asset.getHeight()>1200 || asset.getWidth()>1200)) {
+					if(asset.getHeight() !=null && asset.getWidth() !=null && (asset.getHeight()>1200 || asset.getWidth()>1200)) {
 						int exit = ImageUtil.convert(file.getAbsolutePath(), assetFolder+"/"+filename+ext, 1200, 1200);
-						if(exit !=0)
+						if(exit !=0) {
 							IOUtils.copy(in, output);
+						}else {
+							FileInputStream smallFile = new FileInputStream(assetFolder+"/"+filename+ext);
+							IOUtils.copy(smallFile, output);
+						}
 					
-					}else */
+					}else 
 						IOUtils.copy(in, output);
 					in.close();
 				}
