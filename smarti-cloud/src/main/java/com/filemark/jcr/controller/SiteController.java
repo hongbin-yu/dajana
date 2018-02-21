@@ -1315,10 +1315,14 @@ public class SiteController extends BaseController {
 			}    		
 
     		
-			String content = page.getContent().replaceAll("-edit", "");
+			String content = page.getContent();
+			if(content==null) {
+				logger.error("content is null");
+			}
+			content = content.replaceAll("-edit", "");
 			content = publishAssets(page.getPath(),content);
 
-
+			
 			Gson gson = new Gson();
 			File json = new File(jcrService.getHome()+page.getPath()+".json");
 			if(page.getPasscode()!=null && !"".equals(page.getPasscode()) && "true".equals(page.getSecured())) {
@@ -2233,6 +2237,7 @@ public class SiteController extends BaseController {
 		String location = folder.getParentFile().getName()+"/assets/";
 		String prefix = folder.getParentFile().getName()+"_"; int i = 0;		
 		if(!folder.exists()) folder.mkdirs();
+
 		try {
 			FileUtils.cleanDirectory(folder);
 		} catch (IOException e2) {
@@ -2241,10 +2246,9 @@ public class SiteController extends BaseController {
 		for (Element e:doc.getElementsByTag("img")) {
 			String src = e.attr("src");
 			if(urls.containsKey(src)) {
-				e.attr(src, urls.get(src));
-				continue;
+				e.attr("src", urls.get(src));
 			}
-			if(!src.startsWith("http") && (src.indexOf("viewimage?")>=0 || src.indexOf("file/")>0)) {
+			if(src!=null && !"".equals(src) && !src.startsWith("http") && !src.startsWith("resources/") && !src.startsWith("/resources/")) {
 				try {
 					String filename = toFile(src,prefix+i,folder.getAbsolutePath(),path,allTypes);
 					i++;
@@ -2267,11 +2271,11 @@ public class SiteController extends BaseController {
 		}
 		for (Element e:doc.getElementsByTag("a")) {
 			String href = e.attr("href");
+
 			if(urls.containsKey(href)) {
-				e.attr(href, urls.get(href));
-				continue;
+				e.attr("href", urls.get(href));
 			}
-			if(!href.startsWith("http") && (href.indexOf("viewimage?")>=0  || href.indexOf("file/")>0)) {
+			if(href!=null && !"".equals(href) && !href.startsWith("http") && !href.startsWith("resources/") && !href.startsWith("/resources/")) {
 				try {
 					String filename = toFile(href,prefix+i,folder.getAbsolutePath(),path,allTypes);
 					i++;
@@ -2289,10 +2293,62 @@ public class SiteController extends BaseController {
 					logger.error(e1.getMessage());;
 				}
 			}
-		}	
+		}
+
+		for (Element e:doc.getElementsByTag("video")) {
+			String href = e.attr("poster");
+			if(urls.containsKey(href)) {
+				e.attr("poster", urls.get(href));
+			}
+			if(href!=null && !"".equals(href) && href!=null && !"".equals(href) &&  !href.startsWith("http") && !href.startsWith("resources/") && !href.startsWith("/resources/")) {
+				try {
+					String filename = toFile(href,prefix+i,folder.getAbsolutePath(),path,allTypes);
+					logger.info(filename);
+					i++;
+					e.attr("poster", location+filename);
+					urls.put(href, location+filename);
+				} catch (MalformedURLException e2) {
+					logger.error(e2.getMessage());
+				} catch (UnsupportedEncodingException e1) {
+					logger.error(e1.getMessage());;
+				} catch (RepositoryException e1) {
+					logger.error(e1.getMessage());
+				} catch (FileNotFoundException e1) {
+					logger.error(e1.getMessage());
+				} catch (IOException e1) {
+					logger.error(e1.getMessage());;
+				}
+			}
+		}
+		
+		for (Element e:doc.getElementsByTag("source")) {
+			String href = e.attr("src");
+			if(urls.containsKey(href)) {
+				e.attr("src", urls.get(href));
+			}
+			if(href!=null && !"".equals(href) && !href.startsWith("http") && !href.startsWith("resources/") && !href.startsWith("/resources/")) {
+				try {
+					String filename = toFile(href,prefix+i,folder.getAbsolutePath(),path,allTypes);
+					i++;
+					e.attr("src", location+filename);
+					urls.put(href, location+filename);
+				} catch (MalformedURLException e2) {
+					logger.error(e2.getMessage());
+				} catch (UnsupportedEncodingException e1) {
+					logger.error(e1.getMessage());;
+				} catch (RepositoryException e1) {
+					logger.error(e1.getMessage());
+				} catch (FileNotFoundException e1) {
+					logger.error(e1.getMessage());
+				} catch (IOException e1) {
+					logger.error(e1.getMessage());;
+				}
+			}
+		}				
 		//update description
 		String description = jcrService.getProperty(path, "description");
-		if(description == null || "".equals(description)) {
+		if(doc.getElementsByClass("pagetag") !=null && (description == null || "".equals(description))) {
+			
 			description = doc.getElementsByClass("pagetag").html();
 			if(description != null) {
 				try {
@@ -2321,8 +2377,9 @@ public class SiteController extends BaseController {
 			URL url = new URL("http://localhost/"+link);
 		    Map<String, String> query_pairs = new LinkedHashMap<String, String>();
 		    String query = url.getQuery();
-
+		    
 		    String[] pairs = query.split("&");
+		    
 		    for (String pair : pairs) {
 		        int idx = pair.indexOf("=");
 		        query_pairs.put(URLDecoder.decode(pair.substring(0, idx), "UTF-8"), URLDecoder.decode(pair.substring(idx + 1), "UTF-8"));
@@ -2336,7 +2393,10 @@ public class SiteController extends BaseController {
 			else if(spath !=null) {
 				asset = (Asset)jcrService.getObject(spath);
 			}
-
+			if(asset==null) {
+				logger.error("Asset is null:"+spath+",uid="+uid);
+				return "error";
+			}
 		    String ext =asset.getExt();		
 		    if(ext==null) {
 				try {
@@ -2365,21 +2425,42 @@ public class SiteController extends BaseController {
 			}else if(asset.getDevice()!=null) {
 				File file = null;
 				Device device = (Device)jcrService.getObject(asset.getDevice());
-				file = new File(device.getLocation()+asset.getPath());
-				FileInputStream in = new FileInputStream(file);
-				if(asset.getHeight() !=null && asset.getWidth() !=null && (asset.getHeight()>1200 || asset.getWidth()>1200)) {
-					int exit = ImageUtil.convert(file.getAbsolutePath(), assetFolder+"/"+filename+ext, 1200, 1200);
-					if(exit !=0)
-						IOUtils.copy(in, output);
+				String filePath = device.getLocation()+asset.getPath();
+				if(link.startsWith("doc2jpg")) {
+					filePath = jcrService.getHome()+"/icon400"+asset.getPath()+".jpg";
+				}else if(link.startsWith("pdf2jpg")) {					
+					filePath = jcrService.getHome()+"/icon400"+asset.getPath()+".jpg";
+				}else if(link.startsWith("video2jpg")) {
+					filePath = jcrService.getHome()+"/icon400"+asset.getPath()+".jpg";
+				}else if(link.startsWith("video.mp4")) {
+					if(new File(device.getLocation()+asset.getPath()+".mp4").exists())
+						filePath = device.getLocation()+asset.getPath()+".mp4";
+					else 
+						filePath = device.getLocation()+asset.getPath();
+				}else if(link.startsWith("doc2pdf")) {
+					filePath = filePath.substring(0, filePath.lastIndexOf("."))+".pdf";
+
+				}
+		
+				file = new File(filePath);
 				
-				}else 
-					IOUtils.copy(in, output);
-				in.close();
+				if(file.exists()) {
+					FileInputStream in = new FileInputStream(file);
+/*					if(asset.getHeight() !=null && asset.getWidth() !=null && (asset.getHeight()>1200 || asset.getWidth()>1200)) {
+						int exit = ImageUtil.convert(file.getAbsolutePath(), assetFolder+"/"+filename+ext, 1200, 1200);
+						if(exit !=0)
+							IOUtils.copy(in, output);
+					
+					}else */
+						IOUtils.copy(in, output);
+					in.close();
+				}
 			}else  if(jcrService.nodeExsits(path+"/original")) {
 				jcrService.readAsset(path+"/original", output);
 			}
 
 			output.close();
+	
 			return filename+ext;
 	}
 	
