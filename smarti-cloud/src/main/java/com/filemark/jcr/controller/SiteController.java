@@ -2276,7 +2276,7 @@ public class SiteController extends BaseController {
 			if(urls.containsKey(href)) {
 				e.attr("href", urls.get(href));
 			}
-			if(href!=null && !"".equals(href) && !href.startsWith("http") && !href.startsWith("resources/") && !href.startsWith("/resources/")) {
+			if(href!=null && !"".equals(href) && !href.startsWith("#") && !href.startsWith("http") && !href.startsWith("resources/") && !href.startsWith("/resources/")) {
 				try {
 					String filename = toFile(href,prefix+i,folder.getAbsolutePath(),path,allTypes);
 					i++;
@@ -2301,7 +2301,7 @@ public class SiteController extends BaseController {
 			if(urls.containsKey(href)) {
 				e.attr("poster", urls.get(href));
 			}
-			if(href!=null && !"".equals(href) && href!=null && !"".equals(href) &&  !href.startsWith("http") && !href.startsWith("resources/") && !href.startsWith("/resources/")) {
+			if(href!=null && !"".equals(href) && href!=null &&  !href.startsWith("#") && !"".equals(href) &&  !href.startsWith("http") && !href.startsWith("resources/") && !href.startsWith("/resources/")) {
 				try {
 					String filename = toFile(href,prefix+i,folder.getAbsolutePath(),path,allTypes);
 					logger.info(filename);
@@ -2327,7 +2327,7 @@ public class SiteController extends BaseController {
 			if(urls.containsKey(href)) {
 				e.attr("src", urls.get(href));
 			}
-			if(href!=null && !"".equals(href) && !href.startsWith("http") && !href.startsWith("resources/") && !href.startsWith("/resources/")) {
+			if(href!=null && !"".equals(href) &&  !href.startsWith("#")  && !href.startsWith("http") && !href.startsWith("resources/") && !href.startsWith("/resources/")) {
 				try {
 					String filename = toFile(href,prefix+i,folder.getAbsolutePath(),path,allTypes);
 					i++;
