@@ -205,6 +205,7 @@
 			<a  class="wb-lbx" title="<spring:message code="djn.edit"/>" href="<c:url value="texteditor.html?uid=${item.uid}"/>"><span class="glyphicon glyphicon-pencil"></span><spring:message code="djn.onlineEdit"/></a>
 		</c:if>
 		<c:if test="${item.mp4}">
+		<a class="download" href="file/${item.name}?path=${item.path}" target="_BLANK"><span class="glyphicon glyphicon-download">下载</span></a>
 		<figure class="wb-mltmd">
 				<video poster="video2jpg.jpg?path=${item.path }" title="${item.title }"  controls="controls" preload="none">
 					<source type="video/mp4" src="video.mp4?path=${item.path }"/>

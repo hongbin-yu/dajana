@@ -1993,6 +1993,7 @@ public class SiteController extends BaseController {
 			File outfile = new File(jcrService.getDevice()+path);
 			if(outfile.exists()) {
 				FileInputStream in = new FileInputStream(outfile);
+				response.setContentLength((int)outfile.length());
 				IOUtils.copy(in, response.getOutputStream());	
 				in.close();
 			}else if(path !=null && jcrService.nodeExsits(path)) {
@@ -2362,13 +2363,8 @@ public class SiteController extends BaseController {
 		}
 		//limit size max 1200
 
-/*		try {
-			ImageUtil.limit(folder.getAbsolutePath(), "jpg", 1200);
-		} catch (IOException e1) {
-			logger.error(e1.getMessage());
-		} catch (InterruptedException e1) {
-			logger.error(e1.getMessage());
-		}*/
+		ImageUtil.limit(folder.getAbsolutePath(), "jpg", 1200);
+
 		
 		return doc.body().html();
 	}
@@ -2446,7 +2442,7 @@ public class SiteController extends BaseController {
 				
 				if(file.exists()) {
 					FileInputStream in = new FileInputStream(file);
-					if(asset.getHeight() !=null && asset.getWidth() !=null && (asset.getHeight()>1200 || asset.getWidth()>1200)) {
+/*					if(asset.getHeight() !=null && asset.getWidth() !=null && (asset.getHeight()>1200 || asset.getWidth()>1200)) {
 						int exit = ImageUtil.convert(file.getAbsolutePath(), assetFolder+"/"+filename+ext, 1200, 1200);
 						if(exit !=0) {
 							IOUtils.copy(in, output);
@@ -2455,7 +2451,7 @@ public class SiteController extends BaseController {
 							IOUtils.copy(smallFile, output);
 						}
 					
-					}else 
+					}else */
 						IOUtils.copy(in, output);
 					in.close();
 				}
