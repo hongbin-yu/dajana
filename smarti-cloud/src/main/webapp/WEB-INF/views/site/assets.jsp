@@ -219,17 +219,14 @@
 		</figure>
 		</c:if>
 		<c:if test="${item.audio}">
-		<a class="download" href="file/${item.name}?path=${item.path}" download><span class="glyphicon glyphicon-download">下载</span></a>
+		<a class="download" href="file/${item.name}?path=${item.path}" download><span class="glyphicon glyphicon-volume-up">下载</span></a>
 		<figure class="wb-mltmd">
 				<audio title="${item.title }" preload="none">
 					<source type="${item.contentType }" src="file/${item.name}?path=${item.path}"/>
 				</audio>
-				<figcaption>
-					<p>${item.title }</p>
-				</figcaption>
 		</figure>
 		</c:if>		
-		<c:if test="${!item.mp4 && !item.doc2pdf}">
+		<c:if test="${!item.mp4 && !item.doc2pdf && !item.audio}">
 	    <a class="${item.cssClass }" href="<c:url value='${item.link}'></c:url>">
 			<img id="img${item.uid}" src="<c:url value='${item.icon }'></c:url>" class="img-responsive" draggable="true"/>
 		</a>
