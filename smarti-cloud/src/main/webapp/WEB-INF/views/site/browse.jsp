@@ -123,6 +123,23 @@ ${path }</label>
 			</video>
 			<button class="bnt bnt-primary" title="点击选择此视频" onclick='javascript:returnFileUrl("video.mp4?path=${item.path}","${item.uid}","video2jpg.jpg?path=${item.path }")'><span class="glyphicon glyphicon-film"></span>${item.title}<span class="glyphicon glyphicon-ok pull-right"></span></button>
 		</c:if>
+		<c:if test="${item.audio}">
+		<a class="download" href="file/${item.name}?path=${item.path}" download><span class="glyphicon glyphicon-download">下载</span></a>
+		<figure class="wb-mltmd">
+				<audio title="${item.title }" preload="none">
+					<source type="${item.contentType }" src="file/${item.name}?path=${item.path}"/>
+				</audio>
+				<figcaption>
+					<button class="bnt bnt-primary" title="点击选择此音频" onclick='javascript:returnFileUrl("file/${item.name }?path=${item.path}","${item.uid}","file/${item.name }?path=${item.path }")'><span class="glyphicon glyphicon-volume-up"></span>${item.title}<span class="glyphicon glyphicon-ok pull-right"></span></button>
+				</figcaption>
+		</figure>
+		</c:if>	
+        <c:if test="${item.doc2pdf}">
+        	<a class="download" href="file/${item.name}?path=${item.path}" target="_BLANK" download><span class="glyphicon glyphicon-download">下载</span></a>
+		    <a class="${item.cssClass }" href="doc2pdf.pdf?path=${item.path }">
+				<img id="img${item.uid}" src="<c:url value='${item.icon }'></c:url>" class="img-responsive" draggable="true"/>
+			</a>
+		</c:if>					
 		<c:if test="${!item.mp4}">
 		<a class="${item.cssClass }-edit" id="href${item.uid }" href="<c:url value='${item.link}'></c:url>">		
 		<img src="<c:url value='${item.icon }'></c:url>" class="img-responsive" draggable="true" onclick="javascript:returnFileUrl('${item.link}','${item.uid }')"/>
