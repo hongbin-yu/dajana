@@ -241,37 +241,31 @@ public class Asset implements SmartiNode, Serializable {
 	}
 
 	public boolean getDoc2pdf() {
-		///if(contentType != null && ("application/vnd.ms-word".equals(contentType) || "application/msword".equals(contentType) || path.endsWith(".doc") || path.endsWith(".docx"))) {
-		//	return true;
-		//}else {	
 		if(path.endsWith(".doc") || path.endsWith(".docx") || path.endsWith(".ppt") || path.toLowerCase().endsWith(".xls") || path.toLowerCase().endsWith(".xlsx") ||  path.toLowerCase().endsWith(".csv")  || path.toLowerCase().endsWith(".rtf")) {
-
-		    if(new Date().getTime() - lastModified.getTime()>3600000) {
-		    	return true;
-		 }
-		    if(path.lastIndexOf(".")>0) {
-				String pdfpath = path.substring(0, path.lastIndexOf("."))+".pdf";
-				File pdffile = new File(devicePath+pdfpath);
-				if(pdffile.exists()) 
-					return true;
-		    }
+				return true;
 		}
-			return false;
-		//}
+		return false;
 	}
 	
 	public boolean getMp4() {
 		
 		if(contentType != null && contentType.startsWith("video/")) {
-/*			String mp4 = devicePath+path+".mp4";
-			if(new File(mp4).exists()) {
-				return true;
-			}*/
+
 			return true;
 		}
 		
 		return false;
 	}
+	
+	public boolean getAudio() {
+		
+		if(contentType != null && contentType.startsWith("audio/")) {
+
+			return true;
+		}
+		
+		return false;
+	}	
 	
 	public boolean getText() {
 		if(contentType != null && (contentType.startsWith("text/") || contentType.startsWith("application/json"))) {

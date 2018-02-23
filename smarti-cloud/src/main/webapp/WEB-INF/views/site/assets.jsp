@@ -198,12 +198,15 @@
         <c:if test="${item.pdf}">
 		<a title="<spring:message code="djn.open"/>PDF" href="<c:url value="/site/viewpdf.pdf?uid=${item.uid}"/>" target="_BLANK"><span class="glyphicon glyphicon-open"></span> <spring:message code="djn.open"/>PDF</a>
 		</c:if>
-        <c:if test="${item.doc2pdf}">
-		<a title="<spring:message code="djn.open"/>PDF" href="<c:url value="/site/doc2pdf.pdf?path=${item.path}"/>" target="_BLANK"><span class="glyphicon glyphicon-open"></span> <spring:message code="djn.open"/>PDF</a>
-		</c:if>		
         <c:if test="${item.text}">
 			<a  class="wb-lbx" title="<spring:message code="djn.edit"/>" href="<c:url value="texteditor.html?uid=${item.uid}"/>"><span class="glyphicon glyphicon-pencil"></span><spring:message code="djn.onlineEdit"/></a>
 		</c:if>
+        <c:if test="${item.doc2pdf}">
+        	<a class="download" href="file/${item.name}?path=${item.path}" target="_BLANK"><span class="glyphicon glyphicon-download">下载</span></a>
+		    <a class="${item.cssClass }" href="doc2pdf.pdf?path=${item.path }">
+				<img id="img${item.uid}" src="<c:url value='${item.icon }'></c:url>" class="img-responsive" draggable="true"/>
+			</a>
+		</c:if>	
 		<c:if test="${item.mp4}">
 		<a class="download" href="file/${item.name}?path=${item.path}" target="_BLANK"><span class="glyphicon glyphicon-download">下载</span></a>
 		<figure class="wb-mltmd">
@@ -215,7 +218,18 @@
 				</figcaption>
 		</figure>
 		</c:if>
-		<c:if test="${!item.mp4}">
+		<c:if test="${item.audio}">
+		<a class="download" href="file/${item.name}?path=${item.path}" target="_BLANK"><span class="glyphicon glyphicon-download">下载</span></a>
+		<figure class="wet-boew-multimedia">
+				<audio title="${item.title }" preload="none">
+					<source type="${item.contentType }" src="file/${item.name}?path=${item.path}"/>
+				</audio>
+				<figcaption>
+					<p>${item.title }</p>
+				</figcaption>
+		</figure>
+		</c:if>		
+		<c:if test="${!item.mp4 && !item.doc2pdf && !item.audio}">
 	    <a class="${item.cssClass }" href="<c:url value='${item.link}'></c:url>">
 			<img id="img${item.uid}" src="<c:url value='${item.icon }'></c:url>" class="img-responsive" draggable="true"/>
 		</a>
