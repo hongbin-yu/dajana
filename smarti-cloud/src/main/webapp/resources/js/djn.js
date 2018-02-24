@@ -204,9 +204,10 @@ function drag(ev) {
 function drop(ev) {
     ev.preventDefault();
     var id = ev.target.id;
+    var data;
     if(id)
     if(id=="uploadBox" || id=="uploadImg" || id.indexOf("folder")>=0) {
-    	var data = ev.dataTransfer.getData("text");
+    	data = ev.dataTransfer.getData("text");
     	path = $("#path").val();
     	if(ev.target.getAttribute("path")) {
     		path = ev.target.getAttribute("path");
@@ -420,7 +421,7 @@ function drop(ev) {
     	i = 0;
     	uploadFiles();
     }else if(folderCreated==false){
-        selDiv.innerHTML=  "<section class=\"alert alert-warning\"><h2 class=\"h3\">"+i18n("no-match")+" </h2></section>"; 
+        selDiv.innerHTML=  "<section class=\"alert alert-warning\"><h2 class=\"h3\">"+i18n("no-match")+" </h2><p>"+data+"</p></section>"; 
     	
     }
     

@@ -203,7 +203,7 @@
 		</c:if>
         <c:if test="${item.doc2pdf}">
         	<a class="download" href="file/${item.name}?path=${item.path}" target="_BLANK" download><span class="glyphicon glyphicon-download">下载</span></a>
-		    <a class="${item.cssClass }" href="doc2pdf.pdf?path=${item.path }">
+		    <a class="${item.cssClass }" href="doc2pdf.pdf?path=${item.path }" target="_BLANK">
 				<img id="img${item.uid}" src="<c:url value='${item.icon }'></c:url>" class="img-responsive" draggable="true"/>
 			</a>
 		</c:if>	
@@ -212,6 +212,7 @@
 		<figure class="wb-mltmd">
 				<video poster="video2jpg.jpg?path=${item.path }" title="${item.title }"  controls="controls" preload="none">
 					<source type="video/mp4" src="video.mp4?path=${item.path }"/>
+					<source type="video/webm" src="video.webm?path=${item.path }"/>
 				</video>
 				<figcaption>
 					<p>${item.title }</p>
