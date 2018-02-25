@@ -1805,8 +1805,12 @@ public class JcrServicesImpl implements JcrServices {
 				}
 				if (metadata==null) return null;
     	        ExifIFD0Directory exifIFD0Directory = metadata.getFirstDirectoryOfType(ExifIFD0Directory.class);
+    	        if(exifIFD0Directory == null) return null;
     	        //JpegDirectory jpegDirectory = (JpegDirectory) metadata.getDirectoriesOfType(JpegDirectory.class);
     	        int orientation = 1;
+    	        if(!exifIFD0Directory.containsTag(ExifIFD0Directory.TAG_ORIENTATION)) {
+    	        	return null;
+    	        }
     	        orientation = exifIFD0Directory.getInt(ExifIFD0Directory.TAG_ORIENTATION);
             	AffineTransform affineTransform = new AffineTransform();
                 //int height = jpegDirectory.getImageHeight();
@@ -1818,15 +1822,15 @@ public class JcrServicesImpl implements JcrServices {
                 	return null;
                 }
                 
-				if(ImageUtil.autoRotate(infile, infile)==0) {
+/*				if(ImageUtil.autoRotate(infile, infile)==0) {
 	        		image = ImageIO.read(file);
 
 					node.setProperty("width", image.getWidth());
 	                node.setProperty("height", image.getHeight());   
 	                session.save();		
 	                return null;
-				}
-				
+				}*/
+
                 switch (orientation) {
                 case 1:
                 	

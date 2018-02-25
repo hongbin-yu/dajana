@@ -273,7 +273,7 @@ function drop(ev) {
 		    					    processData: false,
 		    					    success: function(data) {
 		    					    	if(data.title.indexOf("error:")>=0)
-		    						        selDiv.innerHTML=  "<section class=\"alert alert-warning\"><h2 class=\"h3\">"+i18n("success")+"</h2><p>"+data.title+"</p></section>"; // 
+		    						        selDiv.innerHTML=  "<section class=\"alert alert-warning\"><h2 class=\"h3\">"+i18n("fail")+"</h2><p>"+data.title+"</p></section>"; // 
 		    					    	else {
 		    							    selDiv.innerHTML = "<section class=\"alert alert-success\"><h2 class=\"4\">"+i18n("success")+"</h2><p>"+data.title+"</p></section>";
 		    							    var html = $("#div_uid").html();
@@ -290,7 +290,7 @@ function drop(ev) {
 		    					    	}
 		    					    },
 		    					    error: function() {
-		    					        selDiv.innerHTML=  "<section class=\"alert alert-warning\"><h2 class=\"h3\">"+i18n("fail")+"</h2></section>"; // 
+		    					        selDiv.innerHTML=  "<section class=\"alert alert-warning\"><h2 class=\"h3\">"+i18n("fail")+"</h2><p></p></section>"; // 
 		    					    }
 		    					    // ... Other options like success and etc
 		    					}); 

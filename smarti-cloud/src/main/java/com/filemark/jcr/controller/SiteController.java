@@ -12,6 +12,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -1025,14 +1026,48 @@ public class SiteController extends BaseController {
 		//int count=0;
 		Date start = new Date();
         URL url_img = new URL(url);
-        URLConnection uc = url_img.openConnection();
+    	HttpURLConnection conn = (HttpURLConnection) url_img.openConnection();
+    	conn.setReadTimeout(30000);
+    	conn.addRequestProperty("Accept-Language", "en-US,en;q=0.8");
+    	conn.addRequestProperty("User-Agent", "Mozilla");
+    	conn.addRequestProperty("Referer", "baidu.com");
+    	boolean redirect = false;
+
+    	// normally, 3xx is redirect
+    	int status = conn.getResponseCode();
+    	if (status != HttpURLConnection.HTTP_OK) {
+    		if (status == HttpURLConnection.HTTP_MOVED_TEMP
+    			|| status == HttpURLConnection.HTTP_MOVED_PERM
+    				|| status == HttpURLConnection.HTTP_SEE_OTHER)
+    		redirect = true;
+    	}
+    	if (redirect) {
+
+    		// get redirect url from "location" header field
+    		String newUrl = conn.getHeaderField("Location");
+
+    		// get the cookie if need, for login
+    		String cookies = conn.getHeaderField("Set-Cookie");
+
+    		// open the new connnection again
+    		url_img = new URL(newUrl);
+    		conn = (HttpURLConnection) url_img.openConnection();
+    		conn.setRequestProperty("Cookie", cookies);
+    		conn.addRequestProperty("Accept-Language", "en-US,en;q=0.8");
+    		conn.addRequestProperty("User-Agent", "Mozilla");
+    		conn.addRequestProperty("Referer", "baidu.com");
+
+    		logger.debug("Redirect to:"+newUrl);
+
+    	}        
         
-    	String contentType = uc.getContentType();
+    	String contentType = conn.getContentType();
 	    MimeTypes allTypes = MimeTypes.getDefaultMimeTypes();
-	    
+	    logger.debug("contentType="+contentType);
 	    String ext="";
+	    if(contentType !=null)
 		try {
-			MimeType mimeType = allTypes.forName(asset.getContentType());
+			MimeType mimeType = allTypes.forName(contentType);
 		    ext = mimeType.getExtension(); 
 		} catch (MimeTypeException e1) {
 			ImageUtil.HDDOff();
@@ -1059,7 +1094,7 @@ public class SiteController extends BaseController {
 		}
 		if(contentType==null || "".equals(contentType))
 			contentType = new MimetypesFileTypeMap().getContentType(fileName);
-    	InputStream is = uc.getInputStream();
+		logger.debug("nodeName="+nodeName);
     	asset.setTitle(fileName);	
     	asset.setName(nodeName);
 		asset.setCreatedBy(username);
@@ -1068,9 +1103,9 @@ public class SiteController extends BaseController {
 		asset.setContentType(contentType);
 		asset.setDevice(this.getDevice().getPath());
 		
-		jcrService.addOrUpdate(asset);
-		jcrService.updateCalendar(path,"lastModified");
-		jcrService.setProperty(path, "changed", "true");	
+		//jcrService.addOrUpdate(asset);
+		//jcrService.updateCalendar(path,"lastModified");
+		//jcrService.setProperty(path, "changed", "true");	
 		if(asset.getDevice()!=null) {
 			Device device = (Device)jcrService.getObject(asset.getDevice());
 			logger.debug("Writing device "+device.getPath() +":"+device.getLocation());
@@ -1080,27 +1115,32 @@ public class SiteController extends BaseController {
 				file.getParentFile().mkdirs();
 			}
 
+	
+			//FileUtils.copyURLToFile(url_img, file);
+	    	InputStream is = conn.getInputStream();
+			FileUtils.copyInputStreamToFile(is, file);
 			is.close();
-			FileUtils.copyURLToFile(url_img, file);
-			//FileUtils.copyInputStreamToFile(is, file);
-
 			Date end = new Date();
 			long speed = file.length()*8/(end.getTime() - start.getTime()); 
 			asset.setSize(file.length());
 			asset.setOriginalDate(new Date(file.lastModified()));
 			jcrService.addOrUpdate(asset);
+			jcrService.updateCalendar(path,"lastModified");
+			jcrService.setProperty(path, "changed", "true");
 			asset.setTitle(asset.getTitle() +" - "+speed+"kb/s");
 			//output.close();
 		}else {
 			logger.debug("Writing jcr");
+	    	InputStream is = conn.getInputStream();
 			jcrService.addFile(assetPath,"original",is,contentType);
+			is.close();
 		}
 		logger.debug("Done");
 
 		
 		if(contentType != null && contentType.startsWith("image/")) {
 			jcrService.autoRoateImage(assetPath);
-			
+			logger.debug("create icon");
 			jcrService.createIcon(assetPath, 400,400);
 		}		
 
@@ -1972,6 +2012,7 @@ public class SiteController extends BaseController {
 						if(!icon.exists()) {
 							jcrService.createIcon(path, width,width);
 						}
+						if(icon.exists())
 							file = icon;
 
 					}
