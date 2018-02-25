@@ -204,7 +204,7 @@ function drag(ev) {
 function drop(ev) {
     ev.preventDefault();
     var id = ev.target.id;
-    var data;
+    var data="";
     if(id)
     if(id=="uploadBox" || id=="uploadImg" || id.indexOf("folder")>=0) {
     	data = ev.dataTransfer.getData("text");
@@ -421,7 +421,38 @@ function drop(ev) {
     	i = 0;
     	uploadFiles();
     }else if(folderCreated==false){
-        selDiv.innerHTML=  "<section class=\"alert alert-warning\"><h2 class=\"h3\">"+i18n("no-match")+" </h2><p>"+data+"</p></section>"; 
+    	if(data.indexOf("http")==0) {
+    		selDiv.innerHTML=  "<section class=\"alert alert-info\"><h2 class=\"h3\">"+i18n("upload")+"</h2><p><img alt='' src='"+contentPath+"/resources/images/ui-anim_basic_16x16.gif'/> "+data+"</p></section>";
+	      $.ajax({
+			    url: 'importAsset.html?path='+path+"&url="+data,
+			    type: "GET", 
+			    contentType: false,
+			    processData: false,
+			    success: function(data) {
+			    	if(data.title.indexOf("error:")>=0)
+				        selDiv.innerHTML=  "<section class=\"alert alert-warning\"><h2 class=\"h3\">"+i18n("fail")+" </h2><p>"+data.title+"</p></section>"; // 
+			    	else {
+					    selDiv.innerHTML = "<section class=\"alert alert-success\"><h2 class=\"4\">"+i18n("success")+"</h2><p>"+data.title+"</p></section>";
+					    var html = $("#div_uid").html();
+					    html = html.split("{uid}").join(data.uid);
+					    html = html.replace("imgreplace","img");
+					    html = html.replace("{title}",data.title);
+					    html = html.replace("{icon}",data.icon);
+					    
+					    html = html.replace("{link}",data.link);
+				    	//$("#top_insert").prepend("<div class=\"col-md-4\"> <a href=\"javascript:returnFileUrl('viewimage?uid="+data.uid+"')\"><img class=\"img-responsive\" src=\"viewimage?uid="+data.uid +"&w=4\"/></a></div>");
+					    //$("#top_insert").prepend(html);
+					    $("#top_insert").after(html);
+
+			    	}
+			    },
+			    error: function() {
+			        selDiv.innerHTML=  "<section class=\"alert alert-warning\"><h2 class=\"h3\">"+i18n("fail")+"</h2></section>"; // 
+			    }
+			    // ... Other options like success and etc
+			}); 
+    	} else
+	    	  selDiv.innerHTML=  "<section class=\"alert alert-warning\"><h2 class=\"h3\">"+i18n("no-match")+" </h2><p>"+data+"</p></section>"; 
     	
     }
     
