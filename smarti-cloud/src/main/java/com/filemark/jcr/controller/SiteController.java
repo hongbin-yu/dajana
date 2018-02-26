@@ -1786,7 +1786,88 @@ public class SiteController extends BaseController {
 		ImageUtil.HDDOff();
 		return null;
 	}
+	
+	@RequestMapping(value = {"/site/doc2pdf.jpg"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
+	public @ResponseBody String doc2pdf2jpg(String path,Integer p,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
+		ImageUtil.HDDOn();	
+		try {
+			if (p==null) p=0;
+			String pdfpath = path.substring(0, path.lastIndexOf("."))+".pdf";
+			String jpgpath = path.substring(0, path.lastIndexOf("."))+"-"+p+".jpg";
+			File pdffile = new File(jcrService.getDevice()+pdfpath);
+			File jpgfile = new File(jcrService.getDevice()+jpgpath);
+			if(pdffile.exists() && !jpgfile.exists()) {
+				if(ImageUtil.pdf2jpg(pdffile.getAbsolutePath(), p, "1080x1080", jpgfile.getAbsolutePath())==0) {
+					FileInputStream in = new FileInputStream(jpgfile);
+					response.setContentType("image/jpeg");
+					IOUtils.copy(in, response.getOutputStream());
+					in.close();	
+					return null;					
+				}
+					
+			}
+			if(jpgfile.exists()) {
+				FileInputStream in = new FileInputStream(jpgfile);
+				response.setContentType("image/jpeg");
+				IOUtils.copy(in, response.getOutputStream());
+				in.close();	
+				return null;
+			}
 
+
+			if(path !=null  && jcrService.nodeExsits(path)) {
+				Asset asset = (Asset)jcrService.getObject(path);
+				if(asset.getDevice()!=null) {
+					File file = null;
+					Device device = (Device)jcrService.getObject(asset.getDevice());
+					String docname = device.getLocation()+asset.getPath();
+					String pdfname = device.getLocation()+asset.getPath().replaceFirst(".docx", ".pdf").replaceFirst(".doc", ".pdf").replaceFirst(".rtf", ".pdf");
+					file = new File(pdfname);
+					if(!file.exists()) {
+						try {
+							int exit = ImageUtil.doc2pdf(docname, file.getParentFile().getAbsolutePath());
+							if(exit != 0) {
+								ImageUtil.HDDOff();
+								return "文件转换将在15分钟内完成！";									
+							}
+						} catch (InterruptedException e) {
+							logger.error("doc2pdf:"+e.getMessage());
+							ImageUtil.HDDOff();
+							return e.getMessage();
+						}
+					}
+					if(pdffile.exists() && !jpgfile.exists()) {
+						if(ImageUtil.pdf2jpg(pdffile.getAbsolutePath(), p, "1080x1080", jpgfile.getAbsolutePath())==0) {
+							FileInputStream in = new FileInputStream(jpgfile);
+							response.setContentType("image/jpeg");
+							IOUtils.copy(in, response.getOutputStream());
+							in.close();	
+							return null;					
+						}
+							
+					}					
+				}
+				
+			}
+		} catch (RepositoryException e) {
+			logger.error("doc2pdf:"+e.getMessage());
+			ImageUtil.HDDOff();
+			return e.getMessage();
+		} catch (FileNotFoundException e) {
+			logger.error("doc2pdf:"+e.getMessage());
+			ImageUtil.HDDOff();
+			return e.getMessage();
+		} catch (IOException e) {
+			logger.error("doc2pdf:"+e.getMessage());
+			ImageUtil.HDDOff();
+			return e.getMessage();
+		}
+
+		ImageUtil.HDDOff();
+		return null;
+	}
+
+	
 	@RequestMapping(value = {"/site/pdf2jpg.jpg"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public @ResponseBody String pdf2jpg(String path,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
 		ImageUtil.HDDOn();	
@@ -1803,7 +1884,7 @@ public class SiteController extends BaseController {
 			file = new File(jpgname);
 			if(!file.exists()) {
 
-				int exit = ImageUtil.pdf2jpg(pdfname, jpgname);
+				int exit = ImageUtil.pdf2jpg(pdfname,0,"400x400", jpgname);
 				if(exit != 0) {
 					response.sendRedirect("/resources/images/pdf-icon.png");									
 				}
@@ -1844,7 +1925,7 @@ public class SiteController extends BaseController {
 			file = new File(jpgname);
 			if(!file.exists()) {
 
-				int exit = ImageUtil.pdf2jpg(pdfname, jpgname);
+				int exit = ImageUtil.pdf2jpg(pdfname,0,"400x400", jpgname);
 				if(exit != 0) {
 				    if(path.endsWith(".doc") || path.endsWith(".docx")) {	
 						response.sendRedirect("/resources/images/word-icon.png");	

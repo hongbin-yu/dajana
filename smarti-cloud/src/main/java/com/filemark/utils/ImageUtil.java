@@ -232,11 +232,11 @@ public class ImageUtil
     	
     }     
 
-    public static int pdf2jpg(String infile, String outfile) {
+    public static int pdf2jpg(String infile,Integer n,String wxh, String outfile) {
     	String s;
     	Process p;
     	int exit=1;
-    	ProcessBuilder pb = new ProcessBuilder("/usr/bin/convert","-colorspace","sRGB", infile+"[0]","-scale","400x400","-background","white","-flatten",outfile);
+    	ProcessBuilder pb = new ProcessBuilder("/usr/bin/convert","-colorspace","sRGB", infile+"["+n+"]","-scale",wxh,"-background","white","-flatten",outfile);
     	pb.redirectErrorStream(true);
         try {
 	        p = pb.start();//Runtime.getRuntime().exec(shellCommand);
