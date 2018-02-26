@@ -1926,7 +1926,7 @@ public class SiteController extends BaseController {
 			file = new File(jpgname);
 			if(!file.exists()) {
 
-				int exit = ImageUtil.pdf2jpg(pdfname,0,"1600x1600", jpgname);
+				int exit = ImageUtil.pdf2jpg(pdfname,p,"1600x1600", jpgname);
 				if(exit != 0) {
 					response.sendRedirect("/resources/images/pdf-icon.png");									
 				}
