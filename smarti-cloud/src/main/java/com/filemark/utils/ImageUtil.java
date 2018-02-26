@@ -236,7 +236,7 @@ public class ImageUtil
     	String s;
     	Process p;
     	int exit=1;
-    	ProcessBuilder pb = new ProcessBuilder("/usr/bin/convert","-colorspace","sRGB", infile+"["+n+"]","-scale",wxh,"-background","white","-flatten",outfile);
+    	ProcessBuilder pb = new ProcessBuilder("/usr/bin/convert","-colorspace","sRGB","-density","200",infile+"["+n+"]","-scale",wxh,"-background","white","-flatten",outfile);
     	pb.redirectErrorStream(true);
         try {
 	        p = pb.start();//Runtime.getRuntime().exec(shellCommand);

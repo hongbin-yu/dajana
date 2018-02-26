@@ -1797,7 +1797,7 @@ public class SiteController extends BaseController {
 			File pdffile = new File(jcrService.getDevice()+pdfpath);
 			File jpgfile = new File(jcrService.getDevice()+jpgpath);
 			if(pdffile.exists() && !jpgfile.exists()) {
-				if(ImageUtil.pdf2jpg(pdffile.getAbsolutePath(), p, "1080x1080", jpgfile.getAbsolutePath())==0) {
+				if(ImageUtil.pdf2jpg(pdffile.getAbsolutePath(), p, "1600x1600", jpgfile.getAbsolutePath())==0) {
 					FileInputStream in = new FileInputStream(jpgfile);
 					response.setContentType("image/jpeg");
 					IOUtils.copy(in, response.getOutputStream());
@@ -1908,6 +1908,49 @@ public class SiteController extends BaseController {
 		return null;
 	}
 	
+	@RequestMapping(value = {"/site/pdf2img.jpg"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
+	public @ResponseBody String pdf2img(String path,Integer p,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
+		ImageUtil.HDDOn();	
+		try {
+			if(path==null) {
+				response.sendRedirect("/resources/images/pdf-icon.png");									
+
+			}
+			if(p==null) p=0;
+			String pdfbase = path.substring(0, path.lastIndexOf("."));
+			String pdfpath = pdfbase+".pdf";
+
+			File file = null;
+			String jpgname = jcrService.getDevice()+pdfbase+"-"+p+".jpg";
+			String pdfname = jcrService.getDevice()+pdfpath;
+			file = new File(jpgname);
+			if(!file.exists()) {
+
+				int exit = ImageUtil.pdf2jpg(pdfname,0,"1600x1600", jpgname);
+				if(exit != 0) {
+					response.sendRedirect("/resources/images/pdf-icon.png");									
+				}
+
+			}
+			FileInputStream in = new FileInputStream(file);
+			response.setContentType("image/jpeg");
+			IOUtils.copy(in, response.getOutputStream());
+			in.close();						
+		} catch (FileNotFoundException e) {
+			logger.error("doc2pdf:"+e.getMessage());
+			ImageUtil.HDDOff();
+			return e.getMessage();
+		} catch (IOException e) {
+			logger.error("doc2pdf:"+e.getMessage());
+			ImageUtil.HDDOff();
+			return e.getMessage();
+		}
+
+		ImageUtil.HDDOff();
+		return null;
+	}
+	
+
 	@RequestMapping(value = {"/site/doc2jpg.jpg"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public @ResponseBody String doc2jpg(String path,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
 		ImageUtil.HDDOn();	
