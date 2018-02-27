@@ -2067,12 +2067,20 @@ public class SiteController extends BaseController {
 			if(mp4File.exists()) {
 				FileInputStream in = new FileInputStream(mp4File);
 				response.setContentType("video/mp4");
+				response.addHeader("Accept-Ranges", "bytes");
+				response.addHeader("Content-Length", Long.toString(mp4File.length()));
+				response.addHeader("Content-Range", "bytes 0-"+Long.toString(mp4File.length()-1)+"/"+Long.toString(mp4File.length()));
+				
 				IOUtils.copy(in, response.getOutputStream());
 				in.close();					
 			}else {
 				File file = new File(jcrService.getDevice()+path);
 				FileInputStream in = new FileInputStream(file);
 				response.setContentType("video/mp4");
+				response.addHeader("Accept-Ranges", "bytes");
+				response.addHeader("Content-Length", Long.toString(file.length()));
+				response.addHeader("Content-Range", "bytes 0-"+Long.toString(file.length()-1)+"/"+Long.toString(file.length()));
+
 				IOUtils.copy(in, response.getOutputStream());
 				in.close();					
 			}
@@ -2099,12 +2107,19 @@ public class SiteController extends BaseController {
 			if(mp4File.exists()) {
 				FileInputStream in = new FileInputStream(mp4File);
 				response.setContentType("video/webm");
+				response.addHeader("Accept-Ranges", "bytes");
+				response.addHeader("Content-Length", Long.toString(mp4File.length()));
+				response.addHeader("Content-Range", "bytes 0-"+Long.toString(mp4File.length()-1)+"/"+Long.toString(mp4File.length()));
+				
 				IOUtils.copy(in, response.getOutputStream());
 				in.close();					
 			}else {
 				File file = new File(jcrService.getDevice()+path);
 				FileInputStream in = new FileInputStream(file);
 				response.setContentType("video/webm");
+				response.addHeader("Accept-Ranges", "bytes");
+				response.addHeader("Content-Length", Long.toString(file.length()));
+				response.addHeader("Content-Range", "bytes 0-"+Long.toString(file.length()-1)+"/"+Long.toString(file.length()));
 				IOUtils.copy(in, response.getOutputStream());
 				in.close();					
 			}

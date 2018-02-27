@@ -20,7 +20,14 @@
 	        <param-value>true</param-value>
 	    </init-param>
 	</filter>
-		
+	<filter>
+	   <filter-name>etagFilter</filter-name>
+	   <filter-class>org.springframework.web.filter.ShallowEtagHeaderFilter</filter-class>
+	</filter>
+	<filter-mapping>
+	   <filter-name>etagFilter</filter-name>
+	   <url-pattern>/site/*</url-pattern>
+	</filter-mapping>		
 	<filter>
 	    <filter-name>jwtSSO</filter-name>
 	    <filter-class>com.filemark.sso.resources.JwtFilter</filter-class>
@@ -34,6 +41,8 @@
 	    </init-param>  
     
 	</filter>
+	
+	
 	<filter>
 	    <filter-name>jwtAdmin</filter-name>
 	    <filter-class>com.filemark.sso.resources.AdminFilter</filter-class>
