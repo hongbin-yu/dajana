@@ -233,7 +233,13 @@ for(var i=0; i<pdf_control.length;i++) {
 		e.stopPropagation();
 		});
 	}	
-		
+var pdf_control = document.querySelectorAll('a.download');
+for(var i=0; i<pdf_control.length;i++) {
+	pdf_control[i].addEventListener('click',function(e) {
+		e.preventDefault();
+		e.stopPropagation();
+		});
+	}			
 function returnFileUrl(fileUrl) {
 	//preventDefault();
 	var message = win.document.getElementById("header_message");
