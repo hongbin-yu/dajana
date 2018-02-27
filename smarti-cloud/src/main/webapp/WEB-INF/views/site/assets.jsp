@@ -147,7 +147,7 @@
 <div id="{uid}" class="col-md-4">
 	<div class="checkbox">
 		<input type="checkbox" class="checkbox" name="puid" value="{uid}"><a title="打开PDF" href="<c:url value="viewpdf?uid={uid}"/>" target="_BLANK"><img title="点击选中" src='<c:url value="/resources/images/pdf.gif"></c:url>'></a>
-		<a class="wb-lbx-edit" href="<c:url value='{link}'></c:url>" target="_BLANK"><imgreplace id="img{uid}" src="<c:url value='{icon}'></c:url>" class="img-responsive" draggable="true"></a>
+		<a class="wb-lbx-edit" href="<c:url value='{link}'></c:url>" target="_BLANK"><imgreplace id="img{uid}" src="<c:url value='{icon}'></c:url>" class="img-responsive" draggable="true"/></a>
 	</div>
 	<details>
 		<summary><span class="glyphicon glyphicon-edit"></span> {title}</summary>
@@ -226,7 +226,7 @@
 		<c:if test="${item.mp4}">
 		<a class="download" href="file/${item.name}?path=${item.path}" target="_BLANK" download><span class="glyphicon glyphicon-download">下载</span></a>
 		<figure class="wb-mltmd">
-				<video poster="video2jpg.jpg?path=${item.path }" title="${item.title }" preload="none">
+				<video poster="video2jpg.jpg?path=${item.path }" title="${item.title }" controls="controls" preload="none">
 					<source type="video/mp4" src="video.mp4?path=${item.path }"/>
 				</video>
 				<figcaption>
