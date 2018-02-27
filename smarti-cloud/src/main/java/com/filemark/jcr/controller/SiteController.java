@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -1648,9 +1649,23 @@ public class SiteController extends BaseController {
 				parent.delete();
 			}
 		}
+		
 		File pdficon = new File(jcrService.getHome()+"/icon400/"+path+".jpg");
 		if(path.lastIndexOf(".")>0) {
-			File pdffile = new File(jcrService.getDevice()+path.substring(0,path.lastIndexOf("."))+".pdf");
+			final String filebase = jcrService.getDevice()+path.substring(0,path.lastIndexOf("."));
+			final File[] files = file.getParentFile().listFiles( new FilenameFilter() {
+			    @Override
+			    public boolean accept( final File dir,
+			                           final String name ) {
+			        return name.matches( filebase+"-*\\.pdf" );
+			    }
+			} );
+			for ( final File f : files ) {
+			    if ( !f.delete() ) {
+			        logger.debug( "Can't remove " + f.getAbsolutePath() );
+			    }
+			}	
+			File pdffile = new File(filebase+".pdf");
 			if(pdffile.exists()) {
 				pdffile.delete();
 			}					
@@ -1679,7 +1694,20 @@ public class SiteController extends BaseController {
 				File file = jcrService.getFile(asset.getPath());
 				File pdficon = new File(jcrService.getHome()+"/icon400/"+asset.getPath()+".jpg");
 				if(asset.getPath().lastIndexOf(".")>0) {
-					File pdffile = new File(jcrService.getDevice()+asset.getPath().substring(0,asset.getPath().lastIndexOf("."))+".pdf");
+					final String filebase = jcrService.getDevice()+asset.getPath().substring(0,asset.getPath().lastIndexOf("."));
+					final File[] files = file.getParentFile().listFiles( new FilenameFilter() {
+					    @Override
+					    public boolean accept( final File dir,
+					                           final String name ) {
+					        return name.matches( filebase+"-*\\.pdf" );
+					    }
+					} );
+					for ( final File f : files ) {
+					    if ( !f.delete() ) {
+					        logger.debug( "Can't remove " + f.getAbsolutePath() );
+					    }
+					}	
+					File pdffile = new File(filebase+".pdf");
 					if(pdffile.exists()) {
 						pdffile.delete();
 					}
@@ -2581,6 +2609,7 @@ public class SiteController extends BaseController {
 		    String uid = query_pairs.get("uid");
 		    String spath = query_pairs.get("path");
 		    String w = query_pairs.get("w");
+		    String p = query_pairs.get("p");
 			Asset asset = null;
 			if(uid!=null)
 				asset = jcrService.getAssetById(uid);
@@ -2633,7 +2662,10 @@ public class SiteController extends BaseController {
 						filePath = device.getLocation()+asset.getPath();
 				}else if(link.startsWith("doc2pdf")) {
 					filePath = filePath.substring(0, filePath.lastIndexOf("."))+".pdf";
+				}else if(link.startsWith("pdf2img")) {
+					filePath = filePath.substring(0, filePath.lastIndexOf("."))+"-"+p+".pdf";
 
+				
 				}
 		
 				file = new File(filePath);
