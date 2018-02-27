@@ -8,7 +8,10 @@ $(window).on('load',function() {
 		},1200000);*/
 	}
 	var buttons = document.querySelectorAll("button[disabled]");
-	buttons.forEach(function(b) {b.disabled=false});
+	for(var i=0; i<buttons.length;i++) {
+		buttons[i].disabled = false;
+	}
+	//buttons.forEach(function(b) {b.disabled=false});
 		
 
 	
