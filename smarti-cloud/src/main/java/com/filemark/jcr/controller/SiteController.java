@@ -1980,7 +1980,7 @@ public class SiteController extends BaseController {
 	
 
 	@RequestMapping(value = {"/site/doc2jpg.jpg"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
-	public @ResponseBody String doc2jpg(String path,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
+	public @ResponseBody String doc2jpg(String path,Integer p,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
 		ImageUtil.HDDOn();	
 
 		try {
@@ -1988,15 +1988,16 @@ public class SiteController extends BaseController {
 				response.sendRedirect("/resources/images/word-icon.png");									
 
 			}
-			
+			if(p==null) p=0;
 			File file = null;
-			String jpgname = jcrService.getHome()+"/icon400"+path+".jpg";
-			String pdfpath = path.substring(0, path.lastIndexOf("."))+".pdf";
+			String filebase = path.substring(0, path.lastIndexOf("."));
+			String jpgname = jcrService.getDevice()+filebase+"-"+p+".jpg";
+			String pdfpath = filebase+".pdf";
 			String pdfname = jcrService.getDevice()+ pdfpath;
 			file = new File(jpgname);
 			if(!file.exists()) {
 
-				int exit = ImageUtil.pdf2jpg(pdfname,0,"400x400", jpgname);
+				int exit = ImageUtil.pdf2jpg(pdfname,p,"1600x1600", jpgname);
 				if(exit != 0) {
 				    if(path.endsWith(".doc") || path.endsWith(".docx")) {	
 						response.sendRedirect("/resources/images/word-icon.png");	
