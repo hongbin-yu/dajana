@@ -45,17 +45,18 @@
 <form action='<c:url value="/site/assets.html"></c:url>' method="get" name="cse-search-box" role="search" class="form-inline" accept-charset="UTF-8">
 <div class="form-group">
 <label for="wb-srch-q" class="wb-inv"><spring:message code="djn.search"/></label>
-<select name="type" onchange="this.form.submit()">
+<%-- <select name="type" onchange="this.form.submit()">
 <option value="" <c:if test="${type=='' }">selected</c:if> ><spring:message code="djn.all"/></option>
 <option value="child" <c:if test="${type=='child' }">selected</c:if> ><spring:message code="djn.child"/></option>
 <option value="image" <c:if test="${type=='image' }">selected</c:if> ><spring:message code="djn.image"/></option>
 <option value="video" <c:if test="${type=='video' }">selected</c:if> ><spring:message code="djn.video"/></option>
 <option value="audio" <c:if test="${type=='audio' }">selected</c:if> ><spring:message code="djn.audeo"/></option>
 <option value="application" <c:if test="${type=='application' }">selected</c:if> ><spring:message code="djn.file"/></option>
-</select>
+</select> --%>
 <input id="wb-srch-q" list="wb-srch-q-ac" class="wb-srch-q form-control" name="kw" type="search" value="${kw}" size="22" maxlength="150" placeholder="<spring:message code="djn.input_keyword_search"/>"/>
 <input type="hidden" name="path" value="${folder.path}"/>
 <input type="hidden" name="input" value="${input}"/>
+<input type="hidden" name="type" value="${type}"/>
 <datalist id="wb-srch-q-ac">
 <!--[if lte IE 9]><select><![endif]-->
 <!--[if lte IE 9]></select><![endif]-->

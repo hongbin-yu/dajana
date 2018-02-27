@@ -16,8 +16,25 @@
 		        <h3><c:if test="${folder.name!='assets' }"><a href="assets.html?path=${folder.parent}&type=${type}"><span class="glyphicon glyphicon-backward"></span>${folder.parent}</a></c:if>
 		        <a href="?path=${folder.path}&type=${type}" title="刷屏"><span class="glyphicon glyphicon-refresh"></span>${folder.path}</a>
 		        </h3>
+		    <form action='<c:url value="/site/assets.html"></c:url>' method="get" name="cse-search-box" role="search" class="form-inline" accept-charset="UTF-8">
+			<input type="hidden" name="path" value="${folder.path}"/>
+			<input type="hidden" name="input" value="${input}"/>
+			<input type="hidden" name="kw" value="${kw}"/>			
+		    <div class="btn btn-default-lg form-group pull-right">
+			<label for="wb-srch-q" class="wb-inv"><spring:message code="djn.search"/></label>
+			<select name="type" onchange="this.form.submit()">
+			<option value="" <c:if test="${type=='' }">selected</c:if> ><spring:message code="djn.all"/></option>
+			<option value="child" <c:if test="${type=='child' }">selected</c:if> ><spring:message code="djn.child"/></option>
+			<option value="image" <c:if test="${type=='image' }">selected</c:if> ><spring:message code="djn.image"/></option>
+			<option value="video" <c:if test="${type=='video' }">selected</c:if> ><spring:message code="djn.video"/></option>
+			<option value="audio" <c:if test="${type=='audio' }">selected</c:if> ><spring:message code="djn.audeo"/></option>
+			<option value="application" <c:if test="${type=='application' }">selected</c:if> ><spring:message code="djn.file"/></option>
+			</select>
+			</div>	
+			</form>       
             <details id="${folder.uid }">
-            <summary>${folder.title}</summary>
+            <summary>${folder.title}
+            </summary>
             	<c:if test="${assets.availablePages==0}">
     			    <a class="wb-lbx" title="<spring:message code="djn.delete"/>" href="<c:url value="/site/delete.html?uid=${folder.uid }&redirect=/site/assets.html?path=${folder.parent }"/>"><span class="glyphicon glyphicon-remove"></span><spring:message code="djn.delete"/></a>
 	      		</c:if>
@@ -47,7 +64,6 @@
 				</div>									  
             </details>
 			</section>
-			    
 	    </div>	
 		<div class="wb-frmvld col-md-4">
 			<form action="upload.html" method="POST" id="form-upload" enctype="multipart/form-data">
