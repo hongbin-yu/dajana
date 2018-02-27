@@ -2066,23 +2066,28 @@ public class SiteController extends BaseController {
 			File mp4File = new File(jcrService.getDevice()+path+".mp4");
 			if(mp4File.exists()) {
 				FileInputStream in = new FileInputStream(mp4File);
-				response.setContentType("video/mp4");
+				logger.debug("video mp4:"+mp4File.getAbsolutePath());
 				response.addHeader("Accept-Ranges", "bytes");
 				response.addHeader("Content-Length", Long.toString(mp4File.length()));
 				response.addHeader("Content-Range", "bytes 0-"+Long.toString(mp4File.length()-1)+"/"+Long.toString(mp4File.length()));
-				
+				response.setContentType("video/pm4");				
 				IOUtils.copy(in, response.getOutputStream());
 				in.close();					
 			}else {
 				File file = new File(jcrService.getDevice()+path);
-				FileInputStream in = new FileInputStream(file);
-				response.setContentType("video/mp4");
-				response.addHeader("Accept-Ranges", "bytes");
-				response.addHeader("Content-Length", Long.toString(file.length()));
-				response.addHeader("Content-Range", "bytes 0-"+Long.toString(file.length()-1)+"/"+Long.toString(file.length()));
-
-				IOUtils.copy(in, response.getOutputStream());
-				in.close();					
+				logger.debug("video original:"+file.getAbsolutePath());
+				try {
+					Asset asset = (Asset)jcrService.getObject(path);
+					FileInputStream in = new FileInputStream(file);
+					response.addHeader("Accept-Ranges", "bytes");
+					response.addHeader("Content-Length", Long.toString(file.length()));
+					response.addHeader("Content-Range", "bytes 0-"+Long.toString(file.length()-1)+"/"+Long.toString(file.length()));
+					response.setContentType(asset.getContentType());
+					IOUtils.copy(in, response.getOutputStream());
+					in.close();
+				} catch (RepositoryException e) {
+					logger.error(e.getMessage());
+				}				
 			}
 					
 		} catch (FileNotFoundException e) {
@@ -2106,22 +2111,30 @@ public class SiteController extends BaseController {
 			File mp4File = new File(jcrService.getDevice()+path+".webm");
 			if(mp4File.exists()) {
 				FileInputStream in = new FileInputStream(mp4File);
-				response.setContentType("video/webm");
+				logger.debug("video webm:"+mp4File.getAbsolutePath());
 				response.addHeader("Accept-Ranges", "bytes");
 				response.addHeader("Content-Length", Long.toString(mp4File.length()));
 				response.addHeader("Content-Range", "bytes 0-"+Long.toString(mp4File.length()-1)+"/"+Long.toString(mp4File.length()));
-				
+				response.setContentType("video/webm");
 				IOUtils.copy(in, response.getOutputStream());
 				in.close();					
 			}else {
 				File file = new File(jcrService.getDevice()+path);
-				FileInputStream in = new FileInputStream(file);
-				response.setContentType("video/webm");
-				response.addHeader("Accept-Ranges", "bytes");
-				response.addHeader("Content-Length", Long.toString(file.length()));
-				response.addHeader("Content-Range", "bytes 0-"+Long.toString(file.length()-1)+"/"+Long.toString(file.length()));
-				IOUtils.copy(in, response.getOutputStream());
-				in.close();					
+				logger.debug("video original:"+file.getAbsolutePath());
+
+				try {
+					Asset asset = (Asset)jcrService.getObject(path);
+					FileInputStream in = new FileInputStream(file);
+					response.addHeader("Accept-Ranges", "bytes");
+					response.addHeader("Content-Length", Long.toString(file.length()));
+					response.addHeader("Content-Range", "bytes 0-"+Long.toString(file.length()-1)+"/"+Long.toString(file.length()));
+					response.setContentType(asset.getContentType());
+					IOUtils.copy(in, response.getOutputStream());
+					in.close();
+				} catch (RepositoryException e) {
+					logger.error(e.getMessage());
+				}
+					
 			}
 					
 		} catch (FileNotFoundException e) {
