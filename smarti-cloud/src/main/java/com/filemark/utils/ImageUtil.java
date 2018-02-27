@@ -440,7 +440,7 @@ public class ImageUtil
     public static int video2mp4(String filename,String device) throws IOException, InterruptedException {
     	int exit=1;
     	String output = device+filename+".mp4";
-    	String webmOutput = device+filename+".webm";
+    	//String webmOutput = device+filename+".webm";
     	String icon = device+"/publish/icon400"+filename+".jpg";
 		BufferedWriter writer = new BufferedWriter(new FileWriter("/var/lib/tomcat8/conf/video2mp4.sh",true));
 

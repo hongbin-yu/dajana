@@ -44,6 +44,12 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.InputStreamSource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -1097,7 +1103,7 @@ public class SiteController extends BaseController {
 			contentType = new MimetypesFileTypeMap().getContentType(fileName);
 		logger.debug("nodeName="+nodeName);
     	asset.setTitle(fileName);	
-    	asset.setName(nodeName);
+    	asset.setName(fileName);
 		asset.setCreatedBy(username);
 		asset.setPath(assetPath);
 		asset.setLastModified(new Date());
@@ -2060,25 +2066,29 @@ public class SiteController extends BaseController {
 		return null;
 	}	
 	@RequestMapping(value = {"/site/video.mp4"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
-	public @ResponseBody String video2mp4(String path,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
+	public ResponseEntity<InputStreamResource> video2mp4(String path,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
 		ImageUtil.HDDOn();	
 		try {
-			File mp4File = new File(jcrService.getDevice()+path+".mp4");
-			if(mp4File.exists()) {
-				FileInputStream in = new FileInputStream(mp4File);
-				logger.debug("video mp4:"+mp4File.getAbsolutePath());
+			File file = new File(jcrService.getDevice()+path+".mp4");
+			final HttpHeaders headers = new HttpHeaders();
+			InputStream in = null;
+			headers.add("Content-disposition", "attachment; filename=\"+"+file.getName()+"\"");
+			if(file.exists()) {
+				in = new FileInputStream(file);
+				
+				logger.debug("video mp4:"+file.getAbsolutePath());
 				response.addHeader("Accept-Ranges", "bytes");
-				response.addHeader("Content-Length", Long.toString(mp4File.length()));
-				response.addHeader("Content-Range", "bytes 0-"+Long.toString(mp4File.length()-1)+"/"+Long.toString(mp4File.length()));
+				response.addHeader("Content-Length", Long.toString(file.length()));
+				response.addHeader("Content-Range", "bytes 0-"+Long.toString(file.length()-1)+"/"+Long.toString(file.length()));
 				response.setContentType("video/pm4");				
 				IOUtils.copy(in, response.getOutputStream());
 				in.close();					
 			}else {
-				File file = new File(jcrService.getDevice()+path);
+				file = new File(jcrService.getDevice()+path);
 				logger.debug("video original:"+file.getAbsolutePath());
 				try {
 					Asset asset = (Asset)jcrService.getObject(path);
-					FileInputStream in = new FileInputStream(file);
+					in = new FileInputStream(file);
 					response.addHeader("Accept-Ranges", "bytes");
 					response.addHeader("Content-Length", Long.toString(file.length()));
 					response.addHeader("Content-Range", "bytes 0-"+Long.toString(file.length()-1)+"/"+Long.toString(file.length()));
@@ -2089,18 +2099,22 @@ public class SiteController extends BaseController {
 					logger.error(e.getMessage());
 				}				
 			}
-					
+/*			ImageUtil.HDDOff();
+			ResponseEntity<InputStreamResource> responseEntity = new ResponseEntity<InputStreamResource>(new InputStreamResource(in),headers,HttpStatus.OK);
+			return responseEntity;*/
+				
 		} catch (FileNotFoundException e) {
 			logger.error("video2mp4:"+e.getMessage());
-			ImageUtil.HDDOff();
-			return e.getMessage();
+			//ImageUtil.HDDOff();
+
 		} catch (IOException e) {
 			logger.error("video2mp4:"+e.getMessage());
 			ImageUtil.HDDOff();
-			return e.getMessage();
-		}
 
+		}
+		
 		ImageUtil.HDDOff();
+
 		return null;
 	}
 

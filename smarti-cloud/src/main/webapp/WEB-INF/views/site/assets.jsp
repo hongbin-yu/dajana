@@ -210,7 +210,7 @@
 		<c:if test="${item.mp4}">
 		<a class="download" href="file/${item.name}?path=${item.path}" target="_BLANK" download><span class="glyphicon glyphicon-download">下载</span></a>
 		<figure class="wb-mltmd">
-				<video poster="video2jpg.jpg?path=${item.path }" title="${item.title }"  controls="controls" preload="none">
+				<video poster="video2jpg.jpg?path=${item.path }" title="${item.title }" preload="none">
 					<source type="video/mp4" src="video.mp4?path=${item.path }"/>
 				</video>
 				<figcaption>
