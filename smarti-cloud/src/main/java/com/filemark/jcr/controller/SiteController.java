@@ -12,11 +12,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.httpclient.ChunkedOutputStream;
 import org.apache.commons.io.FileUtils;
 import org.apache.poi.util.IOUtils;
 import org.apache.tika.mime.MimeType;
@@ -58,6 +59,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+
+
+
+
+
 
 import com.filemark.jcr.model.Asset;
 import com.filemark.jcr.model.Device;
@@ -2066,7 +2072,7 @@ public class SiteController extends BaseController {
 		return null;
 	}	
 	@RequestMapping(value = {"/site/video.mp4"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
-	public ResponseEntity<InputStreamResource> video2mp4(String path,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
+	public ResponseEntity<InputStreamResource> video2mp4(String path,Long s, Long e,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
 		ImageUtil.HDDOn();	
 		try {
 			File file = new File(jcrService.getDevice()+path+".mp4");
@@ -2074,41 +2080,75 @@ public class SiteController extends BaseController {
 			InputStream in = null;
 			headers.add("Content-disposition", "attachment; filename=\"+"+file.getName()+"\"");
 			if(file.exists()) {
-				in = new FileInputStream(file);
-				
+				//in = new FileInputStream(file);
+				if(s==null) s=0l;
+				RandomAccessFile rf = new RandomAccessFile(file, "r");
+				if(e==null || e>rf.length()) e = rf.length();
+				if(s>0) rf.seek(s);
+
+				long bufferMaxSize = 1024*100;
+				long length = e - s;
 				logger.debug("video mp4:"+file.getAbsolutePath());
+				response.setStatus(206);
 				response.addHeader("Accept-Ranges", "bytes");
 				response.addHeader("Content-Length", Long.toString(file.length()));
 				response.addHeader("Content-Range", "bytes 0-"+Long.toString(file.length()-1)+"/"+Long.toString(file.length()));
-				response.setContentType("video/pm4");				
-				IOUtils.copy(in, response.getOutputStream());
-				in.close();					
+				response.setContentType("video/mp4");
+				ChunkedOutputStream out =new ChunkedOutputStream(response.getOutputStream());
+				while (length >0) {
+					long bufferSize = Math.min(length, bufferMaxSize);
+					byte bytes[] = new byte[(int)bufferSize];
+					rf.read(bytes);
+					out.write(bytes);
+					length = length - bufferSize;
+				}
+				rf.close();
+				out.close();
+				//IOUtils.copy(in, response.getOutputStream());
+				//in.close();					
 			}else {
 				file = new File(jcrService.getDevice()+path);
 				logger.debug("video original:"+file.getAbsolutePath());
 				try {
 					Asset asset = (Asset)jcrService.getObject(path);
 					in = new FileInputStream(file);
+					if(s==null) s=0l;
+					RandomAccessFile rf = new RandomAccessFile(file, "r");
+					if(e==null || e>rf.length()) e = rf.length();
+					if(s>0) rf.seek(s);
+
+					long bufferMaxSize = 1024*100;
+					long length = e - s;					
 					response.addHeader("Accept-Ranges", "bytes");
 					response.addHeader("Content-Length", Long.toString(file.length()));
 					response.addHeader("Content-Range", "bytes 0-"+Long.toString(file.length()-1)+"/"+Long.toString(file.length()));
 					response.setContentType(asset.getContentType());
-					IOUtils.copy(in, response.getOutputStream());
-					in.close();
-				} catch (RepositoryException e) {
-					logger.error(e.getMessage());
+					ChunkedOutputStream out =new ChunkedOutputStream(response.getOutputStream());
+					while (length >0) {
+						long bufferSize = Math.min(length, bufferMaxSize);
+						byte bytes[] = new byte[(int)bufferSize];
+						rf.read(bytes);
+						out.write(bytes);
+						length = length - bufferSize;
+					}
+					rf.close();
+					out.close();
+/*					IOUtils.copy(in, response.getOutputStream());
+					in.close();*/
+				} catch (RepositoryException e1) {
+					logger.error(e1.getMessage());
 				}				
 			}
 /*			ImageUtil.HDDOff();
 			ResponseEntity<InputStreamResource> responseEntity = new ResponseEntity<InputStreamResource>(new InputStreamResource(in),headers,HttpStatus.OK);
 			return responseEntity;*/
 				
-		} catch (FileNotFoundException e) {
-			logger.error("video2mp4:"+e.getMessage());
+		} catch (FileNotFoundException e1) {
+			logger.error("video2mp4:"+e1.getMessage());
 			//ImageUtil.HDDOff();
 
-		} catch (IOException e) {
-			logger.error("video2mp4:"+e.getMessage());
+		} catch (IOException e1) {
+			logger.error("video2mp4:"+e1.getMessage());
 			ImageUtil.HDDOff();
 
 		}
@@ -2139,6 +2179,7 @@ public class SiteController extends BaseController {
 				try {
 					Asset asset = (Asset)jcrService.getObject(path);
 					FileInputStream in = new FileInputStream(file);
+					
 					response.addHeader("Accept-Ranges", "bytes");
 					response.addHeader("Content-Length", Long.toString(file.length()));
 					response.addHeader("Content-Range", "bytes 0-"+Long.toString(file.length()-1)+"/"+Long.toString(file.length()));
