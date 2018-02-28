@@ -2078,34 +2078,35 @@ public class SiteController extends BaseController {
 			File file = new File(jcrService.getDevice()+path+".mp4");
 			final HttpHeaders headers = new HttpHeaders();
 			InputStream in = null;
-			headers.add("Content-disposition", "attachment; filename=\"+"+file.getName()+"\"");
+			//headers.add("Content-disposition", "attachment; filename=\"+"+file.getName()+"\"");
 			if(file.exists()) {
-				//in = new FileInputStream(file);
+				in = new FileInputStream(file);
 				if(s==null) s=0l;
-				RandomAccessFile rf = new RandomAccessFile(file, "r");
-				if(e==null || e>rf.length()) e = rf.length();
-				if(s>0) rf.seek(s);
+				//RandomAccessFile rf = new RandomAccessFile(file, "r");
+				if(e==null || e>file.length()) e = file.length();
+/*				if(s>0) rf.seek(s);
 
-				long bufferMaxSize = 1024*100;
-				long length = e - s;
+				int bufferMaxSize = 1024*10;
+				byte bytes[] = new byte[bufferMaxSize];
+				long length = e - s;*/
 				logger.debug("video mp4:"+file.getAbsolutePath());
 				response.setStatus(206);
 				response.addHeader("Accept-Ranges", "bytes");
 				response.addHeader("Content-Length", Long.toString(file.length()));
-				response.addHeader("Content-Range", "bytes 0-"+Long.toString(file.length()-1)+"/"+Long.toString(file.length()));
+				response.addHeader("Content-Range", "bytes 0"+s+"-"+Long.toString(e-1)+"/"+Long.toString(file.length()));
 				response.setContentType("video/mp4");
-				ChunkedOutputStream out =new ChunkedOutputStream(response.getOutputStream());
+/*				ChunkedOutputStream out =new ChunkedOutputStream(response.getOutputStream());
 				while (length >0) {
-					long bufferSize = Math.min(length, bufferMaxSize);
-					byte bytes[] = new byte[(int)bufferSize];
-					rf.read(bytes);
-					out.write(bytes);
+					int bufferSize = (int) Math.min(length, bufferMaxSize);
+					rf.read(bytes,0,bufferSize);
+					out.write(bytes,0,bufferSize);
+					out.finish();
 					length = length - bufferSize;
 				}
 				rf.close();
-				out.close();
-				//IOUtils.copy(in, response.getOutputStream());
-				//in.close();					
+				out.close();*/
+				IOUtils.copy(in, response.getOutputStream());
+				in.close();					
 			}else {
 				file = new File(jcrService.getDevice()+path);
 				logger.debug("video original:"+file.getAbsolutePath());
@@ -2113,28 +2114,30 @@ public class SiteController extends BaseController {
 					Asset asset = (Asset)jcrService.getObject(path);
 					in = new FileInputStream(file);
 					if(s==null) s=0l;
-					RandomAccessFile rf = new RandomAccessFile(file, "r");
-					if(e==null || e>rf.length()) e = rf.length();
-					if(s>0) rf.seek(s);
+					//RandomAccessFile rf = new RandomAccessFile(file, "r");
+					if(e==null || e>file.length()) e = file.length();
+					//if(s>0) rf.seek(s);
 
-					long bufferMaxSize = 1024*100;
-					long length = e - s;					
+/*					int bufferMaxSize = 1024*100;
+					byte bytes[] = new byte[bufferMaxSize];
+					long length = e - s;*/	
+					response.setStatus(206);
 					response.addHeader("Accept-Ranges", "bytes");
 					response.addHeader("Content-Length", Long.toString(file.length()));
-					response.addHeader("Content-Range", "bytes 0-"+Long.toString(file.length()-1)+"/"+Long.toString(file.length()));
+					response.addHeader("Content-Range", "bytes "+s+"-"+Long.toString(e-1)+"/"+Long.toString(file.length()));
 					response.setContentType(asset.getContentType());
-					ChunkedOutputStream out =new ChunkedOutputStream(response.getOutputStream());
+/*					ChunkedOutputStream out =new ChunkedOutputStream(response.getOutputStream());
 					while (length >0) {
-						long bufferSize = Math.min(length, bufferMaxSize);
-						byte bytes[] = new byte[(int)bufferSize];
-						rf.read(bytes);
-						out.write(bytes);
+						int bufferSize = (int) Math.min(length, bufferMaxSize);
+						rf.read(bytes,0,bufferSize);
+						out.write(bytes,0,bufferSize);
+						out.finish();
 						length = length - bufferSize;
 					}
 					rf.close();
-					out.close();
-/*					IOUtils.copy(in, response.getOutputStream());
-					in.close();*/
+					out.close();*/
+					IOUtils.copy(in, response.getOutputStream());
+					in.close();
 				} catch (RepositoryException e1) {
 					logger.error(e1.getMessage());
 				}				
