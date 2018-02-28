@@ -2794,8 +2794,9 @@ public class SiteController extends BaseController {
 		    response.setHeader("Content-Length", ((length - start) +1l)+"");
 		    response.setHeader("Content-Range", String.format("bytes %d-%d/%d", start, length,file.length()));
 		    response.setHeader("Accept-Ranges", "bytes");
-		    if(length - start <1024) {
+		    if(length - start <10240) {
 		    	response.setStatus(200);
+		    	response.setHeader("Cache-Control", "max-age=3600, must-revalidate"); 
 			    response.setHeader("Connection", "close");
 		    }else {
 		    	response.setStatus(206);
