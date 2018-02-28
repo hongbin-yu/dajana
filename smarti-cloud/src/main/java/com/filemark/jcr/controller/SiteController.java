@@ -2072,80 +2072,37 @@ public class SiteController extends BaseController {
 		return null;
 	}	
 	@RequestMapping(value = {"/site/video.mp4"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
-	public ResponseEntity<InputStreamResource> video2mp4(String path,Long s, Long e,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
+	public ResponseEntity<InputStreamResource> video2mp4(String path,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
 		ImageUtil.HDDOn();	
 		try {
 			File file = new File(jcrService.getDevice()+path+".mp4");
-			//final HttpHeaders headers = new HttpHeaders();
-			InputStream in = null;
-			//headers.add("Content-disposition", "attachment; filename=\"+"+file.getName()+"\"");
-			if(file.exists()) {
-				in = new FileInputStream(file);
-				long length = file.length();
-				if(s==null) s=0l;
-				//RandomAccessFile rf = new RandomAccessFile(file, "r");
-				if(e==null || e>file.length()) e = file.length();
-/*				if(s>0) rf.seek(s);
-
-				int bufferMaxSize = 1024*10;
-				byte bytes[] = new byte[bufferMaxSize];
-				long length = e - s;*/
-				logger.debug("video mp4:"+file.getAbsolutePath());
-				response.setStatus(206);
-				response.addHeader("Accept-Ranges", "bytes");
-				response.addHeader("Content-Length", Long.toString(length));
-				response.addHeader("Content-Range", "bytes "+s+"-"+Long.toString(e-1)+"/"+Long.toString(length));
-				response.setContentType("video/mp4");
-/*				ChunkedOutputStream out =new ChunkedOutputStream(response.getOutputStream());
-				while (length >0) {
-					int bufferSize = (int) Math.min(length, bufferMaxSize);
-					rf.read(bytes,0,bufferSize);
-					out.write(bytes,0,bufferSize);
-					out.finish();
-					length = length - bufferSize;
-				}
-				rf.close();
-				out.close();*/
-				IOUtils.copy(in, response.getOutputStream());
-				in.close();					
-			}else {
+			String contentType="video/mp4";
+			if(!file.exists()) {
 				file = new File(jcrService.getDevice()+path);
 				logger.debug("video original:"+file.getAbsolutePath());
 				try {
 					Asset asset = (Asset)jcrService.getObject(path);
-					in = new FileInputStream(file);
-					if(s==null) s=0l;
-					//RandomAccessFile rf = new RandomAccessFile(file, "r");
-					if(e==null || e>file.length()) e = file.length();
-					//if(s>0) rf.seek(s);
-
-/*					int bufferMaxSize = 1024*100;
-					byte bytes[] = new byte[bufferMaxSize];
-					long length = e - s;*/	
-					response.setStatus(206);
-					response.addHeader("Accept-Ranges", "bytes");
-					response.addHeader("Content-Length", Long.toString(file.length()));
-					response.addHeader("Content-Range", "bytes "+s+"-"+Long.toString(e-1)+"/"+Long.toString(file.length()));
-					response.setContentType(asset.getContentType());
-/*					ChunkedOutputStream out =new ChunkedOutputStream(response.getOutputStream());
-					while (length >0) {
-						int bufferSize = (int) Math.min(length, bufferMaxSize);
-						rf.read(bytes,0,bufferSize);
-						out.write(bytes,0,bufferSize);
-						out.finish();
-						length = length - bufferSize;
-					}
-					rf.close();
-					out.close();*/
-					IOUtils.copy(in, response.getOutputStream());
-					in.close();
+					contentType=asset.getContentType();
 				} catch (RepositoryException e1) {
 					logger.error(e1.getMessage());
 				}				
 			}
-/*			ImageUtil.HDDOff();
-			ResponseEntity<InputStreamResource> responseEntity = new ResponseEntity<InputStreamResource>(new InputStreamResource(in),headers,HttpStatus.OK);
-			return responseEntity;*/
+		    String rangeheader = request.getHeader("Range");
+	    	long start = 0l;
+	    	long length = file.length()-1l; 
+		    if(rangeheader != null) {
+		      String[] split = rangeheader.substring("bytes=".length()).split("-");
+		      if(logger.isDebugEnabled()) { logger.debug("Range header is:"+rangeheader); }
+			    		
+		      if(split.length == 1) {
+		    	start = Long.parseLong(split[0]);
+		    	length = file.length()-1l;    			
+		      } else {
+		    	start = Long.parseLong(split[0]);
+		    	length = Long.parseLong(split[1]);
+		      }
+		    }
+	    	stream(response,start, length, file,contentType);
 				
 		} catch (FileNotFoundException e1) {
 			logger.error("video2mp4:"+e1.getMessage());
@@ -2829,4 +2786,25 @@ public class SiteController extends BaseController {
 			}
 		return new Device();
 	}
+	  private void stream(HttpServletResponse response,long start, long length, File file,String contentType) throws IOException {
+		  	
+		    FileInputStream fis = new FileInputStream(file);
+		    fis.skip(start);
+		    response.setContentType(contentType);
+		    response.setHeader("Content-Length", ((length - start) +1l)+"");
+		    response.setHeader("Content-Range", String.format("bytes %d-%d/%d", start, length,file.length()));
+		    response.setHeader("Accept-Ranges", "bytes");
+		    if(length - start <1024) {
+		    	response.setStatus(200);
+			    response.setHeader("Connection", "close");
+		    }else {
+		    	response.setStatus(206);
+		    	response.setHeader("Connection", "keep-alive");		    	
+		    }
+			IOUtils.copy(fis, response.getOutputStream());
+			fis.close();					
+		    
+
+		} 
+
 }
