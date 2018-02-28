@@ -2076,11 +2076,12 @@ public class SiteController extends BaseController {
 		ImageUtil.HDDOn();	
 		try {
 			File file = new File(jcrService.getDevice()+path+".mp4");
-			final HttpHeaders headers = new HttpHeaders();
+			//final HttpHeaders headers = new HttpHeaders();
 			InputStream in = null;
 			//headers.add("Content-disposition", "attachment; filename=\"+"+file.getName()+"\"");
 			if(file.exists()) {
 				in = new FileInputStream(file);
+				long length = file.length();
 				if(s==null) s=0l;
 				//RandomAccessFile rf = new RandomAccessFile(file, "r");
 				if(e==null || e>file.length()) e = file.length();
@@ -2092,8 +2093,8 @@ public class SiteController extends BaseController {
 				logger.debug("video mp4:"+file.getAbsolutePath());
 				response.setStatus(206);
 				response.addHeader("Accept-Ranges", "bytes");
-				response.addHeader("Content-Length", Long.toString(file.length()));
-				response.addHeader("Content-Range", "bytes 0"+s+"-"+Long.toString(e-1)+"/"+Long.toString(file.length()));
+				response.addHeader("Content-Length", Long.toString(length));
+				response.addHeader("Content-Range", "bytes "+s+"-"+Long.toString(e-1)+"/"+Long.toString(length));
 				response.setContentType("video/mp4");
 /*				ChunkedOutputStream out =new ChunkedOutputStream(response.getOutputStream());
 				while (length >0) {
