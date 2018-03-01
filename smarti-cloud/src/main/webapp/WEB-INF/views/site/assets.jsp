@@ -60,7 +60,7 @@
 				<label for="order">口令</label><input class="form-control" id="passcode" name="passcode" value="${folder.passcode }" size="35"  uid="${folder.uid }" onchange="updateNode(this)"/>
 				</div>	 --%>
 				<div class="checkbox">
-				<label for="intranet"><input type="checkbox" name="intranet" value="true" id="intranet" <c:if test="${folder.intranet=='true' }">checked</c:if> size="35"  uid="${folder.uid }" onchange="updateProperty(this)"> 内部网（外网不能访问目录下文件）</label>
+				<label for="intranet"><input type="checkbox" name="intranet" value="true" id="intranetfolder" <c:if test="${folder.intranet=='true' }">checked</c:if> size="35"  uid="${folder.uid }" onchange="updateProperty(this)"> 内部网（外网不能访问目录下文件）</label>
 				</div>									  
             </details>
 			</section>
@@ -74,7 +74,7 @@
 						
 				<div class="form-group" ondrop="drop(event)" ondragover="allowDrop(event)" style="border:1px solid #aaaaaa;">
 					<label for="fileUpload" class="required"><a href="#" onclick="openFiles()"><span id="openFiles" class="field-name"><spring:message code="djn.select_dragging_drop"/> </span></a></label>
-					<br/><a href="#" onclick="openFiles()"><img id="uploadImg" src="<c:url value='/resources/images/upload.png'/>"/></a>
+					<br/><a href="#" onclick="openFiles()"><img id="uploadImg" alt="" src="<c:url value='/resources/images/upload.png'/>"/></a>
 					<div class="panel" id="selectedFiles">
 					</div>	
 					<div class="checkbox">
@@ -92,7 +92,7 @@
 		<details>
 			<summary>
 				<label for="path"><span class="glyphicon glyphicon-folder-close"></span> <spring:message code="djn.create_folder"/></label>
-				<input type="hidden" id="folder-path" name="path" value="${folder.path }" >
+				<input type="hidden" id="folder-path1" name="path" value="${folder.path }" >
 			</summary>
 			<div class="wb-frmvld">
 			<form action="javascript:createFolder()" id="createFolder" method="POST">
@@ -100,7 +100,7 @@
 			<div class="form-group">
 			<label for="foldername"><spring:message code="djn.path"/><strong class="required">(<spring:message code="djn.required"/>)</strong></label>
 			
-			<input class="form-control" id="foldername" required="required" name="name" pattern="[A-Za-z0-9\-]{2,}" value="" size="80" placeholder="只能填拼音或数字" placeholder="<spring:message code="djn.alpha_number_only"/>"/>
+			<input class="form-control" id="foldername" required="required" name="name" pattern="[A-Za-z0-9\-]{2,}" value="" size="80" placeholder="<spring:message code="djn.alpha_number_only"/>"/>
 <!-- 
 			<input class="form-control" id="foldername" required="required" name="name" pattern="[A-Za-z0-9\s]{4,}"  data-rule-alphanumeric="true" data-rule-minlength="4" size="40" value="" size="25" placeholder="<spring:message code="djn.alpha_number_only"/>"/>
  -->
@@ -226,7 +226,7 @@
 		<c:if test="${item.mp4}">
 		<a class="download" href="file/${item.name}?path=${item.path}" target="_BLANK" download><span class="glyphicon glyphicon-download">下载</span></a>
 		<figure class="wb-mltmd">
-				<video poster="video2jpg.jpg?path=${item.path }" title="${item.title }" preload="none">
+				<video poster="video2jpg.jpg?path=${item.path }" title="${item.title }" controls="controls" preload="none">
 					<source type="video/mp4" src="video.mp4?path=${item.path }"/>
 				</video>
 				<figcaption>
