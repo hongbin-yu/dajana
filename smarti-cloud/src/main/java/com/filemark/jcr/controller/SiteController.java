@@ -1661,7 +1661,10 @@ public class SiteController extends BaseController {
 				parent.delete();
 			}
 		}
-		
+		File mp4 = new File(file.getAbsoluteFile()+".mp4");
+		if(mp4.exists()) {
+			mp4.delete();
+		}
 		File pdficon = new File(jcrService.getHome()+"/icon400/"+path+".jpg");
 		if(path.lastIndexOf(".")>0) {
 			final String filebase = jcrService.getDevice()+path.substring(0,path.lastIndexOf("."));
@@ -1722,6 +1725,10 @@ public class SiteController extends BaseController {
 					File pdffile = new File(filebase+".pdf");
 					if(pdffile.exists()) {
 						pdffile.delete();
+					}
+					File mp4 = new File(file.getAbsoluteFile()+".mp4");
+					if(mp4.exists()) {
+						mp4.delete();
 					}
 				}
 				if(pdficon.exists()) {
