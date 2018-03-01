@@ -2077,7 +2077,7 @@ public class SiteController extends BaseController {
 		try {
 			File file = new File(jcrService.getDevice()+path+".mp4");
 			String contentType="video/mp4";
-			if(!file.exists()) {
+			if(!file.exists() || (path.endsWith(".mp4") && isIntranet(request))) {
 				file = new File(jcrService.getDevice()+path);
 				logger.debug("video original:"+file.getAbsolutePath());
 				try {
@@ -2794,14 +2794,14 @@ public class SiteController extends BaseController {
 		    response.setHeader("Content-Length", ((length - start) +1l)+"");
 		    response.setHeader("Content-Range", String.format("bytes %d-%d/%d", start, length,file.length()));
 		    response.setHeader("Accept-Ranges", "bytes");
-		    if(length - start <10240) {
-		    	response.setStatus(200);
-		    	response.setHeader("Cache-Control", "max-age=3600, must-revalidate"); 
-			    response.setHeader("Connection", "close");
-		    }else {
+		    //if(length - start <10240) {
+		    	//response.setStatus(200);
+		    	//response.setHeader("Cache-Control", "max-age=3600, must-revalidate"); 
+			    //response.setHeader("Connection", "close");
+		    //}else {
 		    	response.setStatus(206);
 		    	response.setHeader("Connection", "keep-alive");		    	
-		    }
+		    //}
 			IOUtils.copy(fis, response.getOutputStream());
 			fis.close();					
 		    
