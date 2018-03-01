@@ -47,7 +47,7 @@ public class JwtFilter implements Filter {
 		HttpServletRequest httpServletRequest = (HttpServletRequest)request;
 		HttpServletResponse httpServletResponse = (HttpServletResponse)response;
         String signingUser = JwtUtil.getSubject(httpServletRequest, jwtTokenCookieName, signingKey);
-        if(signingUser != null){
+        if(signingUser != null && getUsername()==null){
             String authors[] = signingUser.split("/");
 			Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 			User user = new User();
@@ -144,7 +144,14 @@ public class JwtFilter implements Filter {
         }*/
 		
 	}
-
+	protected String getUsername() {
+		if(SecurityContextHolder.getContext()==null || SecurityContextHolder.getContext().getAuthentication()==null) return null;
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if(auth!=null && auth.isAuthenticated()) { 
+			return auth.getName();
+		} else
+			return null;
+	}	
 	public void destroy() {
 		// TODO Auto-generated method stub
 		

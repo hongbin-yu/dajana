@@ -46,9 +46,12 @@ public class AdminFilter implements Filter {
         if(!httpServletRequest.getContextPath().equals("/") && !authService.startsWith("http")) {
         	authService = httpServletRequest.getContextPath()+authService;
         }
-        if(signingUser==null)
-            httpServletResponse.sendRedirect(authService + "?redirect=" + redirectUrl);
-        else {
+        if(signingUser==null) {
+        	//if(getUsername()==null) {
+        	//}else {
+        	httpServletResponse.sendRedirect(authService + "?redirect=" + redirectUrl);
+        	//}
+        } else {
         	String usersite = (String)httpServletRequest.getAttribute("usersite");
         	String port = (String)httpServletRequest.getAttribute("port");
         	String username = (String)httpServletRequest.getAttribute("username");
@@ -105,6 +108,15 @@ public class AdminFilter implements Filter {
 
 
 	}
+	
+	protected String getUsername() {
+		if(SecurityContextHolder.getContext()==null || SecurityContextHolder.getContext().getAuthentication()==null) return null;
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if(auth!=null && auth.isAuthenticated()) { 
+			return auth.getName();
+		} else
+			return null;
+	}		
 	public FilterConfig getFilterConfig() {
 		return filterConfig;
 	}

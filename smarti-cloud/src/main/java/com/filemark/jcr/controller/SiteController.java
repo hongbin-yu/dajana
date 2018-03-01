@@ -2797,8 +2797,9 @@ public class SiteController extends BaseController {
 		  	
 		    FileInputStream fis = new FileInputStream(file);
 		    fis.skip(start);
+		    long contentLength = (length - start) +1l;
 		    response.setContentType(contentType);
-		    response.setHeader("Content-Length", ((length - start) +1l)+"");
+		    response.setHeader("Content-Length", contentLength+"");
 		    response.setHeader("Content-Range", String.format("bytes %d-%d/%d", start, length,file.length()));
 		    response.setHeader("Accept-Ranges", "bytes");
 		    //if(length - start <10240) {
@@ -2806,12 +2807,36 @@ public class SiteController extends BaseController {
 		    	//response.setHeader("Cache-Control", "max-age=3600, must-revalidate"); 
 			    //response.setHeader("Connection", "close");
 		    //}else {
-		    	response.setStatus(206);
-		    	response.setHeader("Connection", "keep-alive");		    	
-		    //}
+	    	response.setStatus(206);
+	    	response.setHeader("Connection", "keep-alive");	
 			IOUtils.copy(fis, response.getOutputStream());
-			fis.close();					
-		    
+			fis.close();		    	
+		    //}
+ /*   	    OutputStream out = response.getOutputStream();
+		    try {
+
+    	        byte[] buf = new byte[1024];
+    	        int len;
+    	        while((len=fis.read(buf))>0){
+    	            out.write(buf,0,len);
+    	            contentLength -= len;
+    	        }
+    	        out.flush();
+    	    } catch (Exception e) {
+    	        logger.error("stream error:"+e.getMessage());
+    	    } finally {
+    	        out.close();
+    	        fis.close();   
+    	        //if(contentLength>0) {
+	
+    	       // }else {
+    		  //  	response.setStatus(200);
+    		    	//response.setHeader("Connection", "close");	
+    	        }
+    	   // }
+			//IOUtils.copy(fis, response.getOutputStream());
+			//fis.close();					
+		    */
 
 		} 
 

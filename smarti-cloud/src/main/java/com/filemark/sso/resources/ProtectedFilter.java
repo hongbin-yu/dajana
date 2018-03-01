@@ -10,9 +10,13 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.filemark.jcr.controller.ContentController;
 import com.filemark.jcr.model.User;
@@ -22,7 +26,7 @@ public class ProtectedFilter implements Filter {
 	private FilterConfig filterConfig;
     private static final String jwtTokenCookieName = "JWT-TOKEN";
     private static final String signingKey = "dajanaSigningKey";	
-	private static final Logger logger = LoggerFactory.getLogger(ContentController.class);
+	private static final Logger logger = LoggerFactory.getLogger(ProtectedFilter.class);
 	     
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
@@ -42,9 +46,21 @@ public class ProtectedFilter implements Filter {
         	authService = httpServletRequest.getContextPath()+authService;
         }
         if(signingUser==null) {
-        	logger.debug("no signingUser "+authService + "?redirect=" + redirectUrl);
-            httpServletResponse.sendRedirect(authService + "?redirect=" + redirectUrl);
-        } else {
+    		//SecurityContext securityContext = SecurityContextHolder.getContext();
+/*    		HttpSession session = httpServletRequest.getSession(true);
+    		SecurityContext securityContext = (SecurityContext)session.getAttribute("SPRING_SECURITY_CONTEXT");
+    		if(securityContext!=null) {
+        		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    			if(auth!=null && auth.getName()!=null) {
+            	    chain.doFilter(httpServletRequest, httpServletResponse);   				
+    			}
+    		}else {*/
+	        	logger.debug("no signingUser "+authService + "?redirect=" + redirectUrl);
+	            httpServletResponse.sendRedirect(authService + "?redirect=" + redirectUrl);
+   			
+    		//}
+  		
+          } else {
             String authors[] = signingUser.split("/");
 			User user = new User();
 			user.setHost(authors[0]);
@@ -60,6 +76,17 @@ public class ProtectedFilter implements Filter {
     	    chain.doFilter(httpServletRequest, httpServletResponse);
         }
 	}
+	
+	protected String getUsername() {
+		
+		if(SecurityContextHolder.getContext()==null || SecurityContextHolder.getContext().getAuthentication()==null) return null;
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if(auth!=null && auth.isAuthenticated()) { 
+			return auth.getName();
+		} else
+			return null;
+	}	
+	
 	public FilterConfig getFilterConfig() {
 		return filterConfig;
 	}
