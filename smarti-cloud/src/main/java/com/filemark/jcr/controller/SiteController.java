@@ -1676,6 +1676,10 @@ public class SiteController extends BaseController {
 		if(mp4.exists()) {
 			mp4.delete();
 		}
+		File webm = new File(file.getAbsoluteFile()+".webm");
+		if(webm.exists()) {
+			webm.delete();
+		}			
 		File pdficon = new File(jcrService.getHome()+"/icon400/"+path+".jpg");
 		if(path.lastIndexOf(".")>0) {
 			final String filebase = jcrService.getDevice()+path.substring(0,path.lastIndexOf("."));
@@ -1741,6 +1745,10 @@ public class SiteController extends BaseController {
 					if(mp4.exists()) {
 						mp4.delete();
 					}
+					File webm = new File(file.getAbsoluteFile()+".webm");
+					if(webm.exists()) {
+						webm.delete();
+					}					
 				}
 				if(pdficon.exists()) {
 					pdficon.delete();
@@ -2095,7 +2103,7 @@ public class SiteController extends BaseController {
 		try {
 			File file = new File(jcrService.getDevice()+path+".mp4");
 			String contentType="video/mp4";
-			if(!file.exists() || (path.endsWith(".mp4") && isIntranet(request))) {
+			if(!file.exists()) {
 				file = new File(jcrService.getDevice()+path);
 				logger.debug("video original:"+file.getAbsolutePath());
 				try {
