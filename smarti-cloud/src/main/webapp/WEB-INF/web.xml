@@ -73,7 +73,7 @@
 	<filter-mapping>
 		<filter-name>jwtProtected</filter-name>
 		<url-pattern>/protected/*</url-pattern>
- 		<url-pattern>/site/*</url-pattern>
+ 		<!-- url-pattern>/site/*</url-pattern-->
 	</filter-mapping>
 
 	<filter-mapping>

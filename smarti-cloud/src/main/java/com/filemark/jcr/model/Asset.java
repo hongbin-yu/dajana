@@ -207,15 +207,15 @@ public class Asset implements SmartiNode, Serializable {
 			//return icon;
 		//}
 		if(contentType == null) {
-			return "resources/images/document-icon.png";
+			return "/resources/images/document-icon.png";
 		}else if((contentType.equals("image/tiff") || contentType.equals("image/x-tiff") )) {
-			return "resources/images/pdf-icon.png";
+			return "/resources/images/pdf-icon.png";
 		}else if(contentType.startsWith("image/")) {
 			return "viewimage?path="+path+"&w=4";
 		}else if(contentType.startsWith("video/")) {
 			return "video2jpg.jpg?path="+path;			
 		}else if(contentType.startsWith("audio/")) {
-			return "resources/images/audio-icon.png";	
+			return "/resources/images/audio-icon.png";	
 		}else if("application/pdf".equals(contentType)){
 			return "pdf2img.jpg?p=0&path="+path;//"resources/images/pdf-icon.png";
 		}else if(path.endsWith(".doc") || path.endsWith(".docx") || path.endsWith(".ppt")) {	
@@ -226,7 +226,7 @@ public class Asset implements SmartiNode, Serializable {
 			//}
 			//return "resources/images/excel-icon.png";
 		}else if(path.endsWith(".zip")) {
-			return "resources/images/zip-icon.png";
+			return "/resources/images/zip-icon.png";
 		}else {	
 			return "resources/images/document-icon.png";
 		}

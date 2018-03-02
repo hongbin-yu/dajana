@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -28,6 +30,8 @@ public class AdminFilter implements Filter {
 	private FilterConfig filterConfig;
     private static final String jwtTokenCookieName = "JWT-TOKEN";
     private static final String signingKey = "dajanaSigningKey";	
+	private static final Logger logger = LoggerFactory.getLogger(AdminFilter.class);
+    
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
 		this.filterConfig = filterConfig;
@@ -47,10 +51,12 @@ public class AdminFilter implements Filter {
         	authService = httpServletRequest.getContextPath()+authService;
         }
         if(signingUser==null) {
-        	//if(getUsername()==null) {
-        	//}else {
-        	httpServletResponse.sendRedirect(authService + "?redirect=" + redirectUrl);
-        	//}
+        	if(getUsername()!=null) {
+        	    chain.doFilter(httpServletRequest, httpServletResponse);
+        	}else {
+	        	logger.debug("no signingUser "+authService + "?redirect=" + redirectUrl);
+        		httpServletResponse.sendRedirect(authService + "?redirect=" + redirectUrl);
+        	}
         } else {
         	String usersite = (String)httpServletRequest.getAttribute("usersite");
         	String port = (String)httpServletRequest.getAttribute("port");
