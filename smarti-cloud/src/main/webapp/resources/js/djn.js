@@ -607,8 +607,12 @@ function uploadFile(file) {
 }
 var total = 0;
 var i = 0;
+var $element = $( ".wb-sessto" );
+var settings = $element.data( "wb-sessto" );
 function uploadFiles() {
 	selDiv.innerHTML = "";
+	// Trigger the event on the element
+	$element.trigger( "reset.wb-sessto", "" );
 	percentComplete = 0;
 	total = files.length;
 	i = 0;
@@ -628,7 +632,8 @@ function checkProgress() {
 		setTimeout(checkProgress,1000);
 	}else if(i==total -1 || total==0){
 		var override = $("#override").is(":checked")?"true":"false";
-		if(override=="true") {
+		$element.trigger( "reset.wb-sessto", settings );
+		if(override=="true" || total>5) {
 	    	if(percentComplete ==1000 && i==total -  1) {
 	    		setTimeout(function() {window.location.reload();},2000);
 	    	}else {
