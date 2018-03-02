@@ -308,10 +308,11 @@ public class ContentController extends BaseController {
 				} else {
 					File file =new File(jcrService.getHome()+paths);
 					if(file.exists()) {
-						FileInputStream in = new FileInputStream(file);
+/*						FileInputStream in = new FileInputStream(file);
 						response.setContentLength((int)file.length());
 						IOUtils.copy(in, response.getOutputStream());
-						in.close();
+						in.close();*/
+						super.serveResource(request, response, file, null);
 						ImageUtil.gpio("write","18","0");
 						return null;
 					}else {
