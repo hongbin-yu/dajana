@@ -72,6 +72,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 
 
+
 import com.filemark.jcr.model.Asset;
 import com.filemark.jcr.model.Device;
 import com.filemark.jcr.model.Djcontainer;
@@ -2104,25 +2105,11 @@ public class SiteController extends BaseController {
 					logger.error(e1.getMessage());
 				}				
 			}
-/*		    String rangeheader = request.getHeader("Range");
-	    	long start = 0l;
-	    	long length = file.length()-1l; 
-		    if(rangeheader != null) {
-		      String[] split = rangeheader.substring("bytes=".length()).split("-");
-		      if(logger.isDebugEnabled()) { logger.debug("Range header is:"+rangeheader); }
-			    		
-		      if(split.length == 1) {
-		    	start = Long.parseLong(split[0]);
-		    	length = file.length()-1l;    			
-		      } else {
-		    	start = Long.parseLong(split[0]);
-		    	length = file.length()-1l; //Long.parseLong(split[1]);
-		      }
-		    }*/
+
 
 			serveResource(request,response,file,contentType);
 
-	    	//stream(response,start, length, file,contentType);
+
 				
 		} catch (FileNotFoundException e1) {
 			logger.error("video2mp4:"+e1.getMessage());
@@ -2145,44 +2132,31 @@ public class SiteController extends BaseController {
 	public @ResponseBody String video2webm(String path,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
 		ImageUtil.HDDOn();	
 		try {
-			File mp4File = new File(jcrService.getDevice()+path+".webm");
-			if(mp4File.exists()) {
-				FileInputStream in = new FileInputStream(mp4File);
-				logger.debug("video webm:"+mp4File.getAbsolutePath());
-				response.addHeader("Accept-Ranges", "bytes");
-				response.addHeader("Content-Length", Long.toString(mp4File.length()));
-				response.addHeader("Content-Range", "bytes 0-"+Long.toString(mp4File.length()-1)+"/"+Long.toString(mp4File.length()));
-				response.setContentType("video/webm");
-				IOUtils.copy(in, response.getOutputStream());
-				in.close();					
-			}else {
-				File file = new File(jcrService.getDevice()+path);
+			File file = new File(jcrService.getDevice()+path+".webm");
+			String contentType="video/webm";
+			if(!file.exists() || (path.endsWith(".webm") && isIntranet(request))) {
+				file = new File(jcrService.getDevice()+path);
 				logger.debug("video original:"+file.getAbsolutePath());
-
 				try {
 					Asset asset = (Asset)jcrService.getObject(path);
-					FileInputStream in = new FileInputStream(file);
-					
-					response.addHeader("Accept-Ranges", "bytes");
-					response.addHeader("Content-Length", Long.toString(file.length()));
-					response.addHeader("Content-Range", "bytes 0-"+Long.toString(file.length()-1)+"/"+Long.toString(file.length()));
-					response.setContentType(asset.getContentType());
-					IOUtils.copy(in, response.getOutputStream());
-					in.close();
-				} catch (RepositoryException e) {
-					logger.error(e.getMessage());
-				}
-					
-			}
+					contentType=asset.getContentType();
+				} catch (RepositoryException e1) {
+					logger.error(e1.getMessage());
+				}				
+			}			
+			serveResource(request,response,file,contentType);
+
 					
 		} catch (FileNotFoundException e) {
-			logger.error("video2mp4:"+e.getMessage());
+			logger.error("videowebm:"+e.getMessage());
 			ImageUtil.HDDOff();
 			return e.getMessage();
 		} catch (IOException e) {
-			logger.error("video2mp4:"+e.getMessage());
+			logger.error("video2webm:"+e.getMessage());
 			ImageUtil.HDDOff();
 			return e.getMessage();
+		} catch (Exception e) {
+			logger.error("video2webm:"+e.getMessage());
 		}
 
 		ImageUtil.HDDOff();
@@ -3000,7 +2974,7 @@ public class SiteController extends BaseController {
 	            if (ranges.isEmpty() || ranges.get(0) == full) {
 
 	                // Return full file.
-	                logger.info("Return full file");
+	                logger.debug("Return full file");
 	                response.setContentType(contentType);
 	                response.setHeader("Content-Range", "bytes " + full.start + "-" + full.end + "/" + full.total);
 	                response.setHeader("Content-Length", String.valueOf(full.length));
@@ -3010,7 +2984,7 @@ public class SiteController extends BaseController {
 
 	                // Return single part of file.
 	                Range r = ranges.get(0);
-	                logger.info("Return 1 part of file : from ({}) to ({})", r.start, r.end);
+	                logger.debug("Return 1 part of file : from ({}) to ({})", r.start, r.end);
 	                response.setContentType(contentType);
 	                response.setHeader("Content-Range", "bytes " + r.start + "-" + r.end + "/" + r.total);
 	                response.setHeader("Content-Length", String.valueOf(r.length));

@@ -440,12 +440,12 @@ public class ImageUtil
     public static int video2mp4(String filename,String device) throws IOException, InterruptedException {
     	int exit=1;
     	String output = device+filename+".mp4";
-    	//String webmOutput = device+filename+".webm";
+    	String webmOutput = device+filename+".webm";
     	String icon = device+"/publish/icon400"+filename+".jpg";
 		BufferedWriter writer = new BufferedWriter(new FileWriter("/var/lib/tomcat8/conf/video2mp4.sh",true));
 
     	writer.write("ffmpeg -i "+device+filename +" -nostats -nostdin -s 600X400 -c:v libx264 -preset ultrafast -movflags +faststart "+output);
-    	//writer.write("ffmpeg -i "+output+" -c:v libvpx -b:v 1M -c:a libvorbis "+webmOutput);
+    	writer.write("ffmpeg -i "+output+" -c:v libvpx -b:v 1M -c:a libvorbis "+webmOutput);
     	writer.newLine();
     	writer.write("ffmpeg -ss 00:00:02 -i "+output +" -nostats -nostdin -s 400X300 -vframes 1 "+icon);
     	writer.newLine();
