@@ -47,18 +47,23 @@ public class ProtectedFilter implements Filter {
         }
         if(signingUser==null) {
     		//SecurityContext securityContext = SecurityContextHolder.getContext();
-/*    		HttpSession session = httpServletRequest.getSession(true);
+    		HttpSession session = httpServletRequest.getSession(true);
     		SecurityContext securityContext = (SecurityContext)session.getAttribute("SPRING_SECURITY_CONTEXT");
     		if(securityContext!=null) {
         		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     			if(auth!=null && auth.getName()!=null) {
             	    chain.doFilter(httpServletRequest, httpServletResponse);   				
+    			}else {
+    	        	logger.debug("no signingUser and authen user"+authService + "?redirect=" + redirectUrl);
+    	            httpServletResponse.sendRedirect(authService + "?redirect=" + redirectUrl);
+   				
     			}
-    		}else {*/
+    		}else {
+
 	        	logger.debug("no signingUser "+authService + "?redirect=" + redirectUrl);
 	            httpServletResponse.sendRedirect(authService + "?redirect=" + redirectUrl);
-   			
-    		//}
+
+    		}
   		
           } else {
             String authors[] = signingUser.split("/");
