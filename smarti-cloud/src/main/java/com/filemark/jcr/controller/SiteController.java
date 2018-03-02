@@ -2106,7 +2106,7 @@ public class SiteController extends BaseController {
 		    	length = file.length()-1l;    			
 		      } else {
 		    	start = Long.parseLong(split[0]);
-		    	length = Long.parseLong(split[1]);
+		    	length = file.length()-1l; //Long.parseLong(split[1]);
 		      }
 		    }
 	    	stream(response,start, length, file,contentType);
