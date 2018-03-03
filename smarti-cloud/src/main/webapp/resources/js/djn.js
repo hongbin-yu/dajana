@@ -527,8 +527,8 @@ function uploadFile(file) {
 	  fileSize = file.fileSize;
   
     	
-    if(fileSize > 200000000) {
-        selDiv.innerHTML=  "<section class=\"alert alert-warning\"><h2 class=\"h3\">"+i18n("document_limit")+"200MB</h2></section>"; // 
+    if(fileSize > 800000000) {
+        selDiv.innerHTML=  "<section class=\"alert alert-warning\"><h2 class=\"h3\">"+i18n("document_limit")+"800MB -"+fileSize+"</h2></section>"; // 
     	
 	    return;
     	
