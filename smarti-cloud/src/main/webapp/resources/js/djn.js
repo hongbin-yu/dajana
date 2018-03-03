@@ -625,7 +625,7 @@ function checkProgress() {
 	}else if(i==total -1 || total==0){
 		var override = $("#override").is(":checked")?"true":"false";
 		$element.trigger( "reset.wb-sessto", settings );
-		if(override=="true" || total>5) {
+		if(override=="true") {
 	    	if(percentComplete ==1000 && i==total -  1) {
 	    		setTimeout(function() {window.location.reload();},2000);
 	    	}else {
