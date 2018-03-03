@@ -2084,10 +2084,12 @@ public class SiteController extends BaseController {
 				
 			}
 			File file = null;
+			String infile = jcrService.getDevice()+path;
 			String jpgname = jcrService.getHome()+"/icon400"+path+".jpg";
 			file = new File(jpgname);
 			if(!file.exists()) {
-				response.sendRedirect("/resources/images/video-icon.png");									
+				if(ImageUtil.video2jpg(infile, "400x400", jpgname) !=0)
+					response.sendRedirect("/resources/images/video-icon.png");									
 			}
 			super.serveResource(request, response, file, "image/jpeg");
 /*			FileInputStream in = new FileInputStream(file);

@@ -265,7 +265,44 @@ public class ImageUtil
 		}
         return exit;
     	
-    }    
+    }
+
+    public static int video2jpg(String infile,String wxh, String outfile) {
+    	String s;
+    	Process p;
+    	int exit=1;
+    	ProcessBuilder pb = new ProcessBuilder("ffmpeg","-ss", "00:00:02", "-i",infile, "-nostats","-nostdin","-s", wxh, "-vframes","1",outfile);
+    	pb.redirectErrorStream(true);
+        try {
+	        p = pb.start();//Runtime.getRuntime().exec(shellCommand);
+	
+	        BufferedReader br = new BufferedReader(
+	            new InputStreamReader(p.getInputStream()));
+	        while ((s = br.readLine()) != null)
+	            log.debug("line: " + s);
+	        p.waitFor();
+	        exit = p.exitValue();
+	        if(exit !=0) {
+	        	br = new BufferedReader(
+	                    new InputStreamReader(p.getErrorStream()));
+	                while ((s = br.readLine()) != null) {
+	                    log.debug("line: " + s);
+	                }
+	
+	        	log.error("convert exit: " + exit);
+	        	
+	        }
+	        p.destroy();
+        } catch (IOException e) {
+			log.error("video2jpg :"+e.getMessage());;
+        } catch (InterruptedException e) {
+			log.error("video2jpg :"+e.getMessage());;
+		}
+        return exit;
+    	
+    }
+    
+    
     public static String oreintation(String infile) {
     	String s;
     	Process p;
@@ -440,13 +477,14 @@ public class ImageUtil
     public static int video2mp4(String filename,String device) throws IOException, InterruptedException {
     	int exit=1;
     	String output = device+filename+".mp4";
-    	String webmOutput = device+filename+".webm";
-    	String icon = device+"/publish/icon400"+filename+".jpg";
+    	//String webmOutput = device+filename+".webm";
+    	//String icon = device+"/publish/icon400"+filename+".jpg";
 		BufferedWriter writer = new BufferedWriter(new FileWriter("/var/lib/tomcat8/conf/video2mp4.sh",true));
+    	//writer.write("ffmpeg -ss 00:00:02 -i "+device+filename +" -nostats -nostdin -s 400X400 -vframes 1 "+icon);
+    	//writer.newLine();
+
 		writer.write("ffmpeg -i "+device+filename +" -nostats -nostdin -s 600X400 -c:v libx264 -preset ultrafast -movflags +faststart "+output);
     	//writer.write("ffmpeg -i "+device+filename +" -nostats -nostdin -s 600X400 -c:v libx264 -preset ultrafast -movflags +faststart "+output);
-    	writer.newLine();
-    	writer.write("ffmpeg -ss 00:00:02 -i "+output +" -nostats -nostdin -s 400X400 -vframes 1 "+icon);
     	//writer.newLine();
 		//writer.write("ffmpeg -i "+output+" -c:v libvpx -b:v 1M -c:a libvorbis "+webmOutput);
     	writer.newLine();
