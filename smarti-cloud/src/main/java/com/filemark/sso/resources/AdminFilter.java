@@ -51,7 +51,7 @@ public class AdminFilter implements Filter {
         	authService = httpServletRequest.getContextPath()+authService;
         }
         if(signingUser==null) {
-        	if(getUsername()!=null || redirectUrl.startsWith("video.mp4")) {
+        	if(getUsername()!=null || redirectUrl.indexOf("video.mp4")>=0) {
         	    chain.doFilter(httpServletRequest, httpServletResponse);
         	}else {
 	        	logger.debug("no signingUser "+authService + "?redirect=" + redirectUrl);
