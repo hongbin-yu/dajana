@@ -247,16 +247,15 @@ function drop(ev) {
 		    					    	else {
 		    					    		//$("#"+uid).remove();
 		    							    selDiv.innerHTML = "<section class=\"alert alert-success\"><h2 class=\"4\">"+i18n("success")+"</h2><p>"+data.title+"</p></section>";
-		    							    var html = $("#div_uid").html();
+/*		    							    var html = $("#div_uid").html();
 		    							    html = html.split("{uid}").join(data.uid);
 		    							    html = html.replace("imgreplace","img");
 		    							    html = html.replace("{title}",data.title);
 		    							    html = html.replace("{icon}",data.icon);
 		    							    
 		    							    html = html.replace("{link}",data.link);
-		    						    	//$("#top_insert").prepend("<div class=\"col-md-4\"> <a href=\"javascript:returnFileUrl('viewimage?uid="+data.uid+"')\"><img class=\"img-responsive\" src=\"viewimage?uid="+data.uid +"&w=4\"/></a></div>");
-		    							    //$("#top_insert").prepend(html);
-		    							    $("#top_insert").after(html);
+		    							    $("#top_insert").after(html);*/
+		    							    output(data);
 
 		    					    	}
 		    					    },
@@ -279,16 +278,15 @@ function drop(ev) {
 		    						        selDiv.innerHTML=  "<section class=\"alert alert-warning\"><h2 class=\"h3\">"+i18n("fail")+"</h2><p>"+data.title+"</p></section>"; // 
 		    					    	else {
 		    							    selDiv.innerHTML = "<section class=\"alert alert-success\"><h2 class=\"4\">"+i18n("success")+"</h2><p>"+data.title+"</p></section>";
-		    							    var html = $("#div_uid").html();
+/*		    							    var html = $("#div_uid").html();
 		    							    html = html.split("{uid}").join(data.uid);
 		    							    html = html.replace("imgreplace","img");
 		    							    html = html.replace("{title}",data.title);
 		    							    html = html.replace("{icon}",data.icon);
 		    							    
 		    							    html = html.replace("{link}",data.link);
-		    						    	//$("#top_insert").prepend("<div class=\"col-md-4\"> <a href=\"javascript:returnFileUrl('viewimage?uid="+data.uid+"')\"><img class=\"img-responsive\" src=\"viewimage?uid="+data.uid +"&w=4\"/></a></div>");
-		    							    //$("#top_insert").prepend(html);
-		    							    $("#top_insert").after(html);
+		    							    $("#top_insert").after(html);*/
+		    							    output(data);
 
 		    					    	}
 		    					    },
@@ -334,17 +332,15 @@ function drop(ev) {
 				    					    	else {
 				    					    		//$("#"+uid).remove();
 				    							    selDiv.innerHTML = "<section class=\"alert alert-success\"><h2 class=\"4\">"+i18n("success")+"</h2><p>"+data.title+"</p></section>";
-				    							    var html = $("#div_uid").html();
+/*				    							    var html = $("#div_uid").html();
 				    							    html = html.split("{uid}").join(data.uid);
 				    							    html = html.replace("imgreplace","img");
 				    							    html = html.replace("{title}",data.title);
 				    							    html = html.replace("{icon}",data.icon);
 				    							    
 				    							    html = html.replace("{link}",data.link);
-				    						    	//$("#top_insert").prepend("<div class=\"col-md-4\"> <a href=\"javascript:returnFileUrl('viewimage?uid="+data.uid+"')\"><img class=\"img-responsive\" src=\"viewimage?uid="+data.uid +"&w=4\"/></a></div>");
-				    							    //$("#top_insert").prepend(html);
-				    							    $("#top_insert").after(html);
-
+				    							    $("#top_insert").after(html);*/
+				    							    output(data);
 				    					    	}
 				    					    },
 				    					    error: function() {
@@ -365,17 +361,15 @@ function drop(ev) {
 				    						        selDiv.innerHTML=  "<section class=\"alert alert-warning\"><h2 class=\"h3\">"+i18n("fail")+" </h2><p>"+data.title+"</p></section>"; // 
 				    					    	else {
 				    							    selDiv.innerHTML = "<section class=\"alert alert-success\"><h2 class=\"4\">"+i18n("success")+"</h2><p>"+data.title+"</p></section>";
-				    							    var html = $("#div_uid").html();
+/*				    							    var html = $("#div_uid").html();
 				    							    html = html.split("{uid}").join(data.uid);
 				    							    html = html.replace("imgreplace","img");
 				    							    html = html.replace("{title}",data.title);
 				    							    html = html.replace("{icon}",data.icon);
 				    							    
 				    							    html = html.replace("{link}",data.link);
-				    						    	//$("#top_insert").prepend("<div class=\"col-md-4\"> <a href=\"javascript:returnFileUrl('viewimage?uid="+data.uid+"')\"><img class=\"img-responsive\" src=\"viewimage?uid="+data.uid +"&w=4\"/></a></div>");
-				    							    //$("#top_insert").prepend(html);
-				    							    $("#top_insert").after(html);
-
+				    							    $("#top_insert").after(html);*/
+				    							    output(data);
 				    					    	}
 				    					    },
 				    					    error: function() {
@@ -436,17 +430,15 @@ function drop(ev) {
 				        selDiv.innerHTML=  "<section class=\"alert alert-warning\"><h2 class=\"h3\">"+i18n("fail")+" </h2><p>"+data.title+"</p></section>"; // 
 			    	else {
 					    selDiv.innerHTML = "<section class=\"alert alert-success\"><h2 class=\"4\">"+i18n("success")+"</h2><p>"+data.title+"</p></section>";
-					    var html = $("#div_uid").html();
+/*					    var html = $("#div_uid").html();
 					    html = html.split("{uid}").join(data.uid);
 					    html = html.replace("imgreplace","img");
 					    html = html.replace("{title}",data.title);
 					    html = html.replace("{icon}",data.icon);
 					    
 					    html = html.replace("{link}",data.link);
-				    	//$("#top_insert").prepend("<div class=\"col-md-4\"> <a href=\"javascript:returnFileUrl('viewimage?uid="+data.uid+"')\"><img class=\"img-responsive\" src=\"viewimage?uid="+data.uid +"&w=4\"/></a></div>");
-					    //$("#top_insert").prepend(html);
 					    $("#top_insert").after(html);
-
+*/						output(data);	
 			    	}
 			    },
 			    error: function() {
@@ -586,16 +578,16 @@ function uploadFile(file) {
 				    speed = fileSize*8/(end.getTime() - start.getTime());
 	                selDiv.innerHTML ="<section id=\""+file.name+"\"><h5>"+file.name+"("+(speed/1000).toFixed(2)+" MB/s)</h5><progress class=\"full-width\" value=\""+fileSize +"\" max=\""+fileSize+"\"><span class=\"wb-inv\">"+100+"%</span></progress></section>";
 		    		selDiv.innerHTML += "<section class=\"alert alert-success\"><h3 class=\"5\">"+(i+1)+"/"+total+i18n("document_uploaded")+i18n("success")+"</h3></section>";
-
-		    		var html = $("#div_uid").html();
+		    		output(data);
+/*		    		var html = $("#div_uid").html();
 				    html = html.split("{uid}").join(data.uid);
 				    html = html.replace("imgreplace","img");
 				    html = html.replace("{title}",data.title);
 				    html = html.replace("{link}",data.link);		
 				    html = html.replace("{icon}",data.icon);					    
-				    html = html.replace("-edit","");
+				    html = html.replace("-edit","");*/
 			    	//$("#top_insert").prepend("<div class=\"col-md-4\"> <a href=\"javascript:returnFileUrl('viewimage?uid="+data.uid+"')\"><img class=\"img-responsive\" src=\"viewimage?uid="+data.uid +"&w=4\"/></a></div>");
-				    $("#top_insert").after(html);
+				    //$("#top_insert").after(html);
 
 		    	}
 		    },
@@ -647,6 +639,48 @@ function checkProgress() {
 
 }
 
+function output(data) {
+    var html = '<div id="'+data.uid+'" class="col-md-4 well">'
+    		  +'<div class="checkbox"><input type="checkbox" class="checkbox" name="puid" value="'+data.uid+'"><a title="打开PDF" href="viewpdf?uid='+data.uid+'" target="_BLANK"><img title="点击选中" src="/resources/images/pdf.gif"></a>'
+    		  +'<a class="wb-lbx-edit" href="'+data.link+'" target="_BLANK"><img id="img'+data.uid+'" src="'+data.icon+'" class="img-responsive" draggable="true"></img></a>'
+    		  +'</div>'
+    		  +'<details>'
+    		  +'<summary><span class="glyphicon glyphicon-edit"></span>'+data.title+'</summary>'
+    		  +'<div class="form-group">'
+    		  +'<label for="title'+data.uid+'">标题&nbsp;</label><input class="form-control" id="title'+data.uid+'" name="jcr:title" value="'+data.title+'" size="25" uid="'+data.uid+'"  onchange="updateNode(this)"/>'
+    		  +'</div>'
+    		  +'<div class="form-group">'
+    		  +'<label for="url'+data.uid+'">链接&nbsp;</label><input class="form-control" id="url'+data.uid+'" name="url" value="'+(data.url?data.url:'')+'" size="25" uid="'+data.uid+'"  onchange="updateNode(this)"/>'
+			  +'</div>'
+		      +'<div class="form-group">'
+		      +'<select id="rotate'+data.uid+'" name="rotate">'
+		      +'<option value="0" selected>0</option>'
+			  +'<option value="90">90</option>'
+			  +'<option value="-90">-90</option>'
+			  +'<option value="180">180</option>'
+			  +'</select>'
+			  +'<a class="btn btn-default btn-sm" href="javascript:rotate('+data.uid+')">旋转<img class="wb-inv" id="rotate_running'+data.uid+'" src="/resources/images/ui-anim_basic_16x16.gif" alt="旋转"/></a>'		
+			  +'</div>'		
+			  +'<div class="form-group">'
+			  +'<label for="contentType'+data.uid+'">类型&nbsp;</label><input class="form-control" id="contentType'+data.uid+'" name="contentType" value="'+data.contentType+'" size="24" uid="'+data.uid+'" disabled/>'
+			  +'</div>'
+			  +'<div class="form-group">'
+			  +'<label for="size'+data.uid+'">长度&nbsp;</label><input class="form-control" id="size'+data.uid+'" name="size" value="'+data.size+'" size="24" uid="'+data.uid+'" disabled/>'
+			  +'</div>'	
+			  +'<div class="form-group">'
+			  +'<label for="lastModified'+data.uid+'">文件日期&nbsp;</label>'
+			  +getDateString(data.lastModified)
+			  +'</div>'			  
+			  +'</details>'
+			  +'</div>';	     
+    $("#top_insert").after(html);	
+}
+
+function getDateString(datelong) {
+	var d = new Date();
+	d.setTime(datelong);
+	return d.getFullYear()+"-"+d.getMonth()+"-"+d.getDay();
+}
 
 function deleteNode(path) {
 
@@ -744,7 +778,7 @@ function removeTag(id) {
 	if(input)	
 		win.document.getElementById(input).value = fileUrl;
 	else if(editor)
-		editor.insertContent('<div class="noneditable" data-ajax-replace="'+fileUrl+'"><img class="img-responsive" src="'+fileUrl+'" title="内容会被替代"/></div>');
+		editor.insertContent('<div class="noneditable" data-ajax-replace="'+fileUrl+'"><img class="img-responsive" src="'+fileUrl+'" title="å†…å®¹ä¼šè¢«æ›¿ä»£"/></div>');
 	
 	close();
 }
@@ -814,7 +848,7 @@ document.addEventListener("dragenter", function(event) {
 //			if(input)	
 //				win.document.getElementById(input).value = event.target.id;
 //			else if(editor)
-//				editor.insertContent('<div class="noneditable" data-ajax-replace="'+event.target.id+'"><img class="img-responsive" src="'+event.target.id+'" title="内容会被替代"/></div>');
+//				editor.insertContent('<div class="noneditable" data-ajax-replace="'+event.target.id+'"><img class="img-responsive" src="'+event.target.id+'" title="å†…å®¹ä¼šè¢«æ›¿ä»£"/></div>');
 //			
 //			close();
 //	        
