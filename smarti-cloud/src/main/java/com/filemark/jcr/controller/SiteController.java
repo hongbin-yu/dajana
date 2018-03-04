@@ -1623,7 +1623,7 @@ public class SiteController extends BaseController {
 		return result;
 	} 
 
-	@RequestMapping(value = {"/site/delete.html","/protected/delete.html"}, method = RequestMethod.POST)
+	@RequestMapping(value = {"/admin/delete.html","/site/delete.html","/protected/delete.html"}, method = RequestMethod.POST)
 	public @ResponseBody String deleteNode(String uid,String path,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
 		if(uid!=null && !uid.equals("")) {
 			path = jcrService.getNodeById(uid);
@@ -1770,7 +1770,7 @@ public class SiteController extends BaseController {
 	} 
 	@RequestMapping(value = {"/site/doc2pdf.pdf"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public @ResponseBody String doc2pdf(String path,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
-		ImageUtil.HDDOn();	
+
 		try {
 			String pdfpath = path.substring(0, path.lastIndexOf("."))+".pdf";
 
@@ -1799,12 +1799,12 @@ public class SiteController extends BaseController {
 						try {
 							int exit = ImageUtil.doc2pdf(docname, file.getParentFile().getAbsolutePath());
 							if(exit != 0) {
-								ImageUtil.HDDOff();
+
 								return "文件转换将在15分钟内完成！";									
 							}
 						} catch (InterruptedException e) {
 							logger.error("doc2pdf:"+e.getMessage());
-							ImageUtil.HDDOff();
+
 							return e.getMessage();
 						}
 					}
@@ -1818,29 +1818,28 @@ public class SiteController extends BaseController {
 			}
 		} catch (RepositoryException e) {
 			logger.error("doc2pdf:"+e.getMessage());
-			ImageUtil.HDDOff();
+
 			return e.getMessage();
 		} catch (FileNotFoundException e) {
 			logger.error("doc2pdf.pdf:"+e.getMessage());
-			ImageUtil.HDDOff();
+
 			return e.getMessage();
 		} catch (IOException e) {
 			logger.error("doc2pdf.pdf:"+e.getMessage());
-			ImageUtil.HDDOff();
+
 			return e.getMessage();
 		} catch (Exception e) {
 			logger.error("pdf2pdf.pdf:"+e.getMessage());
-			ImageUtil.HDDOff();
+
 			return e.getMessage();
 		}
 
-		ImageUtil.HDDOff();
 		return null;
 	}
 	
 	@RequestMapping(value = {"/site/doc2pdf.jpg"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public @ResponseBody String doc2pdf2jpg(String path,Integer p,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
-		ImageUtil.HDDOn();	
+
 		try {
 			if (p==null) p=0;
 			String pdfpath = path.substring(0, path.lastIndexOf("."))+".pdf";
@@ -1907,30 +1906,30 @@ public class SiteController extends BaseController {
 			}
 		} catch (RepositoryException e) {
 			logger.error("doc2pdf.jpg:"+e.getMessage());
-			ImageUtil.HDDOff();
+
 			return e.getMessage();
 		} catch (FileNotFoundException e) {
 			logger.error("doc2pdf.jpg:"+e.getMessage());
-			ImageUtil.HDDOff();
+
 			return e.getMessage();
 		} catch (IOException e) {
 			logger.error("doc2pdf.jpg:"+e.getMessage());
-			ImageUtil.HDDOff();
+
 			return e.getMessage();
 		} catch (Exception e) {
 			logger.error("pdf2pdf.jpg:"+e.getMessage());
-			ImageUtil.HDDOff();
+
 			return e.getMessage();
 		}
 
-		ImageUtil.HDDOff();
+
 		return null;
 	}
 
 	
 	@RequestMapping(value = {"/site/pdf2jpg.jpg"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public @ResponseBody String pdf2jpg(String path,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
-		ImageUtil.HDDOn();	
+
 		try {
 			if(path==null) {
 				response.sendRedirect("/resources/images/pdf-icon.png");									
@@ -1957,25 +1956,25 @@ public class SiteController extends BaseController {
 			super.serveResource(request, response, file, "image/jpeg");
 		} catch (FileNotFoundException e) {
 			logger.error("pdf2jpg:"+e.getMessage());
-			ImageUtil.HDDOff();
+
 			return e.getMessage();
 		} catch (IOException e) {
 			logger.error("pdf2jpg:"+e.getMessage());
-			ImageUtil.HDDOff();
+
 			return e.getMessage();
 		} catch (Exception e) {
 			logger.error("pdf2jpg:"+e.getMessage());
-			ImageUtil.HDDOff();
+
 			return e.getMessage();
 		}
 
-		ImageUtil.HDDOff();
+
 		return null;
 	}
 	
 	@RequestMapping(value = {"/site/pdf2img.jpg"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public @ResponseBody String pdf2img(String path,Integer p,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
-		ImageUtil.HDDOn();	
+	
 		try {
 			if(path==null) {
 				response.sendRedirect("/resources/images/pdf-icon.png");									
@@ -2004,26 +2003,26 @@ public class SiteController extends BaseController {
 			super.serveResource(request, response, file, "image/jpeg");
 		} catch (FileNotFoundException e) {
 			logger.error("pdf2img:"+e.getMessage());
-			ImageUtil.HDDOff();
+
 			return e.getMessage();
 		} catch (IOException e) {
 			logger.error("pdf2img:"+e.getMessage());
-			ImageUtil.HDDOff();
+
 			return e.getMessage();
 		} catch (Exception e) {
 			logger.error("pdf2img:"+e.getMessage());
-			ImageUtil.HDDOff();
+
 			return e.getMessage();
 		}
 
-		ImageUtil.HDDOff();
+
 		return null;
 	}
 	
 
 	@RequestMapping(value = {"/site/doc2jpg.jpg"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public @ResponseBody String doc2jpg(String path,Integer p,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
-		ImageUtil.HDDOn();	
+
 
 		try {
 			if(path==null) {
@@ -2060,19 +2059,18 @@ public class SiteController extends BaseController {
 			super.serveResource(request, response, file, "image/jpeg");
 		} catch (FileNotFoundException e) {
 			logger.error("doc2jpg:"+e.getMessage());
-			ImageUtil.HDDOff();
+
 			return e.getMessage();
 		} catch (IOException e) {
 			logger.error("doc2jpg:"+e.getMessage());
-			ImageUtil.HDDOff();
+
 			return e.getMessage();
 		} catch (Exception e) {
 			logger.error("doc2jpg:"+e.getMessage());
-			ImageUtil.HDDOff();
+
 			return e.getMessage();
 		}
 
-		ImageUtil.HDDOff();
 		return null;
 	}	
 	@RequestMapping(value = {"/site/video2jpg.jpg"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
@@ -2878,53 +2876,7 @@ public class SiteController extends BaseController {
 			}
 		return new Device();
 	}
-	  private void stream(HttpServletResponse response,long start, long length, File file,String contentType) throws IOException {
-		  	
-		    FileInputStream fis = new FileInputStream(file);
-		    fis.skip(start);
-		    long contentLength = (length - start) +1l;
-		    response.setContentType(contentType);
-		    response.setHeader("Content-Length", contentLength+"");
-		    response.setHeader("Content-Range", String.format("bytes %d-%d/%d", start, length,file.length()));
-		    response.setHeader("Accept-Ranges", "bytes");
-		    //if(length - start <10240) {
-		    	//response.setStatus(200);
-		    	//response.setHeader("Cache-Control", "max-age=3600, must-revalidate"); 
-			    //response.setHeader("Connection", "close");
-		    //}else {
-	    	response.setStatus(206);
-	    	response.setHeader("Connection", "keep-alive");	
-			IOUtils.copy(fis, response.getOutputStream());
-			fis.close();		    	
-		    //}
- /*   	    OutputStream out = response.getOutputStream();
-		    try {
 
-    	        byte[] buf = new byte[1024];
-    	        int len;
-    	        while((len=fis.read(buf))>0){
-    	            out.write(buf,0,len);
-    	            contentLength -= len;
-    	        }
-    	        out.flush();
-    	    } catch (Exception e) {
-    	        logger.error("stream error:"+e.getMessage());
-    	    } finally {
-    	        out.close();
-    	        fis.close();   
-    	        //if(contentLength>0) {
-	
-    	       // }else {
-    		  //  	response.setStatus(200);
-    		    	//response.setHeader("Connection", "close");	
-    	        }
-    	   // }
-			//IOUtils.copy(fis, response.getOutputStream());
-			//fis.close();					
-		    */
-
-		}
-	  
 
 	  
 }

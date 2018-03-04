@@ -304,10 +304,11 @@ public class BaseController {
 		this.localeResolver = localeResolver;
 	}
     public void serveResource(HttpServletRequest request,HttpServletResponse response, File file,String contentType) throws Exception {
-        if (response == null || request == null) {
+        
+    	if (response == null || request == null) {
             return;
         }
-
+		ImageUtil.HDDOn();
         if (!file.exists()) {
             logger.error("File doesn't exist at URI : {}", file.getAbsolutePath());
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
@@ -497,7 +498,7 @@ public class BaseController {
                 sos.println("--" + MULTIPART_BOUNDARY + "--");
             }
         }finally{
-        	
+    		ImageUtil.HDDOff();
         }
 
     }
