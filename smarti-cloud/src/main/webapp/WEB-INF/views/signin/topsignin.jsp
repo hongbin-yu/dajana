@@ -22,12 +22,12 @@
 <authz:authorize ifAnyGranted="ROLE_USER,ROLE_ADMINISTRATOR,ROLE_OWNER">
 <%-- <li><img title="<spring:message code="djn.edit"/>" lat="" src='<c:url value="/resources/images/editIcon.gif"></c:url>'><a title="<spring:message code="djn.edit"/>" href="<c:url value="/editor.html?path=${page.path }"/>"><spring:message code="djn.edit"/></a></li>
 <li><a href='<c:url value="/protected/chat.html"></c:url>'><img title="<spring:message code="djn.online_chat"/>" alt="" src='<c:url value="/resources/images/chat16X16.png"></c:url>'><spring:message code="djn.chat"/><span class="badge"></span></a></li>
+<li><a href="<c:url value="/signup"/>"><span class="glyphicon glyphicon-flag"></span><spring:message code="djn.register"/></a></li>
  --%><li><a href="<c:url value="/logout"/>"><span class="glyphicon glyphicon-log-out"></span><spring:message code="djn.logout"/></a></li>
 <%-- <li><a href="/mycart.html" title="<authz:authentication property="name" />"><authz:authentication property="name" /><img title="<spring:message code="djn.shopping_cart"/>" alt="" src='<c:url value="/resources/images/mycart.png"></c:url>'><span class="badge"></span></a></li>
  --%></authz:authorize>
 <authz:authorize ifNotGranted="ROLE_USER">
 <li><a href="<c:url value="/login"/>"><span class="glyphicon glyphicon-log-in"></span><spring:message code="djn.login"/></a></li>
-<li><a href="<c:url value="/signup"/>"><span class="glyphicon glyphicon-flag"></span><spring:message code="djn.register"/></a></li>
 </authz:authorize>
 </ul>
 </div>

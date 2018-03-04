@@ -57,9 +57,9 @@
 <div class="col-xs-4 text-right">
 <img title="<spring:message code="djn.scan_qr"/><spring:message code="djn.jiameng"/>" class="img-responsive" src="<c:url value="/content/home.qrb?path=http://sso.dajana.ca/signup%3Fhost%3D${host}"></c:url>" alt="<spring:message code="djn.jiameng"/>"/>
 </div>
-<div class="col-xs-4 col-md-4 text-center">
+<%-- <div class="col-xs-4 col-md-4 text-center">
 <a class="btn btn-success" href="http://dajana.ca/signup" class="sp-lk"><spring:message code="djn.jiameng"/></a>
-</div>
+</div> --%>
 <div class="col-xs-4 full-right">
 <img class="img-responsive" src="<c:url value="/resources/images/hongicon.png"></c:url>" title="<spring:message code="djn.yuhongweb"/>">
 </div>
