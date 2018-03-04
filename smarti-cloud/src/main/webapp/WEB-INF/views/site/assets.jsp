@@ -177,6 +177,10 @@
 </div>	 
 </div>	   
 	    <div class="clearfix"></div>	
+	    <c:if test="${folders.pageCount>3}">
+	    <details>
+	    <summary>${folders.pageCount} 子目录</summary>
+	    </c:if>
         <c:forEach items="${folders.items}" var="item" varStatus="loop">
             <div class="col-md-4">
             <a title="<spring:message code="djn.open"/>PDF" href="<c:url value="viewf2p?path=${item.path}"/>" target="_BLANK"><img title="<spring:message code="djn.open"/>PDF" src='<c:url value="/resources/images/pdf.gif"></c:url>'></a>
@@ -203,7 +207,10 @@
             </details>
             </div>  
             	<c:if test="${(loop.index+1) % 3 ==0  }"><div class="clearfix"></div></c:if>         
-        </c:forEach> 	
+        </c:forEach> 
+         <c:if test="${folders.pageCount>3}">
+        </details>	
+        </c:if>
         <div class="clearfix"></div>	    
 <div class="row">
 	<div id="top_insert">

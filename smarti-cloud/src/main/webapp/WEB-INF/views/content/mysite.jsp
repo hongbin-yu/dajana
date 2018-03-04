@@ -1,6 +1,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="authz" %>
+
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" session="false" %>
 
 <!DOCTYPE html>
@@ -57,9 +59,11 @@
 <div class="col-xs-4 text-right">
 <img title="<spring:message code="djn.scan_qr"/><spring:message code="djn.jiameng"/>" class="img-responsive" src="<c:url value="/content/home.qrb?path=http://sso.dajana.ca/signup%3Fhost%3D${host}"></c:url>" alt="<spring:message code="djn.jiameng"/>"/>
 </div>
-<%-- <div class="col-xs-4 col-md-4 text-center">
+<div class="col-xs-4 col-md-4 text-center">
+<authz:authorize ifAnyGranted="ROLE_USER,ROLE_ADMINISTRATOR,ROLE_OWNER">
 <a class="btn btn-success" href="http://dajana.ca/signup" class="sp-lk"><spring:message code="djn.jiameng"/></a>
-</div> --%>
+ </authz:authorize>
+ </div>
 <div class="col-xs-4 full-right">
 <img class="img-responsive" src="<c:url value="/resources/images/hongicon.png"></c:url>" title="<spring:message code="djn.yuhongweb"/>">
 </div>
