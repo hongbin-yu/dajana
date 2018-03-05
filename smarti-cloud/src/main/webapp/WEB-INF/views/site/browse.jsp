@@ -281,6 +281,9 @@ ${path }</label>
  var win = (!window.frameElement && window.dialogArguments) || opener || parent || top;
 
 var carousel = win.carousel;
+var newCarousel = "";
+
+
 var tinyMCE = win.tinymce;
 var tinymce = tinyMCE;	
 var contextPath = "${contentPath}";
@@ -477,7 +480,7 @@ function returnCarousel(fileUrl) {
     else 
 		tinyMCE.activeEditor.selection.setContent('<div id="'+fileUrl+'" class="carousel noneditable">'+data+'</div>');
 	tinyMCE.activeEditor.setDirty(true);	
-/*      $.ajax({
+      $.ajax({
 		    url: "carousel.html?path="+fileUrl,
 		    type: "GET", //ADDED THIS LINE
 		    // THIS MUST BE DONE FOR FILE UPLOADING
@@ -486,12 +489,12 @@ function returnCarousel(fileUrl) {
 		    success: function(data) {
 
 			    
-		    	var car = tinyMCE.activeEditor.dom.select('.carousel');
+/* 		    	var car = tinyMCE.activeEditor.dom.select('.carousel');
 		    	if(car.length>0)
 			    	car[0].innerHTML = data;
 			    else 
 		    		tinyMCE.activeEditor.selection.setContent('<div id="'+fileUrl+'" class="carousel noneditable">'+data+'</div>');
-		    	tinyMCE.activeEditor.setDirty(true);
+		    	tinyMCE.activeEditor.setDirty(true); */
 		    	win.carousel = data;
 
 				if(message) {
@@ -511,7 +514,7 @@ function returnCarousel(fileUrl) {
 
 		    }
 		    // ... Other options like success and etc
-		});  */
+		});  
 
 
 
