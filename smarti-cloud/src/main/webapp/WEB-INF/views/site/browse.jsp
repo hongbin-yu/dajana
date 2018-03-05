@@ -129,7 +129,7 @@ ${path }</label>
 <div class="clearfix"></div>
 <div class="col-md-4">
 <c:if test="${carousel.availablePages>0}">
-<div id="carousel" class="wb-tabs carousel-s2 playing slow">
+<div id="carousel" class="wb-tabs carousel-s2 playing">
 	<ul role="tablist">
 	<c:forEach items="${carousel.items }" var="item" varStatus="loop">
 		<c:if test="${loop.count==1}">
