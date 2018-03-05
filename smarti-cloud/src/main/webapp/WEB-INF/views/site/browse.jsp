@@ -129,13 +129,13 @@ ${path }</label>
 <div class="clearfix"></div>
 <div class="col-md-4">
 <c:if test="${carousel.availablePages>0}">
-<div class="wb-tabs carousel-s2 playing slow">
+<div id="carousel" class="wb-tabs carousel-s2 playing slow">
 	<ul role="tablist">
 	<c:forEach items="${carousel.items }" var="item" varStatus="loop">
 		<c:if test="${loop.count==1}">
 			<li class="active">
 				<a href="#tab${loop.count}">
-					<img class="img-responsive" src="<c:url value='viewimage?uid=${item.uid}'></c:url>" alt="${item.alt}" />
+					<img class="img-responsive" src="<c:url value='viewimage?uid=${item.uid}&w=12'></c:url>" alt="${item.alt}" />
 					<span class="wb-inv">Tab ${loop.count}:${item.title}</span>
 				</a>
 			</li>
@@ -143,7 +143,7 @@ ${path }</label>
 		<c:if test="${loop.count>1}">
 			<li>
 				<a href="#tab${loop.count}">
-					<img class="img-responsive" src="<c:url value='viewimage?uid=${item.uid}'></c:url>" alt="${item.alt}" />
+					<img class="img-responsive" src="<c:url value='viewimage?uid=${item.uid}&w=12'></c:url>" alt="${item.alt}" />
 					<span class="wb-inv">Tab ${loop.count}:${item.title}</span>
 				</a>
 			</li>
@@ -157,7 +157,7 @@ ${path }</label>
 					<!-- first child - tabpanel -start -->
 						<figure>
 							<a href="${item.url}" class="learnmore">
-								<img class="img-responsive" src="<c:url value='viewimage?uid=${item.uid}'></c:url>" alt="${item.alt}" />
+								<img class="img-responsive" src="<c:url value='viewimage?uid=${item.uid}&w=12'></c:url>" alt="${item.alt}" />
 							</a>
 						<figcaption>
 							   <a href="${item.url}" class="learnmore">${item.title}</a>
@@ -171,7 +171,7 @@ ${path }</label>
 					<!-- first child - tabpanel -start -->
 						<figure>
 					<a href="${item.url}" class="learnmore">
-								<img class="img-responsive" src="<c:url value='viewimage?uid=${item.uid}'></c:url>" alt="${item.alt}" />
+								<img class="img-responsive" src="<c:url value='viewimage?uid=${item.uid}&w=12'></c:url>" alt="${item.alt}" />
 					</a>
 							<figcaption>
 							    <a href="${item.url}" class="learnmore">${item.title}</a>
@@ -469,7 +469,15 @@ function returnCarousel(fileUrl) {
 		message.innerHTML="<section class=\"alert alert-success\"><h3>加入广告</h3></section>";
 
 		}
-     $.ajax({
+	var data = document.getElementById("carousel").outerHTML;
+	
+	var car = tinyMCE.activeEditor.dom.select('.carousel');
+	if(car.length>0)
+    	car[0].innerHTML = data;
+    else 
+		tinyMCE.activeEditor.selection.setContent('<div id="'+fileUrl+'" class="carousel noneditable">'+data+'</div>');
+	tinyMCE.activeEditor.setDirty(true);	
+/*      $.ajax({
 		    url: "carousel.html?path="+fileUrl,
 		    type: "GET", //ADDED THIS LINE
 		    // THIS MUST BE DONE FOR FILE UPLOADING
@@ -503,7 +511,7 @@ function returnCarousel(fileUrl) {
 
 		    }
 		    // ... Other options like success and etc
-		}); 
+		});  */
 
 
 
