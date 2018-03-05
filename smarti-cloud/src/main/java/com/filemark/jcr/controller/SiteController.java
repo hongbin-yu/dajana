@@ -138,7 +138,7 @@ public class SiteController extends BaseController {
 		WebPage<Asset> assets = jcrService.searchAssets(assetsQuery, 12, p);		
 
 	
-		String carouselQuery = "select * from [nt:base] AS s WHERE ISCHILDNODE(["+path+"])" +" and s.deleted not like 'true' and contentType like 'image%' and s.ocm_classname='com.filemark.jcr.model.Asset' order by s."+orderby+", s.name";
+		String carouselQuery = "select * from [nt:base] AS s WHERE ISCHILDNODE(["+path+"])" +" and s.deleted not like 'true' and s.contentType like 'image/%' and s.ocm_classname='com.filemark.jcr.model.Asset' order by s."+orderby+", s.name";
 		if (m==null) m = 6;
 		WebPage<Asset> carousel = jcrService.searchAssets(carouselQuery, m, 0);
 		model.addAttribute("carousel", carousel);	

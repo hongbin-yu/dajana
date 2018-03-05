@@ -151,7 +151,7 @@ ${path }</label>
 	</c:forEach>
 	</ul>
 	<div class="tabpanels">
-		<c:forEach items="${assets.items }" var="item" varStatus="loop">
+		<c:forEach items="${carousel.items }" var="item" varStatus="loop">
 			<c:if test="${loop.count==1}">
 				<div role="tabpanel" id="tab${loop.count}" class="fade in">
 					<!-- first child - tabpanel -start -->
