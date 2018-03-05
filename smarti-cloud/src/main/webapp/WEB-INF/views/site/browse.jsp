@@ -58,7 +58,7 @@
 <a title="${folder.parent }" href='<c:url value="/site/browse.html?path=${folder.parent}&type=${type }&input=${input }"/>'><span class="glyphicon glyphicon-backward"></span></a>
 </c:if>
 ${path }</label>
-<input type="text" class="form-editable" id="title${folder.uid}" name="jcr:title" size="18" value="${folder.title}" uid="${folder.uid}"/><button class="btn btn-primary btn-xs" href="javascript:returnCarousel('${folder.path}')" title="加入广告"><span class="glyphicon glyphicon-play"></span></button>
+<input type="text" class="form-editable" id="title${folder.uid}" name="jcr:title" size="18" value="${folder.title}" uid="${folder.uid}"/><button class="btn btn-primary btn-xs" onclick="javascript:returnCarousel('${folder.path}')" title="加入广告"><span class="glyphicon glyphicon-play"></span></button>
 </div>
 <details>
 	<summary>
@@ -390,14 +390,13 @@ function returnFileUrl(fileUrl,uid,poster) {
 
 }
 function returnCarousel(fileUrl) {
-	
 	var message = win.document.getElementById("header_message");
 	if(message) {
 		message.innerHTML="<section class=\"alert alert-success\"><h3>加入广告</h3></section>";
 
 		}
      $.ajax({
-		    url: contentPath+"/carousel.html?path="+fileUrl,
+		    url: "carousel.html?path="+fileUrl,
 		    type: "GET", //ADDED THIS LINE
 		    // THIS MUST BE DONE FOR FILE UPLOADING
 		    contentType: "text/html",
