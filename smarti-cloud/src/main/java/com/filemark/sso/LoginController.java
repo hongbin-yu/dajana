@@ -254,34 +254,7 @@ public class LoginController extends BaseController {
     		user.setTitle(title);
     		user.setLastIp(lastIp);
     		jcrService.addOrUpdate(user);
-    		String content = "/content/"+user.getUserName();
-    		Page currentpage = new Page();
-/*    		if(!jcrService.nodeExsits(content)) {//create root
-    			if(!jcrService.nodeExsits("/content")) {
-    				Page djn = new Page();
-    	        	String dajana_home = messageSource.getMessage("dajana_home", null,"\u5927\u5BB6\u62FF", localeResolver.resolveLocale(request));
 
-    				djn.setPath("/content");
-    				djn.setParent("/");
-    				djn.setTitle(dajana_home);
-    				djn.setRedirectTo("http://www.dajana.ca");
-    				djn.setCreatedBy(user.getUserName());
-    				djn.setLastModified(Calendar.getInstance().getTime());
-    				jcrService.addOrUpdate(djn);				
-    			}
-    			currentpage.setPath(content);
-    			currentpage.setParent("/content");
-    			currentpage.setTitle(user.getTitle());
-    			currentpage.setCreatedBy(user.getUserName());
-    			currentpage.setLastModified(Calendar.getInstance().getTime());
-    			if(jcrService.nodeExsits("/content/templates")) {
-    				Page template = jcrService.getPage("/content/templates");
-    				currentpage.setContent(template.getContent());
-    				
-    			}
-			
-    			jcrService.addOrUpdate(currentpage);
-    		} */  
         	String signup_success = messageSource.getMessage("djn.signup_success", null,"\u6CE8\u518C\u6210\u529F\u8BF7\u767B\u5165", localeResolver.resolveLocale(request));
     		
     		model.addAttribute("info", signup_success);

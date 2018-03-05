@@ -37,7 +37,7 @@
 		</div>
 		<div class="form-group">
 			<label for="email" class="required"><span class="field-name"><spring:message code="djn.email"/></span></label>
-			<input class="form-control" id="email" name="email"  value="${user.email }" type="text" pattern="email" type="email" placeholder="<spring:message code="djn.email_for_password"/>"/>
+			<input class="form-control" id="email" name="email"  value="${user.email }" type="email" placeholder="<spring:message code="djn.email_for_password"/>" style="FONT-FAMILY: 'Arial';"/>
 		</div>
 <%-- 		<div class="form-group">
 			<label for="phone" class="required"><span class="field-name"><spring:message code="djn.phone_number"/></span></label>
@@ -53,7 +53,7 @@
 			<label for="password">
 			<span class="field-name"><spring:message code="djn.password"/></span> (<spring:message code="djn.select_4_icon"/>)
 			</label>
-			<input class="form-control" id="password" name="password" type="password" maxlength="32" size="40" pattern=".{4,}" data-rule-rangelength="[4,32]" placeholder="<spring:message code="djn.select_4_icon"/>"/>
+			<input class="form-control" id="password" name="password" type="password" onkeypress="this.value=''" maxlength="32" size="40" pattern=".{4,}" data-rule-rangelength="[4,32]" placeholder="<spring:message code="djn.select_4_icon"/>"/>
 			</summary>
 			<div class="btn-group btn-group-justified">
 			<a class="btn btn-default" onclick="javascript:p('A0')"><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/mouse.png"></c:url>'/></a>

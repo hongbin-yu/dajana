@@ -1244,6 +1244,8 @@ public class SiteController extends BaseController {
     			int level = 2;
     			
     			jcrService.setPageNavigation(result,level,20);
+    			jcrService.updatePropertyByPath(path,"breadcrumb",jcrService.getBreadcrumb(path));
+    			
     			//jcrService.setPageNavigation(result,level,20);    			
     		}			
 		}catch (Exception e){
