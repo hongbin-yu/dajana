@@ -157,22 +157,6 @@
 		<div class="form-group">
 		<label for="url{uid}"><spring:message code="djn.link"/>&nbsp;</label><input class="form-control" id="url{uid}" name="url" value="" size="25" uid="{uid}"  onchange="updateNode(this)"/>
 		</div>
-<%--		<div class="form-group">
-		<select id="rotate{uid}" name="rotate">
-			<option value="0" selected>0</option>
-			<option value="90">90</option>
-			<option value="-90">-90</option>
-			<option value="180">180</option>
-		</select>
-		<a class="btn btn-default btn-sm" href="javascript:rotate('{uid}')"><spring:message code="djn.rotate"/><img class="wb-inv" id="rotate_running{uid}" src='<c:url value="/resources/images/ui-anim_basic_16x16.gif"></c:url>' alt="<spring:message code="djn.rotate"/>"/></a>		
-		</div>		
-		<div class="form-group">
-		<label for="contentType{uid}"><spring:message code="djn.content_type"/>&nbsp;</label><input class="form-control" id="contentType{uid}" name="contentType" value="" size="24" uid="{uid}" disabled/>
-		</div>
-		<div class="form-group">
-			<label for="size{uid}"><spring:message code="djn.length"/>&nbsp;</label><input class="form-control" id="size{uid}" name="size" value="" size="24" uid="{uid}" disabled/>
-		</div>	
-		</div>	 --%>			
 	</details>
 </div>	 
 </div>	   

@@ -95,13 +95,9 @@ public class SiteController extends BaseController {
 	    return modelAndView;
     }
     
-//	@RequestMapping(value = {"/smarti-cloud/**/*.*","/smarti-cloud/*.*"}, method = {RequestMethod.GET,RequestMethod.POST})
-//	public String redirect(HttpServletRequest request) throws Exception {
-//		return "redirect:"+request.getRequestURI().replace("/smarti-cloud", "")+"?"+request.getQueryString();
-//	}
 	
 	@RequestMapping(value = {"/site/browse.html","/site/image.html"}, method = {RequestMethod.GET,RequestMethod.POST},produces = "text/plain;charset=UTF-8")
-	public String browse(String path,String type, String input,String kw,Integer p,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public String browse(String path,String type, String input,String kw,Integer p,Integer m,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
 		ImageUtil.HDDOn();
 		String assetFolder = "/"+getUsername()+"/assets";
 		if(!jcrService.nodeExsits(assetFolder)) {
@@ -139,15 +135,15 @@ public class SiteController extends BaseController {
 		model.addAttribute("folders", folders);
 
 		String assetsQuery = "select s.* from [nt:base] AS s INNER JOIN [nt:unstructured] AS f ON ISCHILDNODE(s, f) WHERE "+ISDESCENDANTNODE+"(s,["+path+"])" +keywords+contentType+intranet+" and s.[delete] not like 'true' and s.ocm_classname='com.filemark.jcr.model.Asset' order by s."+orderby+", s.[name]";
-		//logger.info(isIntranet+",ip="+getClientIpAddress(request)+",q="+assetsQuery);;
 		WebPage<Asset> assets = jcrService.searchAssets(assetsQuery, 12, p);		
-/*		String foldersQuery = "select s.* from [nt:base] AS s WHERE ISCHILDNODE(["+path+"])" +keywords+" and s.delete not like 'true' and s.ocm_classname='com.filemark.jcr.model.Folder' order by s.path";
-		WebPage<Folder> folders = jcrService.queryFolders(foldersQuery, 100, 0);
-		model.addAttribute("folders", folders);
 
-		String assetsQuery = "select s.* from [nt:base] AS s WHERE ISDESCENDANTNODE(["+path+"])" +keywords+contentType+" and s.delete not like 'true' and s.ocm_classname='com.filemark.jcr.model.Asset' order by s."+orderby+", s.name";
-		WebPage<Asset> assets = jcrService.searchAssets(assetsQuery, max, p);
-*/		Page page = new Page();
+	
+		String carouselQuery = "select * from [nt:base] AS s WHERE ISCHILDNODE(["+path+"])" +" and s.deleted not like 'true' and contentType like 'image%' and s.ocm_classname='com.filemark.jcr.model.Asset' order by s."+orderby+", s.name";
+		if (m==null) m = 6;
+		WebPage<Asset> carousel = jcrService.searchAssets(carouselQuery, m, 0);
+		model.addAttribute("carousel", carousel);	
+		
+		Page page = new Page();
 		page.setTitle("\u8D44\u6E90");
 		model.addAttribute("page", page);		
 		model.addAttribute("folder", currentNode);
@@ -222,11 +218,7 @@ public class SiteController extends BaseController {
 			}else {
 				return "redirect:"+"/site/passcode.html";
 			}
-	/*
-		} catch (UnsupportedEncodingException e) {
-			logger.error(e.getMessage());
-			throw new Exception("\u8DEF\u5F84\u51FA\u9519!");
-			*/
+
 		} catch (RepositoryException e) {
 			logger.error(e.getMessage());
 			throw new Exception("\u9875\u9762\u6CA1\u627E\u5230!");
@@ -267,9 +259,7 @@ public class SiteController extends BaseController {
 		if(kw==null) {
 			kw="";
 		}else if(!"".equals(kw)){
-			//logger.info(kw);
-			//kw = DjnUtils.Iso2Uft8(kw);//new String(kw.getBytes("ISO-8859-1"), "GB18030");
-			//logger.info(kw);
+
 			keywords = " and contains(s.*,'"+kw+"')";
 		}
 
@@ -578,10 +568,7 @@ public class SiteController extends BaseController {
 			else			
 				return "redirect:/site/editor.html?path="+content;
 		}		
-/*		if(currentpage.getBreadcrumb()==null) {
-			currentpage.setBreadcrumb(jcrService.getBreadcrumb(currentpage.getPath()));
-			jcrService.addOrUpdate(currentpage);
-		}	*/	
+
 
 		String contentPath = request.getContextPath();
 		if(currentpage.getBreadcrumb()==null) {
@@ -593,10 +580,7 @@ public class SiteController extends BaseController {
 			jcrService.addOrUpdate(currentpage);
 		}
 
-/*		String menu = jcrService.getNavigation(currentpage.getPath(),2,20);
-		if(!contentPath.equals("/") && menu.indexOf(contentPath)<0) {
-			menu= menu.replaceAll("/content/", request.getContextPath()+"/content/");
-		}*/
+
 		leftmenu(null,path,model,request,response);
 		//currentpage.setShowFilter("false");
 		if(currentpage.getContent()!=null)
@@ -617,9 +601,7 @@ public class SiteController extends BaseController {
 		String menu="";
 		String content = "/content/"+getUsername();
 		Page currentpage = new Page();
-/*		if(path!=null && !path.startsWith(content)) {
-			path=content;
-		}	*/
+
 		if(uid==null && path!=null) {
 			currentpage = jcrService.getPage(path.replace(".html",""));
 		}else if(uid!=null) {
@@ -2809,17 +2791,7 @@ public class SiteController extends BaseController {
 				
 				if(file.exists()) {
 					FileInputStream in = new FileInputStream(file);
-/*					if(asset.getHeight() !=null && asset.getWidth() !=null && (asset.getHeight()>1200 || asset.getWidth()>1200)) {
-						int exit = ImageUtil.convert(file.getAbsolutePath(), assetFolder+"/"+filename+ext, 1200, 1200);
-						if(exit !=0) {
-							IOUtils.copy(in, output);
-						}else {
-							FileInputStream smallFile = new FileInputStream(assetFolder+"/"+filename+ext);
-							IOUtils.copy(smallFile, output);
-						}
-					
-					}else */
-						IOUtils.copy(in, output);
+					IOUtils.copy(in, output);
 					in.close();
 				}
 			}else  if(jcrService.nodeExsits(path+"/original")) {

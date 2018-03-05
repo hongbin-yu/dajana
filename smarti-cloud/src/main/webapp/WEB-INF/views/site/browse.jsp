@@ -58,8 +58,23 @@
 <a title="${folder.parent }" href='<c:url value="/site/browse.html?path=${folder.parent}&type=${type }&input=${input }"/>'><span class="glyphicon glyphicon-backward"></span></a>
 </c:if>
 ${path }</label>
-<input type="text" class="form-editable" id="title${folder.uid}" name="jcr:title" size="18" value="${folder.title}" uid="${folder.uid}"/><button class="btn btn-primary btn-xs" onclick="javascript:returnCarousel('${folder.path}')" title="加入广告"><span class="glyphicon glyphicon-play"></span></button>
-</div>
+<%-- <input type="text" class="form-editable" id="title${folder.uid}" name="jcr:title" size="18" value="${folder.title}" uid="${folder.uid}"/><button class="btn btn-primary btn-xs" onclick="javascript:returnCarousel('${folder.path}')" title="加入广告"><span class="glyphicon glyphicon-play"></span></button>
+ --%></div>
+            <details id="${folder.uid }">
+            <summary>${folder.title}</summary>
+				<div class="form-group">
+				<label for="foldertitle"><spring:message code="djn.title"/>&nbsp;</label><input class="form-control" id="foldertitle" name="jcr:title" value="${folder.title}" size="25" uid="${folder.uid}"  onchange="updateNode(this)"/>
+				</div>            
+				<div class="form-group">
+				<label for="folderorderby"><spring:message code="djn.order"/>&nbsp;</label>
+				<select class="form-control" id="folderorderby" name="orderby" value="${folder.orderby}" uid="${folder.uid}"  onchange="updateNode(this)">
+					<option value="lastModified desc"><spring:message code="djn.lastModified_desc"/></option>
+					<option value="lastModified asc" <c:if test="${folder.orderby=='lastModified asc'}">selected</c:if>><spring:message code="djn.lastModified_asc"/></option>
+					<option value="originalDate desc" <c:if test="${folder.orderby=='originalDate desc'}">selected</c:if>><spring:message code="djn.docDate_desc"/></option>
+					<option value="originalDate asc" <c:if test="${folder.orderby=='originalDate asc'}">selected</c:if>><spring:message code="djn.docDate_asc"/></option>
+				</select>
+				</div>
+            </details>
 <details>
 	<summary>
 		<label for="path"><span class="glyphicon glyphicon-folder-close"></span>创建子目录</label>
@@ -112,6 +127,65 @@ ${path }</label>
 </div>	 
 </div>	
 <div class="clearfix"></div>
+<div class="col-md-4">
+<c:if test="${carousel.availablePages>0}">
+<div class="wb-tabs carousel-s2 playing slow">
+	<ul role="tablist">
+	<c:forEach items="${carousel.items }" var="item" varStatus="loop">
+		<c:if test="${loop.count==1}">
+			<li class="active">
+				<a href="#tab${loop.count}">
+					<img class="img-responsive" src="<c:url value='viewimage?uid=${item.uid}'></c:url>" alt="${item.alt}" />
+					<span class="wb-inv">Tab ${loop.count}:${item.title}</span>
+				</a>
+			</li>
+		</c:if>
+		<c:if test="${loop.count>1}">
+			<li>
+				<a href="#tab${loop.count}">
+					<img class="img-responsive" src="<c:url value='viewimage?uid=${item.uid}'></c:url>" alt="${item.alt}" />
+					<span class="wb-inv">Tab ${loop.count}:${item.title}</span>
+				</a>
+			</li>
+		</c:if>		
+	</c:forEach>
+	</ul>
+	<div class="tabpanels">
+		<c:forEach items="${assets.items }" var="item" varStatus="loop">
+			<c:if test="${loop.count==1}">
+				<div role="tabpanel" id="tab${loop.count}" class="fade in">
+					<!-- first child - tabpanel -start -->
+						<figure>
+							<a href="${item.url}" class="learnmore">
+								<img class="img-responsive" src="<c:url value='viewimage?uid=${item.uid}'></c:url>" alt="${item.alt}" />
+							</a>
+						<figcaption>
+							   <a href="${item.url}" class="learnmore">${item.title}</a>
+								${item.description}
+							</figcaption>
+						</figure>
+				</div>
+			</c:if>	
+			<c:if test="${loop.count>1}">
+				<div role="tabpanel" id="tab${loop.count}" class="fade out">
+					<!-- first child - tabpanel -start -->
+						<figure>
+					<a href="${item.url}" class="learnmore">
+								<img class="img-responsive" src="<c:url value='viewimage?uid=${item.uid}'></c:url>" alt="${item.alt}" />
+					</a>
+							<figcaption>
+							    <a href="${item.url}" class="learnmore">${item.title}</a>
+								${item.description}
+							</figcaption>
+						</figure>
+				</div>
+			</c:if>	
+		</c:forEach>
+	</div>
+</div>
+<button class="btn btn-primary btn-sm" onclick="javascript:returnCarousel('${folder.path}')" title="加入广告"><span class="glyphicon glyphicon-play">${folder.title } 植入广告</span></button>
+</c:if>
+</div>
 <div class="row">
 <div id="top_insert">
 </div>
