@@ -4,7 +4,7 @@
 
 <div class="container">
 <div class="row">
-        <main id="wb-cont" role="main" property="mainContentOfPage" class="col-md-9 col-md-push-3">
+        <main id="wb-cont" role="main" property="mainContentOfPage" class="col-md-8 col-md-push-4">
         	
 	        <c:if test="${page.redirectTo!=null && page.redirectTo!=''}">
 	        <h1>${page.title }</h1>
@@ -15,14 +15,14 @@
 			 </c:if>
 			 <%@include file="../wet/pagedetails.jsp" %>		
  		</main>
-        <nav class="wb-sec col-md-3 col-md-pull-9" typeof="SiteNavigationElement" id="wb-sec" role="navigation">
+        <nav class="wb-sec col-md-4 col-md-pull-8" typeof="SiteNavigationElement" id="wb-sec" role="navigation">
             <%@include file="leftmenu.jsp" %>
         </nav>
 		
 </div>
 </div>
 
-<section id="left-bar" class="container wb-inv wb-overlay modal-content overlay-def wb-panel-l col-md-3">
+<section id="left-bar" class="container wb-inv wb-overlay modal-content overlay-def wb-panel-l col-md-4">
 	<header class="modal-header">
 		<h2 class="modal-title">云站</h2>
 	</header>
