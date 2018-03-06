@@ -2643,17 +2643,17 @@ public class SiteController extends BaseController {
 					e.attr("href", location+filename);
 					urls.put(href, location+filename);
 				} catch (MalformedURLException e2) {
-					logger.error(e2.getMessage());
+					logger.error("href :"+href+" error:"+e2.getMessage());
 				} catch (UnsupportedEncodingException e1) {
-					logger.error(e1.getMessage());;
+					logger.error("href :"+href+" error:"+e1.getMessage());;
 				} catch (RepositoryException e1) {
-					logger.error(e1.getMessage());
+					logger.error("href :"+href+" error:"+e1.getMessage());
 				} catch (FileNotFoundException e1) {
-					logger.error(e1.getMessage());
+					logger.error("href :"+href+" error:"+e1.getMessage());
 				} catch (IOException e1) {
-					logger.error(e1.getMessage());;
+					logger.error("href :"+href+" error:"+e1.getMessage());;
 				} catch (Exception el) {
-					logger.error("href error:"+el.getMessage());;
+					logger.error("href :"+href+" error:"+el.getMessage());;
 				}
 			}
 		}
