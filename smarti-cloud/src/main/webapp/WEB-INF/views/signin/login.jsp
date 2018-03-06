@@ -34,14 +34,15 @@
 </c:if>
 
 <div class="wb-frmvld">
-	<form action="<c:url value="/signin/authenticate" />" method="post" id="validation-example">
+	<form action="<c:url value="/signin" />" method="post" id="validation-example">
+		<input type="hidden" name="loginCount" value="${loginCount }"/>
 		<div class="form-group">
 			<label for="username" class="required"><span class="field-name"><spring:message code="djn.username"/></span> <strong class="required">(<spring:message code="djn.required"/>)</strong></label>
 			<input class="form-control" id="username" name="j_username" type="text" required="required" pattern=".{2,}" data-rule-minlength="2" size="40"/>
 		</div>
 		<div class="form-group">
 			<label for="password" class="required"><span class="field-name"><spring:message code="djn.password"/></span> (<spring:message code="djn.5_to_10"/>)<strong class="required">(<spring:message code="djn.required"/>)</strong></label>
-			<input class="form-control" id="password" name="j_password" type="password" maxlength="10" required="required"  size="10" pattern=".{5,10}" data-rule-rangelength="[5,10]" />
+			<input class="form-control" id="password" name="j_password" type="password" maxlength="100" required="required"  size="30" pattern=".{5,100}" data-rule-rangelength="[5,100]" />
 		</div>
     
 	<input type="submit" value="<spring:message code="djn.submit"/>" class="btn btn-primary"> <input type="reset" value="<spring:message code="djn.reset"/>" class="btn btn-default">

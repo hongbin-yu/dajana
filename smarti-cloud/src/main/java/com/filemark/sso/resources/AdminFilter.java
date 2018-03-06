@@ -23,13 +23,12 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import com.filemark.jcr.controller.BaseController;
 import com.filemark.jcr.model.User;
 import com.filemark.sso.JwtUtil;
 
 public class AdminFilter implements Filter {
 	private FilterConfig filterConfig;
-    private static final String jwtTokenCookieName = "JWT-TOKEN";
-    private static final String signingKey = "dajanaSigningKey";	
 	private static final Logger logger = LoggerFactory.getLogger(AdminFilter.class);
     
 	@Override
@@ -46,17 +45,14 @@ public class AdminFilter implements Filter {
         String authService = this.getFilterConfig().getInitParameter("services.auth");
         String authKey = this.getFilterConfig().getInitParameter("services.key");
         String redirectUrl = httpServletRequest.getRequestURL().toString() ;
-        String signingUser = JwtUtil.getSubject(httpServletRequest, jwtTokenCookieName, signingKey);
+        String signingUser = JwtUtil.getSubject(httpServletRequest, JwtUtil.jwtTokenCookieName, JwtUtil.signingKey);
         if(!httpServletRequest.getContextPath().equals("/") && !authService.startsWith("http")) {
         	authService = httpServletRequest.getContextPath()+authService;
         }
         if(signingUser==null) {
-        	if(getUsername()!=null || redirectUrl.indexOf("video.mp4")>=0) {
-        	    chain.doFilter(httpServletRequest, httpServletResponse);
-        	}else {
-	        	logger.debug("no signingUser "+authService + "?redirect=" + redirectUrl);
-        		httpServletResponse.sendRedirect(authService + "?redirect=" + redirectUrl);
-        	}
+        	logger.debug("no signingUser "+authService + "?redirect=" + redirectUrl);
+    		httpServletResponse.sendRedirect(authService + "?redirect=" + redirectUrl+"&noSigningUser");
+
         } else {
         	String usersite = (String)httpServletRequest.getAttribute("usersite");
         	String port = (String)httpServletRequest.getAttribute("port");
@@ -68,8 +64,7 @@ public class AdminFilter implements Filter {
 			SecurityContext securityContext = SecurityContextHolder.getContext();
 			Authentication authen = securityContext.getAuthentication();
             String authors[] = signingUser.split("/");
-            if(!authors[4].equals(authKey)) {
-            	
+            if(!BaseController.isIntranet(httpServletRequest) && !authors[4].equals(request.getRemoteAddr())) {
                 httpServletResponse.sendRedirect(authService + "?redirect=" + redirectUrl+"&keyerror=1");
             }
             if(authen == null || !authen.getName().equals(authors[2])) {

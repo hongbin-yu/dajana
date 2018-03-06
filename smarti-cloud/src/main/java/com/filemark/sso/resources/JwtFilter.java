@@ -32,8 +32,6 @@ import com.filemark.sso.JwtUtil;
 @Component
 public class JwtFilter implements Filter {
 	private static final Logger logger = LoggerFactory.getLogger(JwtFilter.class);
-    private static final String jwtTokenCookieName = "JWT-TOKEN";
-    private static final String signingKey = "dajanaSigningKey";
     private FilterConfig filterConfig;
 
 
@@ -46,7 +44,7 @@ public class JwtFilter implements Filter {
 		FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest httpServletRequest = (HttpServletRequest)request;
 		HttpServletResponse httpServletResponse = (HttpServletResponse)response;
-        String signingUser = JwtUtil.getSubject(httpServletRequest, jwtTokenCookieName, signingKey);
+        String signingUser = JwtUtil.getSubject(httpServletRequest, JwtUtil.jwtTokenCookieName, JwtUtil.signingKey);
         if(signingUser != null && getUsername()==null){
             String authors[] = signingUser.split("/");
 			Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();

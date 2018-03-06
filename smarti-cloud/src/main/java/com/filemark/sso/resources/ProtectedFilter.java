@@ -24,8 +24,6 @@ import com.filemark.sso.JwtUtil;
 
 public class ProtectedFilter implements Filter {
 	private FilterConfig filterConfig;
-    private static final String jwtTokenCookieName = "JWT-TOKEN";
-    private static final String signingKey = "dajanaSigningKey";	
 	private static final Logger logger = LoggerFactory.getLogger(ProtectedFilter.class);
 	     
 	@Override
@@ -41,7 +39,7 @@ public class ProtectedFilter implements Filter {
 		HttpServletResponse httpServletResponse = (HttpServletResponse)response;
         String authService = this.getFilterConfig().getInitParameter("services.auth");
         String redirectUrl = httpServletRequest.getRequestURL().toString() ;
-        String signingUser = JwtUtil.getSubject(httpServletRequest, jwtTokenCookieName, signingKey);
+        String signingUser = JwtUtil.getSubject(httpServletRequest, JwtUtil.jwtTokenCookieName, JwtUtil.signingKey);
         if(!httpServletRequest.getContextPath().equals("/") && !authService.startsWith("http")) {
         	authService = httpServletRequest.getContextPath()+authService;
         }

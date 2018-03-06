@@ -10,6 +10,8 @@ import java.util.Base64;
 import java.util.Date;
 
 public class JwtUtil {
+    public static final String jwtTokenCookieName = "JWT-TOKEN";
+    public static final String signingKey = "dajanaSigningKey";
 	static String SYSTEMSECRET = Base64.getEncoder().encodeToString("yuhongyun+".getBytes()); 
 	
     public static String generateToken(String signingKey, String subject) {

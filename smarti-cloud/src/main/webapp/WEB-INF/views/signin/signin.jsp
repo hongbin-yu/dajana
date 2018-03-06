@@ -3,7 +3,7 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="sf" %>
 <h2>Login to SMARTi</h2>
-<form id="signin" action="<c:url value="/signin/authenticate" />" method="post">
+<form id="signin" action="<c:url value="/signin" />" method="post">
 	<div class="formInfo">
   		<c:if test="${param.error eq 'bad_credentials'}">
   		<div class="error">

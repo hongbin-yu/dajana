@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.filemark.jcr.controller.BaseController;
 import com.filemark.sso.CookieUtil;
+import com.filemark.sso.JwtUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 
 @Controller
 public class ResourceController  extends BaseController{
-    private static final String jwtTokenCookieName = "JWT-TOKEN";
 
     @RequestMapping("/protected")
     public String home() {
@@ -28,7 +28,7 @@ public class ResourceController  extends BaseController{
     public String logout(String redirect,HttpServletRequest request,HttpServletResponse httpServletResponse) {
     	//String username = getUsername();
         String domain = request.getServerName().replaceAll(".*\\.(?=.*\\.)", "");
-        CookieUtil.clear(httpServletResponse, jwtTokenCookieName,domain);
+        CookieUtil.clear(httpServletResponse, JwtUtil.jwtTokenCookieName,domain);
         
         request.getSession().invalidate();
         

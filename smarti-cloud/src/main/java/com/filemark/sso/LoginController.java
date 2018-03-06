@@ -31,8 +31,6 @@ import com.filemark.utils.DjnUtils;
 
 @Controller
 public class LoginController extends BaseController {
-    private static final String jwtTokenCookieName = "JWT-TOKEN";
-    private static final String signingKey = "dajanaSigningKey";
 
     public LoginController() {
     }
@@ -43,7 +41,7 @@ public class LoginController extends BaseController {
     public String login(Model model,HttpServletRequest request,HttpServletResponse httpServletResponse, String redirect,String info, Integer loginCount) throws UnsupportedEncodingException{
     	if(redirect!=null && redirect.equals("")) {
             String domain = request.getServerName().replaceAll(".*\\.(?=.*\\.)", "");
-            CookieUtil.clear(httpServletResponse, jwtTokenCookieName,domain);
+            CookieUtil.clear(httpServletResponse, JwtUtil.jwtTokenCookieName,domain);
             
             request.getSession().invalidate();
     		return "login";
@@ -51,7 +49,7 @@ public class LoginController extends BaseController {
     	if(redirect!=null && redirect.equals("signin")) return "redirect:signin";    	
     	String lastIp = request.getRemoteAddr();
     	String remoteHost = request.getRemoteHost();
-        String username = JwtUtil.getSubject(request, jwtTokenCookieName, signingKey);
+        String username = JwtUtil.getSubject(request, JwtUtil.jwtTokenCookieName, JwtUtil.signingKey);
         if(loginCount==null) {
         	loginCount=0;
         }
@@ -159,7 +157,7 @@ public class LoginController extends BaseController {
 		}else {
 			user.setPort(":"+user.getPort());
 		}
-        String token_author = user.getHost()+"/"+user.getPort()+"/"+j_username+"/"+user.getTitle()+"/"+user.getSigningKey();
+        String token_author = user.getHost()+"/"+user.getPort()+"/"+j_username+"/"+user.getTitle()+"/"+request.getRemoteAddr();
 		for(Role role:user.getRoles()) {
 			token_author += "/"+role.getRoleName();
 		}
@@ -176,10 +174,10 @@ public class LoginController extends BaseController {
 		request.setAttribute("username", j_username);
 		request.setAttribute("usertitle", user.getTitle()); 
 		request.setAttribute("signingKey", user.getSigningKey());  
-        String token = JwtUtil.generateToken(signingKey, token_author);
+        String token = JwtUtil.generateToken(JwtUtil.signingKey, token_author);
         String domain =(user.getHost()==null || "".equals(user.getHost()))? request.getServerName():user.getHost();
         //domain = domain.replaceAll(".*\\.(?=.*\\.)", "");
-        CookieUtil.create(httpServletResponse, jwtTokenCookieName, token, false, -1, domain);
+        CookieUtil.create(httpServletResponse, JwtUtil.jwtTokenCookieName, token, false, -1, domain);
 /*        if(user.getHost()!=null && !"".equals(user.getHost())) {
            CookieUtil.create(httpServletResponse, jwtTokenCookieName, token, false, -1, user.getHost());
         }
