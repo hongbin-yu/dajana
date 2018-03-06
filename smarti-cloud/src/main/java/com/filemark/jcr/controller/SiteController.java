@@ -2170,7 +2170,7 @@ public class SiteController extends BaseController {
 	}
 	@RequestMapping(value = {"/site/file/*.*","/site/viewimage","/content/viewimage","/content/**/viewimage","/protected/viewimage","/protected/**/viewimage","/site/file","/site/file*.*","/content/file","/content/file*.*","/content/**/file","/content/**/file*.*"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public @ResponseBody String viewFile(String uid,String path,Integer w,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
-		ImageUtil.HDDOn();		
+
 		Integer width = null;
 		if(w !=null && w <= 12) {
 			width = w*100;
@@ -2188,7 +2188,7 @@ public class SiteController extends BaseController {
 				IOUtils.copy(in, response.getOutputStream());
 				in.close();*/
 				super.serveResource(request, response, outFile, null);
-				ImageUtil.HDDOff();
+
 				return null;					
 			}
 
@@ -2235,7 +2235,7 @@ public class SiteController extends BaseController {
 						out.close();
 						super.serveResource(request, response, file, null);
 						//jcrService.readAsset(path+"/original",  response.getOutputStream());
-						ImageUtil.HDDOff();
+
 						return null;
 						
 					}
@@ -2243,7 +2243,7 @@ public class SiteController extends BaseController {
 					response.setContentType(asset.getContentType());
 					IOUtils.copy(in, response.getOutputStream());
 					in.close();*/
-					ImageUtil.HDDOff();
+
 					return null;
 				}else  if(jcrService.nodeExsits(path+"/original")) {
 					response.setContentType(asset.getContentType());
@@ -2262,20 +2262,20 @@ public class SiteController extends BaseController {
 					out.close();
 					super.serveResource(request, response, file, null);
 					//jcrService.readAsset(path+"/original",  response.getOutputStream());
-					ImageUtil.HDDOff();
+
 					return null;
 				}else {
-					ImageUtil.HDDOff();
+
 					return path +" original file not found";
 				}
 			}else {
-				ImageUtil.HDDOff();
+
 				return path +" file not found";		
 			}
 
 		}catch(Exception e) {
 			logger.error("viewFile:"+e.getMessage()+",path="+path);
-			ImageUtil.HDDOff();
+
 			return e.getMessage();
 		}
 		
@@ -2755,13 +2755,18 @@ public class SiteController extends BaseController {
 				File icon = new File(jcrService.getHome()+"/icon"+w+"00/"+asset.getPath());
 				if(icon.exists()) {
 					FileInputStream in = new FileInputStream(icon);
-					IOUtils.copy(in, output);					
+					IOUtils.copy(in, output);	
+					in.close();
 				}else {
-					String filePath = asset.getPath()+"/file-"+w+"00";
+					File file = jcrService.getFile(asset.getPath());
+					FileInputStream in = new FileInputStream(file);
+					IOUtils.copy(in, output);	
+					in.close();					
+/*					String filePath = asset.getPath()+"/file-"+w+"00";
 					int width = Integer.parseInt(w);
 					if(jcrService.nodeExsits(filePath))
 						jcrService.createFile(asset.getPath(), width);
-					jcrService.readAsset(filePath, output);					
+					jcrService.readAsset(filePath, output);*/					
 				}
 
 			}else if(asset.getDevice()!=null) {
