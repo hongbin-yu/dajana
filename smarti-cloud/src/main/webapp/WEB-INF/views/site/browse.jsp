@@ -479,7 +479,7 @@ function returnCarousel(fileUrl) {
 	var car = tinyMCE.activeEditor.dom.select('.carousel');
 	if(car.length>0) {
     	car[0].innerHTML = data;
-		win.carousel = newCarousel;
+		carousel = newCarousel;
 	}else 
 		tinyMCE.activeEditor.selection.setContent('<div id="'+fileUrl+'" class="carousel noneditable">'+data+'</div>');
 	tinyMCE.activeEditor.setDirty(true);	
