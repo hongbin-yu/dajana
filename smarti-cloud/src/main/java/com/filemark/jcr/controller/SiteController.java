@@ -1273,13 +1273,13 @@ public class SiteController extends BaseController {
 	}
 	
 	@RequestMapping(value = {"/site/publish.html"}, method = {RequestMethod.GET,RequestMethod.POST})
-	public @ResponseBody String  publish(String uid,String path,String name, String value,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public @ResponseBody String  publish(String uid,String path,String name, String value,Model model,HttpServletRequest request, HttpServletResponse response) throws RepositoryException {
 		String result="";
 		if(name==null) name="status";
 		if(value==null) value="true";
 		BufferedWriter bufferWriter = null;
-		try {
-			ImageUtil.gpio("write", "18", "1");
+		//try {
+			ImageUtil.HDDOn();
 			Page page = null;
 			//String template = getAssetContent("/templates/assets/structure/page.html");
 			if(uid !=null && !"".equals(uid)) {
@@ -1311,25 +1311,35 @@ public class SiteController extends BaseController {
 			}
 			String menuPath=jcrService.getAncestorPath(page.getPath(), level);
 			page.setMenuPath(menuPath);
-			if(page.getDepth() < 6) {
-				File menuFile = new File(jcrService.getHome()+menuPath+"/navimenu.html");
-	    		if(!menuFile.getParentFile().exists()) {
-	    			menuFile.getParentFile().mkdirs();
-	    		}
-	    		
-	    		bufferWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(menuFile),"UTF-8"));
-/*	    		String ul = "<div class=\"container nvbar\">"+
-	    					"<h2>主题菜单</h2>"+
-	    					"<div class=\"row\">"+
-	    					"<ul class=\"list-inline menu\">";
-	    		bufferWriter.write(ul);*/
-	    		bufferWriter.write(navigation);
-/*	    		bufferWriter.write("</ul></div></div>");*/
-	    		bufferWriter.close();				
-			}
-
-		
     		
+    		try {
+				if(page.getDepth() < 6) {
+					File menuFile = new File(jcrService.getHome()+menuPath+"/navimenu.html");
+		    		if(!menuFile.getParentFile().exists()) {
+		    			menuFile.getParentFile().mkdirs();
+		    		}
+						bufferWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(menuFile),"UTF-8"));
+						bufferWriter.write(navigation);
+						bufferWriter.close();	
+				
+				}
+				Gson gson = new Gson();
+				File json = new File(jcrService.getHome()+page.getPath()+".json");
+				String jsonPage = gson.toJson(page);
+				//bufferWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(json)));
+				bufferWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(json),"UTF-8"));
+				bufferWriter.write(jsonPage);
+				bufferWriter.close();  		
+    		} catch (UnsupportedEncodingException e) {
+    			logger.error(e.toString());
+    			result = "UnsupportedEncodingException error:"+e.getMessage();
+			} catch (FileNotFoundException e) {
+				logger.error(e.toString());
+				result = "FileNotFoundException error:"+e.getMessage();
+			} catch (IOException e) {
+				logger.error(e.toString());
+				result = "IOException error:"+e.getMessage();
+			}   		
 			String breadcrumb = page.getBreadcrumb();
 			if(breadcrumb==null) {
 				breadcrumb = "";
@@ -1345,32 +1355,35 @@ public class SiteController extends BaseController {
 				logger.error("content is null");
 			}
 			content = content.replaceAll("-edit", "");
-			content = publishAssets(page.getPath(),content);
-
-			
-			Gson gson = new Gson();
-			File json = new File(jcrService.getHome()+page.getPath()+".json");
-			if(page.getPasscode()!=null && !"".equals(page.getPasscode()) && "true".equals(page.getSecured())) {
-				content = JwtUtil.encode(content);
+			try {
+				content = publishAssets(page.getPath(),content);
+			}catch(Exception e) {
+				logger.error(e.toString());
+				result = "publishAssets error:"+e.getMessage();	
 			}
-			if("true".equals(page.getSecured()))
-				page.setPasscode(JwtUtil.encode(page.getPasscode()));
-			page.setContent(content);
-			page.setBreadcrumb(breadcrumb);
-			page.setNavigation(navigation);
-			String jsonPage = gson.toJson(page);
-			//bufferWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(json)));
-			bufferWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(json),"UTF-8"));
-			bufferWriter.write(jsonPage);
-			bufferWriter.close();   			
+
+			try {
+				if(page.getPasscode()!=null && !"".equals(page.getPasscode()) && "true".equals(page.getSecured())) {
+					content = JwtUtil.encode(content);
+				}
+				if("true".equals(page.getSecured()))
+					page.setPasscode(JwtUtil.encode(page.getPasscode()));
+				page.setContent(content);
+				page.setBreadcrumb(breadcrumb);
+				page.setNavigation(navigation);
+			}catch(Exception e) {
+				logger.error(e.toString());
+				result = "setBreadcrumb error:"+e.getMessage();	
+			}
+ 			
 
     		
-		}catch (Exception e){
+/*		}catch (Exception e){
 			logger.error(e.toString());
 			result = "error:"+e.getMessage();
 			
-		}
-		ImageUtil.gpio("write", "18", "0");
+		}*/
+		ImageUtil.HDDOff();
 		return result;
 	}
 	
@@ -2612,16 +2625,18 @@ public class SiteController extends BaseController {
 					logger.error(e1.getMessage());
 				} catch (IOException e1) {
 					logger.error(e1.getMessage());;
+				} catch (Exception el) {
+					logger.error("img error:"+el.getMessage());;
 				}
 			}
 		}
 		for (Element e:doc.getElementsByTag("a")) {
 			String href = e.attr("href");
-
+			if(href==null) continue;
 			if(urls.containsKey(href)) {
 				e.attr("href", urls.get(href));
 			}
-			if(href!=null && !"".equals(href) && !href.startsWith("#") && !href.startsWith("http") && !href.startsWith("resources/") && !href.startsWith("/resources/")) {
+			if(!"".equals(href) && !href.startsWith("#") && !href.startsWith("http") &&  !href.startsWith("/templates/") && !href.startsWith("resources/") && !href.startsWith("/content/") && !href.startsWith("../") && !href.startsWith("/resources/")) {
 				try {
 					String filename = toFile(href,prefix+i,folder.getAbsolutePath(),path,allTypes);
 					i++;
@@ -2637,13 +2652,15 @@ public class SiteController extends BaseController {
 					logger.error(e1.getMessage());
 				} catch (IOException e1) {
 					logger.error(e1.getMessage());;
+				} catch (Exception el) {
+					logger.error("href error:"+el.getMessage());;
 				}
 			}
 		}
 
 		for (Element e:doc.getElementsByTag("video")) {
 			String href = e.attr("poster");
-			if(urls.containsKey(href)) {
+			if(href!=null && urls.containsKey(href)) {
 				e.attr("poster", urls.get(href));
 			}
 			if(href!=null && !"".equals(href) && href!=null &&  !href.startsWith("#") && !"".equals(href) &&  !href.startsWith("http") && !href.startsWith("resources/") && !href.startsWith("/resources/")) {
@@ -2663,12 +2680,15 @@ public class SiteController extends BaseController {
 					logger.error(e1.getMessage());
 				} catch (IOException e1) {
 					logger.error(e1.getMessage());;
+				} catch (Exception el) {
+					logger.error("video error:"+el.getMessage());;
 				}
 			}
 		}
 		
 		for (Element e:doc.getElementsByTag("source")) {
 			String href = e.attr("src");
+			if(href==null) continue;
 			if(urls.containsKey(href)) {
 				e.attr("src", urls.get(href));
 			}
@@ -2688,6 +2708,8 @@ public class SiteController extends BaseController {
 					logger.error(e1.getMessage());
 				} catch (IOException e1) {
 					logger.error(e1.getMessage());;
+				} catch (Exception el) {
+					logger.error("source error:"+el.getMessage());;
 				}
 			}
 		}				
