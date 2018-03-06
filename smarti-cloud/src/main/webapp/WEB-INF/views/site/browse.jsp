@@ -475,11 +475,10 @@ function returnCarousel(fileUrl) {
 
 		}
 	var data = document.getElementById("carousel").outerHTML;
-	
+	win.carousel = newCarousel;	
 	var car = tinyMCE.activeEditor.dom.select('.carousel');
 	if(car.length>0) {
     	car[0].innerHTML = data;
-		carousel = newCarousel;
 	}else 
 		tinyMCE.activeEditor.selection.setContent('<div id="'+fileUrl+'" class="carousel noneditable">'+data+'</div>');
 	tinyMCE.activeEditor.setDirty(true);	
