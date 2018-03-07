@@ -989,7 +989,7 @@ public class SiteController extends BaseController {
 	           					 asset.setHeight(360l);	           					 
 	           				 }else {
 	           					 asset.setWidth(360l);
-	           					 asset.setHeight(360l);		           					 
+	           					 asset.setHeight(280l);		           					 
 	           				 }
 	           				jcrService.addOrUpdate(asset);
 	        				 ImageUtil.video2mp4(file.getAbsolutePath(),resolution);
