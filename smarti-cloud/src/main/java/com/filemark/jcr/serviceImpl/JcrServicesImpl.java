@@ -569,6 +569,8 @@ public class JcrServicesImpl implements JcrServices {
             	 folder.setSharing(node.getProperty("sharing").getString());   
              if(node.hasProperty("readonly"))
             	 folder.setReadonly(node.getProperty("readonly").getString());   
+             if(node.hasProperty("resolution"))
+            	 folder.setReadonly(node.getProperty("resolution").getString());   
              if(node.hasProperty("ocm_classname")) {
             	 String[] classname = node.getProperty("ocm_classname").getString().split("\\.");
             	 

@@ -43,7 +43,9 @@ public class Folder implements SmartiNode, Serializable {
 	@Field
 	private String sharing;
 	@Field
-	protected String intranet;		
+	protected String intranet;	
+	@Field
+	protected String resolution;		
 	private Date lastUpdated;	
 	private String limit;
 	private int level;
@@ -250,6 +252,14 @@ public class Folder implements SmartiNode, Serializable {
 
 	public void setIntranet(String intranet) {
 		this.intranet = intranet;
+	}
+
+	public String getResolution() {
+		return resolution;
+	}
+
+	public void setResolution(String resolution) {
+		this.resolution = resolution;
 	}
 	
 }

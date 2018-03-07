@@ -976,7 +976,10 @@ public class SiteController extends BaseController {
 	        			}        				
 	           			if(contentType!=null && contentType.startsWith("video/")) {	
 	           				 logger.debug("video2mp4:"+file.getAbsolutePath());
-	        				 ImageUtil.video2mp4(file.getAbsolutePath());
+	           				 Folder currentFolder = jcrService.getFolder(assetPath);
+	           				 String resolution = "720x540";
+	           				 if(currentFolder.getResolution()!=null) resolution = currentFolder.getResolution();
+	        				 ImageUtil.video2mp4(file.getAbsolutePath(),resolution);
 	        			}        				
 
         			}else {
