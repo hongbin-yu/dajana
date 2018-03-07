@@ -2269,11 +2269,11 @@ public class SiteController extends BaseController {
 		}
 		try {
 			File outfile = new File(jcrService.getDevice()+path);
+			String ext = path.substring(path.indexOf("."));
+			if(outfile.isDirectory()) {
+				outfile = new File(jcrService.getDevice()+path+"/origin"+ext);
+			}
 			if(outfile.exists()) {
-/*				FileInputStream in = new FileInputStream(outfile);
-				response.setContentLength((int)outfile.length());
-				IOUtils.copy(in, response.getOutputStream());	
-				in.close();*/
 				super.serveResource(request, response, outfile, null);				
 			}else if(path !=null && jcrService.nodeExsits(path)) {
 				Asset asset = (Asset)jcrService.getObject(path);
@@ -2284,6 +2284,10 @@ public class SiteController extends BaseController {
 					File file = null;
 					Device device = (Device)jcrService.getObject(asset.getDevice());
 					file = new File(device.getLocation()+asset.getPath());
+					ext = asset.getPath().substring(asset.getPath().indexOf("."));
+					if(outfile.isDirectory()) {
+						outfile = new File(jcrService.getDevice()+asset.getPath()+"/origin"+ext);
+					}
 /*
 					FileInputStream in = new FileInputStream(file);
 					response.setContentType(asset.getContentType());
