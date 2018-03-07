@@ -976,7 +976,7 @@ public class SiteController extends BaseController {
 	        			}        				
 	           			if(contentType!=null && contentType.startsWith("video/")) {	
 	           				 logger.debug("video2mp4:"+file.getAbsolutePath());
-	        				 ImageUtil.video2mp4(file.getAbsolutePath(), device.getLocation());
+	        				 ImageUtil.video2mp4(file.getAbsolutePath());
 	        			}        				
 
         			}else {
