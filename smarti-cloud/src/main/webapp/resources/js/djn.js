@@ -665,7 +665,7 @@ function output(data) {
 			  +'<label for="contentType'+data.uid+'">类型&nbsp;</label><input class="form-control" id="contentType'+data.uid+'" name="contentType" value="'+data.contentType+'" size="24" uid="'+data.uid+'" disabled/>'
 			  +'</div>'
 			  +'<div class="form-group">'
-			  +'<label for="size'+data.uid+'">长度&nbsp;</label><input class="form-control" id="size'+data.uid+'" name="size" value="'+data.size+'" size="24" uid="'+data.uid+'" disabled/>'
+			  +'<label for="size'+data.uid+'">长度&nbsp;</label><input class="form-control" id="size'+data.uid+'" name="size" value="'+data.size+"("+data.width+"x"+data.height+'）" size="24" uid="'+data.uid+'" disabled/>'
 			  +'</div>'	
 			  +'<div class="form-group">'
 			  +'<label for="lastModified'+data.uid+'">文件日期&nbsp;</label>'
