@@ -483,7 +483,7 @@ public class ImageUtil
     	//writer.write("ffmpeg -ss 00:00:02 -i "+device+filename +" -nostats -nostdin -s 400X400 -vframes 1 "+icon);
     	//writer.newLine();
 
-		writer.write("ffmpeg -i "+filename +" -nostats -nostdin -s 600X400 -c:v libx264 -preset ultrafast -movflags +faststart "+output);
+		writer.write("ffmpeg -i "+filename +" -nostats -nostdin -s 720X540 -c:v libx264 -preset ultrafast -movflags +faststart "+output);
     	//writer.write("ffmpeg -i "+device+filename +" -nostats -nostdin -s 600X400 -c:v libx264 -preset ultrafast -movflags +faststart "+output);
     	//writer.newLine();
 		//writer.write("ffmpeg -i "+output+" -c:v libvpx -b:v 1M -c:a libvorbis "+webmOutput);
