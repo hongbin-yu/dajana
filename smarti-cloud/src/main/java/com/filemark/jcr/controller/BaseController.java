@@ -498,6 +498,8 @@ public class BaseController {
                 sos.println("--" + MULTIPART_BOUNDARY + "--");
             }
         }finally{
+        	input.close();
+        	output.close();
     		ImageUtil.HDDOff();
         }
 

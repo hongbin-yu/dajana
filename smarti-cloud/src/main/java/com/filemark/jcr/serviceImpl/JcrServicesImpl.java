@@ -1573,7 +1573,10 @@ public class JcrServicesImpl implements JcrServices {
 		jcrTemplate.execute(new JcrCallback() { 
         	public Object doInJcr(Session session) throws RepositoryException, IOException {
         		BufferedImage image = null;
-        		File file = getFile(path);
+                String ext = path.substring(path.lastIndexOf("."));	
+        		File file = new File(getFile(path),"origin"+ext);
+        		
+        		
         		if(file !=null && file.exists()) {
         			image = ImageIO.read(file);
         		}else {
@@ -1586,10 +1589,11 @@ public class JcrServicesImpl implements JcrServices {
         		}
         		BufferedImage resizedImg = scaleBufferedImage(image,x);
     			//ByteArrayOutputStream os = new ByteArrayOutputStream();
-        		OutputStream os = new FileOutputStream(home+"/icon"+x+path);
+        		OutputStream os = new FileOutputStream(device+path+"/x"+x+".jpg");
     			ImageIO.write(resizedImg, "jpeg", os);
-    			updatePropertyByPath(path, "icon", home+"/icon"+x+path);
+    			updatePropertyByPath(path, "icon", device+path+"/x"+x+".jpg");
     			os.close();
+    			
        			//InputStream is = new ByteArrayInputStream(os.toByteArray());
     			//String mineType = node.getParent().getProperty("contentType").getString();
     			//addFile(path,"file-"+x,is,"image/jpeg");
@@ -1607,7 +1611,10 @@ public class JcrServicesImpl implements JcrServices {
         		File file = getFile(path);
         		if(file !=null && file.exists()) {
         			String infile = file.getAbsolutePath();
-        			String outfile =home+ "/icon"+w+path;
+        			if(file.isDirectory()) {
+        				infile +="/origin"+ infile.substring(infile.indexOf("."));
+        			}
+        			String outfile =device+ path+"/x"+w+".jpg";
         			File out = new File(outfile);
         			if(!out.getParentFile().exists()) {
         				out.getParentFile().mkdirs();
@@ -1656,7 +1663,7 @@ public class JcrServicesImpl implements JcrServices {
         	    for(Asset asset : assets.getItems()) {
         	    	BufferedImage image = null;;
         	    	File file = getFile(asset.getPath());
-        	    	File icon = new File(home+"/icon400/"+asset.getPath());
+        	    	File icon = new File(device+asset.getPath()+"/x400.jpg");
         	    	if(icon.exists()) {
         	    		image = ImageIO.read(icon);
         	    	}else if(file !=null) {
@@ -1704,8 +1711,9 @@ public class JcrServicesImpl implements JcrServices {
 		jcrTemplate.execute(new JcrCallback() { 
         	public Object doInJcr(Session session) throws RepositoryException, IOException {
         	BufferedImage image = null;
-        	File file = getFile(path);
-        	if(file != null) {
+        	String ext = path.substring(path.lastIndexOf("."));
+        	File file = new File(getFile(path),"origin"+ext);
+        	if(file.exists()) {
         		image = ImageIO.read(file);
         	}else {
         		Node node = getNode(path+"/original");	
@@ -1731,7 +1739,8 @@ public class JcrServicesImpl implements JcrServices {
 			g2.dispose();  
 
 			//String mineType = node.getParent().getProperty("contentType").getString();
-			if(file!=null) {
+			if(file.exists()) {
+				
 				ImageIO.write(imageRotated, "jpeg", new FileOutputStream(file));
 			}else {
 				ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -1739,6 +1748,7 @@ public class JcrServicesImpl implements JcrServices {
 	   			InputStream is = new ByteArrayInputStream(os.toByteArray());				
 	   			addFile(path,"original",is,"image/jpeg");	
 	   			is.close();
+	   			os.close();
 			}
 
 			Node asset = getNode(path);
@@ -1757,9 +1767,13 @@ public class JcrServicesImpl implements JcrServices {
         	public Object doInJcr(Session session) throws RepositoryException, IOException {
         	BufferedImage image = null;
         	File file = getFile(path);
+        	
         	int width,height; 
             Node node = getNode(path);
-      	    String infile = file.getAbsolutePath();
+            String ext = path.substring(path.lastIndexOf("."));
+            
+      	    String infile = file.getAbsolutePath()+"/origin"+ext;
+      	    file = new File(file,"origin"+ext);
 	        Metadata metadata = null;
 			try {
 				String sorientation=ImageUtil.oreintation(infile);
@@ -2595,6 +2609,7 @@ public class JcrServicesImpl implements JcrServices {
 			Node deviceNode = getNode(node.getProperty("device").getString());
 			if(deviceNode.hasProperty("location")) {
 				String location = deviceNode.getProperty("location").getString();
+				
 				return new File(location+path);
 			}
 		}

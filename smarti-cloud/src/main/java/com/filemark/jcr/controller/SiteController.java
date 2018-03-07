@@ -17,6 +17,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -81,7 +82,10 @@ public class SiteController extends BaseController {
 	    ModelAndView modelAndView = new ModelAndView("error404");
 	    String errorcode = request.getParameter("error");
 	    String message =  ex.getMessage();
-	    String simpleName = ex.getCause().getClass().getSimpleName();
+	    
+	    String simpleName ="";
+	    if(ex.getCause()!=null)
+	    	simpleName = ex.getCause().getClass().getSimpleName();
 	    //logger.info(simpleName);
 	    if (simpleName.equals("ClientAbortException") || simpleName.equals("SocketException")) {
 			ImageUtil.HDDOff();
@@ -398,7 +402,7 @@ public class SiteController extends BaseController {
 		try {
 			String folderName = folder.getName().toLowerCase().replaceAll(" ", "-");
     		if(!folderName.matches("(\\w|\\.|\\-|\\s|_)+")) {
-    			folderName = path+"/"+new Date().getTime();
+    			folderName = path+"/"+getDateTime();
     		}
 			folder.setPath(jcrService.getUniquePath(path, folderName));
 			folder.setLastModified(new Date());
@@ -912,7 +916,7 @@ public class SiteController extends BaseController {
         		}
         		String assetPath = fileName;
         		if(!fileName.matches("(\\w|\\.|\\-|\\s|_)+")) {
-        			assetPath = path+"/"+new Date().getTime()+ext;
+        			assetPath = path+"/"+getDateTime()+ext;
         			//fileName = DjnUtils.Iso2Uft8(fileName);
         		}else {
         			
@@ -921,7 +925,7 @@ public class SiteController extends BaseController {
 	        				asset = (Asset)jcrService.getObject(path+"/"+fileName);
 	        				assetPath = path+"/"+fileName;
         				}else {
-        					assetPath = path+"/"+new Date().getTime()+"-"+fileName;
+        					assetPath = path+"/"+getDateTime()+ext;
         				}
         			}else {
         				assetPath = jcrService.getUniquePath(path, fileName);
@@ -953,10 +957,12 @@ public class SiteController extends BaseController {
         				Device device = (Device)jcrService.getObject(asset.getDevice());
         				//logger.debug("Writing device "+device.getPath() +":"+device.getLocation());
         				infile = device.getLocation()+asset.getPath();
-        				File file = new File(device.getLocation()+asset.getPath());
-        				if(!file.getParentFile().exists()) {
+        				File folder = new File(device.getLocation()+asset.getPath());
+        				if(!folder.exists()) folder.mkdirs();
+        				File file = new File(device.getLocation()+asset.getPath()+"/origin"+ext);
+/*        				if(!file.getParentFile().exists()) {
         					file.getParentFile().mkdirs();
-        				}
+        				}*/
         				InputStream in = multipartFile.getInputStream();
         				FileUtils.copyInputStreamToFile(in, file);
         				in.close();
@@ -970,7 +976,7 @@ public class SiteController extends BaseController {
 	        			}        				
 	           			if(contentType!=null && contentType.startsWith("video/")) {	
 	           				 logger.debug("video2mp4:"+file.getAbsolutePath());
-	        				 ImageUtil.video2mp4(asset.getPath(), device.getLocation());
+	        				 ImageUtil.video2mp4(file.getAbsolutePath(), device.getLocation());
 	        			}        				
 
         			}else {
@@ -1066,7 +1072,7 @@ public class SiteController extends BaseController {
 		String fileName = nodeName;
 		fileName = nodeName.replaceAll(" ", "-");
 		if(!fileName.matches("(\\w|\\.|\\-|\\s|_)+")) {
-			fileName = ""+new Date().getTime()+"."+ext;
+			fileName = ""+getDateTime()+"."+ext;
 		}
 		if(!fileName.endsWith(ext)) fileName +=ext;
 		String assetPath =  path+"/"+fileName;
@@ -1093,11 +1099,13 @@ public class SiteController extends BaseController {
 			Device device = (Device)jcrService.getObject(asset.getDevice());
 			logger.debug("Writing device "+device.getPath() +":"+device.getLocation());
 			
-			File file = new File(device.getLocation()+asset.getPath());
-			if(!file.getParentFile().exists()) {
+			File folder = new File(device.getLocation()+asset.getPath());
+			File file = new File(device.getLocation()+asset.getPath()+"/origin."+ext);
+			if(!folder.exists()) folder.mkdirs();
+/*			if(!file.getParentFile().exists()) {
 				file.getParentFile().mkdirs();
 			}
-
+*/
 	
 			//FileUtils.copyURLToFile(url_img, file);
 	    	InputStream is = conn.getInputStream();
@@ -1147,7 +1155,7 @@ public class SiteController extends BaseController {
 			//String names[]=asset.getPath().split("/");
 			//String nodeName = asset.getPath().split("/")[names.length-1];
 			//String frompath = asset.getPath();
-			String topath = path+"/"+new Date().getTime();
+			String topath = path+"/"+getDateTime();
 			String contentType = asset.getContentType();
 			Device device = getDevice();
 
@@ -1631,122 +1639,57 @@ public class SiteController extends BaseController {
 	} 
 
 	@RequestMapping(value = {"/site/deleteasset.html","/protected/deleteasset.html"}, method = RequestMethod.POST)
-	public @ResponseBody String deleteAsset(String uid,String path,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
-		ImageUtil.HDDOn();
-		if(uid!=null && !uid.equals("")) {
-			path = jcrService.getNodeById(uid);
-		}else if( path==null || "".equals(path)) {
-			throw new Exception("路径没找到");
-		}
-		File file = jcrService.getFile(path);
-		if(file!=null && file.exists()) {
-			file.delete();
-			File parent = file.getParentFile();
-			if(parent.list().length == 0) {
-				parent.delete();
-			}
-		}
-		File mp4 = new File(file.getAbsoluteFile()+".mp4");
-		if(mp4.exists()) {
-			mp4.delete();
-		}
-		File webm = new File(file.getAbsoluteFile()+".webm");
-		if(webm.exists()) {
-			webm.delete();
-		}			
-		File pdficon = new File(jcrService.getHome()+"/icon400/"+path+".jpg");
-		if(path.lastIndexOf(".")>0) {
-			final String filebase = jcrService.getDevice()+path.substring(0,path.lastIndexOf("."));
-			final File[] files = file.getParentFile().listFiles( new FilenameFilter() {
-			    @Override
-			    public boolean accept( final File dir,
-			                           final String name ) {
-			        return name.matches( filebase+"-*\\.pdf" );
-			    }
-			} );
-			for ( final File f : files ) {
-			    if ( !f.delete() ) {
-			        logger.debug( "Can't remove " + f.getAbsolutePath() );
-			    }
-			}	
-			File pdffile = new File(filebase+".pdf");
-			if(pdffile.exists()) {
-				pdffile.delete();
-			}					
-		}
-		if(pdficon.exists()) {
-			pdficon.delete();
-		}
+	public @ResponseBody String deleteAsset(String uid,String path,Model model,HttpServletRequest request, HttpServletResponse response) {
 
-		File iconfile = new File(jcrService.getHome()+"/icon400/"+path);
-		if(iconfile!=null && iconfile.exists()) {
-			iconfile.delete();
-			File parent = iconfile.getParentFile();
-			if(parent.list().length == 0) {
-				parent.delete();
+		try {
+			if(uid!=null && !uid.equals("")) {
+				path = jcrService.getNodeById(uid);
+			}else if( path==null || "".equals(path)) {
+				return "error:路径没找到";
 			}
+			File file = jcrService.getFile(path);
+			if(file.isDirectory()) {
+				FileUtils.cleanDirectory(file);
+			}else {
+				file.delete();
+			}
+			return jcrService.deleteNode(path);
+		} catch (RepositoryException e) {
+			logger.error(e.getMessage());
+			return "error:"+e.getMessage();
+		} catch (IOException e) {
+			logger.error(e.getMessage());
+			return "error:"+e.getMessage();
 		}		
-		ImageUtil.HDDOff();
-		return jcrService.deleteNode(path);
+
+
 	}
 
 	@RequestMapping(value = {"/site/deleteassets.html","/protected/deleteasset.html"}, method = RequestMethod.POST)
-	public @ResponseBody String deleteAssets(String[] uid,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public @ResponseBody String deleteAssets(String[] uid,Model model,HttpServletRequest request, HttpServletResponse response) {
 		if(uid!=null) {
 			for(String id:uid) {
-				Asset asset = jcrService.getAssetById(id);
-				File file = jcrService.getFile(asset.getPath());
-				File pdficon = new File(jcrService.getHome()+"/icon400/"+asset.getPath()+".jpg");
-				if(asset.getPath().lastIndexOf(".")>0) {
-					final String filebase = jcrService.getDevice()+asset.getPath().substring(0,asset.getPath().lastIndexOf("."));
-					final File[] files = file.getParentFile().listFiles( new FilenameFilter() {
-					    @Override
-					    public boolean accept( final File dir,
-					                           final String name ) {
-					        return name.matches( filebase+"-*\\.pdf" );
-					    }
-					} );
-					for ( final File f : files ) {
-					    if ( !f.delete() ) {
-					        logger.debug( "Can't remove " + f.getAbsolutePath() );
-					    }
-					}	
-					File pdffile = new File(filebase+".pdf");
-					if(pdffile.exists()) {
-						pdffile.delete();
+
+			
+				try {
+					Asset asset = jcrService.getAssetById(id);
+					File file = jcrService.getFile(asset.getPath());
+					if(file.isDirectory()) {
+						FileUtils.cleanDirectory(file);
+					}else {
+						file.delete();
 					}
-					File mp4 = new File(file.getAbsoluteFile()+".mp4");
-					if(mp4.exists()) {
-						mp4.delete();
-					}
-					File webm = new File(file.getAbsoluteFile()+".webm");
-					if(webm.exists()) {
-						webm.delete();
-					}					
+					jcrService.deleteNode(asset.getPath());
+				} catch (RepositoryException e) {
+					logger.error(e.getMessage());
+					return "error:"+e.getMessage();
+				} catch (IOException e) {
+					logger.error(e.getMessage());
+					return "error:"+e.getMessage();
 				}
-				if(pdficon.exists()) {
-					pdficon.delete();
-				}
-				File iconfile = new File(jcrService.getHome()+"/icon400/"+asset.getPath());
-				if(iconfile!=null && iconfile.exists()) {
-					iconfile.delete();
-					File parent = iconfile.getParentFile();
-					if(parent.list().length == 0) {
-						parent.delete();
-					}
-				}						
-				if(file!=null && file.exists()) {
-					file.delete();
-					File parent = file.getParentFile();
-					if(parent.list().length == 0) {
-						parent.delete();
-					}
-				}
-				
-				jcrService.deleteNode(asset.getPath());
 			}
 		}else {
-			throw new Exception("error:路径没找到");
+			return "error:路径没找到";
 		}
 		return "";
 	}	
@@ -1769,10 +1712,10 @@ public class SiteController extends BaseController {
 	public @ResponseBody String doc2pdf(String path,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
 
 		try {
-			String pdfpath = path.substring(0, path.lastIndexOf("."))+".pdf";
+			//String pdfpath = path.substring(0, path.lastIndexOf("."))+".pdf";
 
 
-			File pdffile = new File(jcrService.getDevice()+pdfpath);
+			File pdffile = new File(jcrService.getDevice()+path+"/origin.pdf");
 			if(pdffile.exists()) {
 /*				FileInputStream in = new FileInputStream(pdffile);
 				response.setContentType("application/pdf");
@@ -1782,15 +1725,19 @@ public class SiteController extends BaseController {
 
 				return null;
 			}
-
+    		String ext = "";
+    		if(path.indexOf(".")>0) {
+    			ext = path.substring(path.indexOf("."));
+    		}
 
 			if(path !=null  && jcrService.nodeExsits(path)) {
 				Asset asset = (Asset)jcrService.getObject(path);
 				if(asset.getDevice()!=null) {
 					File file = null;
 					Device device = (Device)jcrService.getObject(asset.getDevice());
-					String docname = device.getLocation()+asset.getPath();
-					String pdfname = device.getLocation()+asset.getPath().replaceFirst(".docx", ".pdf").replaceFirst(".doc", ".pdf").replaceFirst(".rtf", ".pdf");
+					String docname = device.getLocation()+asset.getPath()+"/origin"+ext;
+					String pdfname = device.getLocation()+asset.getPath()+"/origin.pdf";
+					//String pdfname = device.getLocation()+asset.getPath().replaceFirst(".docx", ".pdf").replaceFirst(".doc", ".pdf").replaceFirst(".rtf", ".pdf");
 					file = new File(pdfname);
 					if(!file.exists()) {
 						try {
@@ -1839,8 +1786,8 @@ public class SiteController extends BaseController {
 
 		try {
 			if (p==null) p=0;
-			String pdfpath = path.substring(0, path.lastIndexOf("."))+".pdf";
-			String jpgpath = path.substring(0, path.lastIndexOf("."))+"-"+p+".jpg";
+			String pdfpath = path+"/origin.pdf";
+			String jpgpath = path+"/origin"+"-"+p+".jpg";
 			File pdffile = new File(jcrService.getDevice()+pdfpath);
 			File jpgfile = new File(jcrService.getDevice()+jpgpath);
 			if(pdffile.exists() && !jpgfile.exists()) {
@@ -1865,14 +1812,17 @@ public class SiteController extends BaseController {
 				return null;
 			}
 
-
+    		String ext = "";
+    		if(path.indexOf(".")>0) {
+    			ext = path.substring(path.indexOf("."));
+    		}
 			if(path !=null  && jcrService.nodeExsits(path)) {
 				Asset asset = (Asset)jcrService.getObject(path);
 				if(asset.getDevice()!=null) {
 					File file = null;
 					Device device = (Device)jcrService.getObject(asset.getDevice());
-					String docname = device.getLocation()+asset.getPath();
-					String pdfname = device.getLocation()+asset.getPath().replaceFirst(".docx", ".pdf").replaceFirst(".doc", ".pdf").replaceFirst(".rtf", ".pdf");
+					String docname = device.getLocation()+asset.getPath()+"/orogin"+ext;
+					String pdfname = device.getLocation()+asset.getPath()+"/orogin.pdf";//device.getLocation()+asset.getPath().replaceFirst(".docx", ".pdf").replaceFirst(".doc", ".pdf").replaceFirst(".rtf", ".pdf");
 					file = new File(pdfname);
 					if(!file.exists()) {
 						try {
@@ -1888,7 +1838,7 @@ public class SiteController extends BaseController {
 						}
 					}
 					if(pdffile.exists() && !jpgfile.exists()) {
-						if(ImageUtil.pdf2jpg(pdffile.getAbsolutePath(), p, "1080x1080", jpgfile.getAbsolutePath())==0) {
+						if(ImageUtil.pdf2jpg(pdffile.getAbsolutePath(), p, "1600x1600", jpgfile.getAbsolutePath())==0) {
 /*							FileInputStream in = new FileInputStream(jpgfile);
 							response.setContentType("image/jpeg");
 							IOUtils.copy(in, response.getOutputStream());
@@ -1932,10 +1882,10 @@ public class SiteController extends BaseController {
 				response.sendRedirect("/resources/images/pdf-icon.png");									
 
 			}
-			String pdfpath = path.substring(0, path.lastIndexOf("."))+".pdf";
+			String pdfpath = path+"/origin.pdf";
 
 			File file = null;
-			String jpgname = jcrService.getHome()+"/icon400"+path+".jpg";
+			String jpgname = jcrService.getDevice()+path+"/x400"+".jpg";
 			String pdfname = jcrService.getDevice()+pdfpath;
 			file = new File(jpgname);
 			if(!file.exists()) {
@@ -1978,11 +1928,11 @@ public class SiteController extends BaseController {
 
 			}
 			if(p==null) p=0;
-			String pdfbase = path.substring(0, path.lastIndexOf("."));
-			String pdfpath = pdfbase+".pdf";
+			//String pdfbase = path.substring(0, path.lastIndexOf("."));
+			String pdfpath = path+"/origin.pdf";
 
 			File file = null;
-			String jpgname = jcrService.getDevice()+pdfbase+"-"+p+".jpg";
+			String jpgname = jcrService.getDevice()+path+"/origin-"+p+".jpg";
 			String pdfname = jcrService.getDevice()+pdfpath;
 			file = new File(jpgname);
 			if(!file.exists()) {
@@ -2028,9 +1978,9 @@ public class SiteController extends BaseController {
 			}
 			if(p==null) p=0;
 			File file = null;
-			String filebase = path.substring(0, path.lastIndexOf("."));
-			String jpgname = jcrService.getDevice()+filebase+"-"+p+".jpg";
-			String pdfpath = filebase+".pdf";
+			//String filebase = path.substring(0, path.lastIndexOf("."));
+			String jpgname = jcrService.getDevice()+path+"/origin-"+p+".jpg";
+			String pdfpath = path+"/origin.pdf";
 			String pdfname = jcrService.getDevice()+ pdfpath;
 			file = new File(jpgname);
 			if(!file.exists()) {
@@ -2078,9 +2028,13 @@ public class SiteController extends BaseController {
 				response.sendRedirect("/resources/images/video-icon.png");									
 				
 			}
+    		String ext = "";
+    		if(path.indexOf(".")>0) {
+    			ext = path.substring(path.indexOf("."));
+    		}			
 			File file = null;
-			String infile = jcrService.getDevice()+path;
-			String jpgname = jcrService.getHome()+"/icon400"+path+".jpg";
+			String infile = jcrService.getDevice()+path+"/origin"+ext;
+			String jpgname = jcrService.getDevice()+path+"/x400"+".jpg";
 			file = new File(jpgname);
 			if(!file.exists()) {
 				if(ImageUtil.video2jpg(infile, "400x400", jpgname) !=0)
@@ -2112,10 +2066,14 @@ public class SiteController extends BaseController {
 	public ResponseEntity<InputStreamResource> video2mp4(String path,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
 		ImageUtil.HDDOn();	
 		try {
-			File file = new File(jcrService.getDevice()+path+".mp4");
+    		String ext = "";
+    		if(path.indexOf(".")>0) {
+    			ext = path.substring(path.indexOf("."));
+    		}
+			File file = new File(jcrService.getDevice()+path+"/origin"+ext+".mp4");
 			String contentType="video/mp4";
 			if(!file.exists()) {
-				file = new File(jcrService.getDevice()+path);
+				file = new File(jcrService.getDevice()+path+"/origin"+ext);
 				logger.debug("video original:"+file.getAbsolutePath());
 				try {
 					Asset asset = (Asset)jcrService.getObject(path);
@@ -2193,15 +2151,17 @@ public class SiteController extends BaseController {
 		try {
 			if(uid!=null && (path==null || "".equals(path)))
 				path = jcrService.getNodeById(uid);
-
-			File outFile = new File((width==null?jcrService.getDevice():jcrService.getHome()+"/icon"+width)+path);
-			if(outFile.exists()) {
-				logger.debug("output:"+outFile.getAbsolutePath());
-/*				FileInputStream in = new FileInputStream(outFile);
-				IOUtils.copy(in, response.getOutputStream());
-				in.close();*/
+			File outFile = new File(jcrService.getDevice()+path);
+			if(outFile.exists() && outFile.isFile()) {
+				logger.debug("path is file output:"+outFile.getAbsolutePath());
 				super.serveResource(request, response, outFile, null);
-
+				return null;					
+			}
+			String ext = path.substring(path.lastIndexOf("."));
+			outFile = new File(jcrService.getDevice()+path+(width==null?"/origin"+ext:"/x"+width+".jpg"));
+			if(outFile.exists() && outFile.isFile()) {
+				logger.debug("output:"+outFile.getAbsolutePath());
+				super.serveResource(request, response, outFile, null);
 				return null;					
 			}
 
@@ -2214,12 +2174,12 @@ public class SiteController extends BaseController {
 				}else */
 				if(asset.getDevice()!=null) {
 					Device device = (Device)jcrService.getObject(asset.getDevice());
-					File file = new File(device.getLocation()+asset.getPath());
+					File file = new File(device.getLocation()+asset.getPath()+"/origin"+ext);
 					if(file.exists() && asset.getWidth() == null && asset.getContentType().startsWith("image/")) {
 						jcrService.autoRoateImage(path);
 					}
 					if(width!=null && file.exists()) {
-						String iconfile = jcrService.getHome()+"/icon"+width+asset.getPath();
+						String iconfile = device.getLocation()+asset.getPath()+"/x"+width+".jpg";
 						File icon = new File(iconfile);
 						
 						if(!icon.exists()) {
@@ -2878,6 +2838,12 @@ public class SiteController extends BaseController {
 		return new Device();
 	}
 
-
+	private String getDateTime() {
+		Date now = new Date();
+		SimpleDateFormat sf = new SimpleDateFormat("yyMMddHHmmss.SSS");
+		return sf.format(now);
+		
+		
+	}
 	  
 }
