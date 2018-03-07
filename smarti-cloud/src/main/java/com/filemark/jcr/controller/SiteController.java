@@ -911,8 +911,8 @@ public class SiteController extends BaseController {
         		}
         		fileName = fileName.toLowerCase().replaceAll(" ", "-");
         		String ext = "";
-        		if(fileName.indexOf(".")>0) {
-        			ext = fileName.substring(fileName.indexOf("."), fileName.length());
+        		if(fileName.lastIndexOf(".")>0) {
+        			ext = fileName.substring(fileName.lastIndexOf("."), fileName.length());
         		}
         		String assetPath = fileName;
         		if(!fileName.matches("(\\w|\\.|\\-|\\s|_)+")) {
@@ -1712,7 +1712,7 @@ public class SiteController extends BaseController {
 	public @ResponseBody String doc2pdf(String path,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
 
 		try {
-			//String pdfpath = path.substring(0, path.lastIndexOf("."))+".pdf";
+			//String pdfpath = path.substring(0, path.lastlastIndexOf("."))+".pdf";
 
 
 			File pdffile = new File(jcrService.getDevice()+path+"/origin.pdf");
@@ -1726,8 +1726,8 @@ public class SiteController extends BaseController {
 				return null;
 			}
     		String ext = "";
-    		if(path.indexOf(".")>0) {
-    			ext = path.substring(path.indexOf("."));
+    		if(path.lastIndexOf(".")>0) {
+    			ext = path.substring(path.lastIndexOf("."));
     		}
 
 			if(path !=null  && jcrService.nodeExsits(path)) {
@@ -1813,8 +1813,8 @@ public class SiteController extends BaseController {
 			}
 
     		String ext = "";
-    		if(path.indexOf(".")>0) {
-    			ext = path.substring(path.indexOf("."));
+    		if(path.lastIndexOf(".")>0) {
+    			ext = path.substring(path.lastIndexOf("."));
     		}
 			if(path !=null  && jcrService.nodeExsits(path)) {
 				Asset asset = (Asset)jcrService.getObject(path);
@@ -1928,7 +1928,7 @@ public class SiteController extends BaseController {
 
 			}
 			if(p==null) p=0;
-			//String pdfbase = path.substring(0, path.lastIndexOf("."));
+			//String pdfbase = path.substring(0, path.lastlastIndexOf("."));
 			String pdfpath = path+"/origin.pdf";
 
 			File file = null;
@@ -1978,7 +1978,7 @@ public class SiteController extends BaseController {
 			}
 			if(p==null) p=0;
 			File file = null;
-			//String filebase = path.substring(0, path.lastIndexOf("."));
+			//String filebase = path.substring(0, path.lastlastIndexOf("."));
 			String jpgname = jcrService.getDevice()+path+"/origin-"+p+".jpg";
 			String pdfpath = path+"/origin.pdf";
 			String pdfname = jcrService.getDevice()+ pdfpath;
@@ -2029,8 +2029,8 @@ public class SiteController extends BaseController {
 				
 			}
     		String ext = "";
-    		if(path.indexOf(".")>0) {
-    			ext = path.substring(path.indexOf("."));
+    		if(path.lastIndexOf(".")>0) {
+    			ext = path.substring(path.lastIndexOf("."));
     		}			
 			File file = null;
 			String infile = jcrService.getDevice()+path+"/origin"+ext;
@@ -2067,8 +2067,8 @@ public class SiteController extends BaseController {
 		ImageUtil.HDDOn();	
 		try {
     		String ext = "";
-    		if(path.indexOf(".")>0) {
-    			ext = path.substring(path.indexOf("."));
+    		if(path.lastIndexOf(".")>0) {
+    			ext = path.substring(path.lastIndexOf("."));
     		}
 			File file = new File(jcrService.getDevice()+path+"/origin"+ext+".mp4");
 			String contentType="video/mp4";
@@ -2269,7 +2269,7 @@ public class SiteController extends BaseController {
 		}
 		try {
 			File outfile = new File(jcrService.getDevice()+path);
-			String ext = path.substring(path.indexOf("."));
+			String ext = path.substring(path.lastIndexOf("."));
 			if(outfile.isDirectory()) {
 				outfile = new File(jcrService.getDevice()+path+"/origin"+ext);
 			}
@@ -2284,7 +2284,7 @@ public class SiteController extends BaseController {
 					File file = null;
 					Device device = (Device)jcrService.getObject(asset.getDevice());
 					file = new File(device.getLocation()+asset.getPath());
-					ext = asset.getPath().substring(asset.getPath().indexOf("."));
+					ext = asset.getPath().substring(asset.getPath().lastIndexOf("."));
 					if(outfile.isDirectory()) {
 						outfile = new File(jcrService.getDevice()+asset.getPath()+"/origin"+ext);
 					}
@@ -2737,7 +2737,7 @@ public class SiteController extends BaseController {
 
 		    
 			FileOutputStream output = new FileOutputStream(assetFolder+"/"+filename+ext);
-			ext =asset.getPath().substring(asset.getPath().indexOf("."));
+			ext =asset.getPath().substring(asset.getPath().lastIndexOf("."));
 			if(w != null) {
 				File icon = new File(jcrService.getDevice()+asset.getPath()+"/x"+w+"00.jpg");
 				if(icon.exists()) {
@@ -2847,7 +2847,7 @@ public class SiteController extends BaseController {
 
 	private String getDateTime() {
 		Date now = new Date();
-		SimpleDateFormat sf = new SimpleDateFormat("yyMMddHHmmss.SSS");
+		SimpleDateFormat sf = new SimpleDateFormat("yyMMddHHmmss");
 		return sf.format(now);
 		
 		
