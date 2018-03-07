@@ -570,7 +570,7 @@ public class JcrServicesImpl implements JcrServices {
              if(node.hasProperty("readonly"))
             	 folder.setReadonly(node.getProperty("readonly").getString());   
              if(node.hasProperty("resolution"))
-            	 folder.setReadonly(node.getProperty("resolution").getString());   
+            	 folder.setResolution(node.getProperty("resolution").getString());   
              if(node.hasProperty("ocm_classname")) {
             	 String[] classname = node.getProperty("ocm_classname").getString().split("\\.");
             	 
@@ -661,6 +661,8 @@ public class JcrServicesImpl implements JcrServices {
             	 folder.setPasscode(node.getProperty("passcode").getString());        
              if(node.hasProperty("intranet"))
             	 folder.setIntranet(node.getProperty("intranet").getString());   
+             if(node.hasProperty("resolution"))
+            	 folder.setResolution(node.getProperty("resolution").getString());   
              
              folder.setTitle(getTitle(node));
              folder.setPath(node.getPath());
@@ -2077,6 +2079,8 @@ public class JcrServicesImpl implements JcrServices {
             			}
                         if(node.hasProperty("intranet"))
                        	 folder.setIntranet(node.getProperty("intranet").getString());   
+                        if(node.hasProperty("resolution"))
+                       	 folder.setResolution(node.getProperty("resolution").getString());   
         			
 
         		}

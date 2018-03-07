@@ -978,7 +978,20 @@ public class SiteController extends BaseController {
 	           				 logger.debug("video2mp4:"+file.getAbsolutePath());
 	           				 Folder currentFolder = jcrService.getFolder(assetPath);
 	           				 String resolution = "720x540";
-	           				 if(currentFolder.getResolution()!=null) resolution = currentFolder.getResolution();
+	           				 if(currentFolder.getResolution()!=null) {
+	           					 resolution = currentFolder.getResolution();
+	           				 }
+	           				 if("720x540".equals(resolution)) {
+	           					 asset.setWidth(720l);
+	           					 asset.setHeight(540l);
+	           				 }else if("540x360".equals(resolution)) {
+	           					 asset.setWidth(540l);
+	           					 asset.setHeight(360l);	           					 
+	           				 }else {
+	           					 asset.setWidth(360l);
+	           					 asset.setHeight(360l);		           					 
+	           				 }
+	           				jcrService.addOrUpdate(asset);
 	        				 ImageUtil.video2mp4(file.getAbsolutePath(),resolution);
 	        			}        				
 
