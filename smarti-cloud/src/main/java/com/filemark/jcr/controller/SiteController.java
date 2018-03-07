@@ -2733,17 +2733,20 @@ public class SiteController extends BaseController {
 
 		    
 			FileOutputStream output = new FileOutputStream(assetFolder+"/"+filename+ext);
+			ext =asset.getPath().substring(asset.getPath().indexOf("."));
 			if(w != null) {
-				File icon = new File(jcrService.getHome()+"/icon"+w+"00/"+asset.getPath());
+				File icon = new File(jcrService.getDevice()+asset.getPath()+"/x"+w+"00.jpg");
 				if(icon.exists()) {
 					FileInputStream in = new FileInputStream(icon);
 					IOUtils.copy(in, output);	
 					in.close();
 				}else {
-					File file = jcrService.getFile(asset.getPath());
+
+					File file =new File(jcrService.getFile(asset.getPath()),"/origin"+ext);
 					FileInputStream in = new FileInputStream(file);
 					IOUtils.copy(in, output);	
-					in.close();					
+					in.close();	
+
 /*					String filePath = asset.getPath()+"/file-"+w+"00";
 					int width = Integer.parseInt(w);
 					if(jcrService.nodeExsits(filePath))
@@ -2756,20 +2759,20 @@ public class SiteController extends BaseController {
 				Device device = (Device)jcrService.getObject(asset.getDevice());
 				String filePath = device.getLocation()+asset.getPath();
 				if(link.startsWith("doc2jpg")) {
-					filePath = jcrService.getHome()+"/icon400"+asset.getPath()+".jpg";
+					filePath = jcrService.getDevice()+asset.getPath()+"/x400"+".jpg";
 				}else if(link.startsWith("pdf2jpg")) {					
-					filePath = jcrService.getHome()+"/icon400"+asset.getPath()+".jpg";
+					filePath = jcrService.getDevice()+asset.getPath()+"/x400"+".jpg";
 				}else if(link.startsWith("video2jpg")) {
-					filePath = jcrService.getHome()+"/icon400"+asset.getPath()+".jpg";
+					filePath = jcrService.getDevice()+asset.getPath()+"/x400"+".jpg";
 				}else if(link.startsWith("video.mp4")) {
-					if(new File(device.getLocation()+asset.getPath()+".mp4").exists())
-						filePath = device.getLocation()+asset.getPath()+".mp4";
+					if(new File(device.getLocation()+asset.getPath()+"/origin"+ext+".mp4").exists())
+						filePath = device.getLocation()+asset.getPath()+"/origin"+ext+".mp4";
 					else 
 						filePath = device.getLocation()+asset.getPath();
 				}else if(link.startsWith("doc2pdf")) {
-					filePath = filePath.substring(0, filePath.lastIndexOf("."))+".pdf";
+					filePath = jcrService.getDevice()+asset.getPath()+"/origin.pdf";
 				}else if(link.startsWith("pdf2img")) {
-					filePath = filePath.substring(0, filePath.lastIndexOf("."))+"-"+p+".pdf";
+					filePath = jcrService.getDevice()+asset.getPath()+"/origin"+"-"+p+".pdf";
 
 				
 				}
