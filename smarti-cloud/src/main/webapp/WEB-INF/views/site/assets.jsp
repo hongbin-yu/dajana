@@ -53,9 +53,9 @@
 				<div class="form-group">
 				<label for="folderresolution"><spring:message code="djn.resolution"/>&nbsp;</label>
 				<select class="form-control" id="folderresolution" name="resolution" value="${folder.resolution}" uid="${folder.uid}"  onchange="updateNode(this)">
-					<option value="720x"><spring:message code="djn.720x540"/></option>
-					<option value="540x" <c:if test="${folder.resolution=='540x360'}">selected</c:if>><spring:message code="djn.540x360"/></option>
-					<option value="360x" <c:if test="${folder.resolution=='360x360'}">selected</c:if>><spring:message code="djn.360x360"/></option>
+					<option value="720x540"><spring:message code="djn.720x540"/></option>
+					<option value="540x360" <c:if test="${folder.resolution=='540x360'}">selected</c:if>><spring:message code="djn.540x360"/></option>
+					<option value="360x280" <c:if test="${folder.resolution=='360x360'}">selected</c:if>><spring:message code="djn.360x360"/></option>
 				</select>
 				</div>
 				<div class="form-group">
