@@ -1650,9 +1650,9 @@ public class SiteController extends BaseController {
 			File file = jcrService.getFile(path);
 			if(file.isDirectory()) {
 				FileUtils.cleanDirectory(file);
-			}else {
-				file.delete();
 			}
+			file.delete();
+
 			return jcrService.deleteNode(path);
 		} catch (RepositoryException e) {
 			logger.error(e.getMessage());
@@ -1676,9 +1676,9 @@ public class SiteController extends BaseController {
 					File file = jcrService.getFile(asset.getPath());
 					if(file.isDirectory()) {
 						FileUtils.cleanDirectory(file);
-					}else {
-						file.delete();
 					}
+					file.delete();
+	
 					jcrService.deleteNode(asset.getPath());
 				} catch (RepositoryException e) {
 					logger.error(e.getMessage());
