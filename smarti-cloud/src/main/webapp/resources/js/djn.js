@@ -479,7 +479,7 @@ function uploadUrl() {
 	var url = $("#uploadLink").val();
 	var override = $("#override").is(":checked")?"true":"false";
 	path = $("#path").val();
-	var running = "<img src=\"resources/images/ui-anim_basic_16x16.gif\">"+ url + "<br/>";
+	var running = "<img src=\"/resources/images/ui-anim_basic_16x16.gif\">"+ url + "<br/>";
 	selDiv.innerHTML = running;	
 	$("#submit_upload_url").attr("disabled",true);
 	$.ajax ({
@@ -510,7 +510,7 @@ function uploadUrl() {
 
 var percentComplete = 0;
 function uploadFile(file) {
-	var running = "<img src=\"resources/images/ui-anim_basic_16x16.gif\">"+ file.name + "<br/>";
+	var running = "<img src=\"/resources/images/ui-anim_basic_16x16.gif\">"+ file.name + "<br/>";
 	selDiv.innerHTML = running;
 	var override = $("#override").is(":checked")?"true":"false";
 	var formData = new FormData();

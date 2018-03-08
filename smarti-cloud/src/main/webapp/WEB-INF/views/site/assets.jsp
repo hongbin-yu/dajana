@@ -53,11 +53,11 @@
 				<div class="form-group">
 				<label for="folderresolution"><spring:message code="djn.resolution"/>&nbsp;</label>
 				<select class="form-control" id="folderresolution" name="resolution" value="${folder.resolution}" uid="${folder.uid}"  onchange="updateNode(this)">
-					<option value="720x540"><spring:message code="djn.720x540"/></option>
-					<option value="540x360" <c:if test="${folder.resolution=='540x360'}">selected</c:if>><spring:message code="djn.540x360"/></option>
+					<option value="540x360"><spring:message code="djn.540x360"/></option>
+					<option value="720x540" <c:if test="${folder.resolution=='720x540'}">selected</c:if>><spring:message code="djn.720x540"/></option>
 					<option value="360x280" <c:if test="${folder.resolution=='360x360'}">selected</c:if>><spring:message code="djn.360x360"/></option>
 				</select>
-				</div>
+				</div>			
 				<div class="form-group">
 				<label for="sharing">共享-用户名@</label><input class="form-control" id="sharing" name="sharing" value="${folder.sharing }" size="35"  uid="${folder.uid }" onchange="updateNode(this)" placeholder="输入’用户名@‘"/>
 				</div>	
@@ -88,7 +88,6 @@
 					<div class="checkbox">
 					<label for="override"><input type="checkbox" name="override" value="true" id="override" size="35"> 覆盖旧文件如果重名</label>
 					</div>					
-
 					<input class="form-control wb-inv" type="file" id="fileUpload" name="file" size="60" required="required"  multiple/>
 					<input id="submit_upload" type="button" onclick="javascript:uploadFiles()" value="<spring:message code="djn.upload"/>" class="btn btn-primary" disabled> <input type="reset" value="<spring:message code="djn.clear"/>" onclick="resetSelDiv()" class="btn btn-default">
 				</div>

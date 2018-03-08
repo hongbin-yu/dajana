@@ -977,7 +977,7 @@ public class SiteController extends BaseController {
 	           			if(contentType!=null && contentType.startsWith("video/")) {	
 	           				 logger.debug("video2mp4:"+file.getAbsolutePath());
 	           				 Folder currentFolder = jcrService.getFolder(path);
-	           				 String resolution = "720x540";
+	           				 String resolution = "540x360";
 	           				 if(currentFolder.getResolution()!=null) {
 	           					 resolution = currentFolder.getResolution();
 	           				 }
@@ -1347,13 +1347,13 @@ public class SiteController extends BaseController {
 						bufferWriter.close();	
 				
 				}
-				Gson gson = new Gson();
+/*				Gson gson = new Gson();
 				File json = new File(jcrService.getHome()+page.getPath()+".json");
 				String jsonPage = gson.toJson(page);
 				//bufferWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(json)));
 				bufferWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(json),"UTF-8"));
 				bufferWriter.write(jsonPage);
-				bufferWriter.close();  		
+				bufferWriter.close();  */		
     		} catch (UnsupportedEncodingException e) {
     			logger.error(e.toString());
     			result = "UnsupportedEncodingException error:"+e.getMessage();
@@ -1395,6 +1395,13 @@ public class SiteController extends BaseController {
 				page.setContent(content);
 				page.setBreadcrumb(breadcrumb);
 				page.setNavigation(navigation);
+				Gson gson = new Gson();
+				File json = new File(jcrService.getHome()+page.getPath()+".json");
+				String jsonPage = gson.toJson(page);
+				//bufferWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(json)));
+				bufferWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(json),"UTF-8"));
+				bufferWriter.write(jsonPage);
+				bufferWriter.close();  				
 			}catch(Exception e) {
 				logger.error(e.toString());
 				result = "setBreadcrumb error:"+e.getMessage();	
@@ -2616,7 +2623,7 @@ public class SiteController extends BaseController {
 			if(urls.containsKey(href)) {
 				e.attr("href", urls.get(href));
 			}
-			if(!"".equals(href) && !href.startsWith("#") && !href.startsWith("http") &&  !href.startsWith("/templates/") && !href.startsWith("resources/") && !href.startsWith("/content/") && !href.startsWith("../") && !href.startsWith("/resources/")) {
+			if(!"".equals(href) && !href.startsWith("#") && !href.startsWith("http") &&  !href.startsWith("/templates/") && !href.startsWith("resources/") && !href.startsWith("/content/") && !href.startsWith("../content/") && !href.startsWith("/resources/")) {
 				try {
 					String filename = toFile(href,prefix+i,folder.getAbsolutePath(),path,allTypes);
 					i++;
@@ -2692,7 +2699,34 @@ public class SiteController extends BaseController {
 					logger.error("source error:"+el.getMessage());;
 				}
 			}
-		}				
+		}	
+		for (Element e:doc.getElementsByTag("video")) {
+			String href = e.attr("poster");
+			if(href==null) continue;
+			if(urls.containsKey(href)) {
+				e.attr("poster", urls.get(href));
+			}
+			if(href!=null && !"".equals(href) &&  !href.startsWith("#")  && !href.startsWith("http") && !href.startsWith("resources/") && !href.startsWith("/resources/")) {
+				try {
+					String filename = toFile(href,prefix+i,folder.getAbsolutePath(),path,allTypes);
+					i++;
+					e.attr("poster", location+filename);
+					urls.put(href, location+filename);
+				} catch (MalformedURLException e2) {
+					logger.error(e2.getMessage());
+				} catch (UnsupportedEncodingException e1) {
+					logger.error(e1.getMessage());;
+				} catch (RepositoryException e1) {
+					logger.error(e1.getMessage());
+				} catch (FileNotFoundException e1) {
+					logger.error(e1.getMessage());
+				} catch (IOException e1) {
+					logger.error(e1.getMessage());;
+				} catch (Exception el) {
+					logger.error("poster error:"+el.getMessage());;
+				}
+			}
+		}			
 		//update description
 		String description = jcrService.getProperty(path, "description");
 		if(doc.getElementsByClass("pagetag") !=null && (description == null || "".equals(description))) {
@@ -2750,10 +2784,33 @@ public class SiteController extends BaseController {
 					logger.error(e1.getMessage());
 				}				    	
 		    }
-
+			ext =asset.getPath().substring(asset.getPath().lastIndexOf("."));
+			String filePath = jcrService.getDevice()+asset.getPath();
+			if(link.startsWith("doc2jpg")) {
+				filePath = jcrService.getDevice()+asset.getPath()+"/x400"+".jpg";
+				ext=".jpg";
+			}else if(link.startsWith("pdf2jpg")) {					
+				filePath = jcrService.getDevice()+asset.getPath()+"/x400"+".jpg";
+				ext=".jpg";
+			}else if(link.startsWith("video2jpg")) {
+				filePath = jcrService.getDevice()+asset.getPath()+"/x400"+".jpg";
+				ext=".jpg";
+			}else if(link.startsWith("video.mp4")) {
+				if(new File(jcrService.getDevice()+asset.getPath()+"/origin"+ext+".mp4").exists()) {
+					filePath = jcrService.getDevice()+asset.getPath()+"/origin"+ext+".mp4";
+				} else 
+					filePath = jcrService.getDevice()+asset.getPath();
+					ext=".mp4";
+			}else if(link.startsWith("doc2pdf")) {
+				filePath = jcrService.getDevice()+asset.getPath()+"/origin.pdf";
+				ext=".pdf";
+			}else if(link.startsWith("pdf2img")) {
+				filePath = jcrService.getDevice()+asset.getPath()+"/origin"+"-"+p+".pdf";
+				ext=".pdf";
+			
+			}		    
 		    
 			FileOutputStream output = new FileOutputStream(assetFolder+"/"+filename+ext);
-			ext =asset.getPath().substring(asset.getPath().lastIndexOf("."));
 			if(w != null) {
 				File icon = new File(jcrService.getDevice()+asset.getPath()+"/x"+w+"00.jpg");
 				if(icon.exists()) {
@@ -2766,40 +2823,16 @@ public class SiteController extends BaseController {
 					FileInputStream in = new FileInputStream(file);
 					IOUtils.copy(in, output);	
 					in.close();	
-
-/*					String filePath = asset.getPath()+"/file-"+w+"00";
-					int width = Integer.parseInt(w);
-					if(jcrService.nodeExsits(filePath))
-						jcrService.createFile(asset.getPath(), width);
-					jcrService.readAsset(filePath, output);*/					
+			
 				}
 
 			}else if(asset.getDevice()!=null) {
 				File file = null;
-				Device device = (Device)jcrService.getObject(asset.getDevice());
-				String filePath = device.getLocation()+asset.getPath();
-				if(link.startsWith("doc2jpg")) {
-					filePath = jcrService.getDevice()+asset.getPath()+"/x400"+".jpg";
-				}else if(link.startsWith("pdf2jpg")) {					
-					filePath = jcrService.getDevice()+asset.getPath()+"/x400"+".jpg";
-				}else if(link.startsWith("video2jpg")) {
-					filePath = jcrService.getDevice()+asset.getPath()+"/x400"+".jpg";
-				}else if(link.startsWith("video.mp4")) {
-					if(new File(device.getLocation()+asset.getPath()+"/origin"+ext+".mp4").exists())
-						filePath = device.getLocation()+asset.getPath()+"/origin"+ext+".mp4";
-					else 
-						filePath = device.getLocation()+asset.getPath();
-				}else if(link.startsWith("doc2pdf")) {
-					filePath = jcrService.getDevice()+asset.getPath()+"/origin.pdf";
-				}else if(link.startsWith("pdf2img")) {
-					filePath = jcrService.getDevice()+asset.getPath()+"/origin"+"-"+p+".pdf";
-
-				
-				}
-		
+	
 				file = new File(filePath);
-				
+				if(file.isDirectory()) file = new File(file,"origin"+ext);
 				if(file.exists()) {
+					logger.debug(file.getAbsolutePath()+" to "+assetFolder+"\\"+filename+ext);
 					FileInputStream in = new FileInputStream(file);
 					IOUtils.copy(in, output);
 					in.close();
