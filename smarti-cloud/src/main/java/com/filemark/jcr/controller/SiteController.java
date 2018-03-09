@@ -1320,6 +1320,12 @@ public class SiteController extends BaseController {
     				if(!file.getParentFile().exists()) {
     					file.getParentFile().mkdirs();
     				}
+    				if(file.isDirectory()) {
+    					String ext = asset.getExt();
+    					if(asset.getPath().lastIndexOf(".")>0)
+    						ext = asset.getPath().substring(asset.getPath().lastIndexOf("."));
+    					file = new File(file,"origin"+ext);
+    				}
     				OutputStream output = new FileOutputStream(file,false);
     				byte[] buffer = new byte[8 * 1024];
     				int byteToRead = 0;
@@ -2610,7 +2616,12 @@ public class SiteController extends BaseController {
 			File file = null;
 			Device device = (Device)jcrService.getObject(asset.getDevice());
 			file = new File(device.getLocation()+asset.getPath());
-
+			if(file.isDirectory()) {
+				String ext = asset.getExt();
+				if(asset.getPath().lastIndexOf(".")>0)
+					ext = asset.getPath().substring(asset.getPath().lastIndexOf("."));
+				file = new File(file,"origin"+ext);
+			}
 			FileInputStream in = new FileInputStream(file);
 			byte[] buffer = new byte[8 * 1024];
 			int byteToRead = 0;
