@@ -161,7 +161,53 @@ public class SiteController extends BaseController {
 		ImageUtil.HDDOff();
 		return "site/browse";
 	}
-	
+
+	@RequestMapping(value = {"/site/browsemore.html"}, method = {RequestMethod.GET,RequestMethod.POST},produces = "text/plain;charset=UTF-8")
+	public String browsemore(String path,String type, String input,String kw,Integer p,Integer m,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
+		ImageUtil.HDDOn();
+		String assetFolder = "/"+getUsername()+"/assets";
+		if(!jcrService.nodeExsits(assetFolder)) {
+			jcrService.addNodes(assetFolder, "nt:unstructured",getUsername());		
+		}
+		int max = 20;
+		if(path == null) {
+			path=assetFolder;
+			max = 20;
+		}
+		
+		Folder currentNode = jcrService.getFolder(path);
+		String orderby = "[lastModified] desc";
+		if(currentNode.getOrderby()!=null && !"".equals(currentNode.getOrderby()) && !"rank,name".equals(currentNode.getOrderby())) {
+			orderby = currentNode.getOrderby();
+		}
+		if(p==null) p= 0 ;
+		String keywords = "";
+		if(kw==null) {
+			kw="";
+		}else if(!"".equals(kw)){
+			//kw = DjnUtils.Iso2Uft8(kw);//kw = new String(kw.getBytes("ISO-8859-1"), "GB18030");
+			keywords = " and contains(s.*,'"+kw+"')";
+		}
+		String contentType = "";
+		if(type!=null && !"".equals(type)) {
+			if(type.equals("media")) type="video";
+			contentType = " and s.contentType like '"+type+"%'";
+		} 
+		boolean isIntranet = isIntranet(request);
+		String ISDESCENDANTNODE = "ISDESCENDANTNODE";
+		String intranet = (isIntranet?"":" and (s.intranet is null or s.intranet not like 'true')");
+
+		String assetsQuery = "select s.* from [nt:base] AS s INNER JOIN [nt:unstructured] AS f ON ISCHILDNODE(s, f) WHERE "+ISDESCENDANTNODE+"(s,["+path+"])" +keywords+contentType+intranet+" and s.[delete] not like 'true' and s.ocm_classname='com.filemark.jcr.model.Asset' order by s."+orderby+", s.[name]";
+		WebPage<Asset> assets = jcrService.searchAssets(assetsQuery, 12, p);		
+		
+		model.addAttribute("assets", assets);
+		model.addAttribute("path", path);
+		model.addAttribute("type", type);
+		model.addAttribute("input", input);		
+		model.addAttribute("kw", kw);	
+		ImageUtil.HDDOff();
+		return "site/browsemore";
+	}
 	@RequestMapping(value = {"/site/media.html"}, method = {RequestMethod.GET,RequestMethod.POST})
 	public String media(String path,String type, String input,String kw,Integer p,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
 

@@ -3,9 +3,6 @@
     <h2 id="wb-sec-h" class="wb-inv">左菜单</h2>
     <section class="list-group menu list-unstyled">
 
-<%--         <c:if test="${page.parent=='/content' }">
-        <a href='<c:url value="/content/templates.html"></c:url>'><img alt="" src='<c:url value="/resources/images/arrowleft.png"/>'/>模板</a>
-        </c:if> --%>
         <a href="#wb-cont"><button class="btn btn-default pull-right" onclick="javascript:setDataView('data-inview','left-bar')" title="打开微云"><span class="glyphicon glyphicon-th-large pull-right"></span></button></a>  
 
         <h3>

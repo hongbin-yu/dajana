@@ -9,18 +9,7 @@
 <c:set var="contentPath"><c:url value="/"></c:url></c:set>
 <body class="secondary" vocab="http://schema.org/" typeof="WebPage">
 <main role="main" property="mainContentOfPage" class="container">
-<c:if test="${assets.availablePages>=1 }">
-<section class="wb-inview show-none bar-demo" data-inview="top-bar">
-     <ul class="pager pagination-sm">
-     <li class='previous<c:if test="${assets.pageNumber==0}"> disabled</c:if>' ><a href="<c:url value='/site/browse.html?path=${path }&type=${type }&input=${input }&kw=${kw }&p=${assets.pageNumber-1}'/>"><span class="glyphicon glyphicon-chevron-left"></span></a></li>
-     <li class="text-center">${assets.pageNumber+1}/${assets.availablePages }(${assets.pageCount })</li>    
-     <c:if test="${assets.pageNumber+1<assets.availablePages}">
-		<li class="next"><a id="nextpageb" href="<c:url value='/site/browse.html?path=${path}&type=${type }&input=${input }&kw=${kw }&p=${assets.pageNumber+1}'/>"><span class="glyphicon glyphicon-chevron-right"></span></a></li>
-     </c:if>    
-     </ul>
-</section>
-</c:if>
-<div class="row">
+<div id="contentRow" class="row">
 <div class="col-md-4 wb-frmvld">
 	<form action="upload.html" method="POST" id="form-upload" enctype="multipart/form-data">
 		<input type="hidden" id="path" name="path" value="${folder.path}"/>
@@ -270,7 +259,8 @@ ${path }</label>
 <c:if test="${(loop.index + 2) % 3 ==1  }"><div class="clearfix"></div></c:if>
 </c:forEach>
 </div>
-<c:if test="${assets.availablePages>1 }">
+<div id="contentmore"></div>
+<%-- <c:if test="${assets.availablePages>1 }">
 <section id="top-bar" class="container wb-overlay modal-content overlay-def wb-bar-t">
      <ul class="pager pagination-sm">
      <li class='previous<c:if test="${assets.pageNumber==0}"> disabled</c:if>' ><a href="<c:url value='/site/browse.html?path=${path }&type=${type }&input=${input }&kw=${kw }&p=${assets.pageNumber-1}'/>"><span class="glyphicon glyphicon-chevron-left"></span></a></li>
@@ -280,7 +270,18 @@ ${path }</label>
      </c:if>    
      </ul>
 </section>
-</c:if>
+</c:if> --%>
+<%-- <c:if test="${assets.availablePages>=1 }">
+<section class="wb-inview show-none bar-demo" data-inview="top-bar">
+     <ul class="pager pagination-sm">
+     <li class='previous<c:if test="${assets.pageNumber==0}"> disabled</c:if>' ><a href="<c:url value='/site/browse.html?path=${path }&type=${type }&input=${input }&kw=${kw }&p=${assets.pageNumber-1}'/>"><span class="glyphicon glyphicon-chevron-left"></span></a></li>
+     <li class="text-center">${assets.pageNumber+1}/${assets.availablePages }(${assets.pageCount })</li>    
+     <c:if test="${assets.pageNumber+1<assets.availablePages}">
+		<li class="next"><a id="nextpageb" href="<c:url value='/site/browse.html?path=${path}&type=${type }&input=${input }&kw=${kw }&p=${assets.pageNumber+1}'/>"><span class="glyphicon glyphicon-chevron-right"></span></a></li>
+     </c:if>    
+     </ul>
+</section>
+</c:if> --%>
 </main>
 <!--[if gte IE 9 | !IE ]><!-->
 <script src="<c:url value='/resources/wet-boew/js/jquery/2.1.4/jquery.js'/>"></script>
@@ -294,7 +295,60 @@ ${path }</label>
 <script src="<c:url value='/resources/js/pageContent.js'/>"></script>
 <script src="<c:url value='/resources/js/djn.js'/>"></script>
 <script type="text/javascript">
- var win = (!window.frameElement && window.dialogArguments) || opener || parent || top;
+
+var avalaiblePages = "${assets.availablePages}";
+var type = "${type}";
+var kw="${kw}";
+var input="${input}";
+var path="${path}";
+var p = "${assets.pageNumber}";
+var _throttleTimer = null;
+var _throttleDelay = 100;
+var $window = $(window);
+var $document = $(document);
+
+$document.ready(function () {
+
+    $window
+        .off('scroll', ScrollHandler)
+        .on('scroll', ScrollHandler);
+
+});
+
+function ScrollHandler(e) {
+    //throttle event:
+    clearTimeout(_throttleTimer);
+    _throttleTimer = setTimeout(function () {
+        //console.log('scroll');
+
+        //do work
+        if ($window.scrollTop() + $window.height() > $document.height() - 100) {
+            if(p < avalaiblePages) {
+                p ++;
+                //alert("near bottom!"+"browsemore.html?path="+path+"&input="+input+"&kw="+kw+"&p="+p);
+                $.ajax ({
+    			    url: "browsemore.html?path="+path+"&input="+input+"&kw="+kw+"&p="+p,
+    			    type: "GET", 
+    			    contentType: "text/html",
+    			    //processData: false,
+    			    success: function(data) {
+    			    	$("#contentmore").append(data);
+    			    },
+    			    error: function() {
+    				    alert("出错：");
+
+    			    }
+    			    // ... Other options like success and etc
+    			}); 	    
+                
+            }
+
+        }
+
+    }, _throttleDelay);
+}
+
+var win = (!window.frameElement && window.dialogArguments) || opener || parent || top;
 
 var carousel = win.carousel;
 var newCarousel = "",newGallery="";

@@ -843,6 +843,9 @@ function setDataView(id,view) {
 		left_bar.classList.remove("wb-inv");
 	//$(document).scrollTop( $("#wb-cont").offset().top ); 
 	//$( "#left-bar" ).trigger( "open.wb-overlay" )
+	
+/*	$("#left-iframe").html('<iframe src="/site/browse.html" width="100%" height="600"  frameBorder="0"></iframe>');
+*/	
 }
 
 function ftrClose(url) {

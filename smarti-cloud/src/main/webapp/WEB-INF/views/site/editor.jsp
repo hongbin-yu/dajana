@@ -27,16 +27,15 @@
 		<h2 class="modal-title">云站</h2>
 	</header>
 	<div class="modal-body">
- 		 <div class="btn-group btn-group-justified">
+<!--  		 <div class="btn-group btn-group-justified">
  		 <a class="btn btn-primary btn-xs" href="javascript:showImages(this)">资源</a>
  		 <a class="btn btn-primary btn-xs" href="javascript:showTemplates(this)">模板</a>
-<!--  		 <a class="btn btn-primary btn-xs" href="javascript:showPages(this)">网页</a>
- 		 <a class="btn btn-primary btn-xs" href="javascript:showVideos(this)">视频</a> -->
- 		 <!-- a class="btn btn-primary btn-xs" href="javascript:showProducts(this)">产品</a-->
- 		</div>
- 		
+ 		 <a class="btn btn-primary btn-xs" href="javascript:showPages(this)">网页</a>
+ 		 <a class="btn btn-primary btn-xs" href="javascript:showVideos(this)">视频</a>
+ 		 a class="btn btn-primary btn-xs" href="javascript:showProducts(this)">产品</a
+ 		</div> -->
+ 		<iframe src="/site/browse.html" width="100%" height="600"  frameBorder="0"></iframe>
  		 <div id="left-iframe">
-
  		 </div>
  	</div>	 
 </section>
