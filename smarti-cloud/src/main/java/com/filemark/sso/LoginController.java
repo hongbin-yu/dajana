@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.jfree.util.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.filemark.jcr.controller.BaseController;
+import com.filemark.jcr.controller.SiteController;
 import com.filemark.jcr.model.Page;
 import com.filemark.jcr.model.Role;
 import com.filemark.jcr.model.User;
@@ -31,6 +34,7 @@ import com.filemark.utils.DjnUtils;
 
 @Controller
 public class LoginController extends BaseController {
+	private static final Logger logger = LoggerFactory.getLogger(SiteController.class);
 
     public LoginController() {
     }
@@ -176,31 +180,22 @@ public class LoginController extends BaseController {
 		request.setAttribute("signingKey", user.getSigningKey());  
         String token = JwtUtil.generateToken(JwtUtil.signingKey, token_author);
         String domain =(user.getHost()==null || "".equals(user.getHost()))? request.getServerName():user.getHost();
-        //domain = domain.replaceAll(".*\\.(?=.*\\.)", "");
+        logger.debug("domain:"+domain);
         CookieUtil.create(httpServletResponse, JwtUtil.jwtTokenCookieName, token, false, -1, domain);
-/*        if(user.getHost()!=null && !"".equals(user.getHost())) {
-           CookieUtil.create(httpServletResponse, jwtTokenCookieName, token, false, -1, user.getHost());
-        }
-        if(user.getHostIp()!=null && !"".equals(user.getHostIp())) {
-            CookieUtil.create(httpServletResponse, jwtTokenCookieName, token, false, -1, user.getHostIp());
-         }*/
+
         if(redirect==null || "".equals(redirect) || "login".equals(redirect)) {
     		String content = "/content/"+user.getUserName();
 
     		if(user.getHost()!=null && !"".equals(user.getHost())) {
-    			return "redirect:http://"+(user.getHost()+(user.getPort()==null || "".equals(user.getPort())?"":":"+user.getPort()) + content+".html");
-    		}/*else if(user.getHostIp()!=null && !"".equals(user.getHostIp())) {
-    			return "redirect:http://"+(user.getHostIp() + content+".html");
-    		}*/
+    			String url = "http://"+(user.getHost()+(user.getPort()==null || "".equals(user.getPort())?"":user.getPort()) + content+".html");
+    			logger.debug("redirect:"+url);
+    			return "redirect:"+url;
+    		}
+    		logger.debug("redirect:/site/editor.html?path=" + content);
     		return "redirect:/site/editor.html?path=" + content;
         }else {
-/*        	if(redirect.equalsIgnoreCase("/content/"+user.getUserName()))
-        		return "redirect:editor.html?path=" + redirect;
-        	else
-        	if(user.getHostIp()!=null && !"".equals(user.getHostIp()) && redirect.endsWith("mycloud")) {
-    			return "redirect:http://"+(user.getHostIp() +"/protected/mycloud");
-    		}*/
-        		return "redirect:"+ redirect;
+        	logger.debug("redirect:"+ redirect);
+        	return "redirect:"+ redirect;
         }
     }
     @RequestMapping(value="/signup",method = RequestMethod.GET)

@@ -34,15 +34,7 @@
 		<div class="form-group">
 			<label for="userName" class="required"><span class="field-name">用户名</span> <strong class="required">(必需)</strong></label>
 			<input class="form-control" id="userName" name="userName" value="${user.userName }" type="text" required="required" pattern="[A-Za-z0-9\s]{4,}" data-rule-alphanumeric="true" data-rule-minlength="4" size="40" placeholder="输入用户名(只能拼音字母和数字)" disabled/>
-		</div>		
-		<div class="form-group">
-			<label for="host"><span class="field-name">域名</span> <strong class="required"></strong></label>
-			<input class="form-control" id="host" name="host" value="${user.host }" type="text" path="${user.path }" data-rule-minlength="4" size="40"  disabled/>
-		</div>
-		<div class="form-group">
-			<label for="port"><span class="field-name">端口</span> </label>
-			<input class="form-control" id="port" name="port" value="${user.port }" type="text" path="${user.path }" data-rule-minlength="4" size="40"  disabled/>
-		</div>
+		</div>	
 		<div class="form-group">
 			<label for="signingKey" class="required"><span class="field-name"><strong class="required" style="FONT-FAMILY: 'Arial';">微云密码</strong></span></label>
 			<input class="form-control" id="signingKey" name="signingKey" value="${user.signingKey }" type="password" path="${user.path }" uid="${user.uid}" required="required" data-rule-minlength="4" size="40"/>
@@ -52,6 +44,14 @@
 			<span class="field-name"><spring:message code="djn.confirm"/></span>
 			</label>			
 			<input class="form-control" id="passwordconfirm" name="passwordconfirm" type="password" maxlength="32" size="40" data-rule-equalTo="#signingKey" placeholder="把以上密码再输一遍"/>
+		</div>			
+		<div class="form-group">
+			<label for="host"><span class="field-name">域名</span> <strong class="required"></strong></label>
+			<input class="form-control" id="host" name="host" value="${user.host }" type="text" path="${user.path }" data-rule-minlength="4" size="40"  disabled/>
+		</div>
+		<div class="form-group">
+			<label for="port"><span class="field-name">端口</span> </label>
+			<input class="form-control" id="port" name="port" value="${user.port }" type="text" path="${user.path }" data-rule-minlength="4" size="40"  disabled/>
 		</div>
 		<div class="form-group">
 			<label for="lastIp" class="required"><span class="field-name">登入IP</span> <strong class="required"></strong></label>

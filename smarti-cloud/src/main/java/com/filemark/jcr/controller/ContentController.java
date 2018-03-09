@@ -288,7 +288,7 @@ public class ContentController extends BaseController {
 	@RequestMapping(value = {"/content/{site}","/content/{site}.html","/content/{site}/**/*","/content/{site}/**/*.html","/content/{site}/*.html"}, method = RequestMethod.GET)
 	public String page(@PathVariable String site, String uid,Integer p, Model model,HttpServletRequest request, HttpServletResponse response) throws Exception  {
 		try {
-			ImageUtil.gpio("write","18","1");
+			ImageUtil.HDDOn();
 			String paths = URLDecoder.decode(request.getRequestURI(),"UTF-8");
 			if(!request.getContextPath().equals("/"))
 				paths = paths.replaceFirst(request.getContextPath(), "");
@@ -313,12 +313,12 @@ public class ContentController extends BaseController {
 						IOUtils.copy(in, response.getOutputStream());
 						in.close();*/
 						super.serveResource(request, response, file, null);
-						ImageUtil.gpio("write","18","0");
+
 						return null;
 					}else {
 						logger.error("Error:"+HttpServletResponse.SC_NOT_FOUND);
 						response.sendError(HttpServletResponse.SC_NOT_FOUND);
-						ImageUtil.gpio("write","18","0");
+						ImageUtil.HDDOff();
 						return null;
 					}
 				}
@@ -337,16 +337,30 @@ public class ContentController extends BaseController {
 				String parent_path = (String)session.getAttribute(page_passcode);
 				String passcode = (String)session.getAttribute(parent_path);
 				if(passcode==null || parent_path==null || !passcode.equals(page_passcode)) {
+			    	String host="";
+			    	if(request.getRemoteHost().endsWith(jcrService.getDomain())) host = request.getRemoteHost();
+					String assetsQuery = "select s.* from [nt:base] AS s WHERE ISCHILDNODE([/templates/assets/splash]) and s.[delete] not like 'true' and s.ocm_classname='com.filemark.jcr.model.Asset' order by s.[lastModified] desc";
+					WebPage<Asset> assets = jcrService.searchAssets(assetsQuery, 12, 0);
+					String splashImagePaths = "";
+					int i = 0;
+					String contextPath = request.getContextPath();
+					if(contextPath.equals("/")) contextPath = "";
+					for(Asset asset:assets.getItems()) {
+						splashImagePaths += contextPath+asset.getPath()+",";
+					}
+			    	model.addAttribute("splashImagePaths", splashImagePaths);
+			    	model.addAttribute("numImages", new Integer(assets.getItems().size()));
+			    	model.addAttribute("host", host);					
 					model.addAttribute("path", path);
 					model.addAttribute("title", currentpage.getTitle());
 					model.addAttribute("passcode", currentpage.getPasscode());
-					ImageUtil.gpio("write","18","0");
+					ImageUtil.HDDOff();
 					return "content/passcode";
 				}
 			}
 
 			if(currentpage.getRedirectTo() != null && !"".equals(currentpage.getRedirectTo())) {
-				ImageUtil.gpio("write","18","0");
+				ImageUtil.HDDOff();
 				return "redirect:"+currentpage.getRedirectTo();
 			}
 			navigation = FileUtils.readFileToString(new File(jcrService.getHome()+menuPath+"/navimenu.html"),"UTF-8");
@@ -361,18 +375,18 @@ public class ContentController extends BaseController {
 			model.addAttribute("origin", request.getRequestURL()+"?"+request.getQueryString());	
 		} catch (UnsupportedEncodingException e) {
 			logger.error(e.getMessage());
-			ImageUtil.gpio("write","18","0");
+			ImageUtil.HDDOff();
 			throw new Exception("\u8DEF\u5F84\u51FA\u9519!");
 		} catch (RepositoryException e) {
 			logger.error(e.getMessage());
-			ImageUtil.gpio("write","18","0");
+			ImageUtil.HDDOff();
 			throw new Exception("\u9875\u9762\u6CA1\u627E\u5230!");
 		} catch (IOException e) {
 			logger.error(e.getMessage());
-			ImageUtil.gpio("write","18","0");
+			ImageUtil.HDDOff();
 			throw new Exception(e.getMessage());			
 		}
-		ImageUtil.gpio("write","18","0");
+		ImageUtil.HDDOff();
 		return "content/page";
 	}
 	@RequestMapping(value = {"/content/{site}.menu","/content/{site}/**/*.menu","/content/{site}/*.menu"}, method = RequestMethod.GET)

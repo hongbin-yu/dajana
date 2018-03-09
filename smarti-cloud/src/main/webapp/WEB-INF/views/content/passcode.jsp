@@ -60,37 +60,11 @@
 </div>
 </main>
 <script>
-    var splashImagePaths = [];
-    var numImages = 0;
-    var selectedImageIndex = 1;
-    var imagePath ="/templates/assets/splash";
-    if("${contentPath}".indexOf("/smarti-cloud")>=0) 
-        imagePath = "/smarti-cloud"+imagePath;
-                splashImagePaths.push(imagePath+'/splash1.jpg');
-                numImages++;
-                
-                splashImagePaths.push(imagePath+'/splash2.jpg');
-                numImages++;
-                
-                splashImagePaths.push(imagePath+'/splash3.jpg');
-                numImages++;
+var splashImagePaths = "${splashImagePaths}".split(",");
+var numImages = ${numImages};
+var selectedImageIndex = 1;
 
-                splashImagePaths.push(imagePath+'/splash4.jpg');
-                numImages++;
-
-                splashImagePaths.push(imagePath+'/splash5.jpg');
-                numImages++;
-                
-                splashImagePaths.push(imagePath+'/splash6.jpg');
-                numImages++;
-                
-                splashImagePaths.push(imagePath+'/splash7.jpg');
-                numImages++;
-                
-                splashImagePaths.push(imagePath+'/splash8.jpg');
-                numImages++;
-
-    document.getElementById("splash-image").src = splashImagePaths[Math.floor((Math.random() * numImages))];
+document.getElementById("splash-image").src = splashImagePaths[Math.floor((Math.random() * numImages))];
 
 </script>
         
@@ -99,7 +73,7 @@
 <script src="/resources/wet-boew/js/wet-boew.min.js"></script>
 
 
-<script src="$/resources/wet-boew/js/theme.min.js"></script>
+<script src="/resources/wet-boew/js/theme.min.js"></script>
     </body>
 </html>
 

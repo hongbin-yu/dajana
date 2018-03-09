@@ -53,13 +53,13 @@ public class ProtectedFilter implements Filter {
             	    chain.doFilter(httpServletRequest, httpServletResponse);   				
     			}else {
     	        	logger.debug("no signingUser and authen user"+authService + "?redirect=" + redirectUrl);
-    	            httpServletResponse.sendRedirect(authService + "?redirect=" + redirectUrl);
+    	            httpServletResponse.sendRedirect(authService + "?redirect=" + redirectUrl+"&authenUser=0");
    				
     			}
     		}else {
 
 	        	logger.debug("no signingUser "+authService + "?redirect=" + redirectUrl);
-	            httpServletResponse.sendRedirect(authService + "?redirect=" + redirectUrl);
+	            httpServletResponse.sendRedirect(authService + "?redirect=" + redirectUrl+"&signingUser=0");
 
     		}
   		
