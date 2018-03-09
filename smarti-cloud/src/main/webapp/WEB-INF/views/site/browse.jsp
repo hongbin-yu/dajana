@@ -208,7 +208,7 @@ ${path }</label>
 <c:forEach items="${assets.items }" var="item" varStatus="loop">
 <div id="${item.uid}" class="col-md-4">
 		<c:if test="${item.mp4}">
-			<video poster="video2jpg.jpg?path=${item.path }" controls="controls" width="300" height="200" preload="none">
+			<video poster="video2jpg.jpg?path=${item.path }" controls="controls" width="300" height="200" preload="metadata">
 			<source type="video/mp4" src="video.mp4?path=${item.path }"/>
 			</video>
 			<button class="bnt btn-primary btn-sm" title="点击选择此视频" onclick='javascript:returnFileUrl("video.mp4?path=${item.path}","${item.uid}","video2jpg.jpg?path=${item.path }")'><span class="glyphicon glyphicon-film"></span>${item.title} 植入视频</button>
@@ -222,7 +222,7 @@ ${path }</label>
 		<c:if test="${item.audio}">
 		<a class="download" href="file/${item.name}?path=${item.path}" download><span class="glyphicon glyphicon-volume-up">下载</span></a>
 		<figure class="wb-mltmd">
-				<audio title="${item.title }" preload="none">
+				<audio title="${item.title }" preload="metadata">
 					<source type="${item.contentType }" src="file/${item.name}?path=${item.path}"/>
 				</audio>
 				<figcaption>
@@ -378,7 +378,7 @@ function returnFileUrl(fileUrl,uid) {
 		if(e_type.indexOf("image/")>=0) {
 			tinyMCE.activeEditor.selection.setContent('<img class="img-responsive" alt="" src="'+fileUrl+'">');
 		}else if(e_type.indexOf("video/")>=0) {
-			var html = "<figure class=\"wb-mltmd-edit editable\"><video title=\""+e_title.value+"\" preload=\"none\">";
+			var html = "<figure class=\"wb-mltmd-edit editable\"><video title=\""+e_title.value+"\" preload=\"metadata\">";
 			if(e_size>10000000) {
 				html +="<source type=\"video/mp4\" src=\""+fileUrl+"\"/>";
 			}else {
