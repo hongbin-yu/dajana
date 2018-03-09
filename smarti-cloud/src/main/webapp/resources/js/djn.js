@@ -37,7 +37,10 @@ function init() {
 	if(fileUpload != null) {
 		fileUpload.addEventListener('change', handleFileSelect, false);	
 	}
-
+	var iconUpload = document.querySelector('#iconUpload');
+	if(iconUpload != null) {
+		iconUpload.addEventListener('change', handleIconSelect, false);	
+	}
 	var form_control = document.querySelectorAll('.form-editable');
 	for(var i=0; i<form_control.length;i++) {
 		form_control[i].addEventListener('change',updateThis);
@@ -165,6 +168,11 @@ function updateThis() {
 	});	    
 }
 
+function openIcon() {
+	selDiv = document.querySelector("#selectedIcon");
+	iconUpload = document.querySelector("#iconUpload");
+	iconUpload.click();
+}
 
 function openFiles() {
 	selDiv = document.querySelector("#selectedFiles");
@@ -196,6 +204,18 @@ function handleFileSelect(e) {
 	
 }
 
+function handleIconSelect(e) {
+	
+	if(!e.target.files) return;
+	files = e.target.files;
+	for(var i=0; i<files.length; i++) {
+		var f = files[i];
+		uploadIcon(f);
+		return;
+	}
+	
+}
+
 function allowDrop(ev) {
     ev.preventDefault();
 }
@@ -207,9 +227,20 @@ function drag(ev) {
 function drop(ev) {
     ev.preventDefault();
     var id = ev.target.id;
+	ev.target.classList.remove("well");
+	ev.target.style.border = "1px solid #aaaaaa";
     var data="";
+    if(id !=null && id=="uploadIcon" ) {
+	    droppedFiles = ev.dataTransfer.files;
+		for(var i = 0; i< droppedFiles.length; i++) {	
+			uploadIcon(droppedFiles[i]);
+			return;
+		}
+    }
+
     if(id)
     if(id=="uploadBox" || id=="uploadImg" || id.indexOf("folder")>=0) {
+
     	data = ev.dataTransfer.getData("text");
     	path = $("#path").val();
     	if(ev.target.getAttribute("path")) {
@@ -247,14 +278,6 @@ function drop(ev) {
 		    					    	else {
 		    					    		//$("#"+uid).remove();
 		    							    selDiv.innerHTML = "<section class=\"alert alert-success\"><h2 class=\"4\">"+i18n("success")+"</h2><p>"+data.title+"</p></section>";
-/*		    							    var html = $("#div_uid").html();
-		    							    html = html.split("{uid}").join(data.uid);
-		    							    html = html.replace("imgreplace","img");
-		    							    html = html.replace("{title}",data.title);
-		    							    html = html.replace("{icon}",data.icon);
-		    							    
-		    							    html = html.replace("{link}",data.link);
-		    							    $("#top_insert").after(html);*/
 		    							    output(data);
 
 		    					    	}
@@ -278,14 +301,6 @@ function drop(ev) {
 		    						        selDiv.innerHTML=  "<section class=\"alert alert-warning\"><h2 class=\"h3\">"+i18n("fail")+"</h2><p>"+data.title+"</p></section>"; // 
 		    					    	else {
 		    							    selDiv.innerHTML = "<section class=\"alert alert-success\"><h2 class=\"4\">"+i18n("success")+"</h2><p>"+data.title+"</p></section>";
-/*		    							    var html = $("#div_uid").html();
-		    							    html = html.split("{uid}").join(data.uid);
-		    							    html = html.replace("imgreplace","img");
-		    							    html = html.replace("{title}",data.title);
-		    							    html = html.replace("{icon}",data.icon);
-		    							    
-		    							    html = html.replace("{link}",data.link);
-		    							    $("#top_insert").after(html);*/
 		    							    output(data);
 
 		    					    	}
@@ -332,14 +347,6 @@ function drop(ev) {
 				    					    	else {
 				    					    		//$("#"+uid).remove();
 				    							    selDiv.innerHTML = "<section class=\"alert alert-success\"><h2 class=\"4\">"+i18n("success")+"</h2><p>"+data.title+"</p></section>";
-/*				    							    var html = $("#div_uid").html();
-				    							    html = html.split("{uid}").join(data.uid);
-				    							    html = html.replace("imgreplace","img");
-				    							    html = html.replace("{title}",data.title);
-				    							    html = html.replace("{icon}",data.icon);
-				    							    
-				    							    html = html.replace("{link}",data.link);
-				    							    $("#top_insert").after(html);*/
 				    							    output(data);
 				    					    	}
 				    					    },
@@ -361,14 +368,6 @@ function drop(ev) {
 				    						        selDiv.innerHTML=  "<section class=\"alert alert-warning\"><h2 class=\"h3\">"+i18n("fail")+" </h2><p>"+data.title+"</p></section>"; // 
 				    					    	else {
 				    							    selDiv.innerHTML = "<section class=\"alert alert-success\"><h2 class=\"4\">"+i18n("success")+"</h2><p>"+data.title+"</p></section>";
-/*				    							    var html = $("#div_uid").html();
-				    							    html = html.split("{uid}").join(data.uid);
-				    							    html = html.replace("imgreplace","img");
-				    							    html = html.replace("{title}",data.title);
-				    							    html = html.replace("{icon}",data.icon);
-				    							    
-				    							    html = html.replace("{link}",data.link);
-				    							    $("#top_insert").after(html);*/
 				    							    output(data);
 				    					    	}
 				    					    },
@@ -430,15 +429,7 @@ function drop(ev) {
 				        selDiv.innerHTML=  "<section class=\"alert alert-warning\"><h2 class=\"h3\">"+i18n("fail")+" </h2><p>"+data.title+"</p></section>"; // 
 			    	else {
 					    selDiv.innerHTML = "<section class=\"alert alert-success\"><h2 class=\"4\">"+i18n("success")+"</h2><p>"+data.title+"</p></section>";
-/*					    var html = $("#div_uid").html();
-					    html = html.split("{uid}").join(data.uid);
-					    html = html.replace("imgreplace","img");
-					    html = html.replace("{title}",data.title);
-					    html = html.replace("{icon}",data.icon);
-					    
-					    html = html.replace("{link}",data.link);
-					    $("#top_insert").after(html);
-*/						output(data);	
+					output(data);	
 			    	}
 			    },
 			    error: function() {
@@ -597,6 +588,53 @@ function uploadFile(file) {
 		    // ... Other options like success and etc
 		});	
 }
+
+function uploadIcon(file) {
+	$("#uploadIcon").attr("src","/resources/images/ui-anim_basic_16x16.gif");
+	var formData = new FormData();
+	formData.append("path",path);
+    formData.append("file", file,file.name);
+    formData.append("filename",file.name);
+    var messageDiv = document.getElementById("messageDiv");
+    var fileSize = 0;
+    if("size" in file)
+      fileSize = file.size;
+    else
+	  fileSize = file.fileSize;
+  
+    	
+    if(fileSize > 10000000) {
+        alert(i18n("document_limit")+"10MB -"+fileSize); // 
+    	
+	    return;
+    	
+    }
+
+      $.ajax({
+		    url: 'uploadIcon.html',
+		    data: formData,
+		    type: "POST", //ADDED THIS LINE
+		    // THIS MUST BE DONE FOR FILE UPLOADING
+		    contentType: false,
+		    processData: false,
+		    enctype: 'multipart/form-data',
+		    success: function(data) {
+
+		    	if(data.indexOf("error:")>=0) {
+
+			        messageDiv.innerHTML=  "<section class=\"alert alert-warning\"><h2 class=\"h5\">"+i18n("fail")+"</h2><p>"+data.title+"</p></section>"; // 
+		    	}else {
+
+		    		$("#uploadIcon").attr("src",data); 
+		    	}
+		    },
+		    error: function(jqXHR, exception) {
+		    	alert(data);
+		        messageDiv.innerHTML=  "<section class=\"alert alert-warning\"><h2 class=\"h3\">"+i18n("fail")+":"+file.name+",sttus:"+jqXHR+",exception:"+exception+"</h2></section>"; // 
+		    }
+		});	
+}
+
 var total = 0;
 var i = 0;
 var $element = $( ".wb-sessto" );
@@ -833,7 +871,7 @@ function toggle(source) {
 document.addEventListener("dragenter", function(event) {
 	var id = event.target.id;
 	if(id)
-	if(id=="uploadBox" || id=="uploadImg" || (id.indexOf("folder")>=0)) {
+	if(id=="uploadBox" || id=="uploadImg" ||  id=="uploadIcon" || (id.indexOf("folder")>=0)) {
 		event.target.classList.add("well");
         event.target.style.border = "3px dotted blue";
         
@@ -867,7 +905,7 @@ document.addEventListener("dragover", function(event) {
 document.addEventListener("dragleave", function(event) {
 	var id = event.target.id;
 	if(id)
-	if(id=="uploadBox" || id=="uploadImg"  || (id.indexOf("folder")>=0)) {
+	if(id=="uploadBox" || id=="uploadImg" || id=="uploadIcon"  || (id.indexOf("folder")>=0)) {
         event.target.style.border = "1px solid #aaaaaa";
         event.target.classList.remove("well");
         }

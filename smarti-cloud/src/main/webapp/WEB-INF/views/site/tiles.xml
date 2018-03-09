@@ -67,7 +67,13 @@
 	<definition name="site/navmenu" templateExpression="/WEB-INF/views/wet/navmenu.jsp">
 	</definition>
 	<definition name="site/passcode" templateExpression="/WEB-INF/views/site/passcode.jsp">
-	</definition>		
+	</definition>	
+
+	<definition name="site/profile" extends="sitepage">
+	    
+	    <put-attribute name="content" value="/WEB-INF/views/site/usereditor.jsp"/>
+  
+	</definition>			
 </tiles-definitions>
 
 

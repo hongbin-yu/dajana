@@ -275,7 +275,9 @@ public class Asset implements SmartiNode, Serializable {
 		}
 	}
 	public String getLink() {
-		if(contentType != null && (contentType.equals("image/tiff") || contentType.equals("image/x-tiff") )) {
+		if(contentType == null)
+			return "/resources/images/usericon.png";
+		if(contentType.equals("image/tiff") || contentType.equals("image/x-tiff") ) {
 			return "viewpdf?path="+path;
 		}else if(contentType.startsWith("video/")) {
 			return "video.mp4?path="+path;

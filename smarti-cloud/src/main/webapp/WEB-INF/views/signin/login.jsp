@@ -8,6 +8,18 @@
 <main role="main" property="mainContentOfPage" class="container">
 <div class="col-md-9 col-md-push-3">
 <h2>登入微云</h2>
+<c:if test="${param.info eq 'pwchanged'}">
+<div class="container">
+<div class="col-md-4">
+<section class="alert alert-warning">
+<h3><spring:message code="djn.password_changed"/>!</h3>
+<p>
+  	<spring:message code="djn.login_again"/>。
+</p>
+</section>
+</div>
+</div>
+</c:if>
 <c:if test="${param.error eq 'bad_credentials'}">
 <div class="container">
 <div class="col-md-4">

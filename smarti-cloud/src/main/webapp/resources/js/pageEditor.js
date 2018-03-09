@@ -1,10 +1,14 @@
 var contentPath="";
-var carousel="";
+var carousel="",gallery="";
 var el = document.querySelector(".carousel");
+var gl = document.querySelector(".gallery");
 var i18n = window.wb.i18n;
 
 if(el) {
 	carousel = el.innerHTML;
+}
+if(gl) {
+	gallery = gl.innerHTML;
 }
 if(window.location.pathname.indexOf("/smarti-cloud")>=0) {
 	contentPath = "/smarti-cloud";
@@ -182,8 +186,10 @@ tinymce.init({
 	                	tinyMCE.DOM.removeClass("div","wb-data-ajax-replace-inited");
 	                	tinyMCE.DOM.removeClass("div","wb-init");	 
 	                	tinyMCE.DOM.removeClass("div","wb-tabs-inited");
-		                var content = tinyMCE.activeEditor.getContent();
-		                content = content.replace("-edit","");
+	                	tinyMCE.DOM.removeClass("a","wb-lbx-inited");	                	
+	                	tinyMCE.DOM.removeClass("a","wb-init");
+	                	var content = tinyMCE.activeEditor.getContent();
+		                content = content.replace("-edit","").replace(" wb-init","").replace(" wb-lbx-inited","").replace(" wb-tabs-inited","").replace(" wb-data-ajax-replace-inited","");
         	    		$("#header_message").html("<section class='alert alert-info'><h3>"+i18n("save")+"...</h3></section>");
 
 		                $.ajax({

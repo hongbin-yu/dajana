@@ -6,7 +6,6 @@
 <html class="no-js" lang="zh" dir="ltr">
 <!--<![endif]-->
 <%@include file="header.jsp" %>
-
 <c:set var="contentPath"><c:url value="/"></c:url></c:set>
 <body class="secondary" vocab="http://schema.org/" typeof="WebPage">
 <main role="main" property="mainContentOfPage" class="container">
@@ -186,6 +185,23 @@ ${path }</label>
 <button class="btn btn-primary btn-sm" onclick="javascript:returnCarousel('${folder.path}')" title="加入广告"><span class="glyphicon glyphicon-play">${folder.title } 植入广告</span></button>
 </c:if>
 </div>
+<div class="col-md-4">
+<c:if test="${carousel.availablePages>0}">
+<div id="gallery" class="wb-lbx lbx-hide-gal">
+<ul class="list-inline">
+  <c:forEach items="${carousel.items }" var="item" varStatus="loop">
+  	<li>
+  	  <a href="viewimage?uid=${item.uid }&w=12" title="${item.title }">
+        <img src="viewimage?uid=${item.uid }&w=4" alt="图像 ${loop.index }" class="image-actual" />
+      </a>
+  	</li>
+  </c:forEach>
+  </ul>
+</div> 
+<div class="clear"></div>
+<button class="btn btn-primary btn-sm" onclick="javascript:returnGallery('${folder.path}')" title="植入画廊"><span class="glyphicon glyphicon-play">${folder.title } 植入画廊</span></button>
+</c:if>
+</div>
 <div class="row">
 <div id="top_insert">
 </div>
@@ -195,7 +211,7 @@ ${path }</label>
 			<video poster="video2jpg.jpg?path=${item.path }" controls="controls" width="300" height="200" preload="none">
 			<source type="video/mp4" src="video.mp4?path=${item.path }"/>
 			</video>
-			<button class="bnt bnt-primary" title="点击选择此视频" onclick='javascript:returnFileUrl("video.mp4?path=${item.path}","${item.uid}","video2jpg.jpg?path=${item.path }")'><span class="glyphicon glyphicon-film"></span>${item.title}<span class="glyphicon glyphicon-ok pull-right"></span></button>
+			<button class="bnt btn-primary btn-sm" title="点击选择此视频" onclick='javascript:returnFileUrl("video.mp4?path=${item.path}","${item.uid}","video2jpg.jpg?path=${item.path }")'><span class="glyphicon glyphicon-film"></span>${item.title} 植入视频</button>
 		</c:if>
         <c:if test="${item.doc2pdf}">
         	<a class="download" href="file/${item.name}?path=${item.path}" target="_BLANK" download><span class="glyphicon glyphicon-download">下载</span></a>
@@ -210,7 +226,7 @@ ${path }</label>
 					<source type="${item.contentType }" src="file/${item.name}?path=${item.path}"/>
 				</audio>
 				<figcaption>
-					<button class="bnt bnt-primary" title="点击选择此音频" onclick='javascript:returnFileUrl("file/${item.name }?path=${item.path}","${item.uid}","file/${item.name }?path=${item.path }")'><span class="glyphicon glyphicon-volume-up"></span>${item.title}<span class="glyphicon glyphicon-ok pull-right"></span></button>
+					<button class="bnt btn-primary btn-sm" title="点击选择此音频" onclick='javascript:returnFileUrl("file/${item.name }?path=${item.path}","${item.uid}","file/${item.name }?path=${item.path }")'><span class="glyphicon glyphicon-volume-up"></span>${item.title} 植入音频</button>
 				</figcaption>
 		</figure>
 		</c:if>	
@@ -281,10 +297,15 @@ ${path }</label>
  var win = (!window.frameElement && window.dialogArguments) || opener || parent || top;
 
 var carousel = win.carousel;
-var newCarousel = "";
+var newCarousel = "",newGallery="";
 var carelement = document.getElementById("carousel");
 if(carelement) {
 	newCarousel = carelement.outerHTML;
+}
+
+var galleryelement = document.getElementById("gallery");
+if(galleryelement) {
+	newGallery = galleryelement.outerHTML;
 }
 var tinyMCE = win.tinymce;
 var tinymce = tinyMCE;	
@@ -519,6 +540,23 @@ function returnCarousel(fileUrl) {
 		});  
  */
 
+
+}
+
+function returnGallery(fileUrl) {
+	var message = win.document.getElementById("header_message");
+	if(message) {
+		message.innerHTML="<section class=\"alert alert-success\"><h3>加入画廊</h3></section>";
+
+		}
+	var data = document.getElementById("gallery").outerHTML;
+	win.gallery = newGallery;	
+	var gallery = tinyMCE.activeEditor.dom.select('.gallery');
+	if(gallery.length>0) {
+		gallery[0].innerHTML = data;
+	}else 
+		tinyMCE.activeEditor.selection.setContent('<div id="'+fileUrl+'" class="gallery noneditable">'+data+'</div>');
+	tinyMCE.activeEditor.setDirty(true);	
 
 }
 function close() {

@@ -1577,7 +1577,10 @@ public class JcrServicesImpl implements JcrServices {
 		jcrTemplate.execute(new JcrCallback() { 
         	public Object doInJcr(Session session) throws RepositoryException, IOException {
         		BufferedImage image = null;
-                String ext = path.substring(path.lastIndexOf("."));	
+                String ext = getProperty(path,"ext");
+                if(path.lastIndexOf(".")>0) 
+                	ext = path.substring(path.lastIndexOf("."));
+
         		File file = new File(getFile(path),"origin"+ext);
         		
         		
@@ -1615,8 +1618,11 @@ public class JcrServicesImpl implements JcrServices {
         		File file = getFile(path);
         		if(file !=null && file.exists()) {
         			String infile = file.getAbsolutePath();
+        			String ext = getProperty(path,"ext");
+        			if(infile.indexOf(".") >0)
+        				ext = infile.substring(infile.indexOf("."));
         			if(file.isDirectory()) {
-        				infile +="/origin"+ infile.substring(infile.indexOf("."));
+        				infile +="/origin"+ ext;
         			}
         			String outfile =device+ path+"/x"+w+".jpg";
         			File out = new File(outfile);
@@ -1774,7 +1780,9 @@ public class JcrServicesImpl implements JcrServices {
         	
         	int width,height; 
             Node node = getNode(path);
-            String ext = path.substring(path.lastIndexOf("."));
+            String ext = getProperty(path,"ext");
+            if(path.lastIndexOf(".")>0)
+            		ext= path.substring(path.lastIndexOf("."));
             
       	    String infile = file.getAbsolutePath()+"/origin"+ext;
       	    file = new File(file,"origin"+ext);

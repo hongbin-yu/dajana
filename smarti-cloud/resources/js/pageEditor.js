@@ -182,6 +182,9 @@ tinymce.init({
 	                	tinyMCE.DOM.removeClass("div","wb-data-ajax-replace-inited");
 	                	tinyMCE.DOM.removeClass("div","wb-init");	 
 	                	tinyMCE.DOM.removeClass("div","wb-tabs-inited");
+	                	tinyMCE.DOM.removeClass("a","wb-lbx-inited");	                	
+	                	tinyMCE.DOM.removeClass("a","wb-init");	                	
+
 		                var content = tinyMCE.activeEditor.getContent();
 		                content = content.replace("-edit","");
         	    		$("#header_message").html("<section class='alert alert-info'><h3>"+i18n("save")+"...</h3></section>");
@@ -665,7 +668,7 @@ function deleteFiles() {
 				
 		}
 		if(url =="") {
-			alert("没有选择文件！");
+			alert("æ²¡æœ‰é€‰æ‹©æ–‡ä»¶ï¼�");
 			return ;
 		}
 	    $.ajax({

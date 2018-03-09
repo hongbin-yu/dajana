@@ -1,6 +1,7 @@
 eclipse.preferences.version=1
 encoding//resources/error404.html=UTF-8
 encoding//resources/error500.html=UTF-8
+encoding//resources/js/pageEditor.js=UTF-8
 encoding//src/main/java/com/filemark/jcr/controller/ContentController.java=UTF-8
 encoding//src/main/java/com/filemark/jcr/controller/ProtectedController.java=UTF-8
 encoding//src/main/java/com/filemark/jcr/controller/SiteController.java=UTF-8
@@ -10,6 +11,7 @@ encoding//src/main/webapp/WEB-INF/views/content/mysite.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/signin/login.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/site/footer.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/site/header.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/views/site/usereditor.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/wet/breadcrumb.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/wet/footer.jsp=UTF-8
 encoding//src/main/webapp/WEB-INF/views/wet/pagedetails.jsp=UTF-8

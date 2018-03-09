@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.io.FileUtils;
 import org.apache.poi.util.IOUtils;
 import org.apache.tika.mime.MimeType;
@@ -59,6 +60,7 @@ import com.filemark.jcr.model.Device;
 import com.filemark.jcr.model.Djcontainer;
 import com.filemark.jcr.model.Folder;
 import com.filemark.jcr.model.Page;
+import com.filemark.jcr.model.User;
 import com.filemark.jcr.service.AssetManager;
 import com.filemark.sso.JwtUtil;
 import com.filemark.utils.ImageUtil;
@@ -1019,6 +1021,50 @@ public class SiteController extends BaseController {
 		return asset;
 	}	
 
+	@RequestMapping(value = {"/site/uploadIcon.html"}, method = {RequestMethod.GET,RequestMethod.POST})
+	public @ResponseBody String  iconUpload(String path,ScanUploadForm uploadForm,Model model,HttpServletRequest request, HttpServletResponse response) {
+
+		String username = getUsername();
+		Asset asset= new Asset();
+		ImageUtil.HDDOn();
+		try {
+			for (MultipartFile multipartFile : uploadForm.getFile()) {
+				String fileName = multipartFile.getOriginalFilename();
+	    		String ext = "";
+	    		if(fileName.lastIndexOf(".")>0) {
+	    			ext = fileName.substring(fileName.lastIndexOf("."), fileName.length());
+	    		}
+	    		String assetPath = "/"+username+"/assets/icon";
+				asset.setExt(ext);
+	     		asset.setName(fileName);
+	    		asset.setCreatedBy(username);
+	    		asset.setPath(assetPath);
+	   			asset.setLastModified(new Date());
+	 			asset.setDevice(this.getDevice().getPath());
+        		String contentType = multipartFile.getContentType();
+        		asset.setContentType(contentType);
+				InputStream in = multipartFile.getInputStream();
+				File folder = new File(jcrService.getDevice()+asset.getPath());
+				if(!folder.exists()) folder.mkdirs();
+				File file = new File(folder,"origin"+ext);
+				FileUtils.copyInputStreamToFile(in, file);
+				in.close();
+				jcrService.addOrUpdate(asset);
+				jcrService.autoRoateImage(asset.getPath());
+				jcrService.createIcon(asset.getPath(), 48,48);
+				jcrService.createIcon(asset.getPath(), 120,120);
+				jcrService.createIcon(asset.getPath(), 400,400);
+			}
+
+		}catch (Exception e){
+			logger.error("error:"+e.getMessage());
+			return "error:"+e.getMessage();
+			
+		}
+		ImageUtil.HDDOff();
+		return "/site/file/icon.jpg?path="+asset.getPath()+"/x120.jpg&time="+new Date().getTime();
+	}	
+	
 	@RequestMapping(value = {"/site/importAsset.html"}, method = {RequestMethod.GET,RequestMethod.POST})
 	public @ResponseBody Asset  assetsImport(String path,String url, String override,Model model,HttpServletRequest request, HttpServletResponse response) {
 		Asset asset= new Asset();
@@ -1730,7 +1776,34 @@ public class SiteController extends BaseController {
 	public @ResponseBody String addComponent(String path,Model model,Djcontainer djcontainer,HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		return super.deleteNode(model, request, response);
-	} 
+	}
+	
+	@RequestMapping(value = {"/site/profile.html"}, method = RequestMethod.GET)
+	public String profile(String path,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String username = getUsername();
+		User user  = (User)jcrService.getObject("/system/users/"+username);
+/*		if(path !=null) {
+			user = (User)jcrService.getObject(path);
+		}
+		if(!user.getUserName().equals(username)) {
+			response.setStatus(HttpStatus.SC_UNAUTHORIZED);
+		}*/
+		File f = new File(jcrService.getDevice());
+		model.addAttribute("usage",""+f.getUsableSpace()/1000000+"MB/"+f.getTotalSpace()/1000000+"MB");
+
+		model.addAttribute("user", user);
+		return "site/profile";
+	}
+	
+	@RequestMapping(value = {"/site/profile.html"}, method = RequestMethod.POST)
+	public String profileUpdate(User user,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String username = getUsername();
+		User dbuser  = (User)jcrService.getObject("/system/users/"+username);
+		dbuser.setSigningKey(user.getSigningKey());
+		jcrService.addOrUpdate(dbuser);
+		return "redirect:/signin?info=pwchanged";
+	}
+	
 	@RequestMapping(value = {"/site/doc2pdf.pdf"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public @ResponseBody String doc2pdf(String path,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
 
@@ -2060,7 +2133,7 @@ public class SiteController extends BaseController {
 			String jpgname = jcrService.getDevice()+path+"/x400"+".jpg";
 			file = new File(jpgname);
 			if(!file.exists()) {
-				if(ImageUtil.video2jpg(infile, "400x400", jpgname) !=0)
+				if(ImageUtil.video2jpg(infile, "400x300", jpgname) !=0)
 					response.sendRedirect("/resources/images/video-icon.png");									
 			}
 			super.serveResource(request, response, file, "image/jpeg");
@@ -2180,7 +2253,8 @@ public class SiteController extends BaseController {
 				super.serveResource(request, response, outFile, null);
 				return null;					
 			}
-			String ext = path.substring(path.lastIndexOf("."));
+			String ext = ".jpg";
+			if(path.lastIndexOf(".")>0) ext = path.substring(path.lastIndexOf("."));
 			outFile = new File(jcrService.getDevice()+path+(width==null?"/origin"+ext:"/x"+width+".jpg"));
 			if(outFile.exists() && outFile.isFile()) {
 				logger.debug("output:"+outFile.getAbsolutePath());
