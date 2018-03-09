@@ -961,7 +961,9 @@ public class SiteController extends BaseController {
         				infile = device.getLocation()+asset.getPath();
         				File folder = new File(device.getLocation()+asset.getPath());
         				if(!folder.exists()) folder.mkdirs();
+        				folder.setLastModified(new Date().getTime());
         				File file = new File(device.getLocation()+asset.getPath()+"/origin"+ext);
+        				file.setLastModified(new Date().getTime());
 /*        				if(!file.getParentFile().exists()) {
         					file.getParentFile().mkdirs();
         				}*/
@@ -1321,6 +1323,7 @@ public class SiteController extends BaseController {
     					file.getParentFile().mkdirs();
     				}
     				if(file.isDirectory()) {
+    					file.setLastModified(new Date().getTime());
     					String ext = asset.getExt();
     					if(asset.getPath().lastIndexOf(".")>0)
     						ext = asset.getPath().substring(asset.getPath().lastIndexOf("."));
