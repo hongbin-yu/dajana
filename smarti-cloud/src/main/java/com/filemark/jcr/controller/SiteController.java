@@ -1326,6 +1326,7 @@ public class SiteController extends BaseController {
     						ext = asset.getPath().substring(asset.getPath().lastIndexOf("."));
     					file = new File(file,"origin"+ext);
     				}
+    				file.setLastModified(new Date().getTime());
     				OutputStream output = new FileOutputStream(file,false);
     				byte[] buffer = new byte[8 * 1024];
     				int byteToRead = 0;
