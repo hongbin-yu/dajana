@@ -63,4 +63,5 @@
 	</div>
 </details>
 </div>
+<c:if test="${(loop.index + 2) % 3 ==1  }"><div class="clearfix"></div></c:if>
 </c:forEach>

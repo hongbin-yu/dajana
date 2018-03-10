@@ -16,6 +16,60 @@ $(window).on('load',function() {
 
 	
 });
+var p=0;
+var _throttleTimer = null;
+var _throttleDelay = 100;
+var $window = $(window);
+var $document = $(document);
+
+$document.ready(function () {
+    $window
+        .off('scroll', ScrollHandler)
+        .on('scroll', ScrollHandler);
+
+});
+
+function ScrollHandler(e) {
+    //throttle event:
+    clearTimeout(_throttleTimer);
+    _throttleTimer = setTimeout(function () {
+        //console.log('scroll');
+
+        //do work
+        if ($window.scrollTop() + $window.height() > $document.height() - 100) {
+        	avalaiblePages = $("#availablePages").val();
+        	type = $("#type").val();
+        	kw=$("#kw").val();
+        	//input=$("#input").val;
+        	path=$("#path").val();
+        	if(p < avalaiblePages) {
+                p ++;
+                $("#loading").html("<img src=\"/resources/images/ui-anim_basic_16x16.gif\" width=\"48\" height=\"48\" alt=\"\">");
+                //alert("near bottom!"+"browsemore.html?path="+path+"&input="+input+"&kw="+kw+"&p="+p);
+                $.ajax ({
+    			    url: "browsemore.html?path="+path+"&type="+type+"&kw="+kw+"&p="+p,
+    			    type: "GET", 
+    			    contentType: "text/html",
+    			    //processData: false,
+    			    success: function(data) {
+    			    	$("#contentmore").append(data);
+    	                $("#loading").html("");
+
+    			    },
+    			    error: function() {
+    	                $("#loading").html("");
+    				    alert("出错：");
+
+    			    }
+    			    // ... Other options like success and etc
+    			}); 	    
+                
+            }
+
+        }
+
+    }, _throttleDelay);
+}
 var contentPath = "";
 if(window.location.pathname.indexOf("/smarti-cloud")>=0) {
 	contentPath = "/smarti-cloud";

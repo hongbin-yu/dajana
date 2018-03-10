@@ -9,10 +9,10 @@
 <c:set var="contentPath"><c:url value="/"></c:url></c:set>
 <body class="secondary" vocab="http://schema.org/" typeof="WebPage">
 <main role="main" property="mainContentOfPage" class="container">
-<div id="contentRow" class="row">
+<div class="row">
 <div class="col-md-4 wb-frmvld">
 	<form action="upload.html" method="POST" id="form-upload" enctype="multipart/form-data">
-		<input type="hidden" id="path" name="path" value="${folder.path}"/>
+<%-- 		<input type="hidden" id="path" name="path" value="${folder.path}"/> --%>
 		<input type="hidden" id="type" name="type" value="${type}"/>
 		<input type="hidden" id="input" name="input" value="${input}"/>	
 		<input type="hidden" name="redirect" value="/site/browse.html">	
@@ -26,8 +26,15 @@
 	</form>
 </div>
 <form action="browse.html" id="assets" name="assets" method="get" accept-charset="UTF-8">
-<input type="hidden" name="input" value="${input}"/>
-<div class="form-group col-md-4">
+<input type="hidden" id="path" name="path" value="${folder.path}"/>
+<input type="hidden" id="input" name="input" value="${input}"/>
+<input type="hidden" id="type" name="type" value="${type}"/>
+<input type="hidden" id="kw" name="kw" value="${kw}"/>		
+<input type="hidden" id="pageNumber" name="pageNumber" value="${assets.pageNumber}"/>	
+<input type="hidden" id="availablePages" name="availablePages" value="${assets.availablePages}"/>				
+
+<div class="col-md-4">
+<div class="form-group">
 <select name="type"  onchange="this.form.submit()">
 <option value="" <c:if test="${type=='' }">selected</c:if> ><spring:message code="djn.all"/></option>
 <option value="child" <c:if test="${type=='child' }">selected</c:if> ><spring:message code="djn.child"/></option>
@@ -38,14 +45,29 @@
 </select> 
 <input id="kw" name="kw" value="${kw}" size="15" placeholder="输入关键词"> <input id="submit_search" type="submit" value="搜索" title="搜索" class="btn btn-primary"> 
 </div>
+
+<div class="form-group">
+<select class="form-control" name="path" onchange="this.form.submit()">
+	<c:if test="${folder.name!='assets' }">
+	<option value="${folder.parent }">${folder.parent }</option>
+	</c:if>
+	<option value="${folder.path}" selected>${folder.path}</option>
+	<c:forEach items="${folders.items }" var="item" varStatus="loop">
+		<option value="${item.path }">${item.title }</option>
+	</c:forEach>     
+</select>
+</div>
+
+</div>
 </form>
 <div class="form-group col-md-4">
 <div class="form-group">
-<label>
+<%-- <label>
 <c:if test="${folder.name!='assets' }">
-<a title="${folder.parent }" href='<c:url value="/site/browse.html?path=${folder.parent}&type=${type }&input=${input }"/>'><span class="glyphicon glyphicon-backward"></span></a>
+<a title="${folder.parent }" href='<c:url value="/site/browse.html?path=${folder.parent}&type=${type }&input=${input }"/>'><span class="glyphicon glyphicon-backward"></span>${path }</a>
 </c:if>
-${path }</label>
+<c:if test="${folder.name=='assets' }">${path }</c:if>
+</label> --%>
 <%-- <input type="text" class="form-editable" id="title${folder.uid}" name="jcr:title" size="18" value="${folder.title}" uid="${folder.uid}"/><button class="btn btn-primary btn-xs" onclick="javascript:returnCarousel('${folder.path}')" title="加入广告"><span class="glyphicon glyphicon-play"></span></button>
  --%></div>
             <details id="${folder.uid }">
@@ -82,12 +104,7 @@ ${path }</label>
 	</form>
 	</div>	
 </details>
-      <ul class="list-group menu list-unstyled">
-		<c:forEach items="${folders.items }" var="item" varStatus="loop">
-		<li class="list-group-item" ><a title="${item.path }" href="browse.html?path=${item.path }">${item.title }</a><%--   <a title="打开PDF" href="<c:url value="/viewf2p?path=${item.path}"/>" target="_BLANK"><img title="点击打开PDF" src='<c:url value="/resources/images/pdf.gif"></c:url>'>(打开PDF)</a> --%><%-- <img title="加广告" alt="" class="pull-left" src="<c:url value="/resources/images/play.png"></c:url>" onclick="javascript:returnCarousel('${item.path}')"> --%></li>
-		</c:forEach>        
-      </ul>
-     </div>
+</div>
 </div>
 <div class="wb-inv" id="div_uid">    
 <div id="{uid}" class="col-md-4">
@@ -187,7 +204,7 @@ ${path }</label>
   </c:forEach>
   </ul>
 </div> 
-<div class="clear"></div>
+<div class="clearfix"></div>
 <button class="btn btn-primary btn-sm" onclick="javascript:returnGallery('${folder.path}')" title="植入画廊"><span class="glyphicon glyphicon-play">${folder.title } 植入画廊</span></button>
 </c:if>
 </div>
@@ -260,7 +277,7 @@ ${path }</label>
 </c:forEach>
 </div>
 <div id="contentmore"></div>
-<div id="loading"></div>
+<div class="text-center" id="loading"></div>
 <%-- <c:if test="${assets.availablePages>1 }">
 <section id="top-bar" class="container wb-overlay modal-content overlay-def wb-bar-t">
      <ul class="pager pagination-sm">
@@ -296,7 +313,7 @@ ${path }</label>
 <script src="<c:url value='/resources/js/pageContent.js'/>"></script>
 <script src="<c:url value='/resources/js/djn.js'/>"></script>
 <script type="text/javascript">
-
+/* 
 var avalaiblePages = "${assets.availablePages}";
 var type = "${type}";
 var kw="${kw}";
@@ -326,10 +343,10 @@ function ScrollHandler(e) {
         if ($window.scrollTop() + $window.height() > $document.height() - 100) {
             if(p < avalaiblePages) {
                 p ++;
-                $("#loading").html("<img src=\"/resources/images/ui-anim_basic_16x16.gif\" alt=\"\">");
+                $("#loading").html("<img src=\"/resources/images/ui-anim_basic_16x16.gif\" width=\"48\" height=\"48" alt=\"\">");
                 //alert("near bottom!"+"browsemore.html?path="+path+"&input="+input+"&kw="+kw+"&p="+p);
                 $.ajax ({
-    			    url: "browsemore.html?path="+path+"&input="+input+"&kw="+kw+"&p="+p,
+    			    url: "browsemore.html?path="+path+"&input="+input+"&type="+type+"&kw="+kw+"&p="+p,
     			    type: "GET", 
     			    contentType: "text/html",
     			    //processData: false,
@@ -352,7 +369,7 @@ function ScrollHandler(e) {
 
     }, _throttleDelay);
 }
-
+ */
 var win = (!window.frameElement && window.dialogArguments) || opener || parent || top;
 
 var carousel = win.carousel;
@@ -562,42 +579,7 @@ function returnCarousel(fileUrl) {
 	}else 
 		tinyMCE.activeEditor.selection.setContent('<div id="'+fileUrl+'" class="carousel noneditable">'+data+'</div>');
 	tinyMCE.activeEditor.setDirty(true);	
-/*       $.ajax({
-		    url: "carousel.html?path="+fileUrl,
-		    type: "GET", //ADDED THIS LINE
-		    // THIS MUST BE DONE FOR FILE UPLOADING
-		    contentType: "text/html",
-		    processData: false,
-		    success: function(data) {
 
-			    
-		    	var car = tinyMCE.activeEditor.dom.select('.carousel');
-		    	if(car.length>0)
-			    	car[0].innerHTML = data;
-			    else 
-		    		tinyMCE.activeEditor.selection.setContent('<div id="'+fileUrl+'" class="carousel noneditable">'+data+'</div>');
-		    	tinyMCE.activeEditor.setDirty(true); 
-		    	win.carousel = data;
-
-				if(message) {
-					message.innerHTML="";
-					var node = document.createElement("section"); 
-					node.classList.add("alert");
-					node.classList.add("alert-success");
-					var h3 = document.createElement("h3");
-					node.appendChild(h3);   
-					var textnode = document.createTextNode("广告已加入:"+fileUrl);
-					h3.appendChild(textnode);  
-					message.appendChild(node);
-					}
-		    },
-		    error: function() {
-			    alert("出错："+fileUrl);
-
-		    }
-		    // ... Other options like success and etc
-		});  
- */
 
 
 }

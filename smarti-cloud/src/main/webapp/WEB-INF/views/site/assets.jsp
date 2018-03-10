@@ -17,12 +17,14 @@
 		        <a href="?path=${folder.path}&type=${type}" title="刷屏"><span class="glyphicon glyphicon-refresh"></span>${folder.path}</a>
 		        </h3>
 		    <form action='<c:url value="/site/assets.html"></c:url>' method="get" name="cse-search-box" role="search" class="form-inline" accept-charset="UTF-8">
-			<input type="hidden" name="path" value="${folder.path}"/>
-			<input type="hidden" name="input" value="${input}"/>
-			<input type="hidden" name="kw" value="${kw}"/>			
+			<input type="hidden" id="path" name="path" value="${folder.path}"/>
+			<input type="hidden" id= "input" name="input" value="${input}"/>
+			<input type="hidden" id="kw" name="kw" value="${kw}"/>		
+			<input type="hidden" id="pageNumber" name="pageNumber" value="${assets.pageNumber}"/>	
+			<input type="hidden" id="availablePages" name="availablePages" value="${assets.availablePages}"/>				
 		    <div class="btn btn-default-lg form-group pull-right">
 			<label for="wb-srch-q" class="wb-inv"><spring:message code="djn.search"/></label>
-			<select name="type" onchange="this.form.submit()">
+			<select id="type" name="type" onchange="this.form.submit()">
 			<option value="" <c:if test="${type=='' }">selected</c:if> ><spring:message code="djn.all"/></option>
 			<option value="child" <c:if test="${type=='child' }">selected</c:if> ><spring:message code="djn.child"/></option>
 			<option value="image" <c:if test="${type=='image' }">selected</c:if> ><spring:message code="djn.image"/></option>
@@ -293,6 +295,7 @@
 	</c:forEach>
 	<div class="clearfix"></div>
 </div>
+<div class="row" id="contentmore"></div>
 		<c:if test="${assets.availablePages>1 }">
 		<c:if test="${assets.pageNumber > 6 }">
 		<c:set var="startPage">${assets.pageNumber-5}</c:set>
@@ -307,7 +310,7 @@
 		<c:set var="endPage">${assets.availablePages}</c:set>
 		</c:if>		
 
-		<section class="text-center">
+		<section id="loading" class="text-center">
 		     <ul class="pagination">
 		     <c:if test="${assets.pageNumber>0}"> 
 		     	<li><a rel='prev' href="<c:url value='?path=${path }&type=${type }&input=${input }&kw=${kw }&p=${assets.pageNumber-1}'/>"><spring:message code="djn.last_page"/></a></li>
@@ -327,6 +330,4 @@
 		</section>
 		</c:if>
 </main>
-
-
 
