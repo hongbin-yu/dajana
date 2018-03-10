@@ -2728,6 +2728,7 @@ public class SiteController extends BaseController {
 			String src = e.attr("src");
 			if(urls.containsKey(src)) {
 				e.attr("src", urls.get(src));
+				continue;
 			}
 			if(src!=null && !"".equals(src) && !src.startsWith("http") && !src.startsWith("resources/") && !src.startsWith("/resources/")) {
 				try {
@@ -2757,6 +2758,7 @@ public class SiteController extends BaseController {
 			if(href==null) continue;
 			if(urls.containsKey(href)) {
 				e.attr("href", urls.get(href));
+				continue;
 			}
 			if(!"".equals(href) && !href.startsWith("#") && !href.startsWith("http") &&  !href.startsWith("/templates/") && !href.startsWith("resources/") && !href.startsWith("/content/") && !href.startsWith("../content/") && !href.startsWith("/resources/")) {
 				try {
@@ -2784,6 +2786,7 @@ public class SiteController extends BaseController {
 			String href = e.attr("poster");
 			if(href!=null && urls.containsKey(href)) {
 				e.attr("poster", urls.get(href));
+				continue;
 			}
 			if(href!=null && !"".equals(href) && href!=null &&  !href.startsWith("#") && !"".equals(href) &&  !href.startsWith("http") && !href.startsWith("resources/") && !href.startsWith("/resources/")) {
 				try {
@@ -2813,6 +2816,7 @@ public class SiteController extends BaseController {
 			if(href==null) continue;
 			if(urls.containsKey(href)) {
 				e.attr("src", urls.get(href));
+				continue;
 			}
 			if(href!=null && !"".equals(href) &&  !href.startsWith("#")  && !href.startsWith("http") && !href.startsWith("resources/") && !href.startsWith("/resources/")) {
 				try {
@@ -2840,6 +2844,7 @@ public class SiteController extends BaseController {
 			if(href==null) continue;
 			if(urls.containsKey(href)) {
 				e.attr("poster", urls.get(href));
+				continue;
 			}
 			if(href!=null && !"".equals(href) &&  !href.startsWith("#")  && !href.startsWith("http") && !href.startsWith("resources/") && !href.startsWith("/resources/")) {
 				try {

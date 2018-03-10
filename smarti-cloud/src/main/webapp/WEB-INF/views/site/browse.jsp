@@ -260,6 +260,7 @@ ${path }</label>
 </c:forEach>
 </div>
 <div id="contentmore"></div>
+<div id="loading"></div>
 <%-- <c:if test="${assets.availablePages>1 }">
 <section id="top-bar" class="container wb-overlay modal-content overlay-def wb-bar-t">
      <ul class="pager pagination-sm">
@@ -325,6 +326,7 @@ function ScrollHandler(e) {
         if ($window.scrollTop() + $window.height() > $document.height() - 100) {
             if(p < avalaiblePages) {
                 p ++;
+                $("#loading").html("<img src=\"/resources/images/ui-anim_basic_16x16.gif\" alt=\"\">");
                 //alert("near bottom!"+"browsemore.html?path="+path+"&input="+input+"&kw="+kw+"&p="+p);
                 $.ajax ({
     			    url: "browsemore.html?path="+path+"&input="+input+"&kw="+kw+"&p="+p,
@@ -333,8 +335,11 @@ function ScrollHandler(e) {
     			    //processData: false,
     			    success: function(data) {
     			    	$("#contentmore").append(data);
+    	                $("#loading").html("");
+
     			    },
     			    error: function() {
+    	                $("#loading").html("");
     				    alert("出错：");
 
     			    }
