@@ -39,7 +39,7 @@
 			<input class="form-control" id="username" name="j_username" type="text" value="${j_username }" required="required" pattern=".{2,}" data-rule-minlength="2" size="40"  placeholder="<spring:message code="djn.input_username"/>"/>
 		</div>
 		<div class="form-group">
-			<details>
+			<details open="open">
 			<summary>
 			<label for="password">
 			<span class="field-name"><spring:message code="djn.password"/></span> (<spring:message code="djn.select_password"/>)
@@ -47,24 +47,24 @@
 			<input class="form-control" id="j_password" name="j_password" type="password" maxlength="32" size="40" pattern=".{3,}" data-rule-rangelength="[4,32]" placeholder="<spring:message code="djn.select_4_icon"/>"/>
 			</summary>
 			<div class="btn-group btn-group-justified">
-			<a class="btn btn-default" onclick="javascript:p('A0')"><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/mouse.png"></c:url>'/></a>
-			<a class="btn btn-default" onclick="javascript:p('A1')"><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/cow.png"></c:url>'/></a>
-			<a class="btn btn-default" onclick="javascript:p('A2')"><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/tiger.png"></c:url>'/></a>
+			<a class="btn btn-default security" id='A0'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/mouse.png"></c:url>'/></a>
+			<a class="btn btn-default security" id='A1'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/cow.png"></c:url>'/></a>
+			<a class="btn btn-default security" id='A2'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/tiger.png"></c:url>'/></a>
 			</div>
 			<div class="btn-group btn-group-justified">
-			<a class="btn btn-default" onclick="javascript:p('B0')"><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/rabit.png"></c:url>'/></a>
-			<a class="btn btn-default" onclick="javascript:p('B1')"><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/dragan.png"></c:url>'/></a>
-			<a class="btn btn-default" onclick="javascript:p('B2')"><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/snake.png"></c:url>'/></a>
+			<a class="btn btn-default security" id='B0'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/rabit.png"></c:url>'/></a>
+			<a class="btn btn-default security" id='B1'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/dragan.png"></c:url>'/></a>
+			<a class="btn btn-default security" id='B2'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/snake.png"></c:url>'/></a>
 			</div>
 			<div class="btn-group btn-group-justified">
-			<a class="btn btn-default" onclick="javascript:p('C0')"><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/horse.png"></c:url>'/></a>
-			<a class="btn btn-default" onclick="javascript:p('C1')"><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/sheep.png"></c:url>'/></a>
-			<a class="btn btn-default" onclick="javascript:p('C2')"><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/monkey.png"></c:url>'/></a>
+			<a class="btn btn-default security" id='C0'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/horse.png"></c:url>'/></a>
+			<a class="btn btn-default security" id='C1'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/sheep.png"></c:url>'/></a>
+			<a class="btn btn-default security" id='C2'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/monkey.png"></c:url>'/></a>
 			</div>
 			<div class="btn-group btn-group-justified">
-			<a class="btn btn-default" onclick="javascript:p('D0')"><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/chiken.png"></c:url>'/></a>
-			<a class="btn btn-default" onclick="javascript:p('D1')"><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/dog.png"></c:url>'/></a>
-			<a class="btn btn-default" onclick="javascript:p('D2')"><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/pig.png"></c:url>'/></a>
+			<a class="btn btn-default security" id='D0'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/chiken.png"></c:url>'/></a>
+			<a class="btn btn-default security" id='D1'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/dog.png"></c:url>'/></a>
+			<a class="btn btn-default security" id='D2'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/pig.png"></c:url>'/></a>
 			</div>
 			</details>
 		</div>
@@ -78,31 +78,5 @@
 
 </div>
 </main>
-<script type="text/javascript">
-var count = 0;
-function p(s) {
-	var v=$("#j_password").val();
-	if(v=="") {
-		count=0;
-		$("#count").val("0");
-	}
 
-	count = $("#count").val();
-	if(count==0) {
-		$("#j_password").val(s);		
-	}else {
-		$("#j_password").val(v+s);
-	}
-	count++;
-	$("#count").val(count);
-	if(count==4) {
-		$("#submit").click();
-		}
-}
-var j_password = document.querySelector('#j_password');
-if(j_password)
-	j_password.addEventListener("focus",function(e) {
-	j_password.value="";
-});
-</script>
 	

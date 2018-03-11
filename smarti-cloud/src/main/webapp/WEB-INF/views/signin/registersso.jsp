@@ -56,24 +56,24 @@
 			<input class="form-control" id="password" name="password" type="password" onkeypress="this.value=''" maxlength="32" size="40" pattern=".{4,}" data-rule-rangelength="[4,32]" placeholder="<spring:message code="djn.select_4_icon"/>"/>
 			</summary>
 			<div class="btn-group btn-group-justified">
-			<a class="btn btn-default" onclick="javascript:p('A0')"><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/mouse.png"></c:url>'/></a>
-			<a class="btn btn-default" onclick="javascript:p('A1')"><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/cow.png"></c:url>'/></a>
-			<a class="btn btn-default" onclick="javascript:p('A2')"><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/tiger.png"></c:url>'/></a>
+			<a class="btn btn-default password" id='A0'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/mouse.png"></c:url>'/></a>
+			<a class="btn btn-default password" id='A1'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/cow.png"></c:url>'/></a>
+			<a class="btn btn-default password" id='A2'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/tiger.png"></c:url>'/></a>
 			</div>
 			<div class="btn-group btn-group-justified">
-			<a class="btn btn-default" onclick="javascript:p('B0')"><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/rabit.png"></c:url>'/></a>
-			<a class="btn btn-default" onclick="javascript:p('B1')"><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/dragan.png"></c:url>'/></a>
-			<a class="btn btn-default" onclick="javascript:p('B2')"><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/snake.png"></c:url>'/></a>
+			<a class="btn btn-default password" id='B0'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/rabit.png"></c:url>'/></a>
+			<a class="btn btn-default password" id='B1'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/dragan.png"></c:url>'/></a>
+			<a class="btn btn-default password" id='B2'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/snake.png"></c:url>'/></a>
 			</div>
 			<div class="btn-group btn-group-justified">
-			<a class="btn btn-default" onclick="javascript:p('C0')"><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/horse.png"></c:url>'/></a>
-			<a class="btn btn-default" onclick="javascript:p('C1')"><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/sheep.png"></c:url>'/></a>
-			<a class="btn btn-default" onclick="javascript:p('C2')"><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/monkey.png"></c:url>'/></a>
+			<a class="btn btn-default password" id='C0'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/horse.png"></c:url>'/></a>
+			<a class="btn btn-default password" id='C1'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/sheep.png"></c:url>'/></a>
+			<a class="btn btn-default password" id='C2'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/monkey.png"></c:url>'/></a>
 			</div>
 			<div class="btn-group btn-group-justified">
-			<a class="btn btn-default" onclick="javascript:p('D0')"><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/chiken.png"></c:url>'/></a>
-			<a class="btn btn-default" onclick="javascript:p('D1')"><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/dog.png"></c:url>'/></a>
-			<a class="btn btn-default" onclick="javascript:p('D2')"><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/pig.png"></c:url>'/></a>
+			<a class="btn btn-default password" id='D0'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/chiken.png"></c:url>'/></a>
+			<a class="btn btn-default password" id='D1'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/dog.png"></c:url>'/></a>
+			<a class="btn btn-default password" id='D2'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/pig.png"></c:url>'/></a>
 			</div>
 			</details>
 
@@ -86,24 +86,24 @@
 			<input class="form-control" id="passwordconfirm" name="passwordconfirm" type="password" maxlength="32" size="40" pattern=".{4,}" data-rule-rangelength="[4,32]" data-rule-equalTo="#password" placeholder="<spring:message code="djn.reselect_4_password_to_confirm"/>"/>
 		</summary>
 			<div class="btn-group btn-group-justified">
-			<a class="btn btn-default" onclick="javascript:c('${ids[0] }')"><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/${imgs[0]}.png"></c:url>'/></a>
-			<a class="btn btn-default" onclick="javascript:c('${ids[1] }')"><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/${imgs[1]}.png"></c:url>'/></a>
-			<a class="btn btn-default" onclick="javascript:c('${ids[2] }')"><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/${imgs[2]}.png"></c:url>'/></a>
+			<a class="btn btn-default confirm" id='${ids[0] }'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/${imgs[0]}.png"></c:url>'/></a>
+			<a class="btn btn-default confirm" id='${ids[1] }'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/${imgs[1]}.png"></c:url>'/></a>
+			<a class="btn btn-default confirm" id='${ids[2] }'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/${imgs[2]}.png"></c:url>'/></a>
 			</div>
 			<div class="btn-group btn-group-justified">
-			<a class="btn btn-default" onclick="javascript:c('${ids[3] }')"><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/${imgs[3]}.png"></c:url>'/></a>
-			<a class="btn btn-default" onclick="javascript:c('${ids[4] }')"><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/${imgs[4]}.png"></c:url>'/></a>
-			<a class="btn btn-default" onclick="javascript:c('${ids[5] }')"><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/${imgs[5]}.png"></c:url>'/></a>
+			<a class="btn btn-default confirm" id='${ids[3] }'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/${imgs[3]}.png"></c:url>'/></a>
+			<a class="btn btn-default confirm" id='${ids[4] }'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/${imgs[4]}.png"></c:url>'/></a>
+			<a class="btn btn-default confirm" id='${ids[5] }'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/${imgs[5]}.png"></c:url>'/></a>
 			</div>
 			<div class="btn-group btn-group-justified">
-			<a class="btn btn-default" onclick="javascript:c('${ids[6] }')"><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/${imgs[6]}.png"></c:url>'/></a>
-			<a class="btn btn-default" onclick="javascript:c('${ids[7] }')"><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/${imgs[7]}.png"></c:url>'/></a>
-			<a class="btn btn-default" onclick="javascript:c('${ids[8] }')"><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/${imgs[8]}.png"></c:url>'/></a>
+			<a class="btn btn-default confirm" id='${ids[6] }'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/${imgs[6]}.png"></c:url>'/></a>
+			<a class="btn btn-default confirm" id='${ids[7] }'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/${imgs[7]}.png"></c:url>'/></a>
+			<a class="btn btn-default confirm" id='${ids[8] }'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/${imgs[8]}.png"></c:url>'/></a>
 			</div>
 			<div class="btn-group btn-group-justified">
-			<a class="btn btn-default" onclick="javascript:c('${ids[9] }')"><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/${imgs[9]}.png"></c:url>'/></a>
-			<a class="btn btn-default" onclick="javascript:c('${ids[10] }')"><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/${imgs[10]}.png"></c:url>'/></a>
-			<a class="btn btn-default" onclick="javascript:c('${ids[11] }')"><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/${imgs[11]}.png"></c:url>'/></a>
+			<a class="btn btn-default confirm" id='${ids[9] }'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/${imgs[9]}.png"></c:url>'/></a>
+			<a class="btn btn-default confirm" id='${ids[10] }'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/${imgs[10]}.png"></c:url>'/></a>
+			<a class="btn btn-defaultn confirm" id='${ids[11] }'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/${imgs[11]}.png"></c:url>'/></a>
 			</div>
 
 		</details>
@@ -116,7 +116,7 @@
 
 </div>
 </main>
-<script type="text/javascript">
+<!-- <script type="text/javascript">
 
 function p(s) {
 	var v=$("#password").val();
@@ -156,4 +156,4 @@ function c(s) {
 		}
 
 }
-</script>	
+</script>	 -->

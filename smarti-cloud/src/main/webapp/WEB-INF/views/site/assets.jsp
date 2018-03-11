@@ -22,7 +22,8 @@
 			<input type="hidden" id="kw" name="kw" value="${kw}"/>		
 			<input type="hidden" id="pageNumber" name="pageNumber" value="${assets.pageNumber}"/>	
 			<input type="hidden" id="availablePages" name="availablePages" value="${assets.availablePages}"/>				
-		    <div class="btn btn-default-lg form-group pull-right">
+			<input type="hidden" id="topage" name="topage" value="assetsmore"/>			    
+			<div class="btn btn-default-lg form-group pull-right">
 			<label for="wb-srch-q" class="wb-inv"><spring:message code="djn.search"/></label>
 			<select id="type" name="type" onchange="this.form.submit()">
 			<option value="" <c:if test="${type=='' }">selected</c:if> ><spring:message code="djn.all"/></option>

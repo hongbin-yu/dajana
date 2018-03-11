@@ -163,7 +163,7 @@ public class SiteController extends BaseController {
 	}
 
 	@RequestMapping(value = {"/site/browsemore.html"}, method = {RequestMethod.GET,RequestMethod.POST},produces = "text/plain;charset=UTF-8")
-	public String browsemore(String path,String type, String input,String kw,Integer p,Integer m,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public String browsemore(String path,String type, String input,String kw,Integer p,Integer m,String topage,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
 		ImageUtil.HDDOn();
 		String assetFolder = "/"+getUsername()+"/assets";
 		if(!jcrService.nodeExsits(assetFolder)) {
@@ -174,7 +174,7 @@ public class SiteController extends BaseController {
 			path=assetFolder;
 			max = 20;
 		}
-		
+		if(topage==null) topage="browsemorew";
 		Folder currentNode = jcrService.getFolder(path);
 		String orderby = "[lastModified] desc";
 		if(currentNode.getOrderby()!=null && !"".equals(currentNode.getOrderby()) && !"rank,name".equals(currentNode.getOrderby())) {
@@ -206,7 +206,7 @@ public class SiteController extends BaseController {
 		model.addAttribute("input", input);		
 		model.addAttribute("kw", kw);	
 		ImageUtil.HDDOff();
-		return "site/browsemore";
+		return "site/"+topage;
 	}
 	@RequestMapping(value = {"/site/media.html"}, method = {RequestMethod.GET,RequestMethod.POST})
 	public String media(String path,String type, String input,String kw,Integer p,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {

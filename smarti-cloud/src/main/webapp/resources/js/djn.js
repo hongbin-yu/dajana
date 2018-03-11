@@ -40,14 +40,15 @@ function ScrollHandler(e) {
         	avalaiblePages = $("#availablePages").val();
         	type = $("#type").val();
         	kw=$("#kw").val();
-        	//input=$("#input").val;
+        	var topage="browsemore";
+        	if($("#topage")) topage = $("#topage").val();
         	path=$("#path").val();
         	if(p < avalaiblePages) {
                 p ++;
                 $("#loading").html("<img src=\"/resources/images/ui-anim_basic_16x16.gif\" width=\"48\" height=\"48\" alt=\"\">");
                 //alert("near bottom!"+"browsemore.html?path="+path+"&input="+input+"&kw="+kw+"&p="+p);
                 $.ajax ({
-    			    url: "browsemore.html?path="+path+"&type="+type+"&kw="+kw+"&p="+p,
+    			    url: "browsemore.html?path="+path+"&type="+type+"&kw="+kw+"&p="+p+"&topage="+topage,
     			    type: "GET", 
     			    contentType: "text/html",
     			    //processData: false,
@@ -85,7 +86,100 @@ var input = "";
 document.addEventListener("DOMContentLoaded", init, false);
 var i18n = window.wb.i18n;
 
+var count = 0;
+/*function pw(s) {
+	var v=$("#j_password").val();
+	if(v=="") {
+		count=0;
+		$("#count").val("0");
+	}
 
+	count = $("#count").val();
+	if(count==0) {
+		$("#j_password").val(s);		
+	}else {
+		$("#j_password").val(v+s);
+	}
+	count++;
+	$("#count").val(count);
+	if(count==4) {
+		$("#submit").click();
+		}
+}*/
+var j_password = document.querySelector('#j_password');
+if(j_password)
+	j_password.addEventListener("focus",function(e) {
+	j_password.value="";
+});
+
+var security = document.getElementsByClassName('security');
+
+for(var i=0; i<security.length;i++) {
+	security[i].addEventListener("click",function(e) {
+		var v=$("#j_password").val();
+		if(v=="") {
+			count=0;
+			$("#count").val("0");
+		}
+
+		count = $("#count").val();
+		if(count==0) {
+			$("#j_password").val(this.id);		
+		}else {
+			$("#j_password").val(v+this.id);
+		}
+		count++;
+		$("#count").val(count);
+		if(count==4) {
+			$("#submit").click();
+			}		
+	});
+}
+
+var password = document.getElementsByClassName('password');
+
+for(var i=0; i<password.length;i++) {
+	password[i].addEventListener("click",function(e) {
+		var v=$("#password").val();
+		if(v=="") {
+			count=0;
+			$("#count").val("0");
+		}
+		count = $("#count").val();
+		if(count==0) {
+			$("#password").val(this.id);		
+		}else {
+			$("#password").val(v+this.id);
+		}	
+
+		count++;
+		$("#count").val(count);
+		if(count==4) {
+			$("#details_pass").removeAttr("open");
+			$("#details_confirm").attr("open","open");
+			}	
+		
+	});
+}
+var conform = document.getElementsByClassName('confirm');
+for(var i=0; i<conform.length;i++) {
+	conform[i].addEventListener("click",function(e) {
+		var v=$("#passwordconfirm").val();
+
+		count = $("#count").val();
+		if(count==4) {
+			$("#passwordconfirm").val(this.id);		
+		}else {
+			$("#passwordconfirm").val(v+this.id);
+		}	
+
+		count++;
+		$("#count").val(count);
+		if(count==8) {
+			$("#submit").click();
+			}
+	});
+}
 function init() {
 	var fileUpload = document.querySelector('#fileUpload');
 	if(fileUpload != null) {

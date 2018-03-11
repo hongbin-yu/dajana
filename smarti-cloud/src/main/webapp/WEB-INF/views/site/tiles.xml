@@ -27,6 +27,8 @@
 	</definition>	
 	<definition name="site/browsemore" templateExpression="/WEB-INF/views/site/browsemore.jsp">
 	</definition>
+	<definition name="site/assetsmore" templateExpression="/WEB-INF/views/site/assetsmore.jsp">
+	</definition>
 	<definition name="site/media" templateExpression="/WEB-INF/views/site/media.jsp">
 	</definition>	
 	<definition name="site/folder" templateExpression="/WEB-INF/views/site/folders.jsp">
