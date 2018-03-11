@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import javax.activation.MimetypesFileTypeMap;
 import javax.inject.Inject;
@@ -1031,7 +1032,10 @@ public class SiteController extends BaseController {
 	           				 if(currentFolder.getResolution()!=null) {
 	           					 resolution = currentFolder.getResolution();
 	           				 }
-	           				 if("720x540".equals(resolution)) {
+	           				 if("1080x720".equals(resolution) && contentType.equals("video/mp4")) {
+	           					 asset.setWidth(1080l);
+	           					 asset.setHeight(720l);		           					 
+	           				 }else if("720x540".equals(resolution)) {
 	           					 asset.setWidth(720l);
 	           					 asset.setHeight(540l);
 	           				 }else if("540x360".equals(resolution)) {
@@ -1042,7 +1046,8 @@ public class SiteController extends BaseController {
 	           					 asset.setHeight(280l);		           					 
 	           				 }
 	           				jcrService.addOrUpdate(asset);
-	        				 ImageUtil.video2mp4(file.getAbsolutePath(),resolution);
+	           				if(!"1080x720".equals(resolution) && !contentType.equals("video/mp4"))
+	           					ImageUtil.video2mp4(file.getAbsolutePath(),resolution);
 	        			}        				
 
         			}else {
@@ -1846,6 +1851,24 @@ public class SiteController extends BaseController {
 		}*/
 		File f = new File(jcrService.getDevice());
 		model.addAttribute("usage",""+f.getUsableSpace()/1000000+"MB/"+f.getTotalSpace()/1000000+"MB");
+    	String imgs[] = {"shu","niu","fu","tu","long","she","ma","yang","hou","ji","gou","zhu"};
+    	String ids[] = {"A0","A1","A2","B0","B1","B2","C0","C1","C2","D0","D1","D2"};
+    	Page page = new Page();
+    	//page.setTitle("&#27880;&#20876;");
+    	page.setTitle(messageSource.getMessage("djn.signup", null,"\u6CE8\u518C", localeResolver.resolveLocale(request)));
+    	Random rnd = new Random();
+    	for(int i = imgs.length - 1; i >0 ; i--) {
+    		int index = rnd.nextInt(i);
+    		String a = imgs[index];
+    		String b = ids[index];
+    		imgs[index] = imgs[i];
+    		ids[index] = ids[i];
+    		imgs[i] = a;
+    		ids[i] = b;
+    	}
+    	model.addAttribute("imgs", imgs);    
+    	model.addAttribute("ids", ids);
+
 
 		model.addAttribute("user", user);
 		return "site/profile";

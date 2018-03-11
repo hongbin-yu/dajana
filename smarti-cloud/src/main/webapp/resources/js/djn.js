@@ -110,6 +110,7 @@ var j_password = document.querySelector('#j_password');
 if(j_password)
 	j_password.addEventListener("focus",function(e) {
 	j_password.value="";
+	$("#details_password").removeAttr("open");
 });
 
 var security = document.getElementsByClassName('security');

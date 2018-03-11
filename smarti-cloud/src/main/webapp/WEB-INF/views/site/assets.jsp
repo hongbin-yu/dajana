@@ -59,6 +59,7 @@
 					<option value="540x360"><spring:message code="djn.540x360"/></option>
 					<option value="720x540" <c:if test="${folder.resolution=='720x540'}">selected</c:if>><spring:message code="djn.720x540"/></option>
 					<option value="360x280" <c:if test="${folder.resolution=='360x360'}">selected</c:if>><spring:message code="djn.360x360"/></option>
+					<option value="1080x720" <c:if test="${folder.resolution=='720x540'}">selected</c:if>><spring:message code="djn.1080x720"/></option>
 				</select>
 				</div>			
 				<div class="form-group">

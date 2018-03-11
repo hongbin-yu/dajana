@@ -39,12 +39,13 @@
 			<input class="form-control" id="username" name="j_username" type="text" value="${j_username }" required="required" pattern=".{2,}" data-rule-minlength="2" size="40"  placeholder="<spring:message code="djn.input_username"/>"/>
 		</div>
 		<div class="form-group">
-			<details open="open">
+			<details id="details_password">
 			<summary>
 			<label for="password">
 			<span class="field-name"><spring:message code="djn.password"/></span> (<spring:message code="djn.select_password"/>)
 			</label>
 			<input class="form-control" id="j_password" name="j_password" type="password" maxlength="32" size="40" pattern=".{3,}" data-rule-rangelength="[4,32]" placeholder="<spring:message code="djn.select_4_icon"/>"/>
+
 			</summary>
 			<div class="btn-group btn-group-justified">
 			<a class="btn btn-default security" id='A0'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/mouse.png"></c:url>'/></a>

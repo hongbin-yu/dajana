@@ -1,6 +1,10 @@
 package com.filemark.jcr.serviceImpl;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Properties;
 
@@ -18,6 +22,7 @@ import javax.mail.URLName;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import org.apache.poi.util.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +31,7 @@ import org.springframework.mail.MailSendException;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 
+import com.filemark.jcr.model.Asset;
 import com.filemark.jcr.service.JcrIndexService;
 import com.filemark.jcr.service.JcrServices;
 import com.filemark.jcr.service.jcrEmailService;
@@ -233,9 +239,9 @@ public class JcrEmailServiceImpl implements jcrEmailService {
 			        try {
 			  		  	for (int j=0, m=multipart.getCount(); j<m; j++) {
 			  		  		Part part = multipart.getBodyPart(j);
-			  		  		
+			  		  		handlePart(part,path);
 			  		  	}
-					  		          
+
 			        }catch (Exception e) {
 						log.error("receive:Exception:"+e);
 			        	continue;
@@ -261,7 +267,69 @@ public class JcrEmailServiceImpl implements jcrEmailService {
 	    }
 	    
 
+		  private Asset handlePart(Part part,String path) throws MessagingException, IOException {
+				
 
+				Asset asset = new Asset();  
+				String disposition = part.getDisposition();
+			    String contentType = part.getContentType();
+			    SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+
+			    if (disposition == null) { // When just body
+			    	log.debug("just body: "  + contentType);
+			      // Check if plain
+			      if (part.isMimeType("multipart/alternative")) {
+			          //part.writeTo(out);
+			    	  log.debug("contentType "+ contentType);  
+			      }else if(part.isMimeType("image/*")) {
+			    	  log.debug("Image: " + contentType);
+					String ext = "";
+					if (part.getFileName().lastIndexOf(".")>0) {
+						ext = part.getFileName().substring(part.getFileName().lastIndexOf(".")+1);
+						ext = ext.toLowerCase();
+					}
+					File file = new File(path,"origin"+ext);
+					InputStream in = part.getInputStream();
+					OutputStream out = new FileOutputStream(file);
+					IOUtils.copy(in, out);
+			      }else if (part.isMimeType("multipart/*")) { 
+			    	  log.debug("contentType "+ contentType); 
+					    Multipart mp = (Multipart)part.getContent();
+					    for (int i = 0; i < mp.getCount(); i++) {
+					    	asset =handlePart(mp.getBodyPart(i),path);
+					    }	    	  
+			      } else { // Don't think this will happen
+			    	  log.debug("Other body: " + contentType);
+			          //part.writeTo(out);
+			      }
+			    } else if (disposition.equalsIgnoreCase(Part.ATTACHMENT)) {
+			    	log.debug("Attachment: " + part.getFileName() + " : " + contentType);
+					String ext = "";
+					if (part.getFileName().lastIndexOf(".")>0) {
+						ext = part.getFileName().substring(part.getFileName().lastIndexOf(".")+1);
+						ext = ext.toLowerCase();
+					}
+					File file = new File(path,"origin"+ext);
+					InputStream in = part.getInputStream();
+					OutputStream out = new FileOutputStream(file);
+					IOUtils.copy(in, out);
+			    } else if (disposition.equalsIgnoreCase(Part.INLINE)) {
+			    	log.debug("Inline: " + part.getFileName() + " : " + contentType);
+					String ext = "";
+					if (part.getFileName().lastIndexOf(".")>0) {
+						ext = part.getFileName().substring(part.getFileName().lastIndexOf(".")+1);
+						ext = ext.toLowerCase();
+					}
+					File file = new File(path,"origin"+ext);
+					InputStream in = part.getInputStream();
+					OutputStream out = new FileOutputStream(file);
+					IOUtils.copy(in, out);
+			    } else {  // Should never happen
+			      log.debug("Other: " + disposition);
+			    }
+			    
+			    return asset;
+			  }
 
 
 		  private String getText(Part p) throws MessagingException, IOException {

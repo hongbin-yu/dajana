@@ -43,9 +43,11 @@
 			<img id="img${item.uid}" src="<c:url value='${item.icon }'></c:url>" class="img-responsive" draggable="true"/>
 		</a>
 		</c:if>
-
-		<div class="panel panel-default description" id="description${item.uid }" property="description"  uid="${item.uid}" placeholder="description">${item.description}</div>
-
+		<div class="form-group">
+		<input class="form-control" id="description${item.uid  }" name="jcr:description" value="${item.description}" size="42" uid="${item.uid}"  onchange="updateNode(this)"/>
+		</div>
+<%-- 		<div class="panel panel-default description" id="description${item.uid }" property="description"  uid="${item.uid}" placeholder="description">${item.description}</div>
+ --%>
 	</div>
 	<details>
 		<summary><span class="glyphicon glyphicon-edit"></span> ${item.title}</summary>
