@@ -9,6 +9,7 @@
 <c:set var="contentPath"><c:url value="/"></c:url></c:set>
 <body class="secondary" vocab="http://schema.org/" typeof="WebPage">
 <main role="main" property="mainContentOfPage" class="container">
+<input type="hidden" id="folderpath" name="path" value="${folder.path}"/>
 <div class="row">
 <div class="col-md-4 wb-frmvld">
 	<form action="upload.html" method="POST" id="form-upload" enctype="multipart/form-data">
@@ -26,11 +27,10 @@
 	</form>
 </div>
 <form action="browse.html" id="assets" name="assets" method="get" accept-charset="UTF-8">
-<%-- <input type="hidden" id="path" name="path" value="${folder.path}"/> --%>
 <input type="hidden" id="input" name="input" value="${input}"/>
 <input type="hidden" id="type" name="type" value="${type}"/>
 <input type="hidden" id="kw" name="kw" value="${kw}"/>	
-<input type="hidden" id="topage" name="kw" value="browsemore"/>		
+<input type="hidden" id="topage" name="topage" value="browsemore"/>		
 <input type="hidden" id="pageNumber" name="pageNumber" value="${assets.pageNumber}"/>	
 <input type="hidden" id="availablePages" name="availablePages" value="${assets.availablePages}"/>				
 
@@ -215,7 +215,7 @@
 <c:forEach items="${assets.items }" var="item" varStatus="loop">
 <div id="${item.uid}" class="col-md-4">
 		<c:if test="${item.mp4}">
-			<video poster="video2jpg.jpg?path=${item.path }" controls="controls" width="300" height="200" preload="metadata">
+			<video poster="video2jpg.jpg?path=${item.path }" controls="controls" width="300" height="200" preload="none">
 			<source type="video/mp4" src="video.mp4?path=${item.path }"/>
 			</video>
 			<button class="bnt btn-primary btn-sm" title="点击选择此视频" onclick='javascript:returnFileUrl("video.mp4?path=${item.path}","${item.uid}","video2jpg.jpg?path=${item.path }")'><span class="glyphicon glyphicon-film"></span>${item.title} 植入视频</button>

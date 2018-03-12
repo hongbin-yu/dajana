@@ -42,7 +42,7 @@ function ScrollHandler(e) {
         	kw=$("#kw").val();
         	var topage="browsemore";
         	if($("#topage")) topage = $("#topage").val();
-        	path=$("#path").val();
+        	path=$("#folderpath").val();
         	if(p < avalaiblePages) {
                 p ++;
                 $("#loading").html("<img src=\"/resources/images/ui-anim_basic_16x16.gif\" width=\"48\" height=\"48\" alt=\"\">");
@@ -990,6 +990,10 @@ function setDataView(id,view) {
 	var left_bar = document.getElementById("left-bar");
 	if(left_bar.classList.contains("wb-inv"))
 		left_bar.classList.remove("wb-inv");
+	var left_iframe = document.getElementById("left-iframe");
+
+	if(left_iframe.getAttribute("src")!="/site/browse.html")
+		left_iframe.setAttribute("src", "/site/browse.html"); 
 	//$(document).scrollTop( $("#wb-cont").offset().top ); 
 	//$( "#left-bar" ).trigger( "open.wb-overlay" )
 	

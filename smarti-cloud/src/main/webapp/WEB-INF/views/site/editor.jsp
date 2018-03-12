@@ -34,9 +34,7 @@
  		 <a class="btn btn-primary btn-xs" href="javascript:showVideos(this)">视频</a>
  		 a class="btn btn-primary btn-xs" href="javascript:showProducts(this)">产品</a
  		</div> -->
- 		<iframe src="/site/browse.html" width="100%" height="600"  frameBorder="0"></iframe>
- 		 <div id="left-iframe">
- 		 </div>
+ 		<iframe id="left-iframe" src="" width="100%" height="600"  frameBorder="0"></iframe>
  	</div>	 
 </section>
 
