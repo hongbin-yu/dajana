@@ -507,7 +507,7 @@ public class ContentController extends BaseController {
 		return null;
 	}
 	
-	@RequestMapping(value = {"/content/{site}.pdf","/content/{site}.pdf","/content/{site}/**/*.pdf","/content/{site}/**/*.pdf","/content/{site}/*.pdf"}, method = RequestMethod.GET)
+	//@RequestMapping(value = {"/content/{site}.pdf","/content/{site}.pdf","/content/{site}/**/*.pdf","/content/{site}/**/*.pdf","/content/{site}/*.pdf"}, method = RequestMethod.GET)
 	public @ResponseBody String page2pdf(@PathVariable String site, String uid,Integer p, Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
 		try {
 			String paths = URLDecoder.decode(request.getRequestURI(),"UTF-8");

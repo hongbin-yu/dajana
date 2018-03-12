@@ -26,7 +26,7 @@
 	</form>
 </div>
 <form action="browse.html" id="assets" name="assets" method="get" accept-charset="UTF-8">
-<input type="hidden" id="path" name="path" value="${folder.path}"/>
+<%-- <input type="hidden" id="path" name="path" value="${folder.path}"/> --%>
 <input type="hidden" id="input" name="input" value="${input}"/>
 <input type="hidden" id="type" name="type" value="${type}"/>
 <input type="hidden" id="kw" name="kw" value="${kw}"/>	

@@ -2969,7 +2969,7 @@ public class SiteController extends BaseController {
 				ext=".pdf";
 			}else if(link.startsWith("pdf2img")) {
 				filePath = jcrService.getDevice()+asset.getPath()+"/origin-"+p+".jpg";
-				ext=".jpg";
+				ext=".pdf";
 				File file = new File(filePath);
 				if(!file.exists()) {
 					String pdfPath = jcrService.getDevice()+asset.getPath()+"/origin.pdf";
@@ -2991,7 +2991,7 @@ public class SiteController extends BaseController {
 					FileInputStream in = new FileInputStream(file);
 					IOUtils.copy(in, output);	
 					in.close();	
-			
+
 				}
 
 			}else if(asset.getDevice()!=null) {
