@@ -30,4 +30,5 @@
 <![endif]-->
 <noscript><link rel="stylesheet" href="<c:url value='/resources/wet-boew/js/noscript.min.css'/>"/></noscript>
 <script>dataLayer1=[];</script>
+<span class="wb-sessto" data-wb-sessto='{logouturl: "/logout"}'></span>
 </head>
