@@ -16,7 +16,7 @@ $(window).on('load',function() {
 
 	
 });
-var p=0;
+var p=$("#pageNumber").val();;
 var _throttleTimer = null;
 var _throttleDelay = 100;
 var $window = $(window);
@@ -41,10 +41,13 @@ function ScrollHandler(e) {
         	type = $("#type").val();
         	kw=$("#kw").val();
         	var topage="browsemore";
+        	//var pageNumber = $("#pageNumber").val();
         	if($("#topage")) topage = $("#topage").val();
         	path=$("#folderpath").val();
         	if(p < avalaiblePages) {
                 p ++;
+                
+                //alert("browsemore.html?path="+path+"&type="+type+"&kw="+kw+"&p="+p+"&topage="+topage);
                 $("#loading").html("<img src=\"/resources/images/ui-anim_basic_16x16.gif\" width=\"48\" height=\"48\" alt=\"\">");
                 //alert("near bottom!"+"browsemore.html?path="+path+"&input="+input+"&kw="+kw+"&p="+p);
                 $.ajax ({
@@ -1001,8 +1004,33 @@ function setDataView(id,view) {
 	//f($("#"+id).attr("data-inview") == "") 
 	//$("#"+id).attr("data-inview",view);
 	var left_bar = document.getElementById("left-bar");
-	if(left_bar.classList.contains("wb-inv"))
+	if(left_bar.classList.contains("wb-inv")) {
 		left_bar.classList.remove("wb-inv");
+		left_bar.classList.add("container");
+		left_bar.classList.add("wb-overlay");
+		left_bar.classList.add("modal-content");
+		left_bar.classList.add("overlay-def");
+		left_bar.classList.add("wb-panel-l");
+		left_bar.classList.add("col-md-4");
+
+		
+	}
+	var left_nav = document.getElementById("wb-sec");
+	if(left_nav.classList.contains("col-md-3")) {
+		left_nav.classList.remove("col-md-3");
+		left_nav.classList.remove("col-md-pull-9");
+		left_nav.classList.add("col-md-4");
+		left_nav.classList.add("col-md-pull-8");
+	}
+	var main = document.getElementById("wb-cont");
+	if(main.classList.contains("col-md-9")) {
+		main.classList.remove("col-md-9");
+		main.classList.remove("col-md-push-3");
+		main.classList.add("col-md-8");
+		main.classList.add("col-md-push-4");		
+	}
+
+	//container wb-inv wb-overlay modal-content overlay-def wb-panel-l col-md-4
 	var left_iframe = document.getElementById("left-iframe");
 
 	if(left_iframe.getAttribute("src")!="/site/browse.html")

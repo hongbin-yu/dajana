@@ -521,13 +521,13 @@ function returnFileUrl(fileUrl,uid,poster) {
 		if(e_type.indexOf("image/")>=0) {
 			tinyMCE.activeEditor.selection.setContent('<img class="img-responsive" alt="" src="'+fileUrl+'">');
 		}else if(e_type.indexOf("video/")>=0) {
-			var html = "<figure class=\"wb-mltmd-edit editable\"><video poster=\""+poster+"\" title=\""+e_title.value+"\" preload=\"none\">";
+			var html = "<div class=\"noneditable\"><figure class=\"wb-mltmd-edit editable\"><video poster=\""+poster+"\" title=\""+e_title.value+"\" preload=\"none\">";
 			if(e_size>10000000) {
 				html +="<source type=\"video/mp4\" src=\""+fileUrl+"\"/>";
 			}else {
 				html +="<source type=\"video/mp4\" src=\""+fileUrl+"\"/>";
 			}
-			html +="</video><figcaption class=\"editable\"><p>"+e_desc.innerHTML+"</p></figcaption></figure>";
+			html +="</video><figcaption class=\"editable\"><p>"+e_desc.innerHTML+"</p></figcaption></figure></div>";
 			tinyMCE.activeEditor.selection.setContent(html);
 		} else if(e_type.indexOf("audio/")>=0) {
 			var html = "<audio controls=\"controls\">";
