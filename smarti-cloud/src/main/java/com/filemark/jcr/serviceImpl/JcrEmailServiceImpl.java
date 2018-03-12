@@ -292,6 +292,8 @@ public class JcrEmailServiceImpl implements jcrEmailService {
 					InputStream in = part.getInputStream();
 					OutputStream out = new FileOutputStream(file);
 					IOUtils.copy(in, out);
+					in.close();
+					out.close();
 			      }else if (part.isMimeType("multipart/*")) { 
 			    	  log.debug("contentType "+ contentType); 
 					    Multipart mp = (Multipart)part.getContent();
@@ -313,6 +315,8 @@ public class JcrEmailServiceImpl implements jcrEmailService {
 					InputStream in = part.getInputStream();
 					OutputStream out = new FileOutputStream(file);
 					IOUtils.copy(in, out);
+					in.close();
+					out.close();
 			    } else if (disposition.equalsIgnoreCase(Part.INLINE)) {
 			    	log.debug("Inline: " + part.getFileName() + " : " + contentType);
 					String ext = "";
@@ -324,6 +328,8 @@ public class JcrEmailServiceImpl implements jcrEmailService {
 					InputStream in = part.getInputStream();
 					OutputStream out = new FileOutputStream(file);
 					IOUtils.copy(in, out);
+					in.close();
+					out.close();
 			    } else {  // Should never happen
 			      log.debug("Other: " + disposition);
 			    }
