@@ -2968,9 +2968,14 @@ public class SiteController extends BaseController {
 				filePath = jcrService.getDevice()+asset.getPath()+"/origin.pdf";
 				ext=".pdf";
 			}else if(link.startsWith("pdf2img")) {
-				filePath = jcrService.getDevice()+asset.getPath()+"/origin"+"-"+p+".jpg";
-				ext=".pdf";
-			
+				filePath = jcrService.getDevice()+asset.getPath()+"/origin-"+p+".jpg";
+				ext=".jpg";
+				File file = new File(filePath);
+				if(!file.exists()) {
+					String pdfPath = jcrService.getDevice()+asset.getPath()+"/origin.pdf";
+					int exit = ImageUtil.pdf2jpg(pdfPath,Integer.parseInt(p),"1600x1600", filePath);
+
+				}			
 			}		    
 		    
 			FileOutputStream output = new FileOutputStream(assetFolder+"/"+filename+ext);
