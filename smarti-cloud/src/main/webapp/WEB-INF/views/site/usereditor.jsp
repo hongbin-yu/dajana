@@ -48,10 +48,10 @@
 		<div class="form-group">
 			<details id="details_pass">
 			<summary>
-			<label for="password">
+			<label for="password" class="required">
 			<span class="field-name"><spring:message code="djn.password"/></span> (<spring:message code="djn.select_4_icon"/>)
 			</label>
-			<input class="form-control" id="password" name="signingKey" type="password" onkeypress="this.value=''" maxlength="32" size="40" pattern=".{4,}" data-rule-rangelength="[4,32]" placeholder="<spring:message code="djn.select_4_icon"/>"/>
+			<input class="form-control" id="password" name="signingKey" type="password" onkeypress="this.value=''" required="required" maxlength="32" size="40" pattern=".{4,}" data-rule-rangelength="[4,32]" placeholder="<spring:message code="djn.select_4_icon"/>"/>
 			</summary>
 			<div class="btn-group btn-group-justified">
 			<a class="btn btn-default password" id='A0'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/mouse.png"></c:url>'/></a>
@@ -81,7 +81,7 @@
 			<label for="passwordconfirm">
 			<span class="field-name"><spring:message code="djn.confirm"/></span> (<spring:message code="djn.reselect_password"/>)
 			</label>			
-			<input class="form-control" id="passwordconfirm" name="passwordconfirm" type="password" maxlength="32" size="40" pattern=".{4,}" data-rule-rangelength="[4,32]" data-rule-equalTo="#password" placeholder="<spring:message code="djn.reselect_4_password_to_confirm"/>"/>
+			<input class="form-control" id="passwordconfirm" name="passwordconfirm" type="password" maxlength="32" size="40" required="required" pattern=".{4,}" data-rule-rangelength="[4,32]" data-rule-equalTo="#password" placeholder="<spring:message code="djn.reselect_4_password_to_confirm"/>"/>
 		</summary>
 			<div class="btn-group btn-group-justified">
 			<a class="btn btn-default confirm" id='${ids[0] }'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/${imgs[0]}.png"></c:url>'/></a>

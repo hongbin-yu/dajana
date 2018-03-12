@@ -312,6 +312,7 @@ public class ContentController extends BaseController {
 						response.setContentLength((int)file.length());
 						IOUtils.copy(in, response.getOutputStream());
 						in.close();*/
+						file.setReadOnly();
 						super.serveResource(request, response, file, null);
 
 						return null;
