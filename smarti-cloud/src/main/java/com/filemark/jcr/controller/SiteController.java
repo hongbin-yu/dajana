@@ -2968,7 +2968,7 @@ public class SiteController extends BaseController {
 				filePath = jcrService.getDevice()+asset.getPath()+"/origin.pdf";
 				ext=".pdf";
 			}else if(link.startsWith("pdf2img")) {
-				filePath = jcrService.getDevice()+asset.getPath()+"/origin"+"-"+p+".pdf";
+				filePath = jcrService.getDevice()+asset.getPath()+"/origin"+"-"+p+".jpg";
 				ext=".pdf";
 			
 			}		    
