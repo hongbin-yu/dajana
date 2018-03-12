@@ -29,7 +29,8 @@
 <input type="hidden" id="path" name="path" value="${folder.path}"/>
 <input type="hidden" id="input" name="input" value="${input}"/>
 <input type="hidden" id="type" name="type" value="${type}"/>
-<input type="hidden" id="kw" name="kw" value="${kw}"/>		
+<input type="hidden" id="kw" name="kw" value="${kw}"/>	
+<input type="hidden" id="topage" name="kw" value="browsemore"/>		
 <input type="hidden" id="pageNumber" name="pageNumber" value="${assets.pageNumber}"/>	
 <input type="hidden" id="availablePages" name="availablePages" value="${assets.availablePages}"/>				
 
