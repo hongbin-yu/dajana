@@ -1880,7 +1880,7 @@ public class SiteController extends BaseController {
 		User dbuser  = (User)jcrService.getObject("/system/users/"+username);
 		dbuser.setSigningKey(user.getSigningKey());
 		jcrService.addOrUpdate(dbuser);
-		return "redirect:/signin?info=pwchanged";
+		return "redirect:/signin?info=pwchanged&username="+username;
 	}
 	
 	@RequestMapping(value = {"/site/doc2pdf.pdf"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})

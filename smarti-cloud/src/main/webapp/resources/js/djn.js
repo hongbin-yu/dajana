@@ -827,39 +827,52 @@ function checkProgress() {
 }
 
 function output(data) {
-    var html = '<div id="'+data.uid+'" class="col-md-4 well">'
-    		  +'<div class="checkbox"><input type="checkbox" class="checkbox" name="puid" value="'+data.uid+'"><a title="打开PDF" href="viewpdf?uid='+data.uid+'" target="_BLANK"><img title="点击选中" src="/resources/images/pdf.gif"></a>'
-    		  +'<a class="wb-lbx-edit" href="'+data.link+'" target="_BLANK"><img id="img'+data.uid+'" src="'+data.icon+'" class="img-responsive" draggable="true"></img></a>'
-    		  +'</div>'
-    		  +'<details>'
-    		  +'<summary><span class="glyphicon glyphicon-edit"></span>'+data.title+'</summary>'
-    		  +'<div class="form-group">'
-    		  +'<label for="title'+data.uid+'">标题&nbsp;</label><input class="form-control" id="title'+data.uid+'" name="jcr:title" value="'+data.title+'" size="25" uid="'+data.uid+'"  onchange="updateNode(this)"/>'
-    		  +'</div>'
-    		  +'<div class="form-group">'
-    		  +'<label for="url'+data.uid+'">链接&nbsp;</label><input class="form-control" id="url'+data.uid+'" name="url" value="'+(data.url?data.url:'')+'" size="25" uid="'+data.uid+'"  onchange="updateNode(this)"/>'
-			  +'</div>'
-		      +'<div class="form-group">'
-		      +'<select id="rotate'+data.uid+'" name="rotate">'
-		      +'<option value="0" selected>0</option>'
-			  +'<option value="90">90</option>'
-			  +'<option value="-90">-90</option>'
-			  +'<option value="180">180</option>'
-			  +'</select>'
-			  +'<a class="btn btn-default btn-sm" href="javascript:rotate('+data.uid+')">旋转<img class="wb-inv" id="rotate_running'+data.uid+'" src="/resources/images/ui-anim_basic_16x16.gif" alt="旋转"/></a>'		
-			  +'</div>'		
-			  +'<div class="form-group">'
-			  +'<label for="contentType'+data.uid+'">类型&nbsp;</label><input class="form-control" id="contentType'+data.uid+'" name="contentType" value="'+data.contentType+'" size="24" uid="'+data.uid+'" disabled/>'
-			  +'</div>'
-			  +'<div class="form-group">'
-			  +'<label for="size'+data.uid+'">长度&nbsp;</label><input class="form-control" id="size'+data.uid+'" name="size" value="'+data.size+"("+data.width+"x"+data.height+'）" size="24" uid="'+data.uid+'" disabled/>'
-			  +'</div>'	
-			  +'<div class="form-group">'
-			  +'<label for="lastModified'+data.uid+'">文件日期&nbsp;</label>'
-			  +getDateString(data.lastModified)
-			  +'</div>'			  
-			  +'</details>'
-			  +'</div>';	     
+    var html = '<div id="'+data.uid+'" class="col-md-4 well">';
+    	if(data.contentType.indexOf('video/')>=0) {
+    		html +='<a class="download" href="file/'+data.name+'?path='+data.path+'" target="_BLANK" download><span class="glyphicon glyphicon-download">下载</span></a>'
+    			  +'<figure class="wb-mltmd">'
+    			  +'<video poster="video2jpg.jpg?path='+data.path+'" title="'+data.title+'" controls="controls" preload="none">'
+    			  +'<source type="video/mp4" src="video.mp4?path='+data.path+'"/>'
+    			  +'</video>'
+    			  +'<figcaption>'
+    			  +'<p>'+data.title+'</p>'
+    			  +'</figcaption>'
+    			  +'</figure>';   		
+    	}else {
+	    	html +='<div class="checkbox"><input type="checkbox" class="checkbox" name="puid" value="'+data.uid+'"><a title="打开PDF" href="viewpdf?uid='+data.uid+'" target="_BLANK"><img title="点击选中" src="/resources/images/pdf.gif"></a>'
+	    		  +'<a class="wb-lbx-edit" href="'+data.link+'" target="_BLANK"><img id="img'+data.uid+'" src="'+data.icon+'" class="img-responsive" draggable="true"></img></a>'
+	    		  +'</div>';
+    	}	  
+	    	html +='<details>'
+	    		  +'<summary><span class="glyphicon glyphicon-edit"></span>'+data.title+'</summary>'
+	    		  +'<div class="form-group">'
+	    		  +'<label for="title'+data.uid+'">标题&nbsp;</label><input class="form-control" id="title'+data.uid+'" name="jcr:title" value="'+data.title+'" size="25" uid="'+data.uid+'"  onchange="updateNode(this)"/>'
+	    		  +'</div>'
+	    		  +'<div class="form-group">'
+	    		  +'<label for="url'+data.uid+'">链接&nbsp;</label><input class="form-control" id="url'+data.uid+'" name="url" value="'+(data.url?data.url:'')+'" size="25" uid="'+data.uid+'"  onchange="updateNode(this)"/>'
+				  +'</div>'
+			      +'<div class="form-group">'
+			      +'<select id="rotate'+data.uid+'" name="rotate">'
+			      +'<option value="0" selected>0</option>'
+				  +'<option value="90">90</option>'
+				  +'<option value="-90">-90</option>'
+				  +'<option value="180">180</option>'
+				  +'</select>'
+				  +'<a class="btn btn-default btn-sm" href="javascript:rotate('+data.uid+')">旋转<img class="wb-inv" id="rotate_running'+data.uid+'" src="/resources/images/ui-anim_basic_16x16.gif" alt="旋转"/></a>'		
+				  +'</div>'		
+				  +'<div class="form-group">'
+				  +'<label for="contentType'+data.uid+'">类型&nbsp;</label><input class="form-control" id="contentType'+data.uid+'" name="contentType" value="'+data.contentType+'" size="24" uid="'+data.uid+'" disabled/>'
+				  +'</div>'
+				  +'<div class="form-group">'
+				  +'<label for="size'+data.uid+'">长度&nbsp;</label><input class="form-control" id="size'+data.uid+'" name="size" value="'+data.size+"("+data.width+"x"+data.height+'）" size="24" uid="'+data.uid+'" disabled/>'
+				  +'</div>'	
+				  +'<div class="form-group">'
+				  +'<label for="lastModified'+data.uid+'">文件日期&nbsp;</label>'
+				  +getDateString(data.lastModified)
+				  +'</div>'			  
+				  +'</details>'
+				  +'</div>';	
+
     $("#top_insert").after(html);	
 }
 

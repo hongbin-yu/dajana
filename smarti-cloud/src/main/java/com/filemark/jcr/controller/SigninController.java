@@ -48,11 +48,13 @@ import com.filemark.sso.JwtUtil;
 public class SigninController extends BaseController{
 
 	@RequestMapping(value="/signin", method=RequestMethod.GET)
-	public String signin(String redirect, HttpServletRequest request, HttpServletResponse response,Model model) {
+	public String signin(String redirect, String username, HttpServletRequest request, HttpServletResponse response,Model model) {
 
         //String domain = request.getServerName().replaceAll(".*\\.(?=.*\\.)", "");
         //CookieUtil.clear(response, jwtTokenCookieName,domain);
         //request.getSession().invalidate();
+		if(username==null) username="";
+		model.addAttribute("j_username",username);
 		model.addAttribute("loginCount", "0");
     	return "signin";		
 	}
@@ -66,7 +68,7 @@ public class SigninController extends BaseController{
 
     	page.setTitle(title);
     	String lastIp = getClientIpAddress(request);
-    	if(loginCount==null) return signin(redirect, request, httpServletResponse,model);
+    	if(loginCount==null) return signin(redirect,j_username, request, httpServletResponse,model);
     	loginCount++;
     	model.addAttribute("page", page);   
     	model.addAttribute("redirect", redirect);

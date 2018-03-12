@@ -11,7 +11,7 @@
 <c:if test="${param.info eq 'pwchanged'}">
 <div class="container">
 <div class="col-md-4">
-<section class="alert alert-warning">
+<section class="alert alert-success">
 <h3><spring:message code="djn.password_changed"/>!</h3>
 <p>
   	<spring:message code="djn.login_again"/>。

@@ -8,7 +8,7 @@
 <!-- <div class="container">
 <div class="row"> -->
         <main role="main" property="mainContentOfPage" class="container">
-		<input type="hidden" id="path" name="folderpath" value="${folder.path}"/>
+		<input type="hidden" id="folderpath" name="path" value="${folder.path}"/>
 	    <div class="col-md-4 well" id="wb-sec">
 		    <section>
 				<div class="checkbox btn btn-default pull-right">
