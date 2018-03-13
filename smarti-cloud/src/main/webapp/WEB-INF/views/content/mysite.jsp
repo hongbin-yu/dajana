@@ -61,7 +61,7 @@
 </div>
 <div class="col-xs-4 col-md-4 text-center">
 <%-- <authz:authorize ifAnyGranted="ROLE_USER,ROLE_ADMINISTRATOR,ROLE_OWNER"> --%>
-<a class="btn btn-default" href="http://dajana.ca:8888/yhyun"><img src ="/resources/images/yuhong-icon.png" width="48" height="48" alt="内网登入"/></a>
+<a class="btn btn-default" href="http://dajana.cn:8888/yhyun"><img src ="/resources/images/yuhong-icon.png" width="48" height="48" alt="内网登入"/></a>
 <%--  </authz:authorize> --%>
  </div>
 <div class="col-xs-4 full-right">
