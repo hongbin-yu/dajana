@@ -1004,6 +1004,20 @@ function setDataView(id,view) {
 	//f($("#"+id).attr("data-inview") == "") 
 	//$("#"+id).attr("data-inview",view);
 	//container wb-inv wb-overlay modal-content overlay-def wb-panel-l col-md-4
+	var left_nav = document.getElementById("wb-sec");
+	if(left_nav.classList.contains("col-md-3")) {
+		left_nav.classList.remove("col-md-3");
+		left_nav.classList.remove("col-md-pull-9");
+		left_nav.classList.add("col-md-4");
+		left_nav.classList.add("col-md-pull-8");
+	}
+	var main = document.getElementById("wb-cont");
+	if(main.classList.contains("col-md-9")) {
+		main.classList.remove("col-md-9");
+		main.classList.remove("col-md-push-3");
+		main.classList.add("col-md-8");
+		main.classList.add("col-md-push-4");		
+	}
 	var left_iframe = document.getElementById("left-iframe");
 
 	if(left_iframe.getAttribute("src")!="/site/browse.html")
@@ -1021,20 +1035,7 @@ function setDataView(id,view) {
 
 		
 	}
-	var left_nav = document.getElementById("wb-sec");
-	if(left_nav.classList.contains("col-md-3")) {
-		left_nav.classList.remove("col-md-3");
-		left_nav.classList.remove("col-md-pull-9");
-		left_nav.classList.add("col-md-4");
-		left_nav.classList.add("col-md-pull-8");
-	}
-	var main = document.getElementById("wb-cont");
-	if(main.classList.contains("col-md-9")) {
-		main.classList.remove("col-md-9");
-		main.classList.remove("col-md-push-3");
-		main.classList.add("col-md-8");
-		main.classList.add("col-md-push-4");		
-	}
+
 	
 	//$(document).scrollTop( $("#wb-cont").offset().top ); 
 	//$( "#left-bar" ).trigger( "open.wb-overlay" )
