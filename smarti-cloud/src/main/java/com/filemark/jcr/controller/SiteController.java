@@ -2470,8 +2470,8 @@ public class SiteController extends BaseController {
 					Device device = (Device)jcrService.getObject(asset.getDevice());
 					file = new File(device.getLocation()+asset.getPath());
 					ext = asset.getPath().substring(asset.getPath().lastIndexOf("."));
-					if(outfile.isDirectory()) {
-						outfile = new File(jcrService.getDevice()+asset.getPath()+"/origin"+ext);
+					if(file.isDirectory()) {
+						file = new File(jcrService.getDevice()+asset.getPath()+"/origin"+ext);
 					}
 /*
 					FileInputStream in = new FileInputStream(file);
@@ -2481,7 +2481,7 @@ public class SiteController extends BaseController {
 					IOUtils.copy(in, response.getOutputStream());	
 					in.close();*/
 					if(file.exists()) {
-						super.serveResource(request, response, outfile, null);
+						super.serveResource(request, response, file, null);
 						return null;						
 					}else {
 						if(jcrService.nodeExsits(path+"/original")) {
