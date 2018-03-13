@@ -15,7 +15,8 @@
 <div id="wb-bnr" class="container">
 <section id="wb-lng" class="visible-md visible-lg text-right">
 <h2><spring:message code="djn.search_menu"/></h2>
-<div class="row wb-inview show-none bar-demo" data-inview="left-bar">
+<!-- <div class="row wb-inview show-none bar-demo" data-inview="left-bar"> -->
+<div class="row">
 <div class="col-md-12">
 <ul class="list-inline margin-bottom-none">
 <authz:authorize ifAnyGranted="ROLE_USER,ROLE_ADMINISTRATOR,ROLE_OWNER">

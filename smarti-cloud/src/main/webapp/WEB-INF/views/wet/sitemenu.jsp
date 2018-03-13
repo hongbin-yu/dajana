@@ -42,8 +42,11 @@
 </div>
 </div>
 </section>
-<div id="data-inview" class="row wb-inview reverse bar-demo" data-inview="left-bar">
-<div class="brand col-xs-8 col-sm-9 col-md-6">
+<!-- <div id="data-inview" class="row wb-inview reverse bar-demo" data-inview="left-bar">
+ -->
+<div id="data-inview" class="row reverse bar-demo" data-inview="left-bar">
+ <div class="row">
+  <div class="brand col-xs-8 col-sm-9 col-md-6">
 <a href="<c:url value="/"/>">
 <object type="image/svg+xml" tabindex="-1" data="<c:url value="/resources/images/djnlogo.svg" />"></object>
 </a>

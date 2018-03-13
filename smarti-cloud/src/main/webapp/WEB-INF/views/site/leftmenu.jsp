@@ -3,7 +3,9 @@
     <h2 id="wb-sec-h" class="wb-inv">左菜单</h2>
     <section class="list-group menu list-unstyled">
 
-        <a href="#wb-cont"><button class="btn btn-default pull-right" onclick="javascript:setDataView('data-inview','left-bar')" title="打开微云"><span class="glyphicon glyphicon-th-large pull-right"></span></button></a>  
+      <!--   <a href="#wb-cont"> -->
+<!--         <button class="btn btn-default pull-right" onclick="javascript:setDataView('data-inview','left-bar')" title="打开微云"><span class="glyphicon glyphicon-th-large pull-right"></span></button>
+ --><!--         </a>  --> 
 
         <h3>
         <c:if test="${page.parent!='/content' }">

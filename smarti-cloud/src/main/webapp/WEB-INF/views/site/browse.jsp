@@ -28,8 +28,8 @@
 </div>
 <form action="browse.html" id="assets" name="assets" method="get" accept-charset="UTF-8">
 <input type="hidden" id="input" name="input" value="${input}"/>
-<input type="hidden" id="type" name="type" value="${type}"/>
-<input type="hidden" id="kw" name="kw" value="${kw}"/>	
+<%-- <input type="hidden" id="type" name="type" value="${type}"/> --%>
+<%-- <input type="hidden" id="kw" name="kw" value="${kw}"/>	 --%>
 <input type="hidden" id="topage" name="topage" value="browsemore"/>		
 <input type="hidden" id="pageNumber" name="pageNumber" value="${assets.pageNumber}"/>	
 <input type="hidden" id="availablePages" name="availablePages" value="${assets.availablePages}"/>				
@@ -48,7 +48,8 @@
 </div>
 
 <div class="form-group">
-<select class="form-control" name="path" onchange="this.form.submit()">
+<label for="selectPath">路径 : 
+<select id="selectPath" name="path" onchange="this.form.submit()">
 	<c:if test="${folder.name!='assets' }">
 	<option value="${folder.parent }">${folder.parent }</option>
 	</c:if>
@@ -57,6 +58,7 @@
 		<option value="${item.path }">${item.title }</option>
 	</c:forEach>     
 </select>
+</label>
 </div>
 
 </div>
@@ -237,12 +239,12 @@
 				</figcaption>
 		</figure>
 		</c:if>	
-        <c:if test="${item.doc2pdf}">
+<%--         <c:if test="${item.doc2pdf}">
         	<a class="download" href="file/${item.name}?path=${item.path}" target="_BLANK" download><span class="glyphicon glyphicon-download">下载</span></a>
 		    <a class="${item.cssClass }" href="doc2pdf.pdf?path=${item.path }">
 				<img id="img${item.uid}" src="<c:url value='${item.icon }'></c:url>" class="img-responsive" draggable="true"/>
 			</a>
-		</c:if>					
+		</c:if>		 --%>			
 		<c:if test="${!item.mp4 && !item.audio && !item.doc2pdf}">
 		<a class="${item.cssClass }-edit" id="href${item.uid }" href="<c:url value='${item.link}'></c:url>">		
 		<img src="<c:url value='${item.icon }'></c:url>" class="img-responsive" draggable="true" onclick="javascript:returnFileUrl('${item.link}','${item.uid }')"/>

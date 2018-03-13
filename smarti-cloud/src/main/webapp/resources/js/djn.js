@@ -1001,10 +1001,11 @@ function close() {
     }
   };*/
 function setDataView(id,view) {
-	//f($("#"+id).attr("data-inview") == "") 
+	//if($("#"+id).attr("data-inview") == "") 
 	//$("#"+id).attr("data-inview",view);
 	//container wb-inv wb-overlay modal-content overlay-def wb-panel-l col-md-4
-	var left_nav = document.getElementById("wb-sec");
+/*	var left_nav = document.getElementById("wb-sec");
+	
 	if(left_nav.classList.contains("col-md-3")) {
 		left_nav.classList.remove("col-md-3");
 		left_nav.classList.remove("col-md-pull-9");
@@ -1018,30 +1019,43 @@ function setDataView(id,view) {
 		main.classList.add("col-md-8");
 		main.classList.add("col-md-push-4");		
 	}
-	var left_iframe = document.getElementById("left-iframe");
-
-	if(left_iframe.getAttribute("src")!="/site/browse.html")
-		left_iframe.setAttribute("src", "/site/browse.html"); 
-	
-	var left_bar = document.getElementById("left-bar");
+	*/
+/*	var left_bar = document.getElementById("left-bar");
 	if(left_bar.classList.contains("wb-inv")) {
-		left_bar.classList.remove("wb-inv");
-		left_bar.classList.add("container");
-		left_bar.classList.add("wb-overlay");
-		left_bar.classList.add("modal-content");
-		left_bar.classList.add("overlay-def");
-		left_bar.classList.add("wb-panel-l");
-		left_bar.classList.add("col-md-4");
+		left_bar.classList.remove("wb-inv");*/
+		//left_bar.classList.add("container");
+		//left_bar.classList.add("wb-overlay");
+		//left_bar.classList.add("modal-content");
+		//left_bar.classList.add("overlay-def");
+		//left_bar.classList.add("wb-panel-l");
+		//left_bar.classList.add("col-md-4");
 
 		
-	}
+	//}
 
+/*	var left_iframe = document.getElementById("left-iframe");
+
+	if(left_iframe.getAttribute("src")!="/site/browse.html")
+		left_iframe.setAttribute("src", "/site/browse.html"); */	
+	var left_float = document.getElementById("left-float");
+
+	if(left_float !='undefined') {
+		if(left_float.getAttribute("style")=="left: 0px; border: 0px none; height: 600px; position: fixed; width: 380px; overflow: hidden; top: 10px; bottom: 30px")
+			left_float.setAttribute("style", "left: 0px; border: 0px none; height: 600px; position: fixed; width: 0px; overflow: hidden; top: 10px; bottom: 30px");
+		else
+			left_float.setAttribute("style", "left: 0px; border: 0px none; height: 600px; position: fixed; width: 380px; overflow: hidden; top: 10px; bottom: 30px");
+		
+	}
 	
+	if($("#left-iframe").attr("src")=="")
+		$("#left-iframe").attr("src","/site/browse.html");	
 	//$(document).scrollTop( $("#wb-cont").offset().top ); 
-	//$( "#left-bar" ).trigger( "open.wb-overlay" )
+	//$( "#left-bar" ).trigger( "open.wb-overlay" );
+	//$("#wb-sec").html('<iframe src="/site/browse.html" width="100%" height="600"  frameBorder="0"></iframe>');
 	
-/*	$("#left-iframe").html('<iframe src="/site/browse.html" width="100%" height="600"  frameBorder="0"></iframe>');
-*/	
+
+	//$("#left-iframe").html('<iframe src="/site/browse.html" width="100%" height="600"  frameBorder="0"></iframe>');
+
 }
 
 function ftrClose(url) {
