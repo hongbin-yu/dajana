@@ -1215,7 +1215,7 @@ public class SiteController extends BaseController {
 			logger.debug("Writing device "+device.getPath() +":"+device.getLocation());
 			
 			File folder = new File(device.getLocation()+asset.getPath());
-			File file = new File(device.getLocation()+asset.getPath()+"/origin."+ext);
+			File file = new File(device.getLocation()+asset.getPath()+"/origin"+ext);
 			if(!folder.exists()) folder.mkdirs();
 /*			if(!file.getParentFile().exists()) {
 				file.getParentFile().mkdirs();
