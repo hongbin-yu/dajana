@@ -25,7 +25,8 @@
 		<intercept-url pattern="/resources/**" access="permitAll" />
 		<intercept-url pattern="/content/**" access="permitAll" />	
 		<intercept-url pattern="/published/**" access="permitAll" />	
-		<intercept-url pattern="/protected/**" access="isAuthenticated()" />			
+		<intercept-url pattern="/protected/**" access="isAuthenticated()" />
+		<intercept-url pattern="/yhyun" access="permitAll" />			
 		<intercept-url pattern="/signin" access="permitAll" />
 		<intercept-url pattern="/signup" access="permitAll" />
 		<intercept-url pattern="/edit**" access="hasAnyRole('ROLE_USER','ROLE_ADMINISTRATOR')" />

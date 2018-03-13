@@ -60,9 +60,9 @@
 <img title="<spring:message code="djn.scan_qr"/><spring:message code="djn.jiameng"/>" class="img-responsive" src="<c:url value="/content/home.qrb?path=http://sso.dajana.ca/signup%3Fhost%3D${host}"></c:url>" alt="<spring:message code="djn.jiameng"/>"/>
 </div>
 <div class="col-xs-4 col-md-4 text-center">
-<authz:authorize ifAnyGranted="ROLE_USER,ROLE_ADMINISTRATOR,ROLE_OWNER">
-<a class="btn btn-success" href="http://dajana.ca/signup" class="sp-lk"><spring:message code="djn.jiameng"/></a>
- </authz:authorize>
+<%-- <authz:authorize ifAnyGranted="ROLE_USER,ROLE_ADMINISTRATOR,ROLE_OWNER"> --%>
+<a class="btn btn-default" href="http://dajana.ca:8888/yhyun"><img src ="/resources/images/yuhong-icon.png" width="48" height="48" alt="内网登入"/></a>
+<%--  </authz:authorize> --%>
  </div>
 <div class="col-xs-4 full-right">
 <img class="img-responsive" src="<c:url value="/resources/images/hongicon.png"></c:url>" title="<spring:message code="djn.yuhongweb"/>">

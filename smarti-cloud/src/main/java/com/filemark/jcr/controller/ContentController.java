@@ -142,6 +142,23 @@ public class ContentController extends BaseController {
 
     } 
 
+    @RequestMapping(value = {"/yhyun"}, method = RequestMethod.GET)
+   	public String yhyun(@PathVariable String uid,Model model,HttpServletRequest request, HttpServletResponse response) {
+    	String myip = "dajana.cn";
+    	//try {
+			//InetAddress ipAddr = InetAddress.getLocalHost();
+	    myip = getClientIpAddress(request);/*ipAddr.getHostAddress()+"="+request.getRemoteAddr()+"="+getPublicIpAddress()+"ip"+*/
+/*    	} catch (UnknownHostException e) {
+    		myip ="error:UnknownHostException";
+			logger.error(e.getMessage());
+		} */
+
+
+    	
+		return "redirect:http://"+myip+":8888/signin";
+
+    } 
+    
     @RequestMapping(value = {"/uinfo/{uid}"}, method = RequestMethod.GET)
    	public @ResponseBody String uinfo(@PathVariable String uid,Model model,HttpServletRequest request, HttpServletResponse response) {
     	String userPath="/system/users/"+uid,uinfo="";
