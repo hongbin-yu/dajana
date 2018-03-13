@@ -1003,6 +1003,12 @@ function close() {
 function setDataView(id,view) {
 	//f($("#"+id).attr("data-inview") == "") 
 	//$("#"+id).attr("data-inview",view);
+	//container wb-inv wb-overlay modal-content overlay-def wb-panel-l col-md-4
+	var left_iframe = document.getElementById("left-iframe");
+
+	if(left_iframe.getAttribute("src")!="/site/browse.html")
+		left_iframe.setAttribute("src", "/site/browse.html"); 
+	
 	var left_bar = document.getElementById("left-bar");
 	if(left_bar.classList.contains("wb-inv")) {
 		left_bar.classList.remove("wb-inv");
@@ -1029,12 +1035,7 @@ function setDataView(id,view) {
 		main.classList.add("col-md-8");
 		main.classList.add("col-md-push-4");		
 	}
-
-	//container wb-inv wb-overlay modal-content overlay-def wb-panel-l col-md-4
-	var left_iframe = document.getElementById("left-iframe");
-
-	if(left_iframe.getAttribute("src")!="/site/browse.html")
-		left_iframe.setAttribute("src", "/site/browse.html"); 
+	
 	//$(document).scrollTop( $("#wb-cont").offset().top ); 
 	//$( "#left-bar" ).trigger( "open.wb-overlay" )
 	
