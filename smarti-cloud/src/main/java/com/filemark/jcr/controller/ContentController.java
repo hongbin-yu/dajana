@@ -143,7 +143,7 @@ public class ContentController extends BaseController {
     } 
 
     @RequestMapping(value = {"/yhyun"}, method = RequestMethod.GET)
-   	public String yhyun(@PathVariable String uid,Model model,HttpServletRequest request, HttpServletResponse response) {
+   	public String yhyun(HttpServletRequest request, HttpServletResponse response) {
     	String myip = "dajana.cn";
     	//try {
 			//InetAddress ipAddr = InetAddress.getLocalHost();
