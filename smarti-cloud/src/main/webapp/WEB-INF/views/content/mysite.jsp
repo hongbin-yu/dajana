@@ -54,6 +54,7 @@
 </section>
 </div>
 </div>
+<div class="sp-bx-bt col-xs-12">
 <div class="row">
 <c:if test="${not empty param.error}">
 <div class="alert alert-warning">
@@ -61,10 +62,9 @@
 </div>
 </c:if>
 </div>
-<div class="sp-bx-bt col-xs-12">
 <div class="row">
 <div class="col-xs-4 text-right">
-<img title="<spring:message code="djn.scan_qr"/><spring:message code="djn.jiameng"/>" class="img-responsive" src="<c:url value="/content/home.qrb?path=http://sso.dajana.ca/signup%3Fhost%3D${host}"></c:url>" alt="<spring:message code="djn.jiameng"/>"/>
+<img title="<spring:message code="djn.scan_qr"/><spring:message code="djn.jiameng"/>" class="img-responsive" src="<c:url value="/content/home.qrb?path=http://dajana.cn"></c:url>" alt="<spring:message code="djn.jiameng"/>"/>
 </div>
 <div class="col-xs-4 col-md-4 text-center">
 <%-- <authz:authorize ifAnyGranted="ROLE_USER,ROLE_ADMINISTRATOR,ROLE_OWNER"> --%>
