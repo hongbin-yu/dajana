@@ -123,7 +123,8 @@ public class SigninController extends BaseController{
         //(user.getHost()==null || "".equals(user.getHost()))? request.getServerName():user.getHost();
 
         CookieUtil.create(httpServletResponse, JwtUtil.jwtTokenCookieName, token, false, -1, domain);
-
+        if(user.getHost()!=null && !domain.equals(user.getHost()))
+        	CookieUtil.create(httpServletResponse, JwtUtil.jwtTokenCookieName, token, false, -1, user.getHost());
         if(redirect==null || "".equals(redirect) || "signin".equals(redirect)) {
     		return "redirect:/site/assets.html";
         }else {
