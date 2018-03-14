@@ -55,7 +55,7 @@
 </div>
 </div>
 <div class="row">
-<c:if test="${param.error}">
+<c:if test="${not empty param.error}">
 <div class="alert alert-warning">
 <p>${param.ip} 不是优鸿云，只能从内网登入。</p>
 </div>
