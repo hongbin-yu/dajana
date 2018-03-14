@@ -51,7 +51,7 @@ public class AdminFilter implements Filter {
         }
         if(signingUser==null) {
         	logger.debug("no signingUser "+authService + "?redirect=" + redirectUrl);
-    		httpServletResponse.sendRedirect(authService + "?redirect=" + redirectUrl+"&noSigningUser");
+    		httpServletResponse.sendRedirect(authService + "?redirect=" + redirectUrl+"&noSigningUser="+request.getRemoteAddr());
 
         } else {
         	String usersite = (String)httpServletRequest.getAttribute("usersite");

@@ -119,7 +119,7 @@ public class SigninController extends BaseController{
 		request.setAttribute("usertitle", user.getTitle()); 
 		request.setAttribute("signingKey", user.getSigningKey());  
         String token = JwtUtil.generateToken(JwtUtil.signingKey, token_author);
-        String domain = request.getServerName();
+        String domain = request.getRemoteAddr();
         //(user.getHost()==null || "".equals(user.getHost()))? request.getServerName():user.getHost();
 
         CookieUtil.create(httpServletResponse, JwtUtil.jwtTokenCookieName, token, false, -1, domain);
