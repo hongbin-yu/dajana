@@ -32,6 +32,9 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.jfree.util.Log;
+import org.jsoup.Connection;
+import org.jsoup.Connection.Response;
+import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
@@ -152,10 +155,23 @@ public class ContentController extends BaseController {
     		myip ="error:UnknownHostException";
 			logger.error(e.getMessage());
 		} */
-
+        try {
+            Response res = Jsoup.connect("http://"+myip+":8888/signin")
+               .userAgent("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.21 (KHTML, like Gecko) Chrome/19.0.1042.0 Safari/535.21")
+               .timeout(5000)
+               .execute();
+            if(res.statusCode()==200) {
+            	return "redirect:http://"+myip+":8888/signin";
+            }else {
+            	return "redirect:/?ip="+myip+"&error="+res.statusCode();            	
+            }
+         } catch (IOException e) {
+            return "redirect:/?ip="+myip+"&error="+e.getMessage();
+         }
+        
 
     	
-		return "redirect:http://"+myip+":8888/signin";
+		
 
     } 
     

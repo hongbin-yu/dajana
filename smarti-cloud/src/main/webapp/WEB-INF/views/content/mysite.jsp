@@ -54,6 +54,13 @@
 </section>
 </div>
 </div>
+<div class="row">
+<c:if test="${param.error}">
+<div class="alert alert-warning">
+<p>${param.ip} 不是优鸿云，只能从内网登入。</p>
+</div>
+</c:if>
+</div>
 <div class="sp-bx-bt col-xs-12">
 <div class="row">
 <div class="col-xs-4 text-right">
@@ -61,12 +68,12 @@
 </div>
 <div class="col-xs-4 col-md-4 text-center">
 <%-- <authz:authorize ifAnyGranted="ROLE_USER,ROLE_ADMINISTRATOR,ROLE_OWNER"> --%>
-<a class="btn btn-default" href="http://dajana.cn:8888/yhyun"><img src ="/resources/images/yuhong-icon.png" width="48" height="48" alt="内网登入"/></a>
 <%--  </authz:authorize> --%>
  </div>
 <div class="col-xs-4 full-right">
-<img class="img-responsive" src="<c:url value="/resources/images/hongicon.png"></c:url>" title="<spring:message code="djn.yuhongweb"/>">
-</div>
+<a class="btn btn-default" href="http://dajana.cn:8888/yhyun"><img class="img-responsive" src ="/resources/images/yuhong-icon.png" alt="内网登入"/></a>
+<%-- <img class="img-responsive" src="<c:url value="/resources/images/hongicon.png"></c:url>" title="<spring:message code="djn.yuhongweb"/>">
+ --%></div>
 </div>
 </div>
 </div>
