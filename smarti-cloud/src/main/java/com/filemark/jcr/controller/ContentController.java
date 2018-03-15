@@ -85,14 +85,14 @@ public class ContentController extends BaseController {
   	    String simpleName = ex.getCause().getClass().getSimpleName();
   	    logger.info(simpleName);
   	    if (simpleName.equals("ClientAbortException") || simpleName.equals("SocketException")) {
-			ImageUtil.gpio("write","18","0");
+			ImageUtil.HDDOff();
   	    	return null;
   	    }
 		  modelAndView.addObject("navigation", getNavigation());
     	  //modelAndView.addObject("navigation",getNavigator(apps,contentPath));
     	  modelAndView.addObject("breadcrumb", jcrService.getBreadcrumb(paths[0]) );
       } catch(Exception e ) {
-		ImageUtil.gpio("write","18","0");
+    	  ImageUtil.HDDOff();
     	  logger.error(e.getMessage()); 
       }
       invalidCache();
@@ -125,13 +125,21 @@ public class ContentController extends BaseController {
   
     @RequestMapping(value = {"/myip/{uid}"}, method = RequestMethod.GET)
    	public @ResponseBody String myip(@PathVariable String uid,Model model,HttpServletRequest request, HttpServletResponse response) {
-    	String userPath="/system/users/"+uid,myip="";
+    	String username = "unknown";
+    	try {
+    		username = JwtUtil.decode(uid);
+    	}catch (Exception e){
+    		logger.debug("Username is not encoded!"+uid);
+    	}
+    	String userPath="/system/users/"+username,myip="",localIp="";
     	try {
 			InetAddress ipAddr = InetAddress.getLocalHost();
+			localIp = ipAddr.getHostAddress();
 	    	myip = getClientIpAddress(request);/*ipAddr.getHostAddress()+"="+request.getRemoteAddr()+"="+getPublicIpAddress()+"ip"+*/
-	    	User user = (User)jcrService.getObject("/system/users/"+uid);
+	    	User user = (User)jcrService.getObject("/system/users/"+username);
 	    	if(user !=null && !myip.equals(user.getHostIp())) {
 	    		jcrService.updatePropertyByPath(userPath, "hostIp", myip);
+	    		jcrService.updatePropertyByPath(userPath, "localIp",localIp);
 	    	}
     	} catch (UnknownHostException e) {
     		myip ="error:UnknownHostException";
@@ -141,7 +149,7 @@ public class ContentController extends BaseController {
 			logger.error(e.getMessage());
 		}
 
-
+    	if(isIntranet(request)) return localIp;
     	
 		return myip;
 
@@ -149,10 +157,19 @@ public class ContentController extends BaseController {
 
     @RequestMapping(value = {"/yhyun"}, method = RequestMethod.GET)
    	public String yhyun(HttpServletRequest request, HttpServletResponse response) {
-    	String myip = "dajana.cn";
+    	String myip = "dajana.cn",localIp = "";
     	//try {
-			//InetAddress ipAddr = InetAddress.getLocalHost();
-	    myip = getClientIpAddress(request);/*ipAddr.getHostAddress()+"="+request.getRemoteAddr()+"="+getPublicIpAddress()+"ip"+*/
+	    try {
+			InetAddress ipAddr = InetAddress.getLocalHost();
+			localIp = ipAddr.getHostAddress();
+		} catch (UnknownHostException e1) {
+			logger.debug("getLocalHost error:"+e1.getMessage());
+		}
+	    if(isIntranet(request)) {
+	    	myip = localIp;
+        	return "redirect:http://"+myip+":8888/signin";
+	    } else
+	    	myip = getClientIpAddress(request);/*ipAddr.getHostAddress()+"="+request.getRemoteAddr()+"="+getPublicIpAddress()+"ip"+*/
 
         try {
             Response res = Jsoup.connect("http://"+myip+":8888/signin")

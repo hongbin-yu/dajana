@@ -10,6 +10,7 @@
 	<http pattern="/content/**" security="none" />	
 	<http pattern="/templates/**" security="none" />		
 	<http pattern="/myip/**" security="none" />		
+	<http pattern="/dydns" security="none" />		
 	<http pattern="/uinfo/**" security="none" />
 	<http pattern="/myhost/**" security="none" />				
 	<http pattern="/published/**" security="none" />	

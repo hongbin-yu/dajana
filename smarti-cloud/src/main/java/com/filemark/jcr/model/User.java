@@ -33,6 +33,8 @@ public class User implements SmartiNode {
 	@Field
 	private String hostIp;	
 	@Field
+	private String localIp;	
+	@Field
 	private String port;	
 	@Field(path=true)
 	private String path;
@@ -181,6 +183,14 @@ public class User implements SmartiNode {
 
 	public void setHostIp(String hostIp) {
 		this.hostIp = hostIp;
+	}
+
+	public String getLocalIp() {
+		return localIp;
+	}
+
+	public void setLocalIp(String localIp) {
+		this.localIp = localIp;
 	}
 
 	public String getPort() {
