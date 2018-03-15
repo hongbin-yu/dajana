@@ -129,7 +129,7 @@
 		</div>
 		<div class="form-group">
 		<label for="lastModified${item.uid }"><spring:message code="djn.lastModified"/>&nbsp;</label>
-		<fmt:formatDate pattern="yyy-MM-dd HH:mm:ss" value="${item.lastModified }"/>
+		<fmt:formatDate pattern="yyy-MM-dd HH:mm:ss" value="${user.lastModified }"/>
 		</div>				
 	<input type="submit" id="submit" value="确认" class="btn btn-primary"> <input type="reset" value="重填" class="btn btn-default">
 	</form>
