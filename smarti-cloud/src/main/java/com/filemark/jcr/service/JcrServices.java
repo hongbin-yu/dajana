@@ -20,6 +20,8 @@ import com.filemark.utils.WebPage;
 
 public interface JcrServices {
 	public Object getObject(final String path) throws RepositoryException;
+	public Object getFirstObjectByTitle(final String path,final String title);
+
 	public List<Object> getObjects(final String path, final Class<?> aclass) ;
 	public Object add(final Object obj) throws RepositoryException;
 	public Page add(final Page page) throws RepositoryException;

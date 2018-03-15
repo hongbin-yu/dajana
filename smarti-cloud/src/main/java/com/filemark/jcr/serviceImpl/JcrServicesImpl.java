@@ -467,6 +467,14 @@ public class JcrServicesImpl implements JcrServices {
         });
 	}
 
+	
+	@Override
+	public Object getFirstObjectByTitle(String path, String title) {
+		
+		return null;
+	}
+
+
 	public String getValidPath(final String path) throws RepositoryException {
 		
 		return (String) jcrTemplate.execute(new JcrCallback() { 

@@ -966,7 +966,16 @@ public class SiteController extends BaseController {
         		}
         		String assetPath = fileName;
         		if(!fileName.matches("(\\w|\\.|\\-|\\s|_)+")) {
-        			assetPath = path+"/"+getDateTime()+ext;
+        			if("true".equals(override) ) {
+        				String assetsQuery = "select * from [nt:base] AS s WHERE ISCHILDNODE(["+path+"])" +" and s.deleted not like 'true' and jcr:title like '"+fileName+"' and s.ocm_classname='com.filemark.jcr.model.Asset' order by s.lastModified desc, s.name";
+        				WebPage<Asset> assets = jcrService.searchAssets(assetsQuery, 1, 0);
+        				if(assets.getPageCount()>0) {
+        					assetPath = assets.getItems().get(0).getPath();
+        				}else {
+        					assetPath = path+"/"+getDateTime()+ext;
+        				}
+        			}else 
+        				assetPath = path+"/"+getDateTime()+ext;
         			//fileName = DjnUtils.Iso2Uft8(fileName);
         		}else {
         			

@@ -185,8 +185,8 @@ public class ContentController extends BaseController {
             return "redirect:/?ip="+myip+"&error="+e.getMessage();
          }
     } 
-    @RequestMapping(value = {"/dydns"}, method = RequestMethod.POST)
-   	public String dydns(String content,HttpServletRequest request, HttpServletResponse response) {
+    @RequestMapping(value = {"/dydns"}, method = {RequestMethod.POST,RequestMethod.GET})
+   	public @ResponseBody String dydns(String content,HttpServletRequest request, HttpServletResponse response) {
     	String myip = "dajana.cn";
 	    myip = getClientIpAddress(request);/*ipAddr.getHostAddress()+"="+request.getRemoteAddr()+"="+getPublicIpAddress()+"ip"+*/
 		String json_user = JwtUtil.decode(content);
@@ -212,7 +212,7 @@ public class ContentController extends BaseController {
             response.setStatus(HttpStatus.SC_BAD_REQUEST);
          }
         
-        return null;
+        return myip;
     } 
     
     @RequestMapping(value = {"/uinfo/{uid}"}, method = RequestMethod.GET)
