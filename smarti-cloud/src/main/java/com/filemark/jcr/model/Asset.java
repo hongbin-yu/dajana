@@ -54,6 +54,8 @@ public class Asset implements SmartiNode, Serializable {
 	@Field
 	private Long height;
 	@Field
+	private Long total;	
+	@Field
 	private String icon;
 	
 	private String ocm_classname;
@@ -320,6 +322,14 @@ public class Asset implements SmartiNode, Serializable {
 
 	public Long getHeight() {
 		return height;
+	}
+
+	public Long getTotal() {
+		return total;
+	}
+
+	public void setTotal(Long total) {
+		this.total = total;
 	}
 
 	public void setHeight(Long height) {

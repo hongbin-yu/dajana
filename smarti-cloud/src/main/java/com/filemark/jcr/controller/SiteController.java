@@ -1430,6 +1430,7 @@ public class SiteController extends BaseController {
     		if(!file.getParentFile().exists()) {
     			file.getParentFile().mkdirs();
     		}
+    		file.setLastModified(new Date().getTime());
 			int level = 2;
 			if(page.getShowThememenu()!=null && "true".equals(page.getShowThememenu()))
 				level++;	

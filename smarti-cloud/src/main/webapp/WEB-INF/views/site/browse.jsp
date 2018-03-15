@@ -251,6 +251,9 @@
 		${item.description}
 		</a>
 		</c:if>
+		<c:if test="${item.contentType=='application/pdf' && item.total>0}">
+		<button class="btn btn-primary btn-sm" onclick="javascript:returnPPT('${item.path}','${item.total }')" title="植入画廊"><span class="glyphicon glyphicon-play">${folder.title } 植入画廊</span></button>
+		</c:if>
 
 <details>
 	<summary><span class="glyphicon glyphicon-edit"></span>${item.path}</summary>
@@ -423,7 +426,7 @@ function returnFileUrl(fileUrl) {
 	//preventDefault();
 	var message = win.document.getElementById("header_message");
 	if(message) {
-		message.innerHTML="<section class=\"alert alert-success\"><h3>图像已加入</h3></section>";
+		message.innerHTML="<section class=\"text-right alert alert-success\"><h3>图像已加入</h3></section>";
 
 		}
 	if(input && input!="") {
@@ -441,7 +444,7 @@ function returnFileUrl(fileUrl,uid) {
 	//preventDefault();
 	var message = win.document.getElementById("header_message");
 	if(message) {
-		message.innerHTML="<section class=\"alert alert-success\"><h3>资源已加入</h3></section>";
+		message.innerHTML="<section class=\"text-right alert alert-success\"><h3>资源已加入</h3></section>";
 
 		}
 	if(input && input!="") {
@@ -507,7 +510,7 @@ function returnFileUrl(fileUrl,uid,poster) {
 	//preventDefault();
 	var message = win.document.getElementById("header_message");
 	if(message) {
-		message.innerHTML="<section class=\"alert alert-success\"><h3>资源已加入</h3></section>";
+		message.innerHTML="<section class=\"text-right alert alert-success\"><h3>资源已加入</h3></section>";
 
 		}
 	if(input && input!="") {
@@ -571,7 +574,7 @@ function returnFileUrl(fileUrl,uid,poster) {
 function returnCarousel(fileUrl) {
 	var message = win.document.getElementById("header_message");
 	if(message) {
-		message.innerHTML="<section class=\"alert alert-success\"><h3>加入广告</h3></section>";
+		message.innerHTML="<section class=\"text-right alert alert-success\"><h3>加入广告</h3></section>";
 
 		}
 	var data = document.getElementById("carousel").outerHTML;
@@ -590,7 +593,7 @@ function returnCarousel(fileUrl) {
 function returnGallery(fileUrl) {
 	var message = win.document.getElementById("header_message");
 	if(message) {
-		message.innerHTML="<section class=\"alert alert-success\"><h3>加入画廊</h3></section>";
+		message.innerHTML="<section class=\"text-right alert alert-success\"><h3>加入画廊</h3></section>";
 
 		}
 	var data = document.getElementById("gallery").outerHTML;
@@ -600,6 +603,23 @@ function returnGallery(fileUrl) {
 		gallery[0].innerHTML = data;
 	}else 
 		tinyMCE.activeEditor.selection.setContent('<div id="'+fileUrl+'" class="gallery noneditable">'+data+'</div>');
+	tinyMCE.activeEditor.setDirty(true);	
+
+}
+
+function returnPPT(path,total) {
+	var message = win.document.getElementById("header_message");
+	if(message) {
+		message.innerHTML="<section class=\"text-right alert alert-success\"><h3>加入画廊</h3></section>";
+
+		}
+	var html="<div class=\"wb-lbx lbx-hide-gal noneditable\">"
+			+"<ul class=\"list-inline\">";
+	for(var i=0;i<total;i++) {
+		html+="<li><a title=\"\" href=\"pdf2img.jpg?p="+i+"&amp;path="+path+"\"> <img class=\"img-responsive\" src=\"pdf2img.jpg?p="+i+"&amp;path="+path+"\" alt=\"图像 "+i+"\" /> </a></li>";
+		}
+	html+="</ul></div>";	
+	tinyMCE.activeEditor.selection.setContent(html);
 	tinyMCE.activeEditor.setDirty(true);	
 
 }

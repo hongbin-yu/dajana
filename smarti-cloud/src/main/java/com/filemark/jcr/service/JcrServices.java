@@ -64,6 +64,7 @@ public interface JcrServices {
 	public long getCount(final String queryString);
 	public String getProperty(final String path,final String name);	
 	public void setProperty(final String path,final String name,final String value) ;
+	public void setProperty(final String path,final String name,final Long value) ;
 	public String move(final String frompath,final String topath,final String username) ;
 	public void addUsagelog(String username,String message,String type);
 	public void createFile(String path,Integer x);

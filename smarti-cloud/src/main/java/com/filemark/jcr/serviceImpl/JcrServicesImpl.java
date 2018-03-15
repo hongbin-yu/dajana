@@ -2237,7 +2237,20 @@ public class JcrServicesImpl implements JcrServices {
 	}
 	
 
+	public void setProperty(final String path,final String name,final Long value) {
+		jcrTemplate.execute(new JcrCallback() { 
+        	public Object doInJcr(Session session) throws RepositoryException, IOException { 
 
+        		if(session.nodeExists(path)) {
+        			Node node = session.getNode(path);
+        			node.setProperty(name, value);
+        			session.save();
+        		}
+
+        		return null;
+        	} 		
+		});		
+	}
 
 	public String uploadAssets(final String path, final ScanUploadForm uploadForm, final String username)
 			throws RepositoryException {

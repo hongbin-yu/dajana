@@ -1,6 +1,9 @@
 package com.filemark.jcr.serviceImpl;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -15,6 +18,7 @@ import com.filemark.jcr.model.Folder;
 import com.filemark.jcr.service.JcrIndexService;
 import com.filemark.jcr.service.JcrServices;
 import com.filemark.utils.WebPage;
+import com.lowagie.text.pdf.PdfReader;
 
 public class JcrIndexServiceImpl implements JcrIndexService {
 	
@@ -33,7 +37,7 @@ public class JcrIndexServiceImpl implements JcrIndexService {
 		WebPage<Asset> assets = jcrService.searchAssets(assetsQuery, 500, 0);
 		for(Asset asset:assets.getItems()) {
 			Thread.yield();
-			File icon = new File(jcrService.getHome()+"/icon400/"+asset.getPath());
+			File icon = new File(jcrService.getDevice()+asset.getPath()+"/x400.jpg");
 			if(!icon.exists()) {
 				try {
 					jcrService.autoRoateImage(asset.getPath());
@@ -66,8 +70,25 @@ public class JcrIndexServiceImpl implements JcrIndexService {
 		if(folders.getItems().size()>0)
 			log.debug("Jcr Folder "+folders.getItems().size()+" updated at "+new Date());
 		
-
-
+		String pdfAssetsQuery = "select * from [nt:base] AS s WHERE ISDESCENDANTNODE([/]) and s.delete not like 'true' and s.ocm_classname='com.filemark.jcr.model.Asset' and s.contentType like 'application/pdf' and s.total is null  order by s.path";
+		WebPage<Asset> pdfAssets = jcrService.searchAssets(pdfAssetsQuery, 500, 0);
+		for(Asset asset:pdfAssets.getItems()) {
+			Thread.yield();
+			try {
+				File file = new File(jcrService.getDevice()+asset.getPath()+"/origin.pdf");
+				if(file.exists()) {
+					InputStream in = new FileInputStream(file);
+					PdfReader reader = new PdfReader(in);
+					int total = reader.getNumberOfPages();
+					jcrService.setProperty(asset.getPath(), "total", new Long(total));
+				}
+				jcrService.updatePropertyByPath(asset.getPath(), "updated", "true");
+			} catch (RepositoryException e) {
+				log.error(e.getMessage());
+			} catch (IOException e) {
+				log.error(e.getMessage());
+			}
+		}
 	}
 	
 	
