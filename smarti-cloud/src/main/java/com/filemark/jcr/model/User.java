@@ -1,5 +1,6 @@
 package com.filemark.jcr.model;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -38,7 +39,9 @@ public class User implements SmartiNode {
 	@Field
 	private String lastIp;
 	@Field
-	private String signingKey = "SigningKey";
+	private String signingKey = "dajanaSigningKey";
+	@Field 
+	private Date lastModified;
 	
 	@Collection(autoUpdate=false)
 	private Set<Role> roles = new HashSet<Role>();
@@ -194,6 +197,14 @@ public class User implements SmartiNode {
 
 	public void setSigningKey(String signingKey) {
 		this.signingKey = signingKey;
+	}
+
+	public Date getLastModified() {
+		return lastModified;
+	}
+
+	public void setLastModified(Date lastModified) {
+		this.lastModified = lastModified;
 	}
 	
 }

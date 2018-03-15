@@ -1,5 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" session="false" %>
 
@@ -125,7 +126,11 @@
 		<div class="form-group">
 			<label for="usage" class="required"><span class="field-name">可用云空间/总空间</span> <strong class="required"></strong></label>
 			<input class="form-control" id="usage" name="usage" value="${usage}" type="text" required="required" data-rule-alphanumeric="true" data-rule-minlength="4" size="40" disabled/>
-		</div>		
+		</div>
+		<div class="form-group">
+		<label for="lastModified${item.uid }"><spring:message code="djn.lastModified"/>&nbsp;</label>
+		<fmt:formatDate pattern="yyy-MM-dd HH:mm:ss" value="${item.lastModified }"/>
+		</div>				
 	<input type="submit" id="submit" value="确认" class="btn btn-primary"> <input type="reset" value="重填" class="btn btn-default">
 	</form>
 	</div>

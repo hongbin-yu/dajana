@@ -17,6 +17,7 @@ import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.jfree.util.Log;
@@ -151,10 +153,7 @@ public class ContentController extends BaseController {
     	//try {
 			//InetAddress ipAddr = InetAddress.getLocalHost();
 	    myip = getClientIpAddress(request);/*ipAddr.getHostAddress()+"="+request.getRemoteAddr()+"="+getPublicIpAddress()+"ip"+*/
-/*    	} catch (UnknownHostException e) {
-    		myip ="error:UnknownHostException";
-			logger.error(e.getMessage());
-		} */
+
         try {
             Response res = Jsoup.connect("http://"+myip+":8888/signin")
                .userAgent("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.21 (KHTML, like Gecko) Chrome/19.0.1042.0 Safari/535.21")
@@ -168,11 +167,35 @@ public class ContentController extends BaseController {
          } catch (IOException e) {
             return "redirect:/?ip="+myip+"&error="+e.getMessage();
          }
+    } 
+    @RequestMapping(value = {"/dydns"}, method = RequestMethod.POST)
+   	public String dydns(String content,HttpServletRequest request, HttpServletResponse response) {
+    	String myip = "dajana.cn";
+	    myip = getClientIpAddress(request);/*ipAddr.getHostAddress()+"="+request.getRemoteAddr()+"="+getPublicIpAddress()+"ip"+*/
+		String json_user = JwtUtil.decode(content);
+        try {
+			Gson gson = new Gson();
+			User user = gson.fromJson(json_user, User.class);
+			user.setHostIp(myip);
+			user.setLastModified(new Date());
+			if(jcrService.nodeExsits(user.getPath())) {
+				String hostIp = jcrService.getProperty(user.getPath(), "hostIp");
+				if(!myip.equals(hostIp)) {
+					jcrService.setProperty(user.getPath(), "hostIp", myip);
+					jcrService.updateCalendar(user.getPath(), "lastModified");
+				}
+				
+			}else {
+				jcrService.addOrUpdate(user);
+			}
+
+            response.setStatus(HttpStatus.SC_OK);			
+         } catch (Exception e) {
+        	logger.error("dydns:"+e.getMessage());
+            response.setStatus(HttpStatus.SC_BAD_REQUEST);
+         }
         
-
-    	
-		
-
+        return null;
     } 
     
     @RequestMapping(value = {"/uinfo/{uid}"}, method = RequestMethod.GET)
