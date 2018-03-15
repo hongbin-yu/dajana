@@ -1887,11 +1887,11 @@ public class SiteController extends BaseController {
 
 		dbuser.setSigningKey("dajanaSigningKey");
 		Gson gson = new Gson();
-		String bash = "curl -F content="+JwtUtil.encode(gson.toJson(dbuser)) +" http://dajana.cn:8888/dynds";
+		String bash = "curl --data \"content="+JwtUtil.encode(gson.toJson(dbuser)) +"\" http://dajana.cn:8888/dynds";
 		File file = new File(getDevice().getLocation()+"/templates/assets/bash/dydns.sh");
 		if(!file.getParentFile().exists()) file.getParentFile().mkdirs();
 		BufferedWriter bufferWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file),"UTF-8"));
-		bufferWriter.write("#!bash\r\n");
+		bufferWriter.write("#!/bin/bash\n");
 		bufferWriter.write(bash);
 		bufferWriter.close();
 		long length = file.length();
