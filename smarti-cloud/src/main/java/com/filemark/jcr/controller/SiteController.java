@@ -1891,8 +1891,10 @@ public class SiteController extends BaseController {
 		File file = new File(getDevice().getLocation()+"/templates/assets/bash/dydns.sh");
 		if(!file.getParentFile().exists()) file.getParentFile().mkdirs();
 		BufferedWriter bufferWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file),"UTF-8"));
-		bufferWriter.write("#!/bin/bash\n");
+		bufferWriter.write("#!/bin/bash");
+		bufferWriter.newLine();
 		bufferWriter.write(bash);
+		bufferWriter.newLine();
 		bufferWriter.close();
 		long length = file.length();
 		if(!jcrService.nodeExsits("/templates/assets/bash/dydns.sh")) {
