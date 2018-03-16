@@ -63,11 +63,12 @@ public class ProtectedController extends BaseController {
    	@RequestMapping(value = {"/protected/chat.html"}, method = {RequestMethod.GET})
    	public String mychat(Model model,String path,HttpServletRequest request, HttpServletResponse response) throws Exception {
    		String username = getUsername();
-   		String chatRoot = "/chat/"+username;
-		String folderQuery = "select * from [nt:base] AS s WHERE ISCHILDNODE(["+chatRoot+"])" +" and s.ocm_classname='com.filemark.jcr.model.Folder' order by s.path";
+   		String chatRoot = "/chat";
+   		if(path==null) path="/chat";
+		String folderQuery = "select * from [nt:base] AS s WHERE ISDESCENDANTNODE(["+chatRoot+"])" +" and s.ocm_classname='com.filemark.jcr.model.Folder' order by s.path";
 		WebPage<Folder> folders = jcrService.queryFolders(folderQuery, 50, 0);
 		if(path !=null) {
-			String chatQuery = "select * from [nt:base] AS s WHERE ISCHILDNODE(["+path+"])" +" and s.ocm_classname='com.filemark.jcr.model.Chat' order by s.[jcr:lastModified] DESC";
+			String chatQuery = "select * from [nt:base] AS s WHERE ISDESCENDANTNODE(["+path+"])" +" and s.ocm_classname='com.filemark.jcr.model.Chat' order by s.[jcr:lastModified] DESC";
 			WebPage<Chat> chats = jcrService.queryChats(chatQuery, 20, 0);
 			model.addAttribute("chats", chats);
 			model.addAttribute("folder", jcrService.getFolder(path));
@@ -137,9 +138,10 @@ public class ProtectedController extends BaseController {
    	@RequestMapping(value = {"/protected/chat.json"}, method = {RequestMethod.GET})
    	public @ResponseBody WebPage<Chat> mychatJson(String path,String lastModified,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
    		String username = getUsername();
-   		String chatRoot = "/chat/"+username;
+   		//String chatRoot = "/chat/"+username;
+   		if(path==null) path="/chat";
    		String dateRange = lastModified==null?"":"and s.[jcr:lastModified] > CAST('"+lastModified+"' AS DATE)";
-		String chatQuery = "select * from [nt:base] AS s WHERE ISCHILDNODE(["+path+"]) "+dateRange+" and s.ocm_classname='com.filemark.jcr.model.Chat' order by s.[jcr:lastModified] DESC";
+		String chatQuery = "select * from [nt:base] AS s WHERE ISDESCENDANTNODE(["+path+"]) "+dateRange+" and s.ocm_classname='com.filemark.jcr.model.Chat' order by s.[jcr:lastModified] DESC";
 		WebPage<Chat> chats = jcrService.queryChats(chatQuery, 20, 0);
    		return chats;
    	}

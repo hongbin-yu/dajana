@@ -37,6 +37,7 @@ function ScrollHandler(e) {
 
         //do work
         if ($window.scrollTop() + $window.height() > $document.height() - 100) {
+       	
         	avalaiblePages = $("#availablePages").val();
         	type = $("#type").val();
         	kw=$("#kw").val();
@@ -48,7 +49,7 @@ function ScrollHandler(e) {
                 p ++;
                 
                 //alert("browsemore.html?path="+path+"&type="+type+"&kw="+kw+"&p="+p+"&topage="+topage);
-                $("#loading").html("<img src=\"/resources/images/ui-anim_basic_16x16.gif\" width=\"48\" height=\"48\" alt=\"\">");
+                $("#loading").html("<img src=\"/templates/assets/images/loadingx400.gif\" width=\"48\" height=\"48\" alt=\"\">");
                 //alert("near bottom!"+"browsemore.html?path="+path+"&input="+input+"&kw="+kw+"&p="+p);
                 $.ajax ({
     			    url: "browsemore.html?path="+path+"&type="+type+"&kw="+kw+"&p="+p+"&topage="+topage,
@@ -70,6 +71,8 @@ function ScrollHandler(e) {
                 
             }
 
+        }else if($window.scrollTop() ==0) {
+        	//alert($window.scrollTop());
         }
 
     }, _throttleDelay);

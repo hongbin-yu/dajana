@@ -1,5 +1,6 @@
 package com.filemark.jcr.model;
 
+import java.io.File;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -46,6 +47,8 @@ public class User implements SmartiNode {
 	private Date lastModified;
 	@Field 
 	private Date lastUpdated;	
+	@Field 
+	private Date lastDydns;		
 	@Collection(autoUpdate=false)
 	private Set<Role> roles = new HashSet<Role>();
 	
@@ -92,8 +95,7 @@ public class User implements SmartiNode {
 		return true;
 	}
 
-
-
+	
 	public String getUid() {
 		return uid;
 	}
@@ -224,6 +226,14 @@ public class User implements SmartiNode {
 
 	public void setLastUpdated(Date lastUpdated) {
 		this.lastUpdated = lastUpdated;
+	}
+
+	public Date getLastDydns() {
+		return lastDydns;
+	}
+
+	public void setLastDydns(Date lastDydns) {
+		this.lastDydns = lastDydns;
 	}
 	
 }

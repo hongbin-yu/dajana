@@ -2365,7 +2365,7 @@ public class SiteController extends BaseController {
 		ImageUtil.HDDOff();
 		return null;
 	}
-	@RequestMapping(value = {"/site/file/*.*","/site/viewimage","/content/viewimage","/content/**/viewimage","/protected/viewimage","/protected/**/viewimage","/site/file","/site/file*.*","/content/file","/content/file*.*","/content/**/file","/content/**/file*.*"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
+	@RequestMapping(value = {"/file/*.*","/site/file/*.*","/site/viewimage","/content/viewimage","/content/**/viewimage","/protected/viewimage","/protected/**/viewimage","/site/file","/site/file*.*","/content/file","/content/file*.*","/content/**/file","/content/**/file*.*"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public @ResponseBody String viewFile(String uid,String path,Integer w,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
 
 		Integer width = null;
@@ -2394,7 +2394,7 @@ public class SiteController extends BaseController {
 
 			if(path !=null  && jcrService.nodeExsits(path)) {
 				Asset asset = (Asset)jcrService.getObject(path);
-
+				ext = asset.getExt();
 /*				if(width!=null && jcrService.nodeExsits(path+"/file-"+width)) {
 					response.setContentType(asset.getContentType());
 					jcrService.readAsset(path+"/file-"+width, response.getOutputStream());

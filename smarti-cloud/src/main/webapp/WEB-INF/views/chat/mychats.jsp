@@ -6,7 +6,7 @@
 <div class="container">
 <div class="row">
         <main role="main" property="mainContentOfPage" class="col-md-9 col-md-push-3">
-        <h1>在线通讯 - ${folder.title } <span class="glyphicon glyphicon-user pull-right"></span></h1>
+        <h1>云信 - ${folder.title } <span class="glyphicon glyphicon-user pull-right"></span></h1>
         <div id="online_chat">
 		</div>
 			<div class="row">

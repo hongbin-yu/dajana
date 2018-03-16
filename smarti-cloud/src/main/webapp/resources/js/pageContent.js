@@ -288,7 +288,7 @@ function syncChat() {
 						html +='<h5 class="panel-title">'+c.createdBy+' <span class="small">'+cDate.toISOString()+'</span><a href="javascript:removeTag('+"'"+c.uid+"'"+')"><button title="\u70B9\u51FB\u5220\u9664" class="btn btn-warning btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span></button></a></h5>';
 						
 					}
-					html +='</header><div class="panel-body">'+c.content+'</div></div><div class="clearfix"></div>';
+					html +='</header><div class="panel-body"><img class=\"img-responsive pull-right\" src=\"'+c.icon+"\">"+c.content+'</div></div><div class="clearfix"></div>';
 					$("#online_chat").append(html);
 					lastModified = c.lastModified;	
 		    	}else {

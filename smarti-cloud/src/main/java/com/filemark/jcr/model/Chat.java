@@ -1,5 +1,6 @@
 package com.filemark.jcr.model;
 
+import java.io.File;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -74,6 +75,20 @@ public class Chat implements SmartiNode, Serializable {
 		this.createdBy = createdBy;
 	}
 
+	public String getIcon() {
+		if(new File("/mnt/device/"+createdBy+"/assets/icon/x48.jpg").exists()) {
+			return "/file/icon.jpg?path=/"+createdBy+"/assets/icon/x48.jpg";
+		}
+		return "/resources/images/usericon.png";
+	}
+
+	public String getIconlg() {
+		if(new File("/mnt/device/"+createdBy+"/assets/icon/x120.jpg").exists()) {
+			return "/file/icon.jpg?path=/"+createdBy+"/assets/icon/x120.jpg";
+		}
+		return "/resources/images/usericon.png";
+	}
+	
 	public Calendar getLastModified() {
 		return lastModified;
 	}
