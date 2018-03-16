@@ -844,7 +844,9 @@ function output(data) {
     	}else {
 	    	html +='<div class="checkbox"><input type="checkbox" class="checkbox" name="puid" value="'+data.uid+'"><a title="打开PDF" href="viewpdf?uid='+data.uid+'" target="_BLANK"><img title="点击选中" src="/resources/images/pdf.gif"></a>'
 	    		  +'<a class="wb-lbx-edit" href="'+data.link+'" target="_BLANK"><img id="img'+data.uid+'" src="'+data.icon+'" class="img-responsive" draggable="true"></img></a>'
-	    		  +'</div>';
+	    		  +'</div>'
+				  +'<input class="form-control" id="description'+data.uid+'" name="jcr:description" value="'+(data.description==null?"":+data.description)+'" size="42" uid="'+data.uid+'"  onchange="updateNode(this)"/>';
+
     	}	  
 	    	html +='<details>'
 	    		  +'<summary><span class="glyphicon glyphicon-edit"></span>'+data.title+'</summary>'

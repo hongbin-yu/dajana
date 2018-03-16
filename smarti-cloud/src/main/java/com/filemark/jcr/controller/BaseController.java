@@ -316,7 +316,7 @@ public class BaseController {
         }
 
         Long length = file.length();
-        String fileName = file.getName();
+        String fileName = file.getParent()+"/"+file.getName();
         long lastModified = file.lastModified();
         if(contentType==null) {
         	Path path = FileSystems.getDefault().getPath(file.getParentFile().getAbsolutePath(), fileName);
@@ -556,7 +556,7 @@ public class BaseController {
             }
         }
     }
-    private static class HttpUtils {
+    protected static class HttpUtils {
 
         /**
          * Returns true if the given accept header accepts the given value.

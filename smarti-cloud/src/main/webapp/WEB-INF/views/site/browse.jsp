@@ -191,7 +191,7 @@
 		</c:forEach>
 	</div>
 </div>
-<button class="btn btn-primary btn-sm" onclick="javascript:returnCarousel('${folder.path}')" title="加入广告"><span class="glyphicon glyphicon-play">${folder.title } 植入广告</span></button>
+<button class="btn btn-primary btn-sm" onclick="javascript:returnCarousel('${folder.path}')" title="植入滚动联播><span class="glyphicon glyphicon-play">${folder.title } 植入滚动联播</span></button>
 </c:if>
 </div>
 <div class="col-md-4">

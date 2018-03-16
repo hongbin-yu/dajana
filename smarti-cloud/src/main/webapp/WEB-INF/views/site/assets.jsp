@@ -250,10 +250,9 @@
 			<img id="img${item.uid}" src="<c:url value='${item.icon }'></c:url>" class="img-responsive" draggable="true"/>
 		</a>
 		</c:if>
-
-		<div class="panel panel-default description" id="description${item.uid }" property="description"  uid="${item.uid}" placeholder="description">${item.description}</div>
-
 	</div>
+	<div class="panel panel-default description" id="description${item.uid }" property="description"  uid="${item.uid}" placeholder="description">${item.description}</div>
+	
 	<details>
 		<summary><span class="glyphicon glyphicon-edit"></span> ${item.title}</summary>
 		<span class="glyphicon glyphicon-remove"></span>

@@ -57,6 +57,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.filemark.jcr.controller.BaseController.HttpUtils;
 import com.filemark.jcr.model.Asset;
 import com.filemark.jcr.model.Device;
 import com.filemark.jcr.model.Djcontainer;
@@ -2502,6 +2503,17 @@ public class SiteController extends BaseController {
 				outfile = new File(jcrService.getDevice()+path+"/origin"+ext);
 			}
 			if(outfile.exists()) {
+		        String fileName = outfile.getName();
+		        long lastModified = outfile.lastModified();
+		        long ifModifiedSince = request.getDateHeader("If-Modified-Since");
+		        logger.debug("ifModifiedSince="+ifModifiedSince+"/"+lastModified);
+		        if (ifModifiedSince != -1 && ifModifiedSince + 1000 <= lastModified) {
+					FileInputStream in = new FileInputStream(outfile);
+					IOUtils.copy(in, response.getOutputStream());	
+					in.close();	
+					logger.debug(fileName+" modified");
+					return null;
+		        }
 				super.serveResource(request, response, outfile, null);				
 			}else if(path !=null && jcrService.nodeExsits(path)) {
 				Asset asset = (Asset)jcrService.getObject(path);
