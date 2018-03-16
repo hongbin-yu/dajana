@@ -17,6 +17,8 @@ package com.filemark.jcr.controller;
 
 
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -121,7 +123,15 @@ public class SigninController extends BaseController{
         String token = JwtUtil.generateToken(JwtUtil.signingKey, token_author);
         String domain = request.getRemoteAddr();
         //(user.getHost()==null || "".equals(user.getHost()))? request.getServerName():user.getHost();
-
+        if(redirect !=null) {
+        	try {
+				URL url = new URL(redirect);
+				domain = url.getHost();
+			} catch (MalformedURLException e) {
+				redirect +="&error="+e.getMessage();
+			}	
+        }
+        
         CookieUtil.create(httpServletResponse, JwtUtil.jwtTokenCookieName, token, false, -1, domain);
         if(user.getHost()!=null && !domain.equals(user.getHost()))
         	CookieUtil.create(httpServletResponse, JwtUtil.jwtTokenCookieName, token, false, -1, user.getHost());

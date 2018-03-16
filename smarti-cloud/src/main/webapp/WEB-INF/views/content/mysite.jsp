@@ -66,7 +66,7 @@
 <div class="row">
 <div class="col-xs-5 text-right">
 <a class="btn btn-default" href="http://dajana.cn:8888/content/home.html">
-<img title="<spring:message code="djn.scan_qr"/><spring:message code="djn.dajana"/>" class="img-responsive" src="<c:url value="/content/home.qrb?path=http://dajana.cn:8888/content/home.html"></c:url>" alt="<spring:message code="djn.jiameng"/>"/>
+<img title="<spring:message code="djn.scan_qr"/><spring:message code="djn.dajana"/>" class="img-responsive" src="/templates/assets/images/dajana.qr.png" alt="<spring:message code="djn.dajana"/>"/>
 </a>
 </div>
 <div class="col-xs-2 col-md-4 text-center">
