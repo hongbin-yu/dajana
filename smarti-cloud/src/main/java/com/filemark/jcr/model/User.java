@@ -222,7 +222,7 @@ public class User implements SmartiNode {
 		return lastUpdated;
 	}
 
-	public void setLastUpdates(Date lastUpdated) {
+	public void setLastUpdated(Date lastUpdated) {
 		this.lastUpdated = lastUpdated;
 	}
 	
