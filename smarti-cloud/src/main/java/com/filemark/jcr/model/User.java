@@ -44,7 +44,8 @@ public class User implements SmartiNode {
 	private String signingKey = "dajanaSigningKey";
 	@Field 
 	private Date lastModified;
-	
+	@Field 
+	private Date lastUpdated;	
 	@Collection(autoUpdate=false)
 	private Set<Role> roles = new HashSet<Role>();
 	
@@ -215,6 +216,14 @@ public class User implements SmartiNode {
 
 	public void setLastModified(Date lastModified) {
 		this.lastModified = lastModified;
+	}
+
+	public Date getLastUpdated() {
+		return lastUpdated;
+	}
+
+	public void setLastUpdates(Date lastUpdated) {
+		this.lastUpdated = lastUpdated;
 	}
 	
 }

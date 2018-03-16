@@ -1,11 +1,7 @@
 package com.filemark.jcr.model;
 
-import java.io.File;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
-
-import javax.jcr.Property;
 
 import org.apache.jackrabbit.ocm.mapper.impl.annotation.Field;
 import org.apache.jackrabbit.ocm.mapper.impl.annotation.Node;

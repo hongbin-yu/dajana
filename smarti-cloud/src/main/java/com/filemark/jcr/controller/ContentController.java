@@ -199,9 +199,8 @@ public class ContentController extends BaseController {
 				String hostIp = jcrService.getProperty(user.getPath(), "hostIp");
 				if(!myip.equals(hostIp)) {
 					jcrService.setProperty(user.getPath(), "hostIp", myip);
-					jcrService.updateCalendar(user.getPath(), "lastModified");
 				}
-				
+				jcrService.updateCalendar(user.getPath(), "lastModified");				
 			}else {
 				jcrService.addOrUpdate(user);
 			}
