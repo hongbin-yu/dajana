@@ -276,11 +276,11 @@ public class Asset implements SmartiNode, Serializable {
 		if(contentType == null)
 			return "/resources/images/usericon.png";
 		if(contentType.equals("image/tiff") || contentType.equals("image/x-tiff") ) {
-			return "viewpdf?path="+path;
+			return "/viewpdf?path="+path;
 		}else if(contentType.startsWith("video/")) {
-			return "video.mp4?path="+path;
+			return "/video.mp4?path="+path;
 		}else{
-			return "file/"+getName()+"?path="+path;
+			return "/file/"+getName()+"?path="+path;
 		}
 	}
 

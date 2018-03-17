@@ -64,17 +64,18 @@
 </c:if>
 </div>
 <div class="row">
-<div class="col-xs-5 text-right">
-<a class="btn btn-default" href="http://dajana.cn:8888/content/home.html">
+<div class="col-xs-4 text-right">
+<a class="btn btn-default" href="http://dajana.cn:8888/yhyun">
 <img title="<spring:message code="djn.scan_qr"/><spring:message code="djn.dajana"/>" class="img-responsive" src="/templates/assets/images/dajana.qr.png" alt="<spring:message code="djn.dajana"/>"/>
 </a>
 </div>
-<div class="col-xs-2 col-md-4 text-center">
+<div class="col-xs-4 col-md-4 text-center">
+<a class="btn btn-success" href='<c:url value="/protected/chat.html"></c:url>' title="<spring:message code="djn.online_chat"></spring:message>"><span class="glyphicon glyphicon-envelope"></span><spring:message code="djn.chat"></spring:message><span class="badge"></span></a>
 <%-- <authz:authorize ifAnyGranted="ROLE_USER,ROLE_ADMINISTRATOR,ROLE_OWNER"> --%>
 <%--  </authz:authorize> --%>
  </div>
-<div class="col-xs-5 pull-right">
-<a class="btn btn-default" href="http://dajana.cn:8888/yhyun"><img class="img-responsive" src ="/resources/images/yuhong-icon.png" alt="内网登入"/></a>
+<div class="col-xs-4 pull-right">
+<a class="btn btn-default" href="/protected/chat.html"><img class="img-responsive" src ="/resources/images/yuhong-icon.png" alt="内网登入"/></a>
 <%-- <img class="img-responsive" src="<c:url value="/resources/images/hongicon.png"></c:url>" title="<spring:message code="djn.yuhongweb"/>">
  --%></div>
 </div>

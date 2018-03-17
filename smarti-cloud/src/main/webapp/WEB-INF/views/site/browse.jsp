@@ -191,12 +191,12 @@
 		</c:forEach>
 	</div>
 </div>
-<button class="btn btn-primary btn-sm" onclick="javascript:returnCarousel('${folder.path}')" title="植入滚动联播><span class="glyphicon glyphicon-play">${folder.title } 植入滚动联播</span></button>
+<button class="btn btn-primary btn-sm" onclick="javascript:returnCarousel('${folder.path}')" title="植入滚动联播"><span class="glyphicon glyphicon-play">${folder.title } 植入滚动联播</span></button>
 </c:if>
 </div>
 <div class="col-md-4">
 <c:if test="${carousel.availablePages>0}">
-<div id="gallery" class="wb-lbx lbx-hide-gal">
+<div id="gallery" class="wb-lbx-edit lbx-hide-gal">
 <ul class="list-inline">
   <c:forEach items="${carousel.items }" var="item" varStatus="loop">
   	<li>
@@ -224,9 +224,9 @@
 		</c:if>
         <c:if test="${item.doc2pdf}">
         	<a class="download" href="file/${item.name}?path=${item.path}" target="_BLANK" download><span class="glyphicon glyphicon-download">下载</span></a>
-		    <a class="${item.cssClass }" href="doc2pdf.pdf?path=${item.path }">
+<%-- 		    <a class="${item.cssClass }" href="doc2pdf.pdf?path=${item.path }"> --%>
 				<img id="img${item.uid}" src="<c:url value='${item.icon }'></c:url>" class="img-responsive" draggable="true"/>
-			</a>
+<!-- 			</a> -->
 		</c:if>			
 		<c:if test="${item.audio}">
 		<a class="download" href="file/${item.name}?path=${item.path}" download><span class="glyphicon glyphicon-volume-up">下载</span></a>
@@ -246,10 +246,10 @@
 			</a>
 		</c:if>		 --%>			
 		<c:if test="${!item.mp4 && !item.audio && !item.doc2pdf}">
-		<a class="${item.cssClass }-edit" id="href${item.uid }" href="<c:url value='${item.link}'></c:url>">		
-		<img src="<c:url value='${item.icon }'></c:url>" class="img-responsive" draggable="true" onclick="javascript:returnFileUrl('${item.link}','${item.uid }')"/>
+<%-- 		<a class="${item.cssClass }-edit" id="href${item.uid }" href="<c:url value='${item.link}'></c:url>">		
+ --%>		<img src="<c:url value='${item.icon }'></c:url>" class="img-responsive" draggable="true" onclick="javascript:returnFileUrl('${item.link}','${item.uid }')"/>
 		${item.description}
-		</a>
+<!-- 		</a> -->
 		</c:if>
 		<c:if test="${item.contentType=='application/pdf' && item.total>0}">
 		<button class="btn btn-primary btn-sm" onclick="javascript:returnPPT('${item.path}','${item.total }')" title="植入画廊"><span class="glyphicon glyphicon-play">${folder.title } 植入画廊</span></button>
@@ -600,7 +600,8 @@ function returnGallery(fileUrl) {
 	win.gallery = newGallery;	
 	var gallery = tinyMCE.activeEditor.dom.select('.gallery');
 	if(gallery.length>0) {
-		gallery[0].innerHTML = data;
+	    
+		gallery[0].innerHTML = $(data);
 	}else 
 		tinyMCE.activeEditor.selection.setContent('<div id="'+fileUrl+'" class="gallery noneditable">'+data+'</div>');
 	tinyMCE.activeEditor.setDirty(true);	

@@ -4,6 +4,7 @@
 <tiles-definitions>
 
     <definition name="chat/mychat" extends="contentpage">
+        <put-attribute name="footer" value="/WEB-INF/views/chat/footer.jsp" />	
         <put-attribute name="topmenu" value="/WEB-INF/views/chat/topmenu.jsp" />        
         <put-attribute name="content" value="/WEB-INF/views/chat/mychats.jsp" />
 	</definition>
