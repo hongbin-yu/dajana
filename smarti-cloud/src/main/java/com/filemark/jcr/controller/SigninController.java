@@ -138,7 +138,7 @@ public class SigninController extends BaseController{
         if(redirect==null || "".equals(redirect) || "signin".equals(redirect)) {
     		return "redirect:/site/assets.html";
         }else {
-       		return "redirect:"+ redirect;
+       		return "redirect:"+ redirect+"&domain="+domain;
         }
 		
 	
