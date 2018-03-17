@@ -121,16 +121,17 @@ public class SigninController extends BaseController{
 		request.setAttribute("usertitle", user.getTitle()); 
 		request.setAttribute("signingKey", user.getSigningKey());  
         String token = JwtUtil.generateToken(JwtUtil.signingKey, token_author);
-        String domain = request.getRemoteAddr();
+        String domain = request.getServerName();
+
         //(user.getHost()==null || "".equals(user.getHost()))? request.getServerName():user.getHost();
-        if(redirect !=null) {
+/*        if(redirect !=null) {
         	try {
 				URL url = new URL(redirect);
 				domain = url.getHost();
 			} catch (MalformedURLException e) {
 				redirect +="&error="+e.getMessage();
 			}	
-        }
+        }*/
         
         CookieUtil.create(httpServletResponse, JwtUtil.jwtTokenCookieName, token, false, -1, domain);
         if(user.getHost()!=null && !domain.equals(user.getHost()))
