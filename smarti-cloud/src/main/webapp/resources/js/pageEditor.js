@@ -183,11 +183,19 @@ tinymce.init({
 	                	if(data_replace.length>0) {
 	                		data_replace[0].innerHTML = carousel;
 	                	};
-	                	tinyMCE.DOM.removeClass("div","wb-data-ajax-replace-inited");
+	                	tinyMCE.activeEditor.dom.removeClass("div","wb-data-ajax-replace-inited");
+	                	tinyMCE.activeEditor.dom.removeClass("div","wb-init");
+	                	tinyMCE.activeEditor.dom.removeClass("div","wb-tabs-inited");
+	                	tinyMCE.activeEditor.dom.removeClass("a","wb-lbx-inited");
+	                	tinyMCE.activeEditor.dom.removeClass("a","wb-init");
+	                	tinyMCE.activeEditor.dom.removeClass("img","img-responsive");
+	                	tinyMCE.activeEditor.dom.addClass("img","img-responsive");
+	                	
+/*	                	tinyMCE.DOM.removeClass("div","wb-data-ajax-replace-inited");
 	                	tinyMCE.DOM.removeClass("div","wb-init");	 
 	                	tinyMCE.DOM.removeClass("div","wb-tabs-inited");
 	                	tinyMCE.DOM.removeClass("a","wb-lbx-inited");	                	
-	                	tinyMCE.DOM.removeClass("a","wb-init");
+	                	tinyMCE.DOM.removeClass("a","wb-init");*/
 	                	var content = tinyMCE.activeEditor.getContent();
 		                content = content.replace("-edit","").replace(" wb-init","").replace(" wb-lbx-inited","").replace(" wb-tabs-inited","").replace(" wb-data-ajax-replace-inited","");
         	    		$("#header_message").html("<section class='alert alert-info'><h3>"+i18n("save")+"...</h3></section>");

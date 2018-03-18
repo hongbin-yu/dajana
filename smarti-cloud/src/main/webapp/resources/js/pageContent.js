@@ -167,32 +167,40 @@ function sendChat(url) {
 	$("#online_chat_running").removeClass("wb-inv");
 	$("#online_chat_send").attr("disabled",true);
 	var editor = tinymce.get("online_chat_editor");
-	if(editor) {
-    $.ajax({
-	    url: contentPath+'/protected/addchat.html',
-	    type: "POST",
-	    data: {
-	    	path : url,
-	    	content: editor.getContent()
-	    },
-	    success: function(msg) {
-	    	if(msg.indexOf("error:")>=0) {
-	    		$("#chat_message").html("<section class='alert alert-danger'><h5>"+i18n("fail")+"</h5><p>"+msg+"</p><section>");
-	    	}else {
-		    	$("#chat_message").html("<section class='alert alert-success'><h5>"+i18n("success")+"</h5><section>");
-	    		
-	    	}
 
-	    	path = msg;
-	    	syncChat();
-	    	tinyMCE.activeEditor.setContent("<p></p>");
-	    	$("#online_chat_running").addClass("wb-inv");
-	    },
-	    error: function() {
-	    	window.location.href=contentPath+"/login?redirect="+window.location.href
-	    	//$("#online_chat").html('<section class="alert alert-warning"><h5>\u4F60\u6CA1\u6709\u767B\u5165\uFF01</53></section>');
-	    }
-	});	
+	if(editor) {
+		editor.dom.removeClass("div","wb-data-ajax-replace-inited");
+		editor.dom.removeClass("div","wb-init");
+		editor.dom.removeClass("div","wb-tabs-inited");
+		editor.dom.removeClass("a","wb-lbx-inited");
+		editor.dom.removeClass("a","wb-init");
+		editor.dom.removeClass("img","img-responsive");
+		editor.dom.addClass("img","img-responsive");
+	    $.ajax({
+		    url: contentPath+'/protected/addchat.html',
+		    type: "POST",
+		    data: {
+		    	path : url,
+		    	content: editor.getContent()
+		    },
+		    success: function(msg) {
+		    	if(msg.indexOf("error:")>=0) {
+		    		$("#chat_message").html("<section class='alert alert-danger'><h5>"+i18n("fail")+"</h5><p>"+msg+"</p><section>");
+		    	}else {
+			    	$("#chat_message").html("<section class='alert alert-success'><h5>"+i18n("success")+"</h5><section>");
+		    		
+		    	}
+	
+		    	path = msg;
+		    	syncChat();
+		    	tinyMCE.activeEditor.setContent("<p></p>");
+		    	$("#online_chat_running").addClass("wb-inv");
+		    },
+		    error: function() {
+		    	window.location.href=contentPath+"/login?redirect="+window.location.href
+		    	//$("#online_chat").html('<section class="alert alert-warning"><h5>\u4F60\u6CA1\u6709\u767B\u5165\uFF01</53></section>');
+		    }
+		});	
 	} else {
 		$("#chat_message").html("<section class='alert alert-danger'><h5>编辑器没找到</h5><section>");
 	}
