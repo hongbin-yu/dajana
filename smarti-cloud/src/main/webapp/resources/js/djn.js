@@ -72,7 +72,58 @@ function ScrollHandler(e) {
             }
 
         }else if($window.scrollTop() ==0) {
-        	//alert($window.scrollTop());
+        	if(firstModified != 'undefined' && firstModified>0) {
+        		path = $("#pagePath").val();
+        		$("#online_chat_loading").removeClass("wb-inv");
+        	    $.ajax({
+        		    url: contentPath+'/protected/chat.json',
+        		    data: {
+        			    path: path,
+        			    operator : "<",
+        			    lastModified: new Date(firstModified).toISOString()
+        			    },
+        		    type: "GET",
+        		    contentType: "application/json",
+        		    success: function(data) {
+    	        		$("#online_chat_loading").addClass("wb-inv");
+    	        		var count=0;
+        		    	$.each(data.items,function(i,c){
+        			    	//if(c.lastModified<firstModified) {
+        					    var html = 	"";
+        					    var cDate = new Date(c.lastModified);
+        					    count++;
+        					    if(c.path.indexOf("/chat/"+c.createdBy)>=0) {
+        						    html = '<div id="'+c.uid+'" class="panel panel-default"><header class="panel-heading">';
+        							html +='<h5 class="panel-title">'+c.createdBy+' <span class="small text-left">'+cDate.toISOString()+'</span><a href="javascript:removeTag('+"'"+c.uid+"'"+')"><button title="\u70B9\u51FB\u5220\u9664" class="btn btn-warning btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span></button></a></h5>';
+        							html +='</header><div class="panel-body"><img class=\"img-responsive pull-left\" src=\"'+c.icon+"\">"+c.content+'</div></div><div class="clearfix"></div>';
+
+        					    }else {
+        						    html = '<div id="'+c.uid+'" class="panel panel-success"><header class="panel-heading">';
+        							html +='<h5 class="panel-title">'+c.createdBy+' <span class="small">'+cDate.toISOString()+'</span><a href="javascript:removeTag('+"'"+c.uid+"'"+')"><button title="\u70B9\u51FB\u5220\u9664" class="btn btn-warning btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span></button></a></h5>';
+        							html +='</header><div class="panel-body"><img class=\"img-responsive pull-left\" src=\"'+c.icon+"\">"+c.content+'</div></div><div class="clearfix"></div>';
+        							
+        						}
+        						$("#online_chat").before(html);
+        						if(firstModified > c.lastModified || firstModified ==0) {
+        							firstModified = c.lastModified;
+        						}
+        							
+        			    	//}
+        			    	/*else {
+        			    		alert("last="+new Date(c.lastModified).toISOString()+"="+new Date(lastModified).toISOString());		    		
+        			    	}*/
+
+        				});
+        		    	if(count==0) firstModified = -1;;
+
+        			},
+        			error: function() {
+        			    $("#online_chat_loading").addClass("wb-inv");
+         		    }
+
+        		});	         		
+        	}
+        		
         }
 
     }, _throttleDelay);

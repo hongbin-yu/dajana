@@ -7,13 +7,14 @@
 <div class="row">
         <main role="main" property="mainContentOfPage" class="col-md-9 col-md-push-3">
         <h1>云信 - ${folder.title } <span class="glyphicon glyphicon-user pull-right"></span></h1>
+        <div class="row text-center"><img id="online_chat_loading" width="120" height="120" class="wb-inv" src="/resources/images/loadingx400.gif" alt="下载"/></div>
         <div id="online_chat">
 		</div>
 			<div class="row">
 				<div id="online_chat_editor" class="panel panel-default online_editor">
 						<p></p>
 				</div>
-				<a class="btn btn-default btn-block" title="发送" href="javascript:sendChat('${page.path }')"><span class="glyphicon glyphicon-send"></span></a>
+				<a class="btn btn-default btn-block" title="发送" href="javascript:sendChat('${page.path }')"><span class="glyphicon glyphicon-send"></span><img class="wb-inv" id="online_chat_running" src="/resources/images/loading16x16.gif" alt=""/></a>
 			</div>
  		</main>
         <nav class="wb-sec col-md-3 col-md-pull-9" typeof="SiteNavigationElement" id="wb-sec" role="navigation">

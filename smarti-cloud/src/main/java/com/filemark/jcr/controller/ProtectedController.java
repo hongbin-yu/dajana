@@ -26,7 +26,7 @@ import com.filemark.utils.WebPage;
 @Controller
 public class ProtectedController extends BaseController {
 
-	private static final Logger logger = LoggerFactory.getLogger(ContentController.class);
+	private static final Logger logger = LoggerFactory.getLogger(ProtectedController.class);
     private static final String jwtTokenCookieName = "JWT-TOKEN";
     private static final String signingKey = "dajanaSigningKey";
     
@@ -136,11 +136,12 @@ public class ProtectedController extends BaseController {
    	}
    	
    	@RequestMapping(value = {"/protected/chat.json"}, method = {RequestMethod.GET})
-   	public @ResponseBody WebPage<Chat> mychatJson(String path,String lastModified,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
+   	public @ResponseBody WebPage<Chat> mychatJson(String path,String lastModified,String operator,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
    		String username = getUsername();
    		//String chatRoot = "/chat/"+username;
+   		if(operator==null) operator=">";
    		if(path==null) path="/chat";
-   		String dateRange = lastModified==null?"":"and s.[jcr:lastModified] > CAST('"+lastModified+"' AS DATE)";
+   		String dateRange = lastModified==null?"":"and s.[jcr:lastModified] "+operator+" CAST('"+lastModified+"' AS DATE)";
 		String chatQuery = "select * from [nt:base] AS s WHERE ISDESCENDANTNODE(["+path+"]) "+dateRange+" and s.ocm_classname='com.filemark.jcr.model.Chat' order by s.[jcr:lastModified] DESC";
 		WebPage<Chat> chats = jcrService.queryChats(chatQuery, 20, 0);
    		return chats;
@@ -184,7 +185,7 @@ public class ProtectedController extends BaseController {
 	   		if(content!=null && !content.equals("<p></p>") && !content.equals("") ) {
 	   	   		Chat chat = new Chat();
 	   	   		chat.setFrom(path);
-	   	   		chat.setContent(content);
+	   	   		chat.setContent(content.replace("-edit",""));
 	   	   		Calendar calendar = Calendar.getInstance();
 	   	   		chat.setLastModified(calendar);
 	   	   		chat.setPath(home+"/"+username+"/"+calendar.getTime().getTime());
@@ -212,7 +213,7 @@ public class ProtectedController extends BaseController {
 	   		if(content!=null && !content.equals("<p></p>") && !content.equals("") ) {
 	   	   		Chat chat = new Chat();
 	   	   		chat.setFrom(status);
-	   	   		chat.setContent(content);
+	   	   		chat.setContent(content.replace("-edit",""));
 	   	   		Calendar calendar = Calendar.getInstance();
 	   	   		chat.setLastModified(calendar);
 	   	   		chat.setPath(comment+"/"+calendar.getTime().getTime());
