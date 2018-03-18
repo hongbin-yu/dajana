@@ -1011,7 +1011,7 @@ function deleteUser(path) {
 }
 function removeTag(id) {
 
-	if(confirm(i18n("are_you_sure_delete")+id+"?")) {
+	if(confirm(i18n("are_you_sure_delete")+"?")) {
 		$.ajax({
 		    url: 'delete.html',
 		    data: {

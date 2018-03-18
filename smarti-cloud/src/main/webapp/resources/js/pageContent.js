@@ -307,9 +307,9 @@ function syncChat() {
 
 						
 		    	}
-		    	else {
+/*		    	else {
 		    		alert("last="+new Date(c.lastModified).toISOString()+"="+new Date(lastModified).toISOString());		    		
-		    	}
+		    	}*/
 
 			});
 		    if(data.pageCount>1) {
