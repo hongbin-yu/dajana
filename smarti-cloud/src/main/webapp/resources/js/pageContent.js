@@ -17,7 +17,7 @@ tinymce.init({
 	  content_css: contentPath+'/resources/wet-boew/css/wet-boew.min.css'+','+ contentPath+'/resources/css/tiny_mce_editor.css',
 	  inline: true,
 	  plugins: ['link image paste emoticons'],
-	  toolbar: 'undo redo styleselect link image emoticons',
+	  toolbar: 'undo redo styleselect link image media emoticons',
 	  menubar: false,
       image_class_list:  [{title: 'Image Responsive', value: 'img-responsive'},
 					      {title: 'Image Thumbnail', value: 'thumbnail'},
