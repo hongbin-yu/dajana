@@ -16,7 +16,7 @@ tinymce.init({
 	  language: 'zh_CN.GB2312',
 	  content_css: contentPath+'/resources/wet-boew/css/wet-boew.min.css'+','+ contentPath+'/resources/css/tiny_mce_editor.css',
 	  inline: true,
-	  plugins: ['link image paste emoticons'],
+	  plugins: ['link image paste  media emoticons'],
 	  toolbar: 'undo redo styleselect link image media emoticons',
 	  menubar: false,
       image_class_list:  [{title: 'Image Responsive', value: 'img-responsive'},
