@@ -11,9 +11,7 @@
         <div id="online_chat">
 		</div>
 			<div class="row">
-				<div id="online_chat_editor" class="panel panel-default online_editor">
-						<p></p>
-				</div>
+				<div id="online_chat_editor" class="panel panel-default online_editor"></div>
 				<a class="btn btn-default btn-block" title="发送" href="javascript:sendChat('${page.path }')"><span class="glyphicon glyphicon-send"></span><img class="wb-inv" id="online_chat_running" src="/resources/images/loading16x16.gif" alt=""/></a>
 			</div>
  		</main>
@@ -30,3 +28,4 @@
 </div>
 </div>
 <input type="hidden" id="pagePath" name="pathPath" value="${folder.path}"/>
+<input type="hidden" id="username" name="username" value="${username}"/>

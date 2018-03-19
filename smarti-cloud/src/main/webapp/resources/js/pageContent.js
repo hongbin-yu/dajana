@@ -5,6 +5,7 @@ var lastModified= 0;
 var unreadCount = 0;
 var contentPath="";
 var comment="";
+var username=$("#username").val();
 if(window.location.pathname.indexOf("/smarti-cloud")>=0) {
 	contentPath = "/smarti-cloud";
 }
@@ -272,6 +273,7 @@ function syncChat() {
 	$("#online_chat_running").removeClass("wb-inv");
 	$("#online_chat_send").attr("disabled",true);	
 	path = $("#pagePath").val();
+	username = $("#username").val();
     //alert(new Date(lastModified).toISOString());
     $.ajax({
 	    url: contentPath+'/protected/chat.json',
@@ -290,7 +292,7 @@ function syncChat() {
 		    	if(c.lastModified>lastModified || firstModified ==0) {
 				    var html = 	"";
 				    var cDate = new Date(c.lastModified);
-				    if(c.path.indexOf("/chat/"+c.createdBy)>=0) {
+				    if(c.createdBy==username) {
 					    html = '<div id="'+c.uid+'" class="panel panel-default"><header class="panel-heading">';
 						html +='<h5 class="panel-title">'+c.createdBy+' <span class="small text-left">'+cDate.toISOString()+'</span><a href="javascript:removeTag('+"'"+c.uid+"'"+')"><button title="\u70B9\u51FB\u5220\u9664" class="btn btn-warning btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span></button></a></h5>';
 						html +='</header><div class="panel-body"><img class=\"img-responsive pull-left\" src=\"'+c.icon+"\">"+c.content+'</div></div></div><div class="clearfix"></div>';
