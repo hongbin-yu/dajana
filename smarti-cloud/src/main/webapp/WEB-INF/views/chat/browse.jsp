@@ -22,7 +22,7 @@
 			<input class="form-control wb-inv" type="file" id="fileUpload" name="file" size="60" required="required"  multiple/>
 			<div class="form-group" id="selectedFiles">
 			</div>
-			<input id="submit_upload" type="button" onclick="javascript:uploadFiles()" value="上载" class="btn btn-primary" disabled> <input type="reset" value="清除" onclick="resetSelDiv()" class="btn btn-default">
+			<input id="submit_upload" type="button" onclick="javascript:uploadFiles()" value="上载" class="btn btn-primary" disabled> <input type="reset" value="清除" onclick="resetSelDiv()" class="btn btn-default"> <input type="button" value="关闭" onclick="closeSelf()" class="btn btn-default">
 		</div>
 	</form>
 </div>
@@ -432,15 +432,7 @@ function returnChatUrl(fileUrl,uid) {
 		tinyMCE.activeEditor.setDirty(true);
 	}
 
-	var left_float = win.document.getElementById("left-float");
-
-	if(left_float!=null && left_float !='undefined') {
-		if(left_float.getAttribute("style")=="left: 0px; border: 0px none; height: 600px; position: fixed; width: 380px; overflow: hidden; top: 10px; bottom: 30px")
-			left_float.setAttribute("style", "left: 0px; border: 0px none; height: 600px; position: fixed; width: 0px; overflow: hidden; top: 10px; bottom: 30px");
-		else
-			left_float.setAttribute("style", "left: 0px; border: 0px none; height: 600px; position: fixed; width: 380px; overflow: hidden; top: 10px; bottom: 30px");
-		
-	}
+	closeSelf();
 	
 }
 
@@ -579,7 +571,17 @@ function close() {
 	}
 
   }
+function closeSelf() {
+	var left_float = win.document.getElementById("left-float");
 
+	if(left_float!=null && left_float !='undefined') {
+		if(left_float.getAttribute("style")=="left: 0px; border: 0px none; height: 600px; position: fixed; width: 380px; overflow: hidden; top: 10px; bottom: 30px")
+			left_float.setAttribute("style", "left: 0px; border: 0px none; height: 600px; position: fixed; width: 0px; overflow: hidden; top: 10px; bottom: 30px");
+		else
+			left_float.setAttribute("style", "left: 0px; border: 0px none; height: 600px; position: fixed; width: 380px; overflow: hidden; top: 10px; bottom: 30px");
+		
+	}
+}
 </script>
 
 </body>

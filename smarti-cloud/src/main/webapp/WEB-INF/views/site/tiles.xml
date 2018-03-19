@@ -63,6 +63,7 @@
 	<definition name="site/suggestions" templateExpression="/WEB-INF/views/site/suggestions.jsp">
 		</definition>	
 	<definition name="site/editor" extends="sitepage">
+	    <put-attribute name="topmenu" value="/WEB-INF/views/site/editormenu.jsp"/>	    
 	    <put-attribute name="content" value="/WEB-INF/views/site/editor.jsp"/>
 	</definition>		
 	<definition name="site/template" extends="sitepage">

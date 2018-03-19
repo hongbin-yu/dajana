@@ -5,9 +5,7 @@
 <div class="container">
 <div class="row">
         <main id="wb-cont" role="main" property="mainContentOfPage" class="col-md-9 col-md-push-3">
-        	<button class="btn btn-default pull-right" onclick="javascript:setDataView('data-inview','/site/browse.html')" title="打开/关闭微云"><span class="glyphicon glyphicon-th-large pull-right"></span></button>
-        	
-	        <c:if test="${page.redirectTo!=null && page.redirectTo!=''}">
+ 	        <c:if test="${page.redirectTo!=null && page.redirectTo!=''}">
 	        <h1>${page.title }</h1>
 	        <p>此页重定向到 <a href="${page.redirectTo }">${page.redirectTo }</a></p>
 	        </c:if>
