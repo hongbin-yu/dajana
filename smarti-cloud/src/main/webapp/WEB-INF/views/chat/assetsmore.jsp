@@ -39,9 +39,7 @@
 		</figure>
 		</c:if>		
 		<c:if test="${!item.mp4 && !item.doc2pdf && !item.audio}">
-<!-- 	    <a class="${item.cssClass }" href="<c:url value='${item.link}'></c:url>"> -->
-			<img id="img${item.uid}" src="<c:url value='${item.icon }'></c:url>" class="img-responsive" draggable="true"/>
-<!-- 		</a> -->
+			<img id="img${item.uid}" src="<c:url value='${item.icon }&w=4'></c:url>" class="img-responsive" draggable="true"/>
 		</c:if>
 		<div class="form-group">
 		<input class="form-control" id="description${item.uid  }" name="jcr:description" value="${item.description}" size="42" uid="${item.uid}"  onchange="updateNode(this)"/>

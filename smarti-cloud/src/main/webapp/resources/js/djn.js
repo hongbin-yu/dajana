@@ -37,7 +37,6 @@ function ScrollHandler(e) {
 
         //do work
         if ($window.scrollTop() + $window.height() > $document.height() - 100) {
-       	
         	avalaiblePages = $("#availablePages").val();
         	type = $("#type").val();
         	kw=$("#kw").val();
@@ -45,6 +44,7 @@ function ScrollHandler(e) {
         	//var pageNumber = $("#pageNumber").val();
         	if($("#topage")) topage = $("#topage").val();
         	path=$("#folderpath").val();
+
         	if(p < avalaiblePages) {
                 p ++;
                 
@@ -78,7 +78,7 @@ function ScrollHandler(e) {
         		var userrole = $("#userrole").val();
         		$("#online_chat_loading").removeClass("wb-inv");
         	    $.ajax({
-        		    url: contentPath+'/protected/chat.json',
+        		    url: '/protected/chat.json',
         		    data: {
         			    path: path,
         			    operator : "<",
@@ -1062,6 +1062,8 @@ function close() {
     }
   };*/
 function setDataView(id,view) {
+	
+	$("#"+id).focus();
 	//if($("#"+id).attr("data-inview") == "") 
 	//$("#"+id).attr("data-inview",view);
 	//container wb-inv wb-overlay modal-content overlay-def wb-panel-l col-md-4
@@ -1100,7 +1102,7 @@ function setDataView(id,view) {
 		left_iframe.setAttribute("src", "/site/browse.html"); */	
 	var left_float = document.getElementById("left-float");
 
-	if(left_float !='undefined') {
+	if(left_float!=null && left_float !='undefined') {
 		if(left_float.getAttribute("style")=="left: 0px; border: 0px none; height: 600px; position: fixed; width: 380px; overflow: hidden; top: 10px; bottom: 30px")
 			left_float.setAttribute("style", "left: 0px; border: 0px none; height: 600px; position: fixed; width: 0px; overflow: hidden; top: 10px; bottom: 30px");
 		else
@@ -1109,7 +1111,7 @@ function setDataView(id,view) {
 	}
 	
 	if($("#left-iframe").attr("src")=="")
-		$("#left-iframe").attr("src","/site/browse.html");	
+		$("#left-iframe").attr("src",view);	
 	//$(document).scrollTop( $("#wb-cont").offset().top ); 
 	//$( "#left-bar" ).trigger( "open.wb-overlay" );
 	//$("#wb-sec").html('<iframe src="/site/browse.html" width="100%" height="600"  frameBorder="0"></iframe>');

@@ -211,7 +211,7 @@ public class SiteController extends BaseController {
 		ImageUtil.HDDOff();
 		return "site/"+topage;
 	}
-	@RequestMapping(value = {"/site/media.html"}, method = {RequestMethod.GET,RequestMethod.POST})
+	@RequestMapping(value = {"/site/media.html","/protected/media.html"}, method = {RequestMethod.GET,RequestMethod.POST})
 	public String media(String path,String type, String input,String kw,Integer p,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		String assetFolder = "/"+getUsername()+"/assets";
@@ -1927,7 +1927,7 @@ public class SiteController extends BaseController {
 		return "redirect:/signin?info=pwchanged&username="+username;
 	}
 	
-	@RequestMapping(value = {"/site/doc2pdf.pdf"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
+	@RequestMapping(value = {"/site/doc2pdf.pdf","/protected/doc2pdf.pdf"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public @ResponseBody String doc2pdf(String path,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
 
 		try {
@@ -2001,7 +2001,7 @@ public class SiteController extends BaseController {
 		return null;
 	}
 	
-	@RequestMapping(value = {"/site/doc2pdf.jpg"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
+	@RequestMapping(value = {"/site/doc2pdf.jpg","/protected/doc2pdf.jpg"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public @ResponseBody String doc2pdf2jpg(String path,Integer p,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
 
 		try {
@@ -2096,7 +2096,7 @@ public class SiteController extends BaseController {
 	}
 
 	
-	@RequestMapping(value = {"/site/pdf2jpg.jpg"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
+	@RequestMapping(value = {"/site/pdf2jpg.jpg","/protected/pdf2jpg.jpg"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public @ResponseBody String pdf2jpg(String path,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
 
 		try {
@@ -2142,7 +2142,7 @@ public class SiteController extends BaseController {
 		return null;
 	}
 	
-	@RequestMapping(value = {"/site/pdf2img.jpg"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
+	@RequestMapping(value = {"/site/pdf2img.jpg","/protected/pdf2img.jpg"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public @ResponseBody String pdf2img(String path,Integer p,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
 	
 		try {
@@ -2191,7 +2191,7 @@ public class SiteController extends BaseController {
 	}
 	
 
-	@RequestMapping(value = {"/site/doc2jpg.jpg"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
+	@RequestMapping(value = {"/site/doc2jpg.jpg","/protected/doc2jpg.jpg"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public @ResponseBody String doc2jpg(String path,Integer p,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
 
 
@@ -2245,7 +2245,7 @@ public class SiteController extends BaseController {
 
 		return null;
 	}	
-	@RequestMapping(value = {"/site/video2jpg.jpg"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
+	@RequestMapping(value = {"/site/video2jpg.jpg","/protected/video2jpg.jpg"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public @ResponseBody String video2jpg(String path,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
 		ImageUtil.HDDOn();	
 		try {
@@ -2288,7 +2288,7 @@ public class SiteController extends BaseController {
 		ImageUtil.HDDOff();
 		return null;
 	}	
-	@RequestMapping(value = {"/site/video.mp4","/protected/**/video.mp4"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
+	@RequestMapping(value = {"/site/video.mp4","/protected/video.mp4","/protected/**/video.mp4"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public ResponseEntity<InputStreamResource> video2mp4(String path,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
 		ImageUtil.HDDOn();	
 		try {
@@ -2365,7 +2365,7 @@ public class SiteController extends BaseController {
 		ImageUtil.HDDOff();
 		return null;
 	}
-	@RequestMapping(value = {"/file/*.*","/protected/file/*.*","/site/file/*.*","/site/viewimage","/content/viewimage","/content/**/viewimage","/protected/viewimage","/protected/**/viewimage","/site/file","/site/file*.*","/content/file","/content/file*.*","/content/**/file","/content/**/file*.*"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
+	@RequestMapping(value = {"/protected/file/*.*","/site/file/*.*","/site/viewimage","/content/viewimage","/content/**/viewimage","/protected/viewimage","/protected/**/viewimage","/site/file","/site/file*.*","/content/file","/content/file*.*","/content/**/file","/content/**/file*.*"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public @ResponseBody String viewFile(String uid,String path,Integer w,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
 
 		Integer width = null;

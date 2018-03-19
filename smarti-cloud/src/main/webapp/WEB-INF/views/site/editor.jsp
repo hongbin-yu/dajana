@@ -5,7 +5,7 @@
 <div class="container">
 <div class="row">
         <main id="wb-cont" role="main" property="mainContentOfPage" class="col-md-9 col-md-push-3">
-        	<button class="btn btn-default pull-right" onclick="javascript:setDataView('data-inview','left-bar')" title="打开/关闭微云"><span class="glyphicon glyphicon-th-large pull-right"></span></button>
+        	<button class="btn btn-default pull-right" onclick="javascript:setDataView('data-inview','/site/browse.html')" title="打开/关闭微云"><span class="glyphicon glyphicon-th-large pull-right"></span></button>
         	
 	        <c:if test="${page.redirectTo!=null && page.redirectTo!=''}">
 	        <h1>${page.title }</h1>

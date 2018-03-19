@@ -226,7 +226,7 @@ public class Asset implements SmartiNode, Serializable {
 		}else if(path.endsWith(".zip")) {
 			return "/resources/images/zip-icon.png";
 		}else {	
-			return "resources/images/document-icon.png";
+			return "/resources/images/document-icon.png";
 		}
 	}
 
@@ -280,7 +280,7 @@ public class Asset implements SmartiNode, Serializable {
 		}else if(contentType.startsWith("video/")) {
 			return "/video.mp4?path="+path;
 		}else{
-			return "/file/"+getName()+"?path="+path;
+			return "file/"+getName()+"?path="+path;
 		}
 	}
 

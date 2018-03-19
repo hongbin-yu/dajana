@@ -35,10 +35,8 @@
 			</a>
 		</c:if>					
 		<c:if test="${!item.mp4 && !item.audio && !item.doc2pdf}">
-<%-- 		<a class="${item.cssClass }-edit" id="href${item.uid }" href="<c:url value='${item.link}'></c:url>">		
- --%>		<img src="<c:url value='${item.icon }'></c:url>" class="img-responsive" draggable="true" onclick="javascript:returnFileUrl('${item.link}','${item.uid }')"/>
-			<p>${item.description}</p>
-<!-- 		</a> -->
+		<img src="<c:url value='${item.icon }'></c:url>" class="img-responsive" draggable="true" onclick="javascript:returnChatUrl('${item.link}','${item.uid }')"/>
+		${item.description}
 		</c:if>
 
 <details>

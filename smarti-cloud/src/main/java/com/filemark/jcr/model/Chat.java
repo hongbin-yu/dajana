@@ -77,7 +77,7 @@ public class Chat implements SmartiNode, Serializable {
 
 	public String getIcon() {
 		if(new File("/mnt/device/"+createdBy+"/assets/icon/x48.jpg").exists()) {
-			return "/file/icon.jpg?path=/"+createdBy+"/assets/icon/x48.jpg";
+			return "/site/file/icon.jpg?path=/"+createdBy+"/assets/icon/x48.jpg";
 		}
 		return "/resources/images/usericon.png";
 	}

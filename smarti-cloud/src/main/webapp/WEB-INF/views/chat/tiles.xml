@@ -21,5 +21,9 @@
 	    <put-attribute name="topmenu" value="/WEB-INF/views/chat/assetsmenu.jsp"/>
 	    <put-attribute name="content" value="/WEB-INF/views/chat/assets_readonly.jsp"/>
   
-	</definition>			
+	</definition>
+	<definition name="chat/browse" templateExpression="/WEB-INF/views/chat/browse.jsp">
+	</definition>	
+	<definition name="chat/browsemore" templateExpression="/WEB-INF/views/chat/browsemore.jsp">
+	</definition>				
 </tiles-definitions>
