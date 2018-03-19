@@ -185,7 +185,7 @@
 </div> --%>
 <div class="col-md-4">
 <c:if test="${carousel.availablePages>0}">
-<div id="gallery" class="wb-lbx-edit lbx-hide-gal">
+<div id="gallery${folder.uid }" class="wb-lbx-edit lbx-hide-gal">
 <ul class="list-inline">
   <c:forEach items="${carousel.items }" var="item" varStatus="loop">
   	<li>
@@ -197,7 +197,7 @@
   </ul>
 </div> 
 <div class="clearfix"></div>
-<button class="btn btn-primary btn-sm" onclick="javascript:returnGallery('${folder.path}')" title="植入画廊"><span class="glyphicon glyphicon-play">${folder.title } 植入画廊</span></button>
+<button class="btn btn-primary btn-sm" onclick="javascript:returnChatGallery('${folder.path}','gallery${folder.uid }')" title="植入画廊"><span class="glyphicon glyphicon-play">${folder.title } 植入画廊</span></button>
 </c:if>
 </div>
 <div class="row">
@@ -504,19 +504,20 @@ function returnCarousel(fileUrl) {
 
 }
 
-function returnGallery(fileUrl) {
+function returnChatGallery(fileUrl,uid) {
 	var message = win.document.getElementById("header_message");
 	if(message) {
 		message.innerHTML="<section class=\"text-right alert alert-success\"><h3>加入画廊</h3></section>";
 
 		}
-	var data = document.getElementById("gallery").outerHTML;
-	win.gallery = newGallery;	
+	var data = document.getElementById(uid).outerHTML;
+
+/* 	win.gallery = newGallery;	
 	var gallery = tinyMCE.activeEditor.dom.select('.gallery');
 	if(gallery.length>0) {
 	    
 		gallery[0].innerHTML = $(data);
-	}else 
+	}else  */
 		tinyMCE.activeEditor.selection.setContent('<div id="'+fileUrl+'" class="gallery noneditable">'+data+'</div>');
 	tinyMCE.activeEditor.setDirty(true);	
 	closeSelf();
