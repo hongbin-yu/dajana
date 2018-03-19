@@ -124,7 +124,7 @@
 </div>	 
 </div>	
 <div class="clearfix"></div>
-<div class="col-md-4">
+<%-- <div class="col-md-4">
 <c:if test="${carousel.availablePages>0}">
 <div id="carousel" class="wb-tabs carousel-s2 playing">
 	<ul role="tablist">
@@ -182,7 +182,7 @@
 </div>
 <button class="btn btn-primary btn-sm" onclick="javascript:returnCarousel('${folder.path}')" title="植入滚动联播"><span class="glyphicon glyphicon-play">${folder.title } 植入滚动联播</span></button>
 </c:if>
-</div>
+</div> --%>
 <div class="col-md-4">
 <c:if test="${carousel.availablePages>0}">
 <div id="gallery" class="wb-lbx-edit lbx-hide-gal">
@@ -364,7 +364,7 @@ function returnFileUrl(fileUrl) {
 		tinyMCE.activeEditor.selection.setContent('<a href="'+fileUrl+'"><img class="img-responsive" alt="" src="'+fileUrl+'&w=4"></a>');
 		tinyMCE.activeEditor.setDirty(true);
 	}
-
+	closeSelf();
 }
 
 function returnChatUrl(fileUrl,uid) {
@@ -388,7 +388,7 @@ function returnChatUrl(fileUrl,uid) {
 		if(e_type.indexOf("image/")>=0) {
 			tinyMCE.activeEditor.selection.setContent('<a href="'+fileUrl+'"><img class="img-responsive" alt="" src="'+fileUrl+'&w=4"></a>');
 		}else if(e_type.indexOf("video/")>=0) {
-			var html = "<figure class=\"wb-mltmd-edit editable\"><video title=\""+e_title.value+"\" preload=\"metadata\">";
+			var html = "<figure class=\"wb-mltmd-edit editable\"><video controls=\"controls\" title=\""+e_title.value+"\" preload=\"metadata\">";
 			if(e_size>10000000) {
 				html +="<source type=\"video/mp4\" src=\""+fileUrl+"\"/>";
 			}else {
@@ -456,36 +456,20 @@ function returnFileUrl(fileUrl,uid,poster) {
 		if(e_type.indexOf("image/")>=0) {
 			tinyMCE.activeEditor.selection.setContent('<img class="img-responsive" alt="" src="'+fileUrl+'">');
 		}else if(e_type.indexOf("video/")>=0) {
-			var html = "<div class=\"noneditable\"><figure class=\"wb-mltmd-edit editable\"><video poster=\""+poster+"\" title=\""+e_title.value+"\" preload=\"none\">";
+			var html = "<figure class=\"wb-mltmd-edit editable\"><video controls=\"controls\" poster=\""+poster+"\" title=\""+e_title.value+"\" width=\"400\" height=\"300\" preload=\"metadata\">";
 			if(e_size>10000000) {
 				html +="<source type=\"video/mp4\" src=\""+fileUrl+"\"/>";
 			}else {
 				html +="<source type=\"video/mp4\" src=\""+fileUrl+"\"/>";
 			}
-			html +="</video><figcaption class=\"editable\"><p>"+e_desc.innerHTML+"</p></figcaption></figure></div>";
+			html +="</video><figcaption class=\"editable\"><p>"+e_desc.innerHTML+"</p></figcaption></figure>";
 			tinyMCE.activeEditor.selection.setContent(html);
 		} else if(e_type.indexOf("audio/")>=0) {
 			var html = "<audio controls=\"controls\">";
 			html +="<source type=\""+e_type+"\" src=\""+fileUrl+"\"/>";
 			html +="</audio>";
 			tinyMCE.activeEditor.selection.setContent(html);
-		}else if(e_type.indexOf("msword")>=0) {
-		     $.ajax({
-				    url: contentPath+"/importWord.html?path="+fileUrl,
-				    type: "GET", //ADDED THIS LINE
-				    // THIS MUST BE DONE FOR FILE UPLOADING
-				    contentType: "text/html",
-				    processData: false,
-				    success: function(data) {
-				    	tinyMCE.activeEditor.selection.setContent(data);
-				    },
-				    error: function() {
-					    alert("出错："+fileUrl);
-
-				    }
-				    // ... Other options like success and etc
-				}); 	    
-		} else {
+		}else {
 			var html = $("#href"+uid).html();
 			html = "<a title='下载' href='file?uid="+uid+"'>"+html+"</a><p><a title='下载' href='file?uid="+uid+"'>"+e_title.value+"("+e_size+")</a><p>";
 			tinyMCE.activeEditor.selection.setContent(html);
@@ -499,7 +483,7 @@ function returnFileUrl(fileUrl,uid,poster) {
 			}
 		tinyMCE.activeEditor.setDirty(true);
 	}
-
+	closeSelf();
 }
 function returnCarousel(fileUrl) {
 	var message = win.document.getElementById("header_message");
@@ -535,7 +519,7 @@ function returnGallery(fileUrl) {
 	}else 
 		tinyMCE.activeEditor.selection.setContent('<div id="'+fileUrl+'" class="gallery noneditable">'+data+'</div>');
 	tinyMCE.activeEditor.setDirty(true);	
-
+	closeSelf();
 }
 
 function returnPPT(path,total) {
@@ -552,7 +536,7 @@ function returnPPT(path,total) {
 	html+="</ul></div>";	
 	tinyMCE.activeEditor.selection.setContent(html);
 	tinyMCE.activeEditor.setDirty(true);	
-
+	closeSelf();
 }
 function close() {
     var editor = tinymce.EditorManager.activeEditor;
