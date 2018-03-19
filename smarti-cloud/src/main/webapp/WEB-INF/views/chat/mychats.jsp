@@ -2,7 +2,7 @@
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" session="false" %>
-
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="authz" %>
 <div class="container">
 <div class="row">
         <main role="main" property="mainContentOfPage" class="col-md-9 col-md-push-3">
@@ -29,3 +29,6 @@
 </div>
 <input type="hidden" id="pagePath" name="pathPath" value="${folder.path}"/>
 <input type="hidden" id="username" name="username" value="${username}"/>
+<authz:authorize ifAnyGranted="ROLE_ADMINISTRATOR,ROLE_OWNER">
+<input type="hidden" id="userrole" name="userrole" value="Administrator"/>
+</authz:authorize>
