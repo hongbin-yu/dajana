@@ -2288,7 +2288,7 @@ public class SiteController extends BaseController {
 		ImageUtil.HDDOff();
 		return null;
 	}	
-	@RequestMapping(value = {"/site/video.mp4","/video.mp4"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
+	@RequestMapping(value = {"/site/video.mp4","/protected/**/video.mp4"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public ResponseEntity<InputStreamResource> video2mp4(String path,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
 		ImageUtil.HDDOn();	
 		try {
