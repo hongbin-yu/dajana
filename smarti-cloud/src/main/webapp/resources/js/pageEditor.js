@@ -140,6 +140,8 @@ tinymce.init({
       },
       image_class_list:  [{title: 'Image Responsive', value: 'img-responsive'},
 					      {title: 'Image Thumbnail', value: 'thumbnail'},
+					      {title: 'Image Circle', value: 'img-circle'},
+					      {title: 'Image Rounded', value: 'img-rounded'},					      
 					      {title: 'Image Thumbnail Responsive', value: 'img-responsive thumbnail'},
 					      {title: 'Pull left', value: 'pull-left img-responsive'},
 					      {title: 'Pull right', value: 'pull-right img-responsive'},

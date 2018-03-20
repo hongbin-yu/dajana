@@ -22,6 +22,8 @@ tinymce.init({
 	  menubar: false,
       image_class_list:  [{title: 'Image Responsive', value: 'img-responsive'},
 					      {title: 'Image Thumbnail', value: 'thumbnail'},
+					      {title: 'Image Circle', value: 'img-circle'},
+					      {title: 'Image Rounded', value: 'img-rounded'},
 					      {title: 'Image Thumbnail Responsive', value: 'img-responsive thumbnail'},
 					      {title: 'Pull left', value: 'pull-left img-responsive'},
 					      {title: 'Pull right', value: 'pull-right img-responsive'},
@@ -297,7 +299,7 @@ function syncChat() {
 				    if(c.createdBy==username) {
 					    html = '<div id="'+c.uid+'" class="panel panel-default"><header class="panel-heading">';
 						html +='<h5 class="panel-title">'+c.createdBy+' <span class="small text-left">'+cDate.toISOString()+'</span><a href="javascript:removeTag('+"'"+c.uid+"'"+')"><button title="\u70B9\u51FB\u5220\u9664" class="btn btn-warning btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span></button></a></h5>';
-						html +='</header><div class="panel-body"><img class=\"img-responsive pull-left\" src=\"'+c.icon+"\">"+c.content+'</div></div></div><div class="clearfix"></div>';
+						html +='</header><div class="panel-body"><section class="media"><img class=\"media-object pull-right\" src=\"'+c.icon+"\"><div class=\"media-body\">"+c.content+'</div></section></div></div></div><div class="clearfix"></div>';
 
 				    }else {
 					    html = '<div id="'+c.uid+'" class="panel panel-success"><header class="panel-heading">';
@@ -305,7 +307,7 @@ function syncChat() {
 						if(userrole=="Administrator") 
 							html +='<a href="javascript:removeTag('+"'"+c.uid+"'"+')"><button title="\u70B9\u51FB\u5220\u9664" class="btn btn-warning btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span></button></a>';
 						html +='</h5>';
-						html +='</header><div class="panel-body"><img class=\"img-responsive pull-left\" src=\"'+c.icon+"\">"+c.content+'</div></div><div class="clearfix"></div>';
+						html +='</header><div class="panel-body"><section class="media"><img class=\"media-object pull-left\" src=\"'+c.icon+"\"><div class=\"media-body\">"+c.content+'</div></section></div></div><div class="clearfix"></div>';
 						
 					}
 					$("#online_chat").append(html);

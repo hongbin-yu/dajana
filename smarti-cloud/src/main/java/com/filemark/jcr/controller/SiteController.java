@@ -780,7 +780,7 @@ public class SiteController extends BaseController {
 		ImageUtil.HDDOff();
 		return "site/templates";
 	}
-	@RequestMapping(value = {"/site/pages.html","/site/file.html"}, method = RequestMethod.GET)
+	@RequestMapping(value = {"/site/pages.html","/site/file.html","/protected/file.html"}, method = RequestMethod.GET)
 	public String files(String path,String type, String input,String kw,Integer p,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
 		ImageUtil.HDDOn();
 		if(path==null) {
@@ -2379,6 +2379,15 @@ public class SiteController extends BaseController {
 				path = jcrService.getNodeById(uid);
 			File outFile = new File(jcrService.getDevice()+path);
 			if(outFile.exists() && outFile.isFile()) {
+		        long lastModified = outFile.lastModified();
+		        long ifModifiedSince = request.getDateHeader("If-Modified-Since");
+		        logger.debug("ifModifiedSince="+ifModifiedSince+"/"+lastModified);
+		        if (ifModifiedSince != -1 && ifModifiedSince + 1000 <= lastModified) {
+					FileInputStream in = new FileInputStream(outFile);
+					IOUtils.copy(in, response.getOutputStream());	
+					in.close();	
+					return null;
+		        }				
 				logger.debug("path is file output:"+outFile.getAbsolutePath());
 				super.serveResource(request, response, outFile, null);
 				return null;					

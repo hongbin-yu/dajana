@@ -97,7 +97,7 @@ function ScrollHandler(e) {
         					    if(c.createdBy==username) {
         						    html = '<div id="'+c.uid+'" class="panel panel-default"><header class="panel-heading">';
         							html +='<h5 class="panel-title">'+c.createdBy+' <span class="small text-left">'+cDate.toISOString()+'</span><a href="javascript:removeTag('+"'"+c.uid+"'"+')"><button title="\u70B9\u51FB\u5220\u9664" class="btn btn-warning btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span></button></a></h5>';
-        							html +='</header><div class="panel-body"><img class=\"img-responsive pull-left\" src=\"'+c.icon+"\">"+c.content+'</div></div><div class="clearfix"></div>';
+        							html +='</header><div class="panel-body"><section class="media"><img class=\"media-object pull-right\" src=\"'+c.icon+"\"><div class=\"media-body\">"+c.content+'</div></section></div></div><div class="clearfix"></div>';
 
         					    }else {
         						    html = '<div id="'+c.uid+'" class="panel panel-success"><header class="panel-heading">';
@@ -105,7 +105,7 @@ function ScrollHandler(e) {
         							if(userrole=="Administrator") 
         								html +='<a href="javascript:removeTag('+"'"+c.uid+"'"+')"><button title="\u70B9\u51FB\u5220\u9664" class="btn btn-warning btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span></button></a>';
         							html +='</h5>';
-        							html +='</header><div class="panel-body"><img class=\"img-responsive pull-left\" src=\"'+c.icon+"\">"+c.content+'</div></div><div class="clearfix"></div>';
+        							html +='</header><div class="panel-body"><section class="media"><img class=\"media-object pull-left\" src=\"'+c.icon+"\"><div class=\"media-body\">"+c.content+'</div></section></div></div><div class="clearfix"></div>';
         							
         						}
         						$("#online_chat").before(html);
@@ -282,7 +282,7 @@ function updateProperty(obj) {
 	var value = (type=='checkbox'?$(obj).is(":checked"):obj.value);
 
     $.ajax({
-	    url: 'updateProperty.html',
+	    url: '/site/updateProperty.html',
 	    data: {
 		    uid: uid,
 		    name: name,
@@ -316,7 +316,7 @@ function updateNode(obj) {
 	var value = (type=='checkbox'?$(obj).is(":checked"):obj.value);
 
     $.ajax({
-	    url: 'updateNodeProperty.html',
+	    url: '/site/updateNodeProperty.html',
 	    data: {
 		    uid: uid,
 		    name: name,
@@ -350,7 +350,7 @@ function updateThis() {
 	var value = (type=='checkbox'?$(this).is(":checked"):this.value);
 
     $.ajax({
-	    url: 'updateProperty.html',
+	    url: '/site/updateProperty.html',
 	    data: {
 		    uid: uid,
 		    path: path,
@@ -479,7 +479,7 @@ function drop(ev) {
 	    	    			  uid = uid.split("&")[0];
 	  	    	    		  selDiv.innerHTML=  "<section class=\"alert alert-info\"><h2 class=\"h3\">"+i18n("proccess")+"</h2><p><img alt='' src='"+contentPath+"/resources/images/ui-anim_basic_16x16.gif'/> "+s+"</p></section>";
 	    	    			  $.ajax({
-		    					    url: 'importAssetMove.html?path='+path+"&uid="+uid,
+		    					    url: '/site/importAssetMove.html?path='+path+"&uid="+uid,
 		    					    type: "GET", 
 		    					    contentType: false,
 		    					    processData: false,
@@ -503,7 +503,7 @@ function drop(ev) {
 	    	    		}else {
 		    	    		selDiv.innerHTML=  "<section class=\"alert alert-info\"><h2 class=\"h3\">"+i18n("upload")+"</h2><p><img alt='' src='"+contentPath+"/resources/images/ui-anim_basic_16x16.gif'/> "+s+"</p></section>";
 		    			      $.ajax({
-		    					    url: 'importAsset.html?path='+path+"&url="+s,
+		    					    url: '/site/importAsset.html?path='+path+"&url="+s,
 		    					    type: "GET", 
 		    					    contentType: false,
 		    					    processData: false,
@@ -548,7 +548,7 @@ function drop(ev) {
 			    	    			  uid = uid.split("&")[0];
 			    	    			  selDiv.innerHTML=  "<section class=\"alert alert-info\"><h2 class=\"h3\">"+i18n("upload")+"</h2><p><img alt='' src='"+contentPath+"/resources/images/ui-anim_basic_16x16.gif'/> "+url+"</p></section>";
 			    			      $.ajax({
-				    					    url: 'importAssetMove.html?path='+path+"&uid="+uid,
+				    					    url: '/site/importAssetMove.html?path='+path+"&uid="+uid,
 				    					    type: "GET", 
 				    					    contentType: false,
 				    					    processData: false,
@@ -570,7 +570,7 @@ function drop(ev) {
 			    	    		}else	{
 				    	    		selDiv.innerHTML=  "<section class=\"alert alert-info\"><h2 class=\"h3\">"+i18n("upload")+"</h2><p><img alt='' src='"+contentPath+"/resources/images/ui-anim_basic_16x16.gif'/> "+url+"</p></section>";
 				    			      $.ajax({
-				    					    url: 'importAsset.html?path='+path+"&url="+url,
+				    					    url: '/site/importAsset.html?path='+path+"&url="+url,
 				    					    type: "GET", 
 				    					    contentType: false,
 				    					    processData: false,
@@ -631,7 +631,7 @@ function drop(ev) {
     	if(data.indexOf("http")==0) {
     		selDiv.innerHTML=  "<section class=\"alert alert-info\"><h2 class=\"h3\">"+i18n("upload")+"</h2><p><img alt='' src='"+contentPath+"/resources/images/ui-anim_basic_16x16.gif'/> "+data+"</p></section>";
 	      $.ajax({
-			    url: 'importAsset.html?path='+path+"&url="+data,
+			    url: '/site/importAsset.html?path='+path+"&url="+data,
 			    type: "GET", 
 			    contentType: false,
 			    processData: false,
@@ -660,7 +660,7 @@ function uploadFolder() {
 	var folderPath = $("#folderPath").val();
 	var override = $("#override").is(":checked")?"true":"false";
 	$.ajax ({
-	    url: 'importFolder.html?path='+path+"&url="+folderPath+"&override="+override,
+	    url: '/site/importFolder.html?path='+path+"&url="+folderPath+"&override="+override,
 	    type: "GET", 
 	    contentType: false,
 	    processData: false,
@@ -685,7 +685,7 @@ function uploadUrl() {
 	selDiv.innerHTML = running;	
 	$("#submit_upload_url").attr("disabled",true);
 	$.ajax ({
-	    url: 'importAsset.html?path='+path+"&url="+url+"&override="+override,
+	    url: '/site/importAsset.html?path='+path+"&url="+url+"&override="+override,
 	    type: "GET", 
 	    contentType: false,
 	    processData: false,
@@ -764,7 +764,7 @@ function uploadFile(file) {
 
     	       return xhr;
     	    },    	  
-		    url: 'uploadAsset.html',
+		    url: '/site/uploadAsset.html',
 		    data: formData,
 		    type: "POST", //ADDED THIS LINE
 		    // THIS MUST BE DONE FOR FILE UPLOADING
@@ -822,7 +822,7 @@ function uploadIcon(file) {
     }
 
       $.ajax({
-		    url: 'uploadIcon.html',
+		    url: '/site/uploadIcon.html',
 		    data: formData,
 		    type: "POST", //ADDED THIS LINE
 		    // THIS MUST BE DONE FOR FILE UPLOADING
@@ -950,7 +950,7 @@ function deleteNode(path) {
 
 	if(confirm(i18n("are_you_sure_delete")+path+"?")) {
 	    $.ajax({
-		    url: 'delete.html',
+		    url: '/site/delete.html',
 		    data: {
 		    	path:path
 		    },
@@ -973,7 +973,7 @@ function deleteNode(path,uid) {
 
 	if(confirm(i18n("are_you_sure_delete")+path+"?")) {
 	    $.ajax({
-		    url: 'delete.html',
+		    url: '/site/delete.html',
 		    data: {
 		    	path:path
 		    },
@@ -996,7 +996,7 @@ function deleteUser(path) {
 
 	if(confirm(i18n("are_you_sure_delete")+path+"?")) {
 	    $.ajax({
-		    url: 'delete.html',
+		    url: '/site/delete.html',
 		    data: {
 		    	path:path
 		    },
@@ -1018,7 +1018,7 @@ function removeTag(id) {
 
 	if(confirm(i18n("are_you_sure_delete")+"?")) {
 		$.ajax({
-		    url: 'delete.html',
+		    url: '/site/delete.html',
 		    data: {
 		    	uid:id
 		    },
@@ -1110,7 +1110,7 @@ function setDataView(id,view) {
 		
 	}
 	
-	if($("#left-iframe").attr("src")=="")
+	if($("#left-iframe").attr("src")!=view)
 		$("#left-iframe").attr("src",view);	
 	//$(document).scrollTop( $("#wb-cont").offset().top ); 
 	//$( "#left-bar" ).trigger( "open.wb-overlay" );

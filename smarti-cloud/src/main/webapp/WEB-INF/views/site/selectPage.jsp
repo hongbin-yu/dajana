@@ -72,7 +72,7 @@ function returnFileUrl(fileUrl) {
 		tinyMCE.activeEditor.selection.setContent('<img class="img-responsive" alt="" src="'+fileUrl+'">');
 		tinyMCE.activeEditor.setDirty(true);
 	}
-
+	closeSelf();	
 }
 
 function returnPage(fileUrl,title) {
@@ -94,7 +94,25 @@ function returnPage(fileUrl,title) {
 			var textnode = document.createTextNode(title+"网页已加入");
 			h3.appendChild(textnode);  
 			message.appendChild(node);
-		}				
+		}else {
+	   		tinyMCE.activeEditor.selection.setContent('<a href="'+(contextPath+fileUrl).replace("//","/")+'.html">'+title+'</a>');
+	    	tinyMCE.activeEditor.setDirty(true);
+			var message = win.document.getElementById("header_message");
+			if(message) {
+				message.innerHTML="";
+				var node = document.createElement("section"); 
+				node.classList.add("alert");
+				node.classList.add("alert-info");
+				var h3 = document.createElement("h3");
+				node.appendChild(h3);   
+				var textnode = document.createTextNode(title+"网页已加入");
+				h3.appendChild(textnode);  
+				message.appendChild(node);
+			}
+
+			}	
+		
+		closeSelf();			
 }
 
 function close() {
@@ -114,6 +132,18 @@ function close() {
 	}
 
   }
+
+function closeSelf() {
+	var left_float = win.document.getElementById("left-float");
+
+	if(left_float!=null && left_float !='undefined') {
+		if(left_float.getAttribute("style")=="left: 0px; border: 0px none; height: 600px; position: fixed; width: 400px; overflow: hidden; top: 10px; bottom: 30px")
+			left_float.setAttribute("style", "left: 0px; border: 0px none; height: 600px; position: fixed; width: 0px; overflow: hidden; top: 10px; bottom: 30px");
+		else
+			left_float.setAttribute("style", "left: 0px; border: 0px none; height: 600px; position: fixed; width: 400px; overflow: hidden; top: 10px; bottom: 30px");
+		
+	}
+}
 </script>
 </body>
 </html>

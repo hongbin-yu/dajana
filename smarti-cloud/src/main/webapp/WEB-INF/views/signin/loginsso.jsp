@@ -39,7 +39,7 @@
 			<input class="form-control" id="username" name="j_username" type="text" value="${j_username }" required="required" pattern=".{2,}" data-rule-minlength="2" size="40"  placeholder="<spring:message code="djn.input_username"/>"/>
 		</div>
 		<div class="form-group">
-			<details id="details_password">
+			<details id="details_password" open="open">
 			<summary>
 			<label for="password">
 			<span class="field-name"><spring:message code="djn.password"/></span> (<spring:message code="djn.select_password"/>)

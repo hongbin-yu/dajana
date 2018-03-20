@@ -12,8 +12,8 @@
 <input type="hidden" id="folderpath" name="path" value="${folder.path}"/>
 <div class="row">
 <div class="col-md-4 wb-frmvld">
-	<form action="upload.html" method="POST" id="form-upload" enctype="multipart/form-data">
-<%-- 		<input type="hidden" id="path" name="path" value="${folder.path}"/> --%>
+	<form action="/site/upload.html" method="POST" id="form-upload" enctype="multipart/form-data">
+ 		<input type="hidden" id="path" name="path" value="${folder.path}"/>
 		<input type="hidden" id="type" name="type" value="${type}"/>
 		<input type="hidden" id="input" name="input" value="${input}"/>	
 		<input type="hidden" name="redirect" value="/site/browse.html">	

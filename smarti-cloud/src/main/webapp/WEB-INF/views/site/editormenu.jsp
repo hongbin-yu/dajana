@@ -93,9 +93,11 @@ ${navigation }
 	<h2><spring:message code="djn.you_are_here"/>:</h2>
 	<div class="container">
 	<div class="row">
-	 <button class="btn btn-default pull-right" onclick="javascript:setDataView('data-inview','/site/browse.html')" title="打开/关闭微云"><span class="glyphicon glyphicon-cloud pull-right"></span></button>
-
+	<div class="btn-group btn-group-justified">
+	 <button class="btn btn-default btn-sm pull-right" onclick="javascript:setDataView('data-inview','/site/browse.html')" title="打开/关闭微云"><span class="glyphicon glyphicon-cloud pull-right"></span></button>
+	 <button class="btn btn-default btn-sm pull-right" onclick="javascript:setDataView('data-inview','/site/file.html?type=file')" title="打开/关闭微网"><span class="glyphicon glyphicon-globe pull-right"></span></button>
 	${page.breadcrumb}
+    </div>
 	</div>
 	</div>
 </nav>

@@ -234,6 +234,8 @@ tinymce.addI18n('zh_CN.GB2312',{
 "Class": "\u7c7b\u578b",
 "Image Responsive": "\u81ea\u9002\u5e94",
 "Image Thumbnail": "\u52A0\u8FB9\u6846",
+"Image Circle": "\u5706\u5F62",
+"Image Rounded": "\u5706\u89D2",
 "Image Thumbnail Responsive": "\u81ea\u9002\u5e94 \u52A0\u8FB9\u6846",
 "Pull left": "\u9760\u5DE6",
 "Pull right": "\u9760\u53F3",
