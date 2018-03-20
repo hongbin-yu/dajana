@@ -6,7 +6,7 @@
 <div class="container">
 <div class="row">
         <main role="main" property="mainContentOfPage" class="col-md-9 col-md-push-3">
-        <h1>云信 - ${folder.title } <span class="glyphicon glyphicon-user pull-right"></span></h1>
+        <h1>优信 - ${folder.title } <img id="uploadIcon" class="img-responsive pull-right" src="/site/file/icon.jpg?path=/${username }/assets/icon/x48.jpg" alt="图标"/></h1>
         <div class="row text-center"><img id="online_chat_loading" width="120" height="120" class="wb-inv" src="/resources/images/loadingx400.gif" alt="下载"/></div>
         <div id="online_chat">
 		</div>
@@ -15,7 +15,7 @@
 					<div id="online_chat_editor" class="panel panel-default online_editor"></div>
 					<div class="btn-group btn-group-justified">
 						<a class="btn btn-default btn-block" title="发送" href="javascript:sendChat('${page.path }')"><span class="glyphicon glyphicon-send"></span><img class="wb-inv" id="online_chat_running" src="/resources/images/loading16x16.gif" alt=""/></a>
-						<a class="btn btn-default btn-block" title="打开云资源" href="javascript:setDataView('online_chat_editor','/protected/browse.html')"><span class="glyphicon glyphicon-th"></span></a>
+						<a class="btn btn-default btn-block" title="打开云资源" href="javascript:setDataView('online_chat_editor','/protected/browse.html')"><span class="glyphicon glyphicon-cloud"></span></a>
 					</div>
 				</div>
 			</div>

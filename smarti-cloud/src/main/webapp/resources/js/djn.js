@@ -1103,10 +1103,10 @@ function setDataView(id,view) {
 	var left_float = document.getElementById("left-float");
 
 	if(left_float!=null && left_float !='undefined') {
-		if(left_float.getAttribute("style")=="left: 0px; border: 0px none; height: 600px; position: fixed; width: 380px; overflow: hidden; top: 10px; bottom: 30px")
+		if(left_float.getAttribute("style")=="left: 0px; border: 0px none; height: 600px; position: fixed; width: 400px; overflow: hidden; top: 10px; bottom: 30px")
 			left_float.setAttribute("style", "left: 0px; border: 0px none; height: 600px; position: fixed; width: 0px; overflow: hidden; top: 10px; bottom: 30px");
 		else
-			left_float.setAttribute("style", "left: 0px; border: 0px none; height: 600px; position: fixed; width: 380px; overflow: hidden; top: 10px; bottom: 30px");
+			left_float.setAttribute("style", "left: 0px; border: 0px none; height: 600px; position: fixed; width: 400px; overflow: hidden; top: 10px; bottom: 30px");
 		
 	}
 	

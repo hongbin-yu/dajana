@@ -70,7 +70,7 @@ public class ProtectedController extends BaseController {
 		WebPage<Folder> folders = jcrService.queryFolders(folderQuery, 50, 0);
 		if(path !=null) {
 			String chatQuery = "select * from [nt:base] AS s WHERE ISDESCENDANTNODE(["+path+"])" +" and s.ocm_classname='com.filemark.jcr.model.Chat' order by s.[jcr:lastModified] DESC";
-			WebPage<Chat> chats = jcrService.queryChats(chatQuery, 20, 0);
+			WebPage<Chat> chats = jcrService.queryChats(chatQuery, 12, 0);
 			model.addAttribute("chats", chats);
 			model.addAttribute("folder", jcrService.getFolder(path));
 
@@ -142,10 +142,10 @@ public class ProtectedController extends BaseController {
 		if(!jcrService.nodeExsits(assetFolder)) {
 			jcrService.addNodes(assetFolder, "nt:unstructured",getUsername());		
 		}
-		int max = 20;
+		int max = 12;
 		if(path == null) {
 			path=assetFolder;
-			max = 20;
+			max = 12;
 		}
 		
 		Folder currentNode = jcrService.getFolder(path);
@@ -202,12 +202,12 @@ public class ProtectedController extends BaseController {
 		if(!jcrService.nodeExsits(assetFolder)) {
 			jcrService.addNodes(assetFolder, "nt:unstructured",getUsername());		
 		}
-		int max = 20;
+		int max = 12;
 		if(path == null) {
 			path=assetFolder;
-			max = 20;
+			max = 12;
 		}
-		if(topage==null) topage="browsemorew";
+		if(topage==null) topage="browsemore";
 		Folder currentNode = jcrService.getFolder(path);
 		String orderby = "[lastModified] desc";
 		if(currentNode.getOrderby()!=null && !"".equals(currentNode.getOrderby()) && !"rank,name".equals(currentNode.getOrderby())) {
@@ -251,7 +251,7 @@ public class ProtectedController extends BaseController {
    		if(path==null) path="/chat";
    		String dateRange = lastModified==null?"":"and s.[jcr:lastModified] "+operator+" CAST('"+lastModified+"' AS DATE)";
 		String chatQuery = "select * from [nt:base] AS s WHERE ISDESCENDANTNODE(["+path+"]) "+dateRange+" and s.ocm_classname='com.filemark.jcr.model.Chat' order by s.[jcr:lastModified] DESC";
-		WebPage<Chat> chats = jcrService.queryChats(chatQuery, 20, 0);
+		WebPage<Chat> chats = jcrService.queryChats(chatQuery, 12, 0);
    		return chats;
    	}
 

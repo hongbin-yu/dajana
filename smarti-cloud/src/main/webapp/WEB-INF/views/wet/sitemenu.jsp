@@ -77,6 +77,7 @@
 </section>
 </div>
 </div>
+</div>
 <nav role="navigation" id="wb-sm" data-trgt="mb-pnl" class="wb-menu visible-md visible-lg" typeof="SiteNavigationElement">
 <%-- data-ajax-replace='<c:url value="/site/menu.html?path=${page.path}"></c:url>' --%>
 <div class="container nvbar">

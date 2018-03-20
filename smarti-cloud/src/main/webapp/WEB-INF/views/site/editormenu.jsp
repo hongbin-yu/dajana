@@ -77,6 +77,7 @@
 </section>
 </div>
 </div>
+</div>
 <nav role="navigation" id="wb-sm" data-trgt="mb-pnl" class="wb-menu visible-md visible-lg" typeof="SiteNavigationElement">
 <%-- data-ajax-replace='<c:url value="/site/menu.html?path=${page.path}"></c:url>' --%>
 <div class="container nvbar">
@@ -92,7 +93,7 @@ ${navigation }
 	<h2><spring:message code="djn.you_are_here"/>:</h2>
 	<div class="container">
 	<div class="row">
-	 <button class="btn btn-default pull-right" onclick="javascript:setDataView('data-inview','/site/browse.html')" title="打开/关闭微云"><span class="glyphicon glyphicon-th-large pull-right"></span></button>
+	 <button class="btn btn-default pull-right" onclick="javascript:setDataView('data-inview','/site/browse.html')" title="打开/关闭微云"><span class="glyphicon glyphicon-cloud pull-right"></span></button>
 
 	${page.breadcrumb}
 	</div>
