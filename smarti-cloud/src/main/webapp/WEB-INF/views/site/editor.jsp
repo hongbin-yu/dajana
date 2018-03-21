@@ -12,6 +12,11 @@
 	         <c:if test="${page.redirectTo==null || page.redirectTo==''}">
 			 <div class="caneditable" property="content" id="${page.uid }">${page.content }</div>
 			 </c:if>
+			 <section id="menu-bar" class="btn-group btn-group-justified">
+				 <a class="btn btn-default btn-block" onclick="javascript:openOverlay('${page.uid }','youchat-bar')" title="打开/关闭微信"><span class="glyphicon glyphicon-envelope"></span></a>
+				 <a class="btn btn-default btn-block" onclick="javascript:openOverlay('${page.uid }','left-bar')" title="打开/关闭微云"><span class="glyphicon glyphicon-cloud"></span></a>
+				 <a class="btn btn-default btn-block" onclick="javascript:openOverlay('${page.uid }','right-bar')" title="打开/关闭微网"><span class="glyphicon glyphicon-globe"></span></a>
+			 </section>
 			 <%@include file="../wet/pagedetails.jsp" %>		
  		</main>
         <nav class="wb-sec col-md-3 col-md-pull-9" typeof="SiteNavigationElement" id="wb-sec" role="navigation">
@@ -37,6 +42,15 @@
 	</header>
 	<div class="modal-body">
     <iframe id="right-iframe" src="/site/file.html?type=file" scrolling="yes" style="height: 600px; border: 0px none; width: 360px; margin-bottom: 0px; margin-left: 10px;">
+    </iframe>
+ 	</div>
+</section> 
+<section id="youchat-bar" class="wb-overlay modal-content overlay-def wb-panel-l col-md-4">
+	<header class="modal-header">
+		<h2 class="modal-title">云站</h2>
+	</header>
+	<div class="modal-body">
+    <iframe id="left-iframe" src="/protected/chat.html" scrolling="yes" style="height: 600px; border: 0px none; width: 360px; margin-bottom: 0px; margin-left: 10px;">
     </iframe>
  	</div>
 </section> 

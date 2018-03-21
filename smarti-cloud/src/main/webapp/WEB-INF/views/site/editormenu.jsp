@@ -44,7 +44,6 @@
 </section>
 <!-- <div id="data-inview" class="row wb-inview reverse bar-demo" data-inview="left-bar">
  -->
-<div id="data-inview" class="row reverse bar-demo" data-inview="left-bar">
  <div class="row">
   <div class="brand col-xs-8 col-sm-9 col-md-6">
 <a href="<c:url value="/"/>">
@@ -77,7 +76,7 @@
 </section>
 </div>
 </div>
-</div>
+
 <nav role="navigation" id="wb-sm" data-trgt="mb-pnl" class="wb-menu visible-md visible-lg" typeof="SiteNavigationElement">
 <%-- data-ajax-replace='<c:url value="/site/menu.html?path=${page.path}"></c:url>' --%>
 <div class="container nvbar">
@@ -89,6 +88,7 @@ ${navigation }
 </div>
 </div>
 </nav>
+<!-- <section class="wb-inview show-none bar-demo" data-inview="top-bar"> -->
 <nav role="navigation" id="wb-bc" property="breadcrumb">
 	<h2><spring:message code="djn.you_are_here"/>:</h2>
 	<div class="container">
@@ -101,6 +101,7 @@ ${navigation }
 	</div>
 	</div>
 </nav>
+<!-- </section> -->
 <div class="container" id="header_message">
 </div>
 <c:if test="${error !=null }">
