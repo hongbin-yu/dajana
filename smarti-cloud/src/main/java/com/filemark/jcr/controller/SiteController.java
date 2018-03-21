@@ -3135,12 +3135,5 @@ public class SiteController extends BaseController {
 		return new Device();
 	}
 
-	private String getDateTime() {
-		Date now = new Date();
-		SimpleDateFormat sf = new SimpleDateFormat("yyMMddHHmmss");
-		return sf.format(now);
-		
-		
-	}
 	  
 }

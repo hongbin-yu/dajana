@@ -305,7 +305,7 @@ function createPage() {
 function createFolder() {
 	var formData = $("#createFolder").serializeArray();
     $.ajax({
-	    url: 'createFolder.html',
+	    url: '/site/createFolder.html',
 	    data: formData,
 	    type: "POST", 
 	    success: function(msg) {
@@ -418,7 +418,7 @@ function updateTemplate() {
 	var name= "content";
 
     $.ajax({
-	    url: 'updateProperty.html',
+	    url: '/site/updateProperty.html',
 	    data: {
 		    uid: uid,
 		    name: name,
@@ -444,7 +444,7 @@ function updateContent() {
 	var value = document.getElementById('content_value').value;
 
     $.ajax({
-	    url: 'updateContent.html',
+	    url: '/site/updateContent.html',
 	    data: {
 		    uid: uid,
 		    content: value
@@ -471,7 +471,7 @@ function publish(uid) {
 	$("#header_message").html("<section class='alert alert-info'><h3>"+i18n("process")+"</h3></section>");	    	
 
     $.ajax({
-	    url: 'publish.html',
+	    url: '/site/publish.html',
 	    data: {
 		    uid: uid,
 		    name: "status",
@@ -494,7 +494,7 @@ function publish(uid) {
 function publishFolder(uid) {
 	$("#modal_message").html("<section class='alert alert-info'><h3>"+i18n("process")+"</h3></section>");	    	
     $.ajax({
-	    url: 'publishfolder.html',
+	    url: '/site/publishfolder.html',
 	    data: {
 		    uid: uid,
 		    name: "status",
@@ -517,7 +517,7 @@ function publishFolder(uid) {
 function unpublishFolder(uid) {
 	$("#modal_message").html("<section class='alert alert-info'><h3>"+i18n("process")+"</h3></section>");	    	
     $.ajax({
-	    url: 'unpublishfolder.html',
+	    url: '/site/unpublishfolder.html',
 	    data: {
 		    uid: uid,
 		    name: "status",
@@ -685,7 +685,7 @@ function deleteFiles() {
 		}
 		if(confirm(i18n("are_you_sure_delete")+"?")) {
 	    $.ajax({
-		    url: 'deleteassets.html'+url,
+		    url: '/site/deleteassets.html'+url,
 		    type: "POST", 
 		    success: function(msg) {
 		    	if(!msg.indexOf("error:")>=0)
@@ -708,7 +708,7 @@ function rotate(uid) {
 	$("#rotate_running"+uid).removeClass("wb-inv");
 	var angle = $("#rotate"+uid).val();
     $.ajax({
-	    url: 'rotateImage.html',
+	    url: '/site/rotateImage.html',
 	    data: {
 		    uid: uid,
 		    angle: angle

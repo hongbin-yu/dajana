@@ -15,15 +15,15 @@
 				<div class="panel-body">
 					<div id="online_chat_editor" class="panel panel-default online_editor"></div>
 					<div class="btn-group btn-group-justified">
-						<a class="btn btn-default btn-block" title="发送" href="javascript:sendChat('${page.path }')"><span class="glyphicon glyphicon-send"></span><img class="wb-inv" id="online_chat_running" src="/resources/images/loading16x16.gif" alt=""/></a>
-						<a class="btn btn-default btn-block" title="打开云资源" href="javascript:setDataView('online_chat_editor','/protected/browse.html')"><span class="glyphicon glyphicon-cloud"></span></a>
-						<a class="btn btn-default btn-block" title="打开网站" href="javascript:setDataView('online_chat_editor','/protected/file.html?type=file')"><span class="glyphicon glyphicon-globe"></span></a>
+						<a class="btn btn-default btn-block" title="发送" href="javascript:sendChat('${folder.path}')"><span class="glyphicon glyphicon-send"></span><img class="wb-inv" id="online_chat_running" src="/resources/images/loading16x16.gif" alt=""/></a>
+						<a class="btn btn-default btn-block" title="打开云资源" href="javascript:openOverlay('online_chat_editor','left-bar')"  aria-controls="left-panel" role="button"><span class="glyphicon glyphicon-cloud"></span></a>
+						<a class="btn btn-default btn-block" title="打开网站" href="javascript:openOverlay('online_chat_editor','right-bar')"   aria-controls="left-panel" role="button" ><span class="glyphicon glyphicon-globe"></span></a>
 					</div>
 				</div>
 			</div>
  		</main>
         <nav class="wb-sec col-md-3 col-md-pull-9" typeof="SiteNavigationElement" id="wb-sec" role="navigation">
-        		<h3 class="wb-navcurr"><span class="glyphicon glyphicon-th-list"></span> 通讯目录</h3>
+        		<h3 class="wb-navcurr"><a href="/protected/chat.html"><span class="glyphicon glyphicon-th-list"></span> 通讯目录</a></h3>
 			<details>
 			<summary><label for="path"><span class="glyphicon glyphicon-folder-close"></span><spring:message code="djn.create_group"/></label></summary>
 			<div class="wb-frmvld">
@@ -43,7 +43,9 @@
 		</details>	
         <ul class="list-group menu list-unstyled">
 	        <c:forEach items="${folders.items}" var="item" varStatus="loop">
-	            <li class="list-group-item" id="${item.uid }"><a href='<c:url value="/protected/chat.html?path=${item.path}"></c:url>'><span class="glyphicon glyphicon-user">${item.title}</span></a><button class="btn btn-warning btn-xs pull-right" onclick="javascript:removeTag('${item.uid}')"><span class="glyphicon glyphicon-trash"></span></button>
+	            <li class="list-group-item" id="${item.uid }"><a href='<c:url value="/protected/chat.html?path=${item.path}"></c:url>'><span class="glyphicon glyphicon-user">${item.title}</span></a>
+	            <button class="btn btn-warning btn-xs pull-right" onclick="javascript:removeTag('${item.uid}')"><span class="glyphicon glyphicon-trash"></span></button>
+	            <a class="wb-lbx" href="groupedit.html?path=${item.path }"><button class="btn btn-primary btn-xs pull-right"><span class="glyphicon glyphicon-cog"></span></button></a>
 	            </li>           
 	        </c:forEach> 
         </ul>
@@ -51,12 +53,24 @@
         
 </div>
 </div>
-<div id="left-float" style="left: 0px; border: 0px none; height: 600px; position: fixed; width: 0px; overflow: hidden; bottom: 30px;">
-    <div style="overflow: hidden;">
-    </div>
-    <iframe id="left-iframe" src="" scrolling="yes" style="height: 600px; border: 0px none; width: 400px; margin-bottom: 0px; margin-left: 10px;">
+<section id="left-bar" class="wb-overlay modal-content overlay-def wb-panel-l col-md-4">
+	<header class="modal-header">
+		<h2 class="modal-title">云站</h2>
+	</header>
+	<div class="modal-body">
+    <iframe id="left-iframe" src="/protected/browse.html" scrolling="yes" style="height: 600px; border: 0px none; width: 360px; margin-bottom: 0px; margin-left: 10px;">
     </iframe>
- </div> 
+ 	</div>
+</section> 
+<section id="right-bar" class="wb-overlay modal-content overlay-def wb-panel-r col-md-4">
+	<header class="modal-header">
+		<h2 class="modal-title">网站</h2>
+	</header>
+	<div class="modal-body">
+    <iframe id="right-iframe" src="/site/file.html?type=file" scrolling="yes" style="height: 600px; border: 0px none; width: 360px; margin-bottom: 0px; margin-left: 10px;">
+    </iframe>
+ 	</div>
+</section> 
 <input type="hidden" id="pagePath" name="pathPath" value="${folder.path}"/>
 <input type="hidden" id="username" name="username" value="${username}"/>
 <authz:authorize ifAnyGranted="ROLE_ADMINISTRATOR,ROLE_OWNER">

@@ -13,9 +13,11 @@ import java.net.URLDecoder;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
 
@@ -38,6 +40,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
+
 
 
 
@@ -261,7 +264,13 @@ public class BaseController {
 	    }
 	    return res;
 	}
-
+	protected String getDateTime() {
+		Date now = new Date();
+		SimpleDateFormat sf = new SimpleDateFormat("yyMMddHHmmss");
+		return sf.format(now);
+		
+		
+	}
 	private static final String[] IP_HEADER_CANDIDATES = { 
 	    "X-Forwarded-For",
 	    "Proxy-Client-IP",

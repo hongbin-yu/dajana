@@ -271,6 +271,43 @@ public class ProtectedController extends BaseController {
    		return "chat/comments";
    	}
 
+   	@RequestMapping(value = {"/protected/groupedit.html"}, method = {RequestMethod.GET})
+   	public String  groupedit(String path,Integer p,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
+   		if(p==null) p=0;
+   		String userQuery = "select * from [nt:base] AS s WHERE ISCHILDNODE([/system/users]) and s.ocm_classname='com.filemark.jcr.model.User'";
+		WebPage<Object> users = jcrService.queryObject(userQuery, 20, p);
+   		String userInGroup = "select * from [nt:base] AS s WHERE ISCHILDNODE(["+path+"]) and s.ocm_classname='com.filemark.jcr.model.User'";
+		WebPage<Object> usersInGroup = jcrService.queryObject(userInGroup, 20, p);
+
+		model.addAttribute("users", users);
+		model.addAttribute("usersInGroup", usersInGroup);
+		model.addAttribute("folder", jcrService.getObject(path));   		
+   		return "chat/group";
+   	}
+   	
+   	@RequestMapping(value = {"/protected/addyouchat.html"}, method = {RequestMethod.POST})
+   	public @ResponseBody String addyouchat(String path,String content,Model model,HttpServletRequest request, HttpServletResponse response){
+			String username = getUsername();
+   		try {
+
+	   		if(content!=null && !content.equals("<p></p>") && !content.equals("") ) {
+	   	   		Chat chat = new Chat();
+	   	   		chat.setFrom(path);
+	   	   		chat.setContent(content.replace("-edit",""));
+	   	   		Calendar calendar = Calendar.getInstance();
+	   	   		chat.setLastModified(calendar);
+	   	   		chat.setPath(path+"/"+getDateTime());
+	   	   		chat.setCreatedBy(username);
+	   	   		chat.setTitle((String)request.getAttribute("usertitle"));
+	   	   		jcrService.addOrUpdate(chat);
+	 			
+	   		}
+
+   		}catch(Exception e) {
+   			return "error:"+e.getMessage();
+   		}     		
+   		return username;
+   	}
    	
    	@RequestMapping(value = {"/protected/addchat.html"}, method = {RequestMethod.POST})
    	public @ResponseBody String addchat(String path,String content,Model model,HttpServletRequest request, HttpServletResponse response){

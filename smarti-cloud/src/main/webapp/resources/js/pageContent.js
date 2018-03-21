@@ -180,7 +180,7 @@ function sendChat(url) {
 		editor.dom.removeClass("img","img-responsive");
 		editor.dom.addClass("img","img-responsive");
 	    $.ajax({
-		    url: contentPath+'/protected/addchat.html',
+		    url: contentPath+'/protected/addyouchat.html',
 		    type: "POST",
 		    data: {
 		    	path : url,
@@ -287,6 +287,7 @@ function syncChat() {
 		    },
 	    type: "GET",
 	    contentType: "application/json",
+	    timeout: 5000,
 	    success: function(data) {
 	    	setTimeout(function() {
 	    		$("#online_chat_send").attr("disabled",false);	    	
@@ -298,12 +299,12 @@ function syncChat() {
 				    var cDate = new Date(c.lastModified);
 				    if(c.createdBy==username) {
 					    html = '<div id="'+c.uid+'" class="panel panel-default"><header class="panel-heading">';
-						html +='<h5 class="panel-title">'+c.createdBy+' <span class="small text-left">'+cDate.toISOString()+'</span><a href="javascript:removeTag('+"'"+c.uid+"'"+')"><button title="\u70B9\u51FB\u5220\u9664" class="btn btn-warning btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span></button></a></h5>';
+						html +='<h5 class="panel-title">'+c.createdBy+' <span class="small text-left">'+cDate.toLocaleString()+'</span><a href="javascript:removeTag('+"'"+c.uid+"'"+')"><button title="\u70B9\u51FB\u5220\u9664" class="btn btn-warning btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span></button></a></h5>';
 						html +='</header><div class="panel-body"><section class="media"><img class=\"media-object pull-right\" src=\"'+c.icon+"\"><div class=\"media-body\">"+c.content+'</div></section></div></div></div><div class="clearfix"></div>';
 
 				    }else {
 					    html = '<div id="'+c.uid+'" class="panel panel-success"><header class="panel-heading">';
-						html +='<h5 class="panel-title">'+c.createdBy+' <span class="small">'+cDate.toISOString()+'</span>';
+						html +='<h5 class="panel-title">'+c.createdBy+' <span class="small">'+cDate.toLocaleString()+'</span>';
 						if(userrole=="Administrator") 
 							html +='<a href="javascript:removeTag('+"'"+c.uid+"'"+')"><button title="\u70B9\u51FB\u5220\u9664" class="btn btn-warning btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span></button></a>';
 						html +='</h5>';
@@ -329,11 +330,11 @@ function syncChat() {
 		    	}*/
 
 			});
-		    if(data.pageCount>1) {
-		    	setTimeout(syncChat,10000);
+		    if(data.pageCount>0) {
+		    	setTimeout(syncChat,1000);
 		    	
 		    }else {
-		    	setTimeout(syncChat,30000);
+		    	setTimeout(syncChat,10000);
 		    }
 		    if($("#chat").attr("open")) {
 		    	$("#online_notice").html("");	
@@ -346,12 +347,17 @@ function syncChat() {
 		error: function() {
 		    $("#online_chat_running").addClass("wb-inv");
 	    	$("#online_chat").html('<section class="alert alert-warning"><h5>\u4F60\u6CA1\u6709\u767B\u5165\uFF01</53></section>');
+	    	setTimeout(syncChat,30000);
 	    }
 
 	});	 
     
 }
 
+function openOverlay(id,view) {
+	$("#"+id).focus();
+	$("#"+view).trigger("open.wb-overlay");
+}
 if( path !=null && path!="") {
 	syncChat();
 	

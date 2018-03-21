@@ -94,8 +94,8 @@ ${navigation }
 	<div class="container">
 	<div class="row">
 	<div class="btn-group btn-group-justified">
-	 <button class="btn btn-default btn-sm pull-right" onclick="javascript:setDataView('data-inview','/site/browse.html')" title="打开/关闭微云"><span class="glyphicon glyphicon-cloud pull-right"></span></button>
-	 <button class="btn btn-default btn-sm pull-right" onclick="javascript:setDataView('data-inview','/site/file.html?type=file')" title="打开/关闭微网"><span class="glyphicon glyphicon-globe pull-right"></span></button>
+	 <button class="btn btn-default btn-sm pull-right" onclick="javascript:openOverlay('${page.uid }','right-bar')" title="打开/关闭微网"><span class="glyphicon glyphicon-globe pull-right"></span></button>
+	 <button class="btn btn-default btn-sm pull-right" onclick="javascript:openOverlay('${page.uid }','left-bar')" title="打开/关闭微云"><span class="glyphicon glyphicon-cloud pull-right"></span></button>
 	${page.breadcrumb}
     </div>
 	</div>
