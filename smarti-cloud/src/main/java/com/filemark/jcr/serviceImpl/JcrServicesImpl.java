@@ -2065,17 +2065,18 @@ public class JcrServicesImpl implements JcrServices {
         		QueryImpl q = (QueryImpl)queryManager.createQuery(queryString, Query.JCR_SQL2);
         		
         		QueryResult result = q.execute();
-        		long totalCount = result.getNodes().getSize();
+        		long totalCount =result.getRows().getSize();// result.getNodes().getSize();
         		q.setLimit(limit);
         		q.setOffset(offset*limit);
         		result = q.execute();
 
         		List<Folder> folders = new ArrayList<Folder>();
-        		NodeIterator it = result.getNodes();
-        		
+        		//NodeIterator it = result.getNodes();
+        		RowIterator it = result.getRows();
         		while(it.hasNext()) {
-        			Node node = it.nextNode();
-
+        			//Node node = it.nextNode();
+        			final Row row = it.nextRow(); 
+        			Node node = session.getNode(row.getPath("s"));
         			//String ocm_classname= node.hasProperty("ocm_classname")?node.getProperty("ocm_classname").getString():"Folder";
 
             			Folder folder = new Folder();

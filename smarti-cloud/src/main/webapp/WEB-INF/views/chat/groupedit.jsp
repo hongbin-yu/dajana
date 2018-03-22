@@ -22,12 +22,29 @@
 		<label for="status">创建者： ${folder.createdBy }</label>		
 		</div>	
 		<div class="panel panel-success">
-		<header class="panel-heading">群里</header>
-		<div class="panel panel-body"></div>
+		<header class="panel-heading">群里用户</header>
+			<div id="inGroup" class="panel panel-body">
+				<c:forEach items="${usersInGroup.items }" var="item" varStatus="loop">
+					<div id="${item.uid}" class="col-md-3">
+					<a href="javascript:removeUser('${item.uid }','${item.path }')" title="退群"><img class="img-responsive" src="file/icon.jpg?path=/${item.name}/assets/icon/x120.jpg" alt="删除"></a>
+					<p>${item.title } (${item.name})
+					</div>
+					<c:if test="${(loop.index+1) % 4 ==0  }"><div class="clearfix"></div></c:if>
+				</c:forEach>
+			</div>	
 		</div>	
 		<div class="panel panel-default">
-		<header class="panel-heading">群外</header>
-		<div class="panel panel-body"></div>
+		<header class="panel-heading">云里用户</header>
+		<div class="panel panel-body">
+			<c:forEach items="${users.items }" var="item" varStatus="loop">
+				<div id="${item.uid}" class="col-md-3">
+				<a href="javascript:addUser('${folder.path }','${item.path }')" title="入群"><img class="img-responsive" src="file/icon.jpg?path=/${item.name}/assets/icon/x120.jpg" alt="加入"></a>
+				<p>${item.title } (${item.name})
+				</div>
+				<c:if test="${(loop.index+1) % 4 ==0  }"><div class="clearfix"></div></c:if>
+			</c:forEach>
+		</div>
+
 		</div>			
 		<button class="btn btn-primary popup-modal-dismiss" onclick="window.location.reload()">完成</button>  <button class="btn btn-primary popup-modal-dismiss" type="button">关闭</button>
 	</form>

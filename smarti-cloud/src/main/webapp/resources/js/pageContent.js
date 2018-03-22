@@ -204,8 +204,10 @@ function sendChat(url) {
 		    	//$("#online_chat").html('<section class="alert alert-warning"><h5>\u4F60\u6CA1\u6709\u767B\u5165\uFF01</53></section>');
 		    }
 		});	
+	    
+	    
 	} else {
-		$("#chat_message").html("<section class='alert alert-danger'><h5>编辑器没找到</h5><section>");
+		$("#chat_message").html("<section class='alert alert-danger'><h5>ç¼–è¾‘å™¨æ²¡æ‰¾åˆ°</h5><section>");
 	}
 
 }
@@ -351,9 +353,83 @@ function syncChat() {
 	    }
 
 	});	 
-    
+
+    $.ajax({
+	    url: '/protected/unreadchat.json',
+	    data: {
+		    path: path
+		    },
+	    type: "GET",
+	    contentType: "application/json",
+	    timeout: 5000,
+	    success: function(data) {
+	    	$.each(data.items,function(i,f){
+	    		if(f.childCount>0) {
+	    			$("#unread-"+f.uid).html(""+f.childCount);
+	    		}else {
+	    			$("#unread-"+f.uid).html();
+	    		}
+	    	});
+		},
+		error: function() {
+		    $("#online_chat_running").addClass("wb-inv");
+	    	$("#online_chat").html('<section class="alert alert-warning"><h5>\u4F60\u6CA1\u6709\u767B\u5165\uFF01</53></section>');
+	    }
+
+	});	 
 }
 
+function addUser(group,path) {
+    $.ajax({
+	    url: '/protected/adduser.html',
+	    data: {
+		    path: path,
+		    group: group
+		    },
+	    type: "GET",
+	    contentType: "application/json",
+	    timeout: 5000,
+	    success: function(data) {
+
+	    	if(data.title.indexOf("error:")>=0 || data.title.indexOf("warning:")>=0) {
+	    		alert(data.title);
+	    	}else {
+			    var html = 	'<div id="'+data.uid+'" class="col-md-3">';
+			    	html += '<a href="javascript:removeUser(\''+data.uid+'\',\''+data.path+'\')" title="退群"><img class="img-responsive" src="file/icon.jpg?path=/'+data.userName+'/assets/icon/x120.jpg" alt="删除"></a>';
+			    	html += '<p>'+data.title+' ('+data.userName+')';
+			    	html += '</div>';
+				$("#inGroup").append(html);	    		
+	    	}	
+
+
+	    
+	    }
+    });
+    }
+
+function removeUser(uid,path) {
+
+    $.ajax({
+	    url: '/protected/removeuser.html',
+	    data: {
+		    path: path
+		    },
+	    type: "GET",
+	    contentType: "application/json",
+	    timeout: 5000,
+	    success: function(data) {
+
+	    	if(data.title.indexOf("error:")>=0 || data.title.indexOf("warning:")>=0) {
+	    		alert(data.title);
+	    	}else {
+	    		$("#"+uid).remove();
+	    	}	
+
+
+	    
+	    }
+    });
+    }
 function openOverlay(id,view) {
 	$("#"+id).focus();
 	$("#"+view).trigger("open.wb-overlay");

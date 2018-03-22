@@ -83,7 +83,8 @@ public class LoginController extends BaseController {
     				authorities.add(new SimpleGrantedAuthority(this.getRolePrefix()+authors[i].toUpperCase()));
     				
     			}
-				authorities.add(new SimpleGrantedAuthority(this.getRolePrefix()+"USER"));//default role
+    			
+				authorities.add(new SimpleGrantedAuthority(this.getRolePrefix()+user.getRole().toLowerCase()));//default role
 				org.springframework.security.core.userdetails.User userdetails = new org.springframework.security.core.userdetails.User(user.getUserName(),"protected",true,true,true,true,authorities);
   			
     			Authentication auth = 

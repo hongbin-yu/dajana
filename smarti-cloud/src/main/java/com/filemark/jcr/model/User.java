@@ -48,7 +48,9 @@ public class User implements SmartiNode {
 	@Field 
 	private Date lastUpdated;	
 	@Field 
-	private Date lastDydns;		
+	private Date lastDydns;
+	@Field
+	private String role;
 	@Collection(autoUpdate=false)
 	private Set<Role> roles = new HashSet<Role>();
 	
@@ -234,6 +236,17 @@ public class User implements SmartiNode {
 
 	public void setLastDydns(Date lastDydns) {
 		this.lastDydns = lastDydns;
+	}
+
+	public String getRole() {
+		if("home".equals(userName)) return "Owner";
+		if("templates".equals(userName)) return "Administrator";
+		if(role == null) return "User";		
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
 	}
 	
 }

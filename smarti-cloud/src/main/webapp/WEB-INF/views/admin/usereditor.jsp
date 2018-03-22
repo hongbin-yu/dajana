@@ -1,6 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" session="false" %>
 
 <div class="container">
@@ -9,7 +10,7 @@
         <h1>用户管理 - ${user.title }</h1>
               <div class="col-md-8">   
 <div class="wb-frmvld">
-	<form action='<c:url value="/signup" />' method="post" id="validation-signup">
+	<form action='<c:url value="/" />' method="post" id="validation-signup">
 	<input type="hidden" id="count" name="count" value="0"/>
 		<div class="form-group">
 			<label for="title" class="required"><span class="field-name">网名</span> <strong class="required">(必需)</strong></label>
@@ -26,7 +27,14 @@
 		<div class="form-group">
 			<label for="userName" class="required"><span class="field-name">用户名</span> <strong class="required">(必需)</strong></label>
 			<input class="form-control" id="userName" name="userName" value="${user.userName }" type="text" required="required" pattern="[A-Za-z0-9\s]{4,}" data-rule-alphanumeric="true" data-rule-minlength="4" size="40" placeholder="输入用户名(只能拼音字母和数字)" disabled/>
-		</div>		
+		</div>
+		<div class="form-group">				
+			<select id="role" name="role" path="${user..path }" onchange="updateNode(this)">
+				<option value="User" <c:if test="${user..role=='User' }">selected</c:if> ><spring:message code="djn.user"/></option>
+				<option value="Adminstrator" <c:if test="${user.role=='Administrator' }">selected</c:if> ><spring:message code="djn.adminstrator"/></option>
+				<option value="Owner" <c:if test="${user.role=='Owner' }">selected</c:if> ><spring:message code="djn.owner"/></option>
+			</select>
+		</div>
 		<div class="form-group">
 			<label for="host"><span class="field-name">域名</span> <strong class="required"></strong></label>
 			<input class="form-control" id="host" name="host" value="${user.host }" type="text" path="${user.path }" data-rule-minlength="4" size="40" onchange="updateNode(this)"/>

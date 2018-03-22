@@ -25,7 +25,7 @@
  --%><li><a href='<c:url value="/protected/chat.html"></c:url>' title="<spring:message code="djn.online_chat"></spring:message>"><span class="glyphicon glyphicon-envelope"></span><spring:message code="djn.chat"></spring:message><span class="badge"></span></a></li>
 <li><a href="javascript:openPdf()" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-open"></span>PDF</a>
 <li><a href="javascript:deleteFiles()" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-remove"></span><spring:message code="djn.delete"></spring:message></a>
-<li><a href='<c:out value="/site/profile.html"></c:out>'><span class="glyphicon glyphicon-user"></span><authz:authentication property='name' /></a></li>
+<li><a href='<c:out value="/site/profile.html"></c:out>' title="${user.role }"><span class="glyphicon glyphicon-user"></span><authz:authentication property='name' /></a></li>
 <li><a href="<c:url value="/logout"/>"><span class="glyphicon glyphicon-log-out"></span><spring:message code="djn.logout"/></a></li>
 </authz:authorize>
 <%-- <li><a class="wb-lbx lbx-modal" href="#" title="${user.name }">${user.title }</a></li>

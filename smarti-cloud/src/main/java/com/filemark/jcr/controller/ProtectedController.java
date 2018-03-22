@@ -1,6 +1,8 @@
 package com.filemark.jcr.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Map;
 
 import javax.jcr.RepositoryException;
@@ -21,6 +23,7 @@ import com.filemark.jcr.model.Asset;
 import com.filemark.jcr.model.Chat;
 import com.filemark.jcr.model.Folder;
 import com.filemark.jcr.model.Page;
+import com.filemark.jcr.model.User;
 import com.filemark.utils.ImageUtil;
 import com.filemark.utils.WebPage;
 
@@ -28,8 +31,7 @@ import com.filemark.utils.WebPage;
 public class ProtectedController extends BaseController {
 
 	private static final Logger logger = LoggerFactory.getLogger(ProtectedController.class);
-    private static final String jwtTokenCookieName = "JWT-TOKEN";
-    private static final String signingKey = "dajanaSigningKey";
+
     
     @ExceptionHandler(Exception.class)
     public ModelAndView  handleException(Exception ex,HttpServletRequest request) {
@@ -64,10 +66,16 @@ public class ProtectedController extends BaseController {
    	@RequestMapping(value = {"/protected/chat.html"}, method = {RequestMethod.GET})
    	public String mychat(Model model,String path,HttpServletRequest request, HttpServletResponse response) throws Exception {
    		String username = getUsername();
+   		User user = (User)jcrService.getObject("/system/users/"+username);
    		String chatRoot = "/chat";
-   		if(path==null) path="/chat";
-		String folderQuery = "select * from [nt:base] AS s WHERE ISDESCENDANTNODE(["+chatRoot+"])" +" and s.ocm_classname='com.filemark.jcr.model.Folder' order by s.path";
-		WebPage<Folder> folders = jcrService.queryFolders(folderQuery, 50, 0);
+   		if(path==null && user != null && "Owner".equals(user.getRole())) path="/chat";
+
+		String folderQuery = "select s.* from [nt:base] AS s INNER JOIN [nt:base] AS child ON ISCHILDNODE(child,s) WHERE ISDESCENDANTNODE(s,["+chatRoot+"])" +" and child.userName like '%"+username+"' and s.ocm_classname='com.filemark.jcr.model.Folder' and child.ocm_classname ='com.filemark.jcr.model.User' order by s.path";
+
+   		if(user.getRole().equals("Administrator")||user.getRole().equals("Owner"))
+   			folderQuery = "select s.* from [nt:base] AS s WHERE ISDESCENDANTNODE(["+chatRoot+"])" +" and s.ocm_classname='com.filemark.jcr.model.Folder' order by s.path";
+		logger.debug(folderQuery);
+		WebPage<Folder> folders = jcrService.queryFolders(folderQuery, 100, 0);
 		if(path !=null) {
 			String chatQuery = "select * from [nt:base] AS s WHERE ISDESCENDANTNODE(["+path+"])" +" and s.ocm_classname='com.filemark.jcr.model.Chat' order by s.[jcr:lastModified] DESC";
 			WebPage<Chat> chats = jcrService.queryChats(chatQuery, 12, 0);
@@ -77,10 +85,11 @@ public class ProtectedController extends BaseController {
 		}
 
 		Page page = new Page();
-		page.setTitle("\u5728\u7EBF\u901A\u8BAF ");
+		page.setTitle("优信");
 		page.setPath("/content/"+username);
    		model.addAttribute("folders", folders);
    		model.addAttribute("page", page);
+   		model.addAttribute("user", user);
    		model.addAttribute("username", request.getAttribute("username"));
    		model.addAttribute("usertitle", request.getAttribute("usertitle"));   		
 		//model.addAttribute("navigation",jcrService.getPageNavigation("/content/"+getUsername(),2));		
@@ -241,6 +250,35 @@ public class ProtectedController extends BaseController {
 		ImageUtil.HDDOff();
 		return "chat/"+topage;
 	}
+	
+   	@RequestMapping(value = {"/protected/unreadchat.json"}, method = {RequestMethod.GET})
+   	public @ResponseBody WebPage<Folder> unreadChatJson(String path,Model model,HttpServletRequest request, HttpServletResponse response) {
+   		String username = getUsername();
+		String folderQuery = "select s.* from [nt:base] AS s INNER JOIN [nt:base] AS child ON ISCHILDNODE(child,s) WHERE ISDESCENDANTNODE(s,[/chat])" +" and child.userName like '%"+username+"' and s.ocm_classname='com.filemark.jcr.model.Folder' and child.ocm_classname ='com.filemark.jcr.model.User' order by s.path";
+
+		WebPage<Folder> folders = jcrService.queryFolders(folderQuery, 100, 0);
+		for(Folder folder:folders.getItems()) {
+			String userpath = folder.getPath()+"/"+username;
+			User user;
+			try {
+				user = (User)jcrService.getObject(userpath);
+			} catch (RepositoryException e) {
+				logger.error(e.getMessage());
+				continue;
+			}
+	   		String operator=">";
+	   		if(path==null) path="/chat";
+	   		SimpleDateFormat sdf;
+	   		sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+
+	   		String dateRange = user.getLastModified()==null?"":"and s.[jcr:lastModified] "+operator+" CAST('"+sdf.format(user.getLastModified())+"' AS DATE)";
+			String chatQuery = "select * from [nt:base] AS s WHERE ISDESCENDANTNODE(["+folder.getPath()+"]) "+dateRange+" and s.ocm_classname='com.filemark.jcr.model.Chat' order by s.[jcr:lastModified] DESC";
+			long chatCount = jcrService.getCount(chatQuery);
+			folder.setChildCount(chatCount);
+
+		}
+   		return folders;
+   	}
 
    	
    	@RequestMapping(value = {"/protected/chat.json"}, method = {RequestMethod.GET})
@@ -251,6 +289,9 @@ public class ProtectedController extends BaseController {
    		if(path==null) path="/chat";
    		String dateRange = lastModified==null?"":"and s.[jcr:lastModified] "+operator+" CAST('"+lastModified+"' AS DATE)";
 		String chatQuery = "select * from [nt:base] AS s WHERE ISDESCENDANTNODE(["+path+"]) "+dateRange+" and s.ocm_classname='com.filemark.jcr.model.Chat' order by s.[jcr:lastModified] DESC";
+		if(!"/chat".equals(path)) {
+			jcrService.updateCalendar(path+"/"+username, "lastModified");
+		}
 		WebPage<Chat> chats = jcrService.queryChats(chatQuery, 12, 0);
    		return chats;
    	}
@@ -284,7 +325,40 @@ public class ProtectedController extends BaseController {
 		model.addAttribute("folder", jcrService.getObject(path));   		
    		return "chat/group";
    	}
-   	
+   	@RequestMapping(value = {"/protected/adduser.html"}, method = {RequestMethod.POST,RequestMethod.GET})
+   	public @ResponseBody User addUser(String path,String group,Model model,HttpServletRequest request, HttpServletResponse response){
+
+		User user = new User();
+   		try {
+   			User yun_user = (User)jcrService.getObject(path);
+   			if(jcrService.nodeExsits(group+"/"+yun_user.getName())) {
+   				user.setTitle("warning:用户已在群里！");
+   			}else {
+   				user.setUserName(yun_user.getUserName());
+   				user.setTitle(yun_user.getTitle());
+   				user.setPath(group+"/"+yun_user.getName());
+   				user.setLastModified(new Date());
+   				jcrService.addOrUpdate(user);
+   			}
+   			
+   		}catch(Exception e) {
+   			user.setTitle("error:"+e.getMessage());
+   		}     		
+   		return user;
+   	}
+
+   	@RequestMapping(value = {"/protected/removeuser.html"}, method = {RequestMethod.POST,RequestMethod.GET})
+   	public @ResponseBody User removeUser(String path,Model model,HttpServletRequest request, HttpServletResponse response){
+
+		User user = new User();
+   		try {
+   			jcrService.deleteNode(path);
+   			user.setTitle("deleted");
+   		}catch(Exception e) {
+   			user.setTitle("error:"+e.getMessage());
+   		}     		
+   		return user;
+   	}   	
    	@RequestMapping(value = {"/protected/addyouchat.html"}, method = {RequestMethod.POST})
    	public @ResponseBody String addyouchat(String path,String content,Model model,HttpServletRequest request, HttpServletResponse response){
 			String username = getUsername();

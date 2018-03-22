@@ -8,6 +8,7 @@ import javax.jcr.Property;
 
 import org.apache.jackrabbit.ocm.mapper.impl.annotation.Field;
 import org.apache.jackrabbit.ocm.mapper.impl.annotation.Node;
+import org.codehaus.jackson.annotate.JsonIgnore;
 
 @Node(jcrMixinTypes = "mix:versionable")
 public class Folder implements SmartiNode, Serializable {
@@ -53,6 +54,7 @@ public class Folder implements SmartiNode, Serializable {
 
 	private String ocm_classname;
 	private String nodeName;
+	@JsonIgnore
 	private boolean hasNodes;
 	//private List<Property> properties;
 	public static String root="";	
