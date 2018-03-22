@@ -333,10 +333,10 @@ function syncChat() {
 
 			});
 		    if(data.pageCount>0) {
-		    	setTimeout(syncChat,1000);
+		    	setTimeout(syncChat,3000);
 		    	
 		    }else {
-		    	setTimeout(syncChat,10000);
+		    	setTimeout(syncChat,30000);
 		    }
 		    if($("#chat").attr("open")) {
 		    	$("#online_notice").html("");	
@@ -353,7 +353,7 @@ function syncChat() {
 	    }
 
 	});	 
-
+    var count=0;
     $.ajax({
 	    url: '/protected/unreadchat.json',
 	    data: {
@@ -369,14 +369,17 @@ function syncChat() {
 	    		}else {
 	    			$("#unread-"+f.uid).html();
 	    		}
+	    		//alert(f.lastModified);
 	    	});
 		},
 		error: function() {
+	    	setTimeout(syncChat,30000);
 		    $("#online_chat_running").addClass("wb-inv");
 	    	$("#online_chat").html('<section class="alert alert-warning"><h5>\u4F60\u6CA1\u6709\u767B\u5165\uFF01</53></section>');
 	    }
 
 	});	 
+
 }
 
 function addUser(group,path) {

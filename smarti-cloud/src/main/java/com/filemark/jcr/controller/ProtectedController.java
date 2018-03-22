@@ -257,6 +257,7 @@ public class ProtectedController extends BaseController {
 		String folderQuery = "select s.* from [nt:base] AS s INNER JOIN [nt:base] AS child ON ISCHILDNODE(child,s) WHERE ISDESCENDANTNODE(s,[/chat])" +" and child.userName like '%"+username+"' and s.ocm_classname='com.filemark.jcr.model.Folder' and child.ocm_classname ='com.filemark.jcr.model.User' order by s.path";
 
 		WebPage<Folder> folders = jcrService.queryFolders(folderQuery, 100, 0);
+		//logger.debug("Count="+folders.getPageCount());
 		for(Folder folder:folders.getItems()) {
 			String userpath = folder.getPath()+"/"+username;
 			User user;
@@ -270,11 +271,12 @@ public class ProtectedController extends BaseController {
 	   		if(path==null) path="/chat";
 	   		SimpleDateFormat sdf;
 	   		sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
-
+	   		//logger.debug(sdf.format(user.getLastModified()));
 	   		String dateRange = user.getLastModified()==null?"":"and s.[jcr:lastModified] "+operator+" CAST('"+sdf.format(user.getLastModified())+"' AS DATE)";
 			String chatQuery = "select * from [nt:base] AS s WHERE ISDESCENDANTNODE(["+folder.getPath()+"]) "+dateRange+" and s.ocm_classname='com.filemark.jcr.model.Chat' order by s.[jcr:lastModified] DESC";
 			long chatCount = jcrService.getCount(chatQuery);
 			folder.setChildCount(chatCount);
+			folder.setLastModified(user.getLastModified());
 
 		}
    		return folders;
@@ -289,16 +291,21 @@ public class ProtectedController extends BaseController {
    		if(path==null) path="/chat";
    		String dateRange = lastModified==null?"":"and s.[jcr:lastModified] "+operator+" CAST('"+lastModified+"' AS DATE)";
 		String chatQuery = "select * from [nt:base] AS s WHERE ISDESCENDANTNODE(["+path+"]) "+dateRange+" and s.ocm_classname='com.filemark.jcr.model.Chat' order by s.[jcr:lastModified] DESC";
-		if(!"/chat".equals(path) && jcrService.nodeExsits(path+"/"+username)) {
-			jcrService.updateCalendar(path+"/"+username, "lastModified");
-		}
 		WebPage<Chat> chats = jcrService.queryChats(chatQuery, 12, 0);
+		if(!"/chat".equals(path) && jcrService.nodeExsits(path+"/"+username)) {
+			if(chats.getPageCount()>0) {
+				Chat chat = chats.getItems().get(0);
+				jcrService.updateCalendar(path+"/"+username, "lastModified",chat.getLastModified());
+			}
+
+		}
+
    		return chats;
    	}
 
    	@RequestMapping(value = {"/protected/comments.html"}, method = {RequestMethod.GET})
    	public String  comments(String path,String status,Integer p,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
-   		path += "/cocments";
+   		path += "/comments";
    		if(p==null)
    			p=0;
    		if( status == null || "0".equals(status)) {

@@ -2413,6 +2413,18 @@ public class JcrServicesImpl implements JcrServices {
 		});
 	}
 
+	@Override
+	public void updateCalendar(final String path, final String name, final Calendar calendar) {
+		jcrTemplate.execute(new JcrCallback() { 
+        	public Object doInJcr(Session session) throws RepositoryException, IOException {
+        		Node node = session.getNode(path);
+       			node.setProperty(name, calendar);
+        		session.save();
+				return node;
+        	};
+        	
+		});
+	}	
 /*	@Override
 	public String extractWord(final String path) {
 		return (String)jcrTemplate.execute(new JcrCallback() { 

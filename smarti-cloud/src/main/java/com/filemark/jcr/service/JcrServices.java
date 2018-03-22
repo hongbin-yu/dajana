@@ -3,6 +3,7 @@ package com.filemark.jcr.service;
 import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.jcr.Node;
@@ -34,6 +35,8 @@ public interface JcrServices {
 	public void updateFolderIcon(final String path) throws RepositoryException;
 	public String updateProperty(final String uid,final String name, final String value) throws RepositoryException;
 	public String updatePropertyByPath(final String path,final String name,final String value) throws RepositoryException;
+	public void updateCalendar(String path, String name);
+	public void updateCalendar(String path, String name,Calendar calendar);	
 	public String deleteNode(final String path) throws RepositoryException;
 	public String deleteNodeAndOrphan(final String path) throws RepositoryException;
 	public void readAsset(final String path, final HttpServletResponse response);
@@ -86,7 +89,6 @@ public interface JcrServices {
 	public void exportDocument(final String path, final OutputStream out,final Boolean binary);
 	public Asset getAssetById(String uid) throws RepositoryException;
 	public void assets2pdf(final List<Asset> assets,final OutputStream outputStream);
-	public void updateCalendar(String path, String name);
 	public void roateImage(final String path,final double angle) ;
 	public void autoRoateImage(final String path) ;	
 	public File getFile(String path) throws RepositoryException;
