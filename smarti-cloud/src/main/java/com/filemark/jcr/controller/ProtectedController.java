@@ -1,9 +1,14 @@
 package com.filemark.jcr.controller;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
+import java.util.Random;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
@@ -24,8 +29,10 @@ import com.filemark.jcr.model.Chat;
 import com.filemark.jcr.model.Folder;
 import com.filemark.jcr.model.Page;
 import com.filemark.jcr.model.User;
+import com.filemark.sso.JwtUtil;
 import com.filemark.utils.ImageUtil;
 import com.filemark.utils.WebPage;
+import com.google.gson.Gson;
 
 @Controller
 public class ProtectedController extends BaseController {
@@ -144,6 +151,45 @@ public class ProtectedController extends BaseController {
    		return "redirect:"+site;
 
    	}
+   	
+	@RequestMapping(value = {"/protected/profile.html"}, method = RequestMethod.GET)
+	public String profile(String path,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String username = getUsername();
+		User user  = (User)jcrService.getObject("/system/users/"+username);
+		File f = new File(jcrService.getDevice());
+		model.addAttribute("usage",""+f.getUsableSpace()/1000000+"MB/"+f.getTotalSpace()/1000000+"MB");
+    	String imgs[] = {"shu","niu","fu","tu","long","she","ma","yang","hou","ji","gou","zhu"};
+    	String ids[] = {"A0","A1","A2","B0","B1","B2","C0","C1","C2","D0","D1","D2"};
+    	Page page = new Page();
+    	//page.setTitle("&#27880;&#20876;");
+    	page.setTitle(messageSource.getMessage("djn.signup", null,"\u6CE8\u518C", localeResolver.resolveLocale(request)));
+    	Random rnd = new Random();
+    	for(int i = imgs.length - 1; i >0 ; i--) {
+    		int index = rnd.nextInt(i);
+    		String a = imgs[index];
+    		String b = ids[index];
+    		imgs[index] = imgs[i];
+    		ids[index] = ids[i];
+    		imgs[i] = a;
+    		ids[i] = b;
+    	}
+    	model.addAttribute("imgs", imgs);    
+    	model.addAttribute("ids", ids);
+
+
+		model.addAttribute("user", user);
+		return "chat/profile";
+	}
+	
+	@RequestMapping(value = {"/protected/profile.html"}, method = RequestMethod.POST)
+	public String profileUpdate(User user,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String username = getUsername();
+		User dbuser  = (User)jcrService.getObject("/system/users/"+username);
+		dbuser.setPassword(user.getPassword());
+		jcrService.addOrUpdate(dbuser);
+		return "redirect:/signin?info=pwchanged&username="+username;
+	}
+  	
 	@RequestMapping(value = {"/protected/browse.html","/site/image.html"}, method = {RequestMethod.GET,RequestMethod.POST},produces = "text/plain;charset=UTF-8")
 	public String browse(String path,String type, String input,String kw,Integer p,Integer m,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
 		ImageUtil.HDDOn();

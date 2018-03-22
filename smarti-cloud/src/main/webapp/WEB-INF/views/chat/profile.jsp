@@ -18,7 +18,7 @@
 	<input class="form-control wb-inv" type="file" id="iconUpload" name="file" size="60" required="required"/>
 	</div>
 	<div class="wb-frmvld">
-	<form action='<c:url value="/site/profile.html" />' method="post" id="validation-signup">
+	<form action='<c:url value="/protected/profile.html" />' method="post" id="validation-signup">
 	<input type="hidden" id="count" name="count" value="0"/>
 		<div class="form-group">
 			<label for="title" class="required"><span class="field-name">网名</span> <strong class="required">(必需)</strong></label>
@@ -36,23 +36,13 @@
 			<label for="userName" class="required"><span class="field-name">用户名</span> <strong class="required">(必需)</strong></label>
 			<input class="form-control" id="userName" name="userName" value="${user.userName }" type="text" required="required" pattern="[A-Za-z0-9\s]{4,}" data-rule-alphanumeric="true" data-rule-minlength="4" size="40" placeholder="输入用户名(只能拼音字母和数字)" disabled/>
 		</div>	
-<%-- 		<div class="form-group">
-			<label for="signingKey" class="required"><span class="field-name"><strong class="required" style="FONT-FAMILY: 'Arial';">微云密码</strong></span></label>
-			<input class="form-control" id="signingKey" name="signingKey" value="${user.signingKey }" type="password" path="${user.path }" uid="${user.uid}" required="required" data-rule-minlength="4" size="40"/>
-		</div>
-		<div class="form-group">
-			<label for="passwordconfirm">
-			<span class="field-name"><spring:message code="djn.confirm"/></span>
-			</label>			
-			<input class="form-control" id="passwordconfirm" name="passwordconfirm" type="password" maxlength="32" size="40" data-rule-equalTo="#signingKey" placeholder="把以上密码再输一遍"/>
-		</div> --%>
 		<div class="form-group">
 			<details id="details_pass">
-			<summary class="alert alert-danger">
+			<summary>
 			<label for="password" class="required">
-			<span class="field-name"><spring:message code="djn.weiyun"/><spring:message code="djn.password"/></span> (<spring:message code="djn.select_4_icon"/>)
+			<span class="field-name"><spring:message code="djn.dajana"/><spring:message code="djn.password"/></span> (<spring:message code="djn.select_4_icon"/>)
 			</label>
-			<input class="form-control" id="password" name="signingKey" type="password" onkeypress="this.value=''" required="required" maxlength="32" size="40" pattern=".{4,}" data-rule-rangelength="[4,32]" placeholder="<spring:message code="djn.select_4_icon"/>"/>
+			<input class="form-control" id="password" name="password" type="password" onkeypress="this.value=''" required="required" maxlength="32" size="40" pattern=".{4,}" data-rule-rangelength="[4,32]" placeholder="<spring:message code="djn.select_4_icon"/>"/>
 			</summary>
 			<div class="btn-group btn-group-justified">
 			<a class="btn btn-default password" id='A0'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/mouse.png"></c:url>'/></a>
@@ -107,14 +97,6 @@
 
 		</details>
 		</div>					
-		<div class="form-group">
-			<label for="host"><span class="field-name">域名</span> <strong class="required"></strong></label>
-			<input class="form-control" id="host" name="host" value="${user.host }" type="text" path="${user.path }" data-rule-minlength="4" size="40"  disabled/>
-		</div>
-		<div class="form-group">
-			<label for="port"><span class="field-name">端口</span> </label>
-			<input class="form-control" id="port" name="port" value="${user.port }" type="text" path="${user.path }" data-rule-minlength="4" size="40"  disabled/>
-		</div>
 		<div class="form-group">
 			<label for="lastIp" class="required"><span class="field-name">登入IP</span> <strong class="required"></strong></label>
 			<input class="form-control" id="lastIp" name="lastIp" value="${user.lastIp }" type="text" required="required" data-rule-alphanumeric="true" data-rule-minlength="4" size="40" disabled/>
