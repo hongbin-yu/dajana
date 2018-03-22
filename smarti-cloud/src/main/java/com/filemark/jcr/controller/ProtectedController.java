@@ -282,14 +282,14 @@ public class ProtectedController extends BaseController {
 
    	
    	@RequestMapping(value = {"/protected/chat.json"}, method = {RequestMethod.GET})
-   	public @ResponseBody WebPage<Chat> mychatJson(String path,String lastModified,String operator,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
+   	public @ResponseBody WebPage<Chat> mychatJson(String path,String lastModified,String operator,Model model,HttpServletRequest request, HttpServletResponse response) {
    		String username = getUsername();
    		//String chatRoot = "/chat/"+username;
    		if(operator==null) operator=">";
    		if(path==null) path="/chat";
    		String dateRange = lastModified==null?"":"and s.[jcr:lastModified] "+operator+" CAST('"+lastModified+"' AS DATE)";
 		String chatQuery = "select * from [nt:base] AS s WHERE ISDESCENDANTNODE(["+path+"]) "+dateRange+" and s.ocm_classname='com.filemark.jcr.model.Chat' order by s.[jcr:lastModified] DESC";
-		if(!"/chat".equals(path)) {
+		if(!"/chat".equals(path) && jcrService.nodeExsits(path+"/"+username)) {
 			jcrService.updateCalendar(path+"/"+username, "lastModified");
 		}
 		WebPage<Chat> chats = jcrService.queryChats(chatQuery, 12, 0);
