@@ -364,7 +364,7 @@ function checkUnread() {
 		    },
 	    type: "GET",
 	    contentType: "application/json",
-	    timeout: 5000,
+	    timeout: 50000,
 	    success: function(data) {
 	    	$.each(data.items,function(i,f){
 	    		if(f.childCount>0) {
@@ -381,7 +381,7 @@ function checkUnread() {
 		error: function() {
 	    	setTimeout(checkUnread,30000);
 		    $("#online_chat_running").addClass("wb-inv");
-	    	$("#online_chat").html('<section class="alert alert-warning"><h5>\u4F60\u6CA1\u6709\u767B\u5165\uFF01</53></section>');
+	    	$("#comment_message").html('<section class="alert alert-warning"><h5>Timeout</h5></section>');
 	    }
 
 	});	 	
