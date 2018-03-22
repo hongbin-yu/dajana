@@ -289,7 +289,7 @@ function syncChat() {
 		    },
 	    type: "GET",
 	    contentType: "application/json",
-	    timeout: 5000,
+	    timeout: 50000,
 	    success: function(data) {
 	    	setTimeout(function() {
 	    		$("#online_chat_send").attr("disabled",false);	    	
@@ -347,7 +347,7 @@ function syncChat() {
 		},
 		error: function() {
 		    $("#online_chat_running").addClass("wb-inv");
-	    	$("#online_chat").html('<section class="alert alert-warning"><h5>\u4F60\u6CA1\u6709\u767B\u5165\uFF01</53></section>');
+	    	$("#comment_message").html('<section class="alert alert-warning"><h5>Timeout</h5></section>');
 	    	setTimeout(syncChat,30000);
 	    }
 
