@@ -13,7 +13,7 @@
         <div class="row text-center"><img id="online_chat_loading" width="120" height="120" class="wb-inv" src="/resources/images/loadingx400.gif" alt="下载"/></div>
         <div id="online_chat">
 		</div>
-			<div class="panel panel-default"><header class="panel-heading">${folder.title }</header>
+			<div class="panel panel-primary"><header class="panel-heading">${folder.title }</header>
 				<div class="panel-body">
 					<div id="online_chat_editor" class="panel panel-default online_editor"></div>
 					<div class="btn-group btn-group-justified">

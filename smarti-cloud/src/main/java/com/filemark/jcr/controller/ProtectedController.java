@@ -294,7 +294,8 @@ public class ProtectedController extends BaseController {
 		WebPage<Chat> chats = jcrService.queryChats(chatQuery, 12, 0);
 		if(!"/chat".equals(path) && jcrService.nodeExsits(path+"/"+username)) {
 			if(chats.getPageCount()>0) {
-				Chat chat = chats.getItems().get(0);
+				Chat chat = chats.getItems().get(chats.getItems().size()-1);
+				//logger.debug("lastModified:"+chat.getLastModified());
 				jcrService.updateCalendar(path+"/"+username, "lastModified",chat.getLastModified());
 			}
 

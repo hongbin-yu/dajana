@@ -196,6 +196,7 @@ function sendChat(url) {
 	
 		    	path = msg;
 		    	syncChat();
+		    	checkUnread();
 		    	tinyMCE.activeEditor.setContent("<p></p>");
 		    	$("#online_chat_running").addClass("wb-inv");
 		    },
@@ -279,7 +280,6 @@ function syncChat() {
 	path = $("#pagePath").val();
 	username = $("#username").val();
 	var userrole = $("#userrole").val();
-
     //alert(new Date(lastModified).toISOString());
     $.ajax({
 	    url: contentPath+'/protected/chat.json',
@@ -295,7 +295,6 @@ function syncChat() {
 	    		$("#online_chat_send").attr("disabled",false);	    	
 	    	},3000); 
 	    	$.each(data.items,function(i,c){
-
 		    	if(c.lastModified>lastModified || firstModified ==0) {
 				    var html = 	"";
 				    var cDate = new Date(c.lastModified);
@@ -334,9 +333,9 @@ function syncChat() {
 			});
 		    if(data.pageCount>0) {
 		    	setTimeout(syncChat,3000);
-		    	
+		        checkUnread();		    	
 		    }else {
-		    	setTimeout(syncChat,30000);
+		    	setTimeout(syncChat,6000);
 		    }
 		    if($("#chat").attr("open")) {
 		    	$("#online_notice").html("");	
@@ -353,7 +352,11 @@ function syncChat() {
 	    }
 
 	});	 
-    var count=0;
+
+}
+
+function checkUnread() {
+	var count=0;
     $.ajax({
 	    url: '/protected/unreadchat.json',
 	    data: {
@@ -369,17 +372,19 @@ function syncChat() {
 	    		}else {
 	    			$("#unread-"+f.uid).html();
 	    		}
-	    		//alert(f.lastModified);
+	    		count++;
 	    	});
+	    	if(count > 0)
+	    		setTimeout(checkUnread,10000);
+
 		},
 		error: function() {
-	    	setTimeout(syncChat,30000);
+	    	setTimeout(checkUnread,30000);
 		    $("#online_chat_running").addClass("wb-inv");
 	    	$("#online_chat").html('<section class="alert alert-warning"><h5>\u4F60\u6CA1\u6709\u767B\u5165\uFF01</53></section>');
 	    }
 
-	});	 
-
+	});	 	
 }
 
 function addUser(group,path) {
@@ -437,10 +442,16 @@ function openOverlay(id,view) {
 	$("#"+id).focus();
 	$("#"+view).trigger("open.wb-overlay");
 }
-if( path !=null && path!="") {
-	syncChat();
-	
+
+
+if($("#pagePath")) {
+	if( path !=null && path!="") {
+		syncChat();
+	}
+	checkUnread();
 }
+
+
 
 function errorException(jqXHR, exception) {
     busy = 0;
