@@ -343,7 +343,7 @@ function syncChat() {
 			});
 		    if(data.pageCount>0) {
 		    	setTimeout(syncChat,5000);
-		        checkUnread();		    	
+		        //checkUnread();		    	
 		    }else {
 		    	setTimeout(syncChat,10000);
 		    }
@@ -386,10 +386,12 @@ function checkUnread() {
 	    	});
 	    	if(count > 0)
 	    		setTimeout(checkUnread,10000);
+	    	else
+	    		setTimeout(checkUnread,30000);
 
 		},
 		error: function() {
-	    	setTimeout(checkUnread,30000);
+	    	setTimeout(checkUnread,60000);
 		    $("#online_chat_running").addClass("wb-inv");
 	    	$("#comment_message").html('<section class="alert alert-warning"><h5>Timeout</h5></section>');
 	    }
