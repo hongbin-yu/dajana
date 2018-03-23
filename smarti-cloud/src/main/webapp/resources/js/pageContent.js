@@ -457,7 +457,7 @@ function openOverlay(id,view) {
 
 
 if($("#pagePath")) {
-	if( path !=null && path!="") {
+	if( path !=null && path.indexOf('/chat')==0) {
 		syncChat();
 		if(path=='/chat')
 			checkUnread();
