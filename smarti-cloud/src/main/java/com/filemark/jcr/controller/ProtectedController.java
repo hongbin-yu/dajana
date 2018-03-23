@@ -88,7 +88,8 @@ public class ProtectedController extends BaseController {
 			WebPage<Chat> chats = jcrService.queryChats(chatQuery, 12, 0);
 			model.addAttribute("chats", chats);
 			model.addAttribute("folder", jcrService.getFolder(path));
-
+		}else {
+			model.addAttribute("folder", jcrService.getFolder("/chat"));
 		}
 
 		Page page = new Page();
