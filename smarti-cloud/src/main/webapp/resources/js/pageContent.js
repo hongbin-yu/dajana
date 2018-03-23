@@ -366,7 +366,9 @@ function syncChat() {
 }
 
 function checkUnread() {
+
 	var count=0;
+	if(path=='/chat')
     $.ajax({
 	    url: '/protected/unreadchat.json',
 	    data: {
