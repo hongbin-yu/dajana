@@ -100,8 +100,11 @@ public class ContentController extends BaseController {
 	  ImageUtil.gpio("write","18","0");
       return modelAndView;
     }
-    @RequestMapping(value = {"/*","/mysite"}, method = RequestMethod.GET)
-   	public String homesite(Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
+    @RequestMapping(value = {"/{site}","/mysite"}, method = RequestMethod.GET)
+   	public String homesite(@PathVariable String site,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
+    	if(site.matches("(.+\\..+\\..+)")) {
+    		String params[] = JwtUtil.decode(site).split("&amp;");
+    	}
     	String host="";
     	if(request.getRemoteHost().endsWith(jcrService.getDomain())) host = request.getRemoteHost();
 		String assetsQuery = "select s.* from [nt:base] AS s WHERE ISCHILDNODE([/templates/assets/splash]) and s.[delete] not like 'true' and s.ocm_classname='com.filemark.jcr.model.Asset' order by s.[lastModified] desc";
