@@ -5,6 +5,7 @@ var lastModified= 0;
 var unreadCount = 0;
 var contentPath="";
 var comment="";
+var files;
 var username=$("#username").val();
 if(window.location.pathname.indexOf("/smarti-cloud")>=0) {
 	contentPath = "/smarti-cloud";
@@ -210,6 +211,8 @@ function sendChat(url) {
 	} else {
 		$("#chat_message").html("<section class='alert alert-danger'><h5>ç¼–è¾‘å™¨æ²¡æ‰¾åˆ°</h5><section>");
 	}
+	
+	$("#selectedFiles").html("");
 
 }
 

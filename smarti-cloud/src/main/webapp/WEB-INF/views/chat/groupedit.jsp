@@ -21,6 +21,12 @@
 		<div class="form-group">
 		<label for="status">创建者： ${folder.createdBy }</label>		
 		</div>	
+		<div class="checkbox">
+		<label for="intranet"><input type="checkbox" name="intranet" value="true" id="intranetfolder" <c:if test="${folder.intranet=='true' }">checked</c:if> size="35"  uid="${folder.uid }" onchange="updateProperty(this)"> <span class="text-danger">向大家拿用户开放</span></label>
+		</div>
+		<div class="checkbox">
+		<label for="readonly"><input type="checkbox" name="readonly" value="true" id="readonly" <c:if test="${folder.readonly=='true' }">checked</c:if>  size="35"  uid="${folder.uid }" onchange="updateNode(this)"> <span class="text-primary">群外用户只读</span></label>
+		</div>							
 		<div class="panel panel-success">
 		<header class="panel-heading">群里用户</header>
 			<div id="inGroup" class="panel panel-body">

@@ -7,20 +7,31 @@
 <div class="container">
 <div class="row">
         <main role="main" property="mainContentOfPage" class="col-md-8 col-md-push-4">
-        <h1>优信<c:if test="${folder.title != null}"> - ${folder.title } </c:if><a href="#" title="${user.title }" onclick="ftrClose('/protected/profile.html')"><img id="uploadIcon" class="img-responsive pull-right" src="/site/file/icon.jpg?path=/${username }/assets/icon/x48.jpg" alt="图标"/></a></h1>
-	<c:if test="${folder==null || folder.title == null}"><div data-ajax-replace="/templates/assets/html/youchat.html"></div></c:if>        
+        <h1>优信<c:if test="${folder.title != null}"> - ${folder.title }</c:if><a href="#" title="${user.title }" onclick="ftrClose('/protected/profile.html')"><img id="uploadIcon" class="img-responsive pull-right" src="/site/file/icon.jpg?path=/${username }/assets/icon/x48.jpg" alt="图标"/></a></h1>
+	<c:if test="${folder==null || folder.path == '/chat'}"><div data-ajax-replace="/templates/assets/html/youchat.html"></div></c:if>        
 	<c:if test="${folder.title != null && folder.path != '/chat'}">
         <div class="row text-center"><img id="online_chat_loading" width="120" height="120" class="wb-inv" src="/resources/images/loadingx400.gif" alt="下载"/></div>
         <div id="online_chat">
 		</div>
 			<div class="panel panel-primary"><header class="panel-heading">${folder.title }</header>
-				<div class="panel-body">
+				<div id="uploadBox" class="panel-body" ondrop="drop(event)" ondragover="allowDrop(event)" style="border:1px solid #aaaaaa;">
+					<form action="upload.html" method="POST" id="form-upload" enctype="multipart/form-data">
+					<input type="hidden" id="path" name="path" value="/${user.userName}/assets/youchat"/>
+					<input type="hidden" id="override" name="override" value="true"/>
+					
+					<div class="panel" id="selectedFiles"  onchange="javascript:uploadFiles()">
+					</div>
+
 					<div id="online_chat_editor" class="panel panel-default online_editor"></div>
+
+					<input class="form-control wb-inv" type="file" id="fileUpload" name="file" size="60" required="required"  multiple/>
 					<div class="btn-group btn-group-justified">
-						<a class="btn btn-default btn-block" title="发送" href="javascript:sendChat('${folder.path}')"><span class="glyphicon glyphicon-send"></span><img class="wb-inv" id="online_chat_running" src="/resources/images/loading16x16.gif" alt=""/></a>
+						<a id="submit_youchat" class="btn btn-default btn-block" title="发送" href="javascript:sendChat('${folder.path}')"><span class="glyphicon glyphicon-send"></span><img class="wb-inv" id="online_chat_running" src="/resources/images/loading16x16.gif" alt=""/></a>
 						<a class="btn btn-default btn-block" title="打开云资源" href="javascript:openOverlay('online_chat_editor','left-bar')"  aria-controls="left-panel" role="button"><span class="glyphicon glyphicon-cloud"></span></a>
 						<a class="btn btn-default btn-block" title="打开网站" href="javascript:openOverlay('online_chat_editor','right-bar')"   aria-controls="left-panel" role="button" ><span class="glyphicon glyphicon-globe"></span></a>
+						<a class="btn btn-default btn-block" title="打开网站" href="javascript:openFiles()"   aria-controls="left-panel" role="button" ><span class="glyphicon glyphicon-picture"></span></a>
 					</div>
+					</form>
 				</div>
 			</div>
 	</c:if>			

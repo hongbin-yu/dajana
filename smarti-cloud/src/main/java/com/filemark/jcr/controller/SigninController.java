@@ -150,7 +150,7 @@ public class SigninController extends BaseController{
 	
 	}	
 	
-    @RequestMapping(value = {"/forget/{encodedjson}"}, method ={ RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = {"/forget/{encodedjson}","/forget"}, method ={ RequestMethod.GET, RequestMethod.POST})
    	public String forgetpassword(@PathVariable String encodedJson,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
 
     	if(encodedJson!=null && encodedJson.matches("(.+\\..+\\..+)")) {
