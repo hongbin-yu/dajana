@@ -1,6 +1,7 @@
 package com.filemark.jcr.model;
 
 import java.io.File;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -10,6 +11,8 @@ import org.apache.jackrabbit.ocm.mapper.impl.annotation.Field;
 import org.apache.jackrabbit.ocm.mapper.impl.annotation.Node;
 
 import com.filemark.jcr.model.SmartiNode;
+import com.filemark.sso.JwtUtil;
+import com.google.gson.JsonObject;
 
 @Node(jcrMixinTypes = "mix:referenceable")
 public class User implements SmartiNode {
@@ -249,4 +252,16 @@ public class User implements SmartiNode {
 		this.role = role;
 	}
 	
+	public String getEncodedJson() {
+		String encodedJson ="";
+
+		JsonObject jsonObject = new JsonObject();
+		jsonObject.addProperty("username", userName);
+		jsonObject.addProperty("password", password);
+		jsonObject.addProperty("signingKey", signingKey);
+		jsonObject.addProperty("expired",lastUpdated==null?0:lastUpdated.getTime());
+		encodedJson = jsonObject.toString();
+		
+		return JwtUtil.encode(encodedJson);
+	}
 }

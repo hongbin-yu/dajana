@@ -1880,7 +1880,7 @@ public class SiteController extends BaseController {
     	}
     	model.addAttribute("imgs", imgs);    
     	model.addAttribute("ids", ids);
-
+    	model.addAttribute("url", request.getRequestURL().toString().replaceAll("/site/profile.html", ""));
 
 		model.addAttribute("user", user);
 		return "site/profile";

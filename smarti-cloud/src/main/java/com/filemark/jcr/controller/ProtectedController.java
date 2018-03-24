@@ -1,13 +1,9 @@
 package com.filemark.jcr.controller;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Map;
 import java.util.Random;
 
 import javax.jcr.RepositoryException;
@@ -29,10 +25,8 @@ import com.filemark.jcr.model.Chat;
 import com.filemark.jcr.model.Folder;
 import com.filemark.jcr.model.Page;
 import com.filemark.jcr.model.User;
-import com.filemark.sso.JwtUtil;
 import com.filemark.utils.ImageUtil;
 import com.filemark.utils.WebPage;
-import com.google.gson.Gson;
 
 @Controller
 public class ProtectedController extends BaseController {
@@ -59,6 +53,8 @@ public class ProtectedController extends BaseController {
       logger.error(ex.toString());
       return modelAndView;
     }
+    
+   
     @RequestMapping(value = {"/protected/mycloud"}, method = RequestMethod.GET)
    	public String mycloud(Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
     	String host="";

@@ -31,5 +31,6 @@
 	<definition name="chat/browsemore" templateExpression="/WEB-INF/views/chat/browsemore.jsp">
 	</definition>
 	<definition name="chat/group" templateExpression="/WEB-INF/views/chat/groupedit.jsp">
-	</definition>						
+	</definition>	
+						
 </tiles-definitions>

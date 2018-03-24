@@ -19,12 +19,15 @@ package com.filemark.jcr.controller;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -33,6 +36,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -41,10 +45,13 @@ import com.filemark.jcr.model.Role;
 import com.filemark.jcr.model.User;
 import com.filemark.sso.CookieUtil;
 import com.filemark.sso.JwtUtil;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 
 @Controller
 public class SigninController extends BaseController{
+	private static final Logger logger = LoggerFactory.getLogger(SigninController.class);
 
 	@RequestMapping(value="/signin", method=RequestMethod.GET)
 	public String signin(String redirect, String username, HttpServletRequest request, HttpServletResponse response,Model model) {
@@ -142,6 +149,81 @@ public class SigninController extends BaseController{
 		
 	
 	}	
+	
+    @RequestMapping(value = {"/forget/{encodedjson}"}, method ={ RequestMethod.GET, RequestMethod.POST})
+   	public String forgetpassword(@PathVariable String encodedJson,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+    	if(encodedJson!=null && encodedJson.matches("(.+\\..+\\..+)")) {
+    		try {
+    			String json = JwtUtil.decode(encodedJson);
+    			JsonParser parser = new JsonParser();
+    			final JsonObject jsonObject = parser.parse(json).getAsJsonObject();
+    			String username = jsonObject.get("username").getAsString();
+    			String password = jsonObject.get("password").getAsString();
+    			String isIntranet = jsonObject.get("isIntranet").getAsString();    			
+    			long expired = jsonObject.get("expired").getAsLong();
+    			String redirect = jsonObject.get("password").getAsString();
+    			if("yes".equals(isIntranet) && !isIntranet(request)) {
+    	            model.addAttribute("error", "login_intranet"); 
+    	            return "protected/forget"; 		    				
+    			}
+    			if(expired >0 && expired > new Date().getTime()) {
+    	            model.addAttribute("error", "login_expired"); 
+    	            return "protected/forget"; 				
+    			}
+    			User user = (User)jcrService.getObject("/system/users/"+username);
+    			if(!user.getUserName().equals(password) || !user.getPassword().equals(password)) {
+    	            model.addAttribute("error", "login_error");    
+    	            return "protected/forget"; 		
+    			}
+    			Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+    			authorities.add(new SimpleGrantedAuthority(this.getRolePrefix()+user.getRole().toLowerCase()));//default role
+
+    			for(Role role:user.getRoles()) {
+    				authorities.add(new SimpleGrantedAuthority(this.getRolePrefix()+role.getRoleName().toUpperCase()));
+    			} 
+    			if(user.getPort()==null || "".equals(user.getPort())) {
+    				user.setPort("");
+    			}else {
+    				user.setPort(":"+user.getPort());
+    			}
+    	        String token_author = user.getHost()+"/"+user.getPort()+"/"+username+"/"+user.getTitle()+"/"+request.getRemoteAddr();
+    			for(Role role:user.getRoles()) {
+    				token_author += "/"+role.getRoleName();
+    			}
+    			org.springframework.security.core.userdetails.User userdetails = new org.springframework.security.core.userdetails.User(user.getUserName(),"proptected",true,true,true,true,authorities);
+    			
+    			Authentication auth = 
+    			new UsernamePasswordAuthenticationToken(userdetails, null, authorities);
+    			SecurityContext securityContext = SecurityContextHolder.getContext();
+    			securityContext.setAuthentication(auth);
+    			HttpSession session = request.getSession(true);
+    	        session.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);
+    			request.setAttribute("usersite", user.getHost());
+    			request.setAttribute("port", user.getPort());
+    			request.setAttribute("username", username);
+    			request.setAttribute("usertitle", user.getTitle()); 
+    			request.setAttribute("signingKey", user.getSigningKey());  
+    	        String token = JwtUtil.generateToken(JwtUtil.signingKey, token_author);
+    	        String domain = request.getServerName();
+
+   	        
+    	        CookieUtil.create(response, JwtUtil.jwtTokenCookieName, token, false, -1, domain);
+    	        if(user.getHost()!=null && !domain.equals(user.getHost()))
+    	        	CookieUtil.create(response, JwtUtil.jwtTokenCookieName, token, false, -1, user.getHost());
+    	        if(redirect==null || "".equals(redirect) || "signin".equals(redirect)) {
+    	    		return "redirect:/site/assets.html";
+    	        }else {
+    	       		return "redirect:"+ redirect+"&domain="+domain;
+    	        }
+    			
+    		}catch( Exception e) {
+    			logger.error(e.getMessage());
+    		}
+    	}
+    	return "forget";
+    }
+	
 	@RequestMapping(value="/register", method=RequestMethod.GET)
 	public void register(String redirect, HttpServletRequest request, HttpServletResponse response) {
 	}

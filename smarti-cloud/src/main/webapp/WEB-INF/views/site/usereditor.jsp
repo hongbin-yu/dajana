@@ -106,7 +106,11 @@
 			</div>
 
 		</details>
-		</div>					
+		</div>
+		<div class="form-group">
+			<label for="encodedJson"><span class="field-name">二维密码（保存起来用于忘记密码登入）</span> <strong class="required"></strong></label>
+			<img class="img-responsive" src="/content/password.qrb?path=${url }/forget/${user.encodedJson}">
+		</div>							
 		<div class="form-group">
 			<label for="host"><span class="field-name">域名</span> <strong class="required"></strong></label>
 			<input class="form-control" id="host" name="host" value="${user.host }" type="text" path="${user.path }" data-rule-minlength="4" size="40"  disabled/>
