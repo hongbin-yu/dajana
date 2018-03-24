@@ -90,7 +90,7 @@ public class Asset implements SmartiNode, Serializable {
 		this.title = title;
 	}
 	public String getName() {
-		if(name==null) {
+		if(name==null && path !=null) {
 		   return path.substring(path.lastIndexOf("/")+1);	
 		}
 		return name;

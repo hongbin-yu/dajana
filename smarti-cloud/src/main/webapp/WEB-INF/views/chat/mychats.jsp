@@ -13,15 +13,15 @@
         <div class="row text-center"><img id="online_chat_loading" width="120" height="120" class="wb-inv" src="/resources/images/loadingx400.gif" alt="下载"/></div>
         <div id="online_chat">
 		</div>
-			<div class="panel panel-primary"><header class="panel-heading">${folder.title }</header>
+			<div class="panel panel-primary"><header class="panel-heading">${folder.title }					<a href="#" title="${user.title }"><img id="uploadIcon" class="img-responsive pull-right" src="/site/file/icon.jpg?path=/${username }/assets/icon/x48.jpg" alt="图标"/></a>
+			</header>
 				<div id="uploadBox" class="panel-body" ondrop="drop(event)" ondragover="allowDrop(event)" style="border:1px solid #aaaaaa;">
 					<form action="upload.html" method="POST" id="form-upload" enctype="multipart/form-data">
 					<input type="hidden" id="path" name="path" value="/${user.userName}/assets/youchat"/>
 					<input type="hidden" id="override" name="override" value="true"/>
-					
+
 					<div class="panel" id="selectedFiles"  onchange="javascript:uploadFiles()">
 					</div>
-
 					<div id="online_chat_editor" class="panel panel-default online_editor"></div>
 
 					<input class="form-control wb-inv" type="file" id="fileUpload" name="file" size="60" required="required"  multiple/>
