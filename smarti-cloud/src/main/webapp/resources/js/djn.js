@@ -1,4 +1,20 @@
 var files=[];
+var contentPath = "";
+if(window.location.pathname.indexOf("/smarti-cloud")>=0) {
+	contentPath = "/smarti-cloud";
+}
+var path = "";
+var type = "image";
+//var win = (!window.frameElement && window.dialogArguments) || opener || parent || top;
+var selDiv = "", topInsert="";
+//var form_upload = document.getElementById("form-upload");
+/*var tinyMCE;
+var tinymce = tinyMCE = win.tinymce;*/
+var input = "";
+document.addEventListener("DOMContentLoaded", init, false);
+var i18n = window.wb.i18n;
+
+var count = 0;
 $(window).on('load',function() {
 	var menu = document.getElementById("wb-lng");
 	if(menu) {
@@ -73,7 +89,7 @@ function ScrollHandler(e) {
 
         }else if($window.scrollTop() ==0) {
         	if(firstModified != 'undefined' && firstModified>0) {
-        		path = $("#pagePath").val();
+        		var path = $("#pagePath").val();
         		username = $("#username").val();
         		var userrole = $("#userrole").val();
         		$("#online_chat_loading").removeClass("wb-inv");
@@ -142,22 +158,7 @@ function ScrollHandler(e) {
 
     }, _throttleDelay);
 }
-var contentPath = "";
-if(window.location.pathname.indexOf("/smarti-cloud")>=0) {
-	contentPath = "/smarti-cloud";
-}
-var path = "";
-var type = "image";
-//var win = (!window.frameElement && window.dialogArguments) || opener || parent || top;
-var selDiv = "", topInsert="";
-//var form_upload = document.getElementById("form-upload");
-/*var tinyMCE;
-var tinymce = tinyMCE = win.tinymce;*/
-var input = "";
-document.addEventListener("DOMContentLoaded", init, false);
-var i18n = window.wb.i18n;
 
-var count = 0;
 /*function pw(s) {
 	var v=$("#j_password").val();
 	if(v=="") {
@@ -729,7 +730,7 @@ function uploadFile(file) {
 	var running = "<img src=\"/resources/images/ui-anim_basic_16x16.gif\">"+ file.name + "<br/>";
 	selDiv.innerHTML = running;
 	var override = $("#override").is(":checked")?"true":"false";
-	path = $("#path").val();
+	var path = $("#path").val();
 	var formData = new FormData();
 	formData.append("path",path);
     formData.append("file", file,file.name);
