@@ -317,7 +317,7 @@ public class ProtectedController extends BaseController {
 	   		if(path==null) path="/chat";
 	   		SimpleDateFormat sdf;
 	   		sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
-	   		//logger.debug(sdf.format(user.getLastModified()));
+	   		//logger.debug(userpath+"="+sdf.format(user.getLastModified()));
 	   		String dateRange = user.getLastModified()==null?"":"and s.[jcr:lastModified] "+operator+" CAST('"+sdf.format(user.getLastModified())+"' AS DATE)";
 			String chatQuery = "select * from [nt:base] AS s WHERE ISDESCENDANTNODE(["+folder.getPath()+"]) "+dateRange+" and s.ocm_classname='com.filemark.jcr.model.Chat' order by s.[jcr:lastModified] DESC";
 			long chatCount = jcrService.getCount(chatQuery);
@@ -341,8 +341,16 @@ public class ProtectedController extends BaseController {
 		if(!"/chat".equals(path) && jcrService.nodeExsits(path+"/"+username)) {
 			if(chats.getPageCount()>0) {
 				Chat chat = chats.getItems().get(chats.getItems().size()-1);
-				//logger.debug("lastModified:"+chat.getLastModified());
+				logger.debug("lastModified:"+chat.getLastModified().getTime());
 				jcrService.updateCalendar(path+"/"+username, "lastModified",chat.getLastModified());
+/*				try {
+					User user = (User)jcrService.getObject(path+"/"+username);
+					logger.debug("lastModified:"+user.getLastModified().getTime());
+				} catch (RepositoryException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}*/
+				
 			}
 
 		}

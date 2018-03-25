@@ -375,7 +375,8 @@ function checkUnread() {
     $.ajax({
 	    url: '/protected/unreadchat.json',
 	    data: {
-		    path: path
+		    path: path,
+		    lastModified: new Date().getTime()
 		    },
 	    type: "GET",
 	    contentType: "application/json",
@@ -385,7 +386,7 @@ function checkUnread() {
 	    		if(f.childCount>0) {
 	    			$("#unread-"+f.uid).html(""+f.childCount);
 	    		}else {
-	    			$("#unread-"+f.uid).html();
+	    			$("#unread-"+f.uid).html("");
 	    		}
 	    		count++;
 	    	});
