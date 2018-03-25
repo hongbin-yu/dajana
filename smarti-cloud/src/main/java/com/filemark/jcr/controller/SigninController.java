@@ -153,7 +153,7 @@ public class SigninController extends BaseController{
     @RequestMapping(value = {"/forget"}, method ={ RequestMethod.GET, RequestMethod.POST})
    	public String forgetpassword(String encodedJson,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-    	if(encodedJson!=null && encodedJson.matches("(.+\\..+\\..+)")) {
+    	//if(encodedJson!=null && encodedJson.matches("(.+\\..+\\..+)")) {
     		try {
     			String json = JwtUtil.decode(encodedJson);
     			JsonParser parser = new JsonParser();
@@ -220,7 +220,7 @@ public class SigninController extends BaseController{
     		}catch( Exception e) {
     			logger.error(e.getMessage());
     		}
-    	}
+    	//}
     	return "forget";
     }
 	
