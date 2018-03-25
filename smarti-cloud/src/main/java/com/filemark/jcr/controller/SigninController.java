@@ -150,8 +150,8 @@ public class SigninController extends BaseController{
 	
 	}	
 	
-    @RequestMapping(value = {"/forget/{encodedjson}","/forget"}, method ={ RequestMethod.GET, RequestMethod.POST})
-   	public String forgetpassword(@PathVariable String encodedJson,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
+    @RequestMapping(value = {"/forget"}, method ={ RequestMethod.GET, RequestMethod.POST})
+   	public String forgetpassword(String encodedJson,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
 
     	if(encodedJson!=null && encodedJson.matches("(.+\\..+\\..+)")) {
     		try {
@@ -165,16 +165,16 @@ public class SigninController extends BaseController{
     			String redirect = jsonObject.get("password").getAsString();
     			if("yes".equals(isIntranet) && !isIntranet(request)) {
     	            model.addAttribute("error", "login_intranet"); 
-    	            return "protected/forget"; 		    				
+    	            return "forget"; 		    				
     			}
     			if(expired >0 && expired > new Date().getTime()) {
     	            model.addAttribute("error", "login_expired"); 
-    	            return "protected/forget"; 				
+    	            return "forget"; 				
     			}
     			User user = (User)jcrService.getObject("/system/users/"+username);
     			if(!user.getUserName().equals(password) || !user.getPassword().equals(password)) {
     	            model.addAttribute("error", "login_error");    
-    	            return "protected/forget"; 		
+    	            return "forget"; 		
     			}
     			Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
     			authorities.add(new SimpleGrantedAuthority(this.getRolePrefix()+user.getRole().toLowerCase()));//default role

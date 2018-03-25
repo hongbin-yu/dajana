@@ -110,7 +110,7 @@
 		<div class="form-group">
 			<details>
 			<summary><label for="encodedJson"><span class="field-name">二维密码（保存起来用于忘记密码登入）</span> <strong class="required"></strong></label></summary>
-			<img class="img-responsive" src="/content/password.qrb?path=${url }/forget/${user.encodedJson}">
+			<img class="img-responsive" src="/content/password.qrb?path=${url }/forget?encodedjson=${user.encodedJson}">
 			</details>
 		</div>							
 		<div class="form-group">

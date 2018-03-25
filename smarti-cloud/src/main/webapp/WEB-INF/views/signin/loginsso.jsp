@@ -72,6 +72,7 @@
 
                
 	<input type="submit" id="submit" value="<spring:message code="djn.submit"/>" class="btn btn-primary"> <input type="reset" value="<spring:message code="djn.reset"/>" class="btn btn-default">
+	<a class="pull-right" href="/forget"><spring:message code="djn.forget_password"/></a>
     </form>
 </div>
 

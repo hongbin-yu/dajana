@@ -27,6 +27,6 @@
 	<definition name="forget" extends="contentpage">
 	    <put-attribute name="header" value="/WEB-INF/views/wet/header.jsp" />
 	    <put-attribute name="topmenu" value="/WEB-INF/views/signin/topmenu.jsp" />	    
-		<put-attribute name="content" value="/WEB-INF/views/signin/loginsso.jsp" />
+		<put-attribute name="content" value="/WEB-INF/views/signin/forget.jsp" />
 	</definition>		
 </tiles-definitions>
