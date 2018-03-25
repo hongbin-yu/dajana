@@ -165,16 +165,16 @@ public class SigninController extends BaseController{
     			String redirect = jsonObject.get("password").getAsString();
     			if("yes".equals(isIntranet) && !isIntranet(request)) {
     	            model.addAttribute("error", "login_intranet"); 
-    	            return "forget"; 		    				
+    	            return "redirect:/forget?error=login_intranet"; 		    				
     			}
     			if(expired >0 && expired > new Date().getTime()) {
     	            model.addAttribute("error", "login_expired"); 
-    	            return "forget"; 				
+    	            return "redirect:/forget?error=login_expired"; 				
     			}
     			User user = (User)jcrService.getObject("/system/users/"+username);
-    			if(!user.getUserName().equals(password) || !user.getPassword().equals(password)) {
+    			if(!user.getPassword().equals(password)) {
     	            model.addAttribute("error", "login_error");    
-    	            return "forget"; 		
+    	            return "redirect:/forget?error=bad_credentials"; 		
     			}
     			Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
     			authorities.add(new SimpleGrantedAuthority(this.getRolePrefix()+user.getRole().toLowerCase()));//default role
