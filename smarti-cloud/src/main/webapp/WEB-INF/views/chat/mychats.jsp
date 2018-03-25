@@ -90,7 +90,7 @@
  	</div>
 </section> 
 <input type="hidden" id="pagePath" name="pathPath" value="${folder.path}"/>
-<input type="hidden" id="pageName" name="pathName" value="mychat"/>
+<input type="hidden" id="pageName" name="pathName" value="youchat"/>
 <input type="hidden" id="username" name="username" value="${username}"/>
 <c:if test="${user.role =='Owner' || user.role == 'Administrator'}">
 <input type="hidden" id="userrole" name="userrole" value="Administrator"/>

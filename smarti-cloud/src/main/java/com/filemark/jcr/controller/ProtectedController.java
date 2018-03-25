@@ -190,7 +190,7 @@ public class ProtectedController extends BaseController {
 		return "redirect:/signin?info=pwchanged&username="+username;
 	}
   	
-	@RequestMapping(value = {"/protected/browse.html","/site/image.html"}, method = {RequestMethod.GET,RequestMethod.POST},produces = "text/plain;charset=UTF-8")
+	@RequestMapping(value = {"/protected/browse.html","/protected/image.html"}, method = {RequestMethod.GET,RequestMethod.POST},produces = "text/plain;charset=UTF-8")
 	public String browse(String path,String type, String input,String kw,Integer p,Integer m,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
 		ImageUtil.HDDOn();
 		String assetFolder = "/"+getUsername()+"/assets";

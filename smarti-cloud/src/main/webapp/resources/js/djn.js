@@ -729,6 +729,7 @@ function uploadFile(file) {
 	var running = "<img src=\"/resources/images/ui-anim_basic_16x16.gif\">"+ file.name + "<br/>";
 	selDiv.innerHTML = running;
 	var override = $("#override").is(":checked")?"true":"false";
+	path = $("#path").val();
 	var formData = new FormData();
 	formData.append("path",path);
     formData.append("file", file,file.name);
@@ -957,8 +958,8 @@ function output(data) {
 	    	document.getElementById("online_chat_editor").focus();
 	    	tinyMCE.activeEditor.selection.select(tinyMCE.activeEditor.getBody(), true);
 	    	tinyMCE.activeEditor.selection.collapse(false);
-	    	tinyMCE.activeEditor.insertContent(html);
-	    	//tinyMCE.activeEditor.setDirty(true);
+	    	tinyMCE.activeEditor.selection.setContent(html);
+	    	tinyMCE.activeEditor.setDirty(true);
 	    }
 }
 
