@@ -54,6 +54,8 @@ public class User implements SmartiNode {
 	private Date lastDydns;
 	@Field
 	private String role;
+	@Field
+	private String icon;	
 	@Collection(autoUpdate=false)
 	private Set<Role> roles = new HashSet<Role>();
 	
@@ -264,4 +266,15 @@ public class User implements SmartiNode {
 		
 		return JwtUtil.encode(encodedJson);
 	}
+	
+	public String getIcon() {
+		String iconpath = Asset.getDevicePath()+"/"+userName+"/assets/icon/x48.jpg";
+		if (new File(iconpath).exists()) return "/protected/file/icon.jpg?path="+"/"+userName+"/assets/icon/x48.jpg";
+		return "/resources/images/user-icon.png";
+	}
+
+	public void setIcon(String icon) {
+		this.icon = icon;
+	}
+	
 }

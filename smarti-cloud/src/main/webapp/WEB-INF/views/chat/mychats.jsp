@@ -7,7 +7,7 @@
 <div class="container">
 <div class="row">
         <main role="main" property="mainContentOfPage" class="col-md-8 col-md-push-4">
-        <h1>优信<c:if test="${folder.title != null}"> - ${folder.title }</c:if><a href="#" title="${user.title }" onclick="ftrClose('/protected/profile.html')"><img id="uploadIcon" class="img-responsive pull-right" src="/site/file/icon.jpg?path=/${username }/assets/icon/x48.jpg" alt="图标"/></a></h1>
+        <h1>优信<c:if test="${folder.title != null}"> - ${folder.title }</c:if><a href="#" title="${user.title }" onclick="ftrClose('/protected/profile.html')"><img id="uploadIcon" class="img-responsive pull-right" src="${user.icon}" alt="图标"/></a></h1>
 	<c:if test="${folder==null || folder.path == '/chat'}"><div data-ajax-replace="/templates/assets/html/youchat.html"></div></c:if>        
 	<c:if test="${folder.title != null && folder.path != '/chat'}">
         <div class="row text-center"><img id="online_chat_loading" width="120" height="120" class="wb-inv" src="/resources/images/loadingx400.gif" alt="下载"/></div>

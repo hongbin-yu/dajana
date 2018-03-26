@@ -390,10 +390,12 @@ function checkUnread() {
 	    		}
 	    		count++;
 	    	});
-	    	if(count > 0)
-	    		setTimeout(checkUnread,10000);
+	    	if(count > 3)
+	    		setTimeout(checkUnread,3000);
+	    	else if(count > 0)
+	    		setTimeout(checkUnread,5000);
 	    	else
-	    		setTimeout(checkUnread,30000);
+	    		setTimeout(checkUnread,20000);
 
 		},
 		error: function() {
