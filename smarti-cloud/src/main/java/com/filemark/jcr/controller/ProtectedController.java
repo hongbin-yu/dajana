@@ -168,7 +168,7 @@ public class ProtectedController extends BaseController {
 		jcrService.addOrUpdate(asset);
 		jcrService.updateCalendar(assetPath,"lastModified");
 		jcrService.setProperty(assetPath, "changed", "true");
-		ImageUtil.fswebcam(assetPath+"/origin.jpg", 1080, 720);
+		ImageUtil.fswebcam(getDevice().getLocation()+assetPath+"/origin.jpg", 1080, 720);
    		return asset;
 
    	}
