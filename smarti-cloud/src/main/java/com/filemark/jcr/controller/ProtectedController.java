@@ -158,7 +158,7 @@ public class ProtectedController extends BaseController {
 		String  fileName = getDateTime()+".jpg";
 		String assetPath = "/"+username+"/assets/webpictures";
 		if(!jcrService.nodeExsits(assetPath)) jcrService.addNodes(assetPath, "nt:unstructure", username);
-		assetPath +=fileName;
+		assetPath +="/"+fileName;
 		File pictures = new File(getDevice().getLocation()+assetPath);
 		if(!pictures.exists()) pictures.mkdirs();
    		Asset asset = new Asset();
