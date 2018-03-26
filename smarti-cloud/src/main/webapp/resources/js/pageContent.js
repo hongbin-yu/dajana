@@ -408,33 +408,99 @@ function checkUnread() {
 function fswebcam() {
     $("#online_chat_running").removeClass("wb-inv");
 	$("#online_chat_send").attr("disabled",true);
-	$("#fswebcam").attr("disabled",true);	
+	$("#fswebcam").attr("disabled",true);
+	var left_float = document.getElementById("left-float");	
+	if(left_float.getAttribute("style")=="left: 0px; border: 400px none; height: 300px; position: fixed; width: 400px; overflow: hidden; top: 10px; left: 10px; bottom: 0px") {
     $.ajax({
-	    url: '/protected/webcam.json',
+	    url: '/protected/video.html?action=close',
 	    type: "GET",
-	    contentType: "application/json",
+	    contentType: "text/html",
 	    timeout: 30000,
 	    success: function(data) {
-	    	var html="";
-    		html +='<a class="wb-lbx-edit" href="'+data.link+'" target="_BLANK"><img id="img'+data.uid+'" src="'+data.icon+'" class="img-responsive" draggable="true"></img></a>';
-	    	document.getElementById("online_chat_editor").focus();
-	    	tinyMCE.activeEditor.selection.select(tinyMCE.activeEditor.getBody(), true);
-	    	tinyMCE.activeEditor.selection.collapse(false);
-	    	tinyMCE.activeEditor.selection.setContent(html);
-	    	tinyMCE.activeEditor.setDirty(true);
-	        $("#online_chat_running").addClass("wb-inv");
-	    	$("#online_chat_send").attr("disabled",false);
-	    	$("#fswebcam").attr("disabled",false);
+	        $.ajax({
+	    	    url: '/protected/webcam.json',
+	    	    type: "GET",
+	    	    contentType: "application/json",
+	    	    timeout: 30000,
+	    	    success: function(data) {
+	    	    	
+	    	    	var html="";
+	        		html +='<a class="wb-lbx-edit" href="'+data.link+'" target="_BLANK"><img id="img'+data.uid+'" src="'+data.icon+'" class="img-responsive" draggable="true"></img></a>';
+	    	    	document.getElementById("online_chat_editor").focus();
+	    	    	tinyMCE.activeEditor.selection.select(tinyMCE.activeEditor.getBody(), true);
+	    	    	tinyMCE.activeEditor.selection.collapse(false);
+	    	    	tinyMCE.activeEditor.selection.setContent(html);
+	    	    	tinyMCE.activeEditor.setDirty(true);
+	    	        $("#online_chat_running").addClass("wb-inv");
+	    	    	$("#online_chat_send").attr("disabled",false);
+	    	    	$("#fswebcam").attr("disabled",false);
+	    	        $.ajax({
+	    	    	    url: '/protected/video.html?action=open&width=300',
+	    	    	    type: "GET",
+	    	    	    contentType: "text/html",
+	    	    	    timeout: 30000,
+	    	    	    success: function(data) {
+	    	    		},
+	    	    		error: function() {
+	    	    	    }
+
+	    	    	});		    	    	
+	    	    	
+	    		},
+	    		error: function() {
+	    		    $("#online_chat_running").addClass("wb-inv");
+	    			$("#online_chat_send").attr("disabled",false);
+	    			$("#fswebcam").attr("disabled",false);
+	    	    	$("#comment_message").html('<section class="alert alert-warning"><h5>Timeout</h5></section>');
+	    	    }
+
+	    	});		    	
 		},
 		error: function() {
-		    $("#online_chat_running").addClass("wb-inv");
-			$("#online_chat_send").attr("disabled",false);
-			$("#fswebcam").attr("disabled",false);
-	    	$("#comment_message").html('<section class="alert alert-warning"><h5>Timeout</h5></section>');
 	    }
 
-	});	
-	
+	});			
+	}else {
+        $.ajax({
+    	    url: '/protected/webcam.json',
+    	    type: "GET",
+    	    contentType: "application/json",
+    	    timeout: 30000,
+    	    success: function(data) {
+    	    	
+    	    	var html="";
+        		html +='<a class="wb-lbx-edit" href="'+data.link+'" target="_BLANK"><img id="img'+data.uid+'" src="'+data.icon+'" class="img-responsive" draggable="true"></img></a>';
+    	    	document.getElementById("online_chat_editor").focus();
+    	    	tinyMCE.activeEditor.selection.select(tinyMCE.activeEditor.getBody(), true);
+    	    	tinyMCE.activeEditor.selection.collapse(false);
+    	    	tinyMCE.activeEditor.selection.setContent(html);
+    	    	tinyMCE.activeEditor.setDirty(true);
+    	        $("#online_chat_running").addClass("wb-inv");
+    	    	$("#online_chat_send").attr("disabled",false);
+    	    	$("#fswebcam").attr("disabled",false);
+    	        $.ajax({
+    	    	    url: '/protected/video.html?action=open&width=300',
+    	    	    type: "GET",
+    	    	    contentType: "text/html",
+    	    	    timeout: 30000,
+    	    	    success: function(data) {
+    	    		},
+    	    		error: function() {
+    	    	    }
+
+    	    	});		    	    	
+    	    	
+    		},
+    		error: function() {
+    		    $("#online_chat_running").addClass("wb-inv");
+    			$("#online_chat_send").attr("disabled",false);
+    			$("#fswebcam").attr("disabled",false);
+    	    	$("#comment_message").html('<section class="alert alert-warning"><h5>Timeout</h5></section>');
+    	    }
+
+    	});				
+	}
+
 }
 
 function webvideo(view,width) {
@@ -450,7 +516,7 @@ function webvideo(view,width) {
 			    contentType: "text/html",
 			    timeout: 30000,
 			    success: function(data) {
-			    	$("#fswebcam").attr("disabled",false);
+			    	//$("#fswebcam").attr("disabled",false);
 				},
 				error: function() {
 			    }
@@ -465,7 +531,7 @@ function webvideo(view,width) {
 			    contentType: "text/html",
 			    timeout: 30000,
 			    success: function(data) {
-			    	$("#fswebcam").attr("disabled",true);
+			    	//$("#fswebcam").attr("disabled",true);
 				},
 				error: function() {
 			    }
