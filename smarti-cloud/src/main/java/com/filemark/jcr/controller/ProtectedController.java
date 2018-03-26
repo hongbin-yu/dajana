@@ -155,7 +155,7 @@ public class ProtectedController extends BaseController {
    	@RequestMapping(value = {"/protected/webcam.json"}, method = RequestMethod.GET)
    	public @ResponseBody Asset fswebcam(Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String username = getUsername();
-		String  fileName = getDateTime();
+		String  fileName = getDateTime()+".jpg";
 		String assetPath = "/"+username+"/assets/webpictures/"+fileName;
    		Asset asset = new Asset();
    		asset.setExt(".jpg");
