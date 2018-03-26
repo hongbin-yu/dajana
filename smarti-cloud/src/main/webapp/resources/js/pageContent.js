@@ -412,6 +412,7 @@ function fswebcam() {
 	    contentType: "application/json",
 	    timeout: 30000,
 	    success: function(data) {
+	    	var html="";
     		html +='<a class="wb-lbx-edit" href="'+data.link+'" target="_BLANK"><img id="img'+data.uid+'" src="'+data.icon+'" class="img-responsive" draggable="true"></img></a>';
 	    	document.getElementById("online_chat_editor").focus();
 	    	tinyMCE.activeEditor.selection.select(tinyMCE.activeEditor.getBody(), true);
