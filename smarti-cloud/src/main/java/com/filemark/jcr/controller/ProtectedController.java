@@ -156,7 +156,11 @@ public class ProtectedController extends BaseController {
    	public @ResponseBody Asset fswebcam(Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String username = getUsername();
 		String  fileName = getDateTime()+".jpg";
-		String assetPath = "/"+username+"/assets/webpictures/"+fileName;
+		String assetPath = "/"+username+"/assets/webpictures";
+		if(!jcrService.nodeExsits(assetPath)) jcrService.addNodes(assetPath, "nt:unstructure", username);
+		assetPath +=fileName;
+		File pictures = new File(getDevice().getLocation()+assetPath);
+		if(!pictures.exists()) pictures.mkdirs();
    		Asset asset = new Asset();
    		asset.setExt(".jpg");
  		asset.setName(fileName);
