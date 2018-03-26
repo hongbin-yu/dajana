@@ -20,6 +20,19 @@
 </div>
 </div>
 </c:if>
+<c:if test="${param.error eq 'barcode:0' || error eq 'barcode:0'}">
+<div class="container">
+<div class="col-md-4">
+<section class="alert alert-warning">
+<h3><spring:message code="djn.login_fail"/>!</h3>
+<p>
+  	<spring:message code="djn.login_barcodenotfound"/>。 <spring:message code="djn.try_again"/>。
+ </p>
+</section>
+</div>
+</div>
+</c:if>
+
 <c:if test="${param.error eq 'bad_credentials'}">
 <div class="container">
 <div class="col-md-4">
@@ -46,20 +59,16 @@
 </c:if>
 
 <div class="wb-frmvld">
-			<form action="upload.html" method="POST" id="form-upload" enctype="multipart/form-data">
-				<input type="hidden" id="path" name="path" value="${folder.path}"/>
-				<input type="hidden" id="type"  name="type" value="${type}"/>
-				<input type="hidden" id="input" name="input" value="${input}"/>
-				<input type="hidden" name="redirect" value="assets.html?path=${folder.path}&type=${type}&input=${input}"/>
-						
-				<div class="form-group" ondrop="drop(event)" ondragover="allowDrop(event)" style="border:1px solid #aaaaaa;">
-					<label for="fileUpload" class="required"><a href="#" onclick="openFiles()"><span id="openFiles" class="field-name"><spring:message code="djn.select_dragging_drop_qr"/> </span></a></label>
-					<br/><a href="#" onclick="openFiles()"><img id="uploadImg" src="<c:url value='/resources/images/upload.png'/>"/></a>
-					<div class="panel" id="selectedFiles">
-					</div>	
-					<input class="form-control wb-inv" type="file" id="fileUpload" name="file" size="60" required="required"  multiple/>
-					<input id="submit_upload" type="button" onclick="javascript:uploadFiles()" value="<spring:message code="djn.upload"/>" class="btn btn-primary" disabled> <input type="reset" value="<spring:message code="djn.clear"/>" onclick="resetSelDiv()" class="btn btn-default">
+			<form action="/forget" method="POST" id="form-upload" enctype="multipart/form-data">
+				<c:if test="${qrimage !=null}">
+				<img class="img-responsive" src="${qrimage}" alt="">
+				</c:if>
+				<div class="form-group">
+					<label for="fileUpload" class="required">选择二维密码图</label>
+					<input class="form-control" type="file" id="fileUpload" name="file" size="60" required="required"  multiple/>
 				</div>
+				<input id="submit_upload" type="submit"  value="<spring:message code="djn.upload"/>" class="btn btn-primary"> <input type="reset" value="<spring:message code="djn.clear"/>" class="btn btn-default">
+
 			</form>
 </div>
 

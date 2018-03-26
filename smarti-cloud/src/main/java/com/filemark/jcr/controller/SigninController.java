@@ -17,10 +17,15 @@ package com.filemark.jcr.controller;
 
 
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collection;
 import java.util.Date;
 
+import javax.imageio.ImageIO;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -36,18 +41,24 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.filemark.jcr.model.Page;
 import com.filemark.jcr.model.Role;
 import com.filemark.jcr.model.User;
 import com.filemark.sso.CookieUtil;
 import com.filemark.sso.JwtUtil;
+import com.filemark.utils.ScanUploadForm;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-
+import com.google.zxing.BinaryBitmap;
+import com.google.zxing.LuminanceSource;
+import com.google.zxing.MultiFormatReader;
+import com.google.zxing.Result;
+import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
+import com.google.zxing.common.HybridBinarizer;
 
 @Controller
 public class SigninController extends BaseController{
@@ -150,19 +161,19 @@ public class SigninController extends BaseController{
 	
 	}	
 	
-    @RequestMapping(value = {"/forget"}, method ={ RequestMethod.GET, RequestMethod.POST})
-   	public String forgetpassword(String encodedJson,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
+    @RequestMapping(value = {"/forget"}, method ={ RequestMethod.GET})
+   	public String forgetpassword(String j,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-    	//if(encodedJson!=null && encodedJson.matches("(.+\\..+\\..+)")) {
+    	if(j!=null) {
     		try {
-    			String json = JwtUtil.decode(encodedJson);
+    			String json = JwtUtil.decode(j);
     			JsonParser parser = new JsonParser();
     			final JsonObject jsonObject = parser.parse(json).getAsJsonObject();
-    			String username = jsonObject.get("username").getAsString();
-    			String password = jsonObject.get("password").getAsString();
-    			String isIntranet = jsonObject.get("isIntranet").getAsString();    			
-    			long expired = jsonObject.get("expired").getAsLong();
-    			String redirect = jsonObject.get("password").getAsString();
+    			String username = jsonObject.get("username")==null?"":jsonObject.get("username").getAsString();
+    			String password = jsonObject.get("password")==null?"":jsonObject.get("password").getAsString();
+    			String isIntranet = jsonObject.get("isIntranet")==null?"false":jsonObject.get("isIntranet").getAsString();    			
+    			long expired = jsonObject.get("expired")==null?0:jsonObject.get("expired").getAsLong();
+    			String redirect = jsonObject.get("redirect")==null?null:jsonObject.get("redirect").getAsString();
     			if("yes".equals(isIntranet) && !isIntranet(request)) {
     	            model.addAttribute("error", "login_intranet"); 
     	            return "redirect:/forget?error=login_intranet"; 		    				
@@ -172,7 +183,7 @@ public class SigninController extends BaseController{
     	            return "redirect:/forget?error=login_expired"; 				
     			}
     			User user = (User)jcrService.getObject("/system/users/"+username);
-    			if(!user.getPassword().equals(password)) {
+    			if(user.getPassword()==null || !user.getPassword().equals(password)) {
     	            model.addAttribute("error", "login_error");    
     	            return "redirect:/forget?error=bad_credentials"; 		
     			}
@@ -218,12 +229,44 @@ public class SigninController extends BaseController{
     	        }
     			
     		}catch( Exception e) {
-    			logger.error(e.getMessage());
+    			logger.error("forget:"+e.getMessage());
+    			return "redirect:/forget?error="+e.getMessage();
     		}
-    	//}
+    	}
     	return "forget";
     }
-	
+    @RequestMapping(value = {"/forget"}, method ={ RequestMethod.POST}) 
+    public String forgetPost(ScanUploadForm uploadForm,Model model,HttpServletRequest request, HttpServletResponse response) {
+    	String error=uploadForm.getFilename();
+    	try {
+			for (MultipartFile multipartFile : uploadForm.getFile()) {
+		    	final ByteArrayOutputStream os = new ByteArrayOutputStream();	
+	    		InputStream in = multipartFile.getInputStream();
+	    		BufferedImage image = ImageIO.read(in);
+	    		in.close();
+
+	            LuminanceSource tmpSource = new BufferedImageLuminanceSource(image);
+	            BinaryBitmap tmpBitmap = new BinaryBitmap(new HybridBinarizer(tmpSource));
+	    		MultiFormatReader tmpBarcodeReader = new MultiFormatReader();
+	    		Result result = tmpBarcodeReader.decode(tmpBitmap);
+	    		String url = result.getText();
+	    		if(url.startsWith("http")) {
+	    			return "redirect:"+url;
+	    		}
+				ImageIO.write(image, "jpg", os);
+				os.close();
+				String qrimage =  "data:image/png;base64,"+Base64.getEncoder().encodeToString(os.toByteArray());
+				model.addAttribute("qrimage",qrimage);
+			}
+    	}catch(Exception e) {
+    		logger.error(e.getMessage());
+    		error=e.getMessage();
+    		model.addAttribute("error", error);
+    	}
+
+    	return "forget";
+    }
+    
 	@RequestMapping(value="/register", method=RequestMethod.GET)
 	public void register(String redirect, HttpServletRequest request, HttpServletResponse response) {
 	}

@@ -58,6 +58,7 @@
 		<option value="${item.path }">${item.title }</option>
 	</c:forEach>     
 </select>
+<a href="?path=${folder.path}&type=${type}" title="刷屏"><span class="glyphicon glyphicon-refresh"></span></a>
 </label>
 </div>
 

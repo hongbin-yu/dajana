@@ -22,8 +22,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.filemark.sso.JwtUtil;
-
 import javax.imageio.ImageIO;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
@@ -34,7 +32,6 @@ import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.jfree.util.Log;
-import org.jsoup.Connection;
 import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
 import org.slf4j.Logger;
@@ -55,6 +52,7 @@ import com.filemark.jcr.model.Chat;
 import com.filemark.jcr.model.News;
 import com.filemark.jcr.model.Page;
 import com.filemark.jcr.model.User;
+import com.filemark.sso.JwtUtil;
 import com.filemark.utils.ImageUtil;
 import com.filemark.utils.WebPage;
 import com.google.gson.Gson;

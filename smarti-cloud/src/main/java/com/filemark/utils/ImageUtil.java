@@ -123,6 +123,42 @@ public class ImageUtil
             throw new RuntimeException(ex);
         }
     }
+    //fswebcam -r 1280x720 --no-banner image3.jpg
+    public static int fswebcam(String outfile,  int maxWidth,int maxHeight) {
+    	String s;
+    	Process p;
+    	int exit=1;
+    	String shellCommand = "/usr/bin/fswebcam -r "+maxWidth+"x"+maxHeight+" "+outfile;
+    	ProcessBuilder pb = new ProcessBuilder("/usr/bin/fswebcam","-r",maxWidth+"x"+maxHeight,outfile);
+    	pb.redirectErrorStream(true);
+	    try {	
+	        p = pb.start();//Runtime.getRuntime().exec(shellCommand);
+	        BufferedReader br = new BufferedReader(
+	            new InputStreamReader(p.getInputStream()));
+	        while ((s = br.readLine()) != null) {
+	            log.debug("line: " + s);
+	        }
+	        p.waitFor();
+	        exit = p.exitValue();
+	        if(exit !=0) {
+	        	br = new BufferedReader(
+	                    new InputStreamReader(p.getErrorStream()));
+	                while ((s = br.readLine()) != null) {
+	                    log.debug("line: " + s);
+	                }
+	        	log.error(shellCommand);
+	        	log.error("convert exit: " + exit);
+	        	
+	        }
+	        p.destroy();
+	    } catch (IOException e) {
+			log.error("pdf2jpg :"+e.getMessage());;
+	    } catch (InterruptedException e) {
+			log.error("pdf2jpg :"+e.getMessage());;
+		}
+	        return exit;
+    
+    }
     
     public static int convert(String infile, String outfile,  int maxWidth,int maxHeight) {
     	String s;

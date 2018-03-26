@@ -1,6 +1,5 @@
 package com.filemark.jcr.controller;
 
-import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -8,7 +7,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -18,7 +16,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -35,7 +32,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.io.FileUtils;
 import org.apache.poi.util.IOUtils;
 import org.apache.tika.mime.MimeType;
@@ -57,7 +53,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.filemark.jcr.controller.BaseController.HttpUtils;
 import com.filemark.jcr.model.Asset;
 import com.filemark.jcr.model.Device;
 import com.filemark.jcr.model.Djcontainer;
@@ -3087,53 +3082,6 @@ public class SiteController extends BaseController {
 			return filename+ext;
 	}
 	
-	private Device getDevice() {
-			String deviceRoot = "/system/devices";
-	   		String deviceQuery = "select * from [nt:base] AS s WHERE ISCHILDNODE(["+deviceRoot+"]) and s.ocm_classname='com.filemark.jcr.model.Device' order by s.order";
-			WebPage<Object> devices = jcrService.queryObject(deviceQuery, 20, 0);
-			for(Object d:devices.getItems()) {
-				Device dv = (Device)d;
-				File f = new File(dv.getLocation());
-				float usable = f.getUsableSpace();
-				if(usable/f.getTotalSpace() > 0.1) {
-					dv.setStatus("enabled");
-					try {
-						jcrService.addOrUpdate(dv);
-					} catch (RepositoryException e) {
-						logger.error(e.getMessage());
-					}
-					return dv;
-				}else {
-					continue;
-				}
-			}
-			if(jcrService.getDevice()!=null && !"".equals(jcrService.getDevice())) {
-				Device device = new Device(jcrService.getDevice());
-				if(!jcrService.nodeExsits("/system/devices")) {
-					try {
-						jcrService.addNodes("/system/devices", "nt:unstructured", getUsername());
-					} catch (RepositoryException e) {
-						logger.error(e.getMessage());
-					}
-				}
-				device.setPath("/system/devices/default");
-				device.setTitle("default");
-				try {
-					File dir = new File(device.getLocation());
-					if(!dir.exists())
-						dir.mkdirs();
-					device.setStatus("enabled");
-					jcrService.addOrUpdate(device);
-					
-					return device;
-				} catch (RepositoryException e) {
-					logger.error("device:"+e.getMessage());
-				}				
-
-
-			}
-		return new Device();
-	}
 
 	  
 }

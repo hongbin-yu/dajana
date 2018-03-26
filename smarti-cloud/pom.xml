@@ -633,15 +633,7 @@
 			<systemPath>${localpath}/JTwain/1.0/JTwain-1.0.jar</systemPath>
 		</dependency>			 -->		 			    
 
-<!-- 		<dependency>
-			<groupId>local</groupId>
-			<artifactId>DTKBarReader</artifactId>
-			<type>jar</type>
-			<version>1.0</version>
-	 		<scope>system</scope>
-			<systemPath>${localpath}/DTKBarReader/1.0/DTKBarReader-1.0.jar</systemPath>		
-		</dependency>
-
+<!-- 		
 		<dependency>
 			<groupId>local</groupId>
 			<artifactId>barcode</artifactId>
@@ -649,9 +641,27 @@
 			<version>1.0</version>
 			<scope>system</scope>
 			<systemPath>${localpath}/barcode/1.0/barcode-1.0.jar</systemPath>			
-		</dependency> -->
+		</dependency>
 
-	
+		<dependency>
+			<groupId>local</groupId>
+			<artifactId>DTKBarReader</artifactId>
+			<type>jar</type>
+			<version>1.0</version>
+	 		<scope>system</scope>
+			<systemPath>${localpath}/DTKBarReader/1.0/DTKBarReader-1.0.jar</systemPath>		
+		</dependency> -->
+		<!-- https://mvnrepository.com/artifact/com.google.zxing/core -->
+		<dependency>
+		    <groupId>com.google.zxing</groupId>
+		    <artifactId>core</artifactId>
+		    <version>3.3.2</version>
+		</dependency>
+		<dependency>
+		  <groupId>com.google.zxing</groupId>
+		  <artifactId>javase</artifactId>
+		  <version>3.3.2</version>
+		</dependency>					
 		<dependency>
 			<groupId>local</groupId>
 			<artifactId>spring-modules-jcr</artifactId>

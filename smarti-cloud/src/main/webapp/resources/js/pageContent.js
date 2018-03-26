@@ -405,6 +405,28 @@ function checkUnread() {
 	});	 	
 }
 
+function fswebcam() {
+    $.ajax({
+	    url: '/protected/webcam.json',
+	    type: "GET",
+	    contentType: "application/json",
+	    timeout: 30000,
+	    success: function(data) {
+    		html +='<a class="wb-lbx-edit" href="'+data.link+'" target="_BLANK"><img id="img'+data.uid+'" src="'+data.icon+'" class="img-responsive" draggable="true"></img></a>';
+	    	document.getElementById("online_chat_editor").focus();
+	    	tinyMCE.activeEditor.selection.select(tinyMCE.activeEditor.getBody(), true);
+	    	tinyMCE.activeEditor.selection.collapse(false);
+	    	tinyMCE.activeEditor.selection.setContent(html);
+	    	tinyMCE.activeEditor.setDirty(true);
+		},
+		error: function() {
+	    	$("#comment_message").html('<section class="alert alert-warning"><h5>Timeout</h5></section>');
+	    }
+
+	});	
+	
+}
+
 function addUser(group,path) {
     $.ajax({
 	    url: '/protected/adduser.html',

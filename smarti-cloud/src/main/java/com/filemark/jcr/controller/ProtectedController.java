@@ -151,7 +151,27 @@ public class ProtectedController extends BaseController {
    		return "redirect:"+site;
 
    	}
-   	
+
+   	@RequestMapping(value = {"/protected/webcam.json"}, method = RequestMethod.GET)
+   	public @ResponseBody Asset fswebcam(Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String username = getUsername();
+		String  fileName = getDateTime();
+		String assetPath = "/"+username+"/assets/webpictures/"+fileName;
+   		Asset asset = new Asset();
+   		asset.setExt(".jpg");
+ 		asset.setName(fileName);
+		asset.setCreatedBy(username);
+		asset.setPath(assetPath);
+		asset.setLastModified(new Date());
+		asset.setDevice(getDevice().getPath());
+		asset.setContentType("image/jpg");
+		jcrService.addOrUpdate(asset);
+		jcrService.updateCalendar(assetPath,"lastModified");
+		jcrService.setProperty(assetPath, "changed", "true");
+		ImageUtil.fswebcam(assetPath+"/origin.jpg", 1080, 720);
+   		return asset;
+
+   	}
 	@RequestMapping(value = {"/protected/profile.html"}, method = RequestMethod.GET)
 	public String profile(String path,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String username = getUsername();
@@ -340,7 +360,7 @@ public class ProtectedController extends BaseController {
 		WebPage<Chat> chats = jcrService.queryChats(chatQuery, 12, 0);
 		if(!"/chat".equals(path) && jcrService.nodeExsits(path+"/"+username)) {
 			if(chats.getPageCount()>0) {
-				Chat chat = chats.getItems().get(chats.getItems().size()-1);
+				Chat chat = chats.getItems().get(0);
 				logger.debug("lastModified:"+chat.getLastModified().getTime());
 				jcrService.updateCalendar(path+"/"+username, "lastModified",chat.getLastModified());
 /*				try {

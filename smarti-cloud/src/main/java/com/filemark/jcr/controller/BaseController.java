@@ -46,13 +46,18 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 
 
+
+
 import com.filemark.jcr.model.Asset;
+import com.filemark.jcr.model.Device;
 import com.filemark.jcr.model.Folder;
 import com.filemark.jcr.model.Role;
 import com.filemark.jcr.model.User;
 import com.filemark.jcr.service.JcrServices;
 import com.filemark.utils.ImageUtil;
 import com.filemark.utils.QueryCustomSetting;
+import com.filemark.utils.WebPage;
+
 
 
 public class BaseController {
@@ -60,7 +65,7 @@ public class BaseController {
     private static final int DEFAULT_BUFFER_SIZE = 20480; // ..bytes = 20KB.
     private static final long DEFAULT_EXPIRE_TIME = 604800000L; // ..ms = 1 week.
     private static final String MULTIPART_BOUNDARY = "MULTIPART_BYTERANGES";
-	
+	private static int loadDTKBarReader = 0;
 	@SuppressWarnings("unused")
 	private static final Logger logger = LoggerFactory.getLogger(BaseController.class);
 	@Inject
@@ -84,7 +89,12 @@ public class BaseController {
 				}
 			}
 			*/
-		Asset.setDevicePath(jcrService.getDevice());
+		if(loadDTKBarReader==0) {
+			loadDTKBarReader = 1;
+			Asset.setDevicePath(jcrService.getDevice());
+		}
+
+
 		ImageUtil.HDDOff();
 	}
 
@@ -565,6 +575,55 @@ public class BaseController {
             }
         }
     }
+  
+	protected Device getDevice() {
+		String deviceRoot = "/system/devices";
+   		String deviceQuery = "select * from [nt:base] AS s WHERE ISCHILDNODE(["+deviceRoot+"]) and s.ocm_classname='com.filemark.jcr.model.Device' order by s.order";
+		WebPage<Object> devices = jcrService.queryObject(deviceQuery, 20, 0);
+		for(Object d:devices.getItems()) {
+			Device dv = (Device)d;
+			File f = new File(dv.getLocation());
+			float usable = f.getUsableSpace();
+			if(usable/f.getTotalSpace() > 0.1) {
+				dv.setStatus("enabled");
+				try {
+					jcrService.addOrUpdate(dv);
+				} catch (RepositoryException e) {
+					logger.error(e.getMessage());
+				}
+				return dv;
+			}else {
+				continue;
+			}
+		}
+		if(jcrService.getDevice()!=null && !"".equals(jcrService.getDevice())) {
+			Device device = new Device(jcrService.getDevice());
+			if(!jcrService.nodeExsits("/system/devices")) {
+				try {
+					jcrService.addNodes("/system/devices", "nt:unstructured", getUsername());
+				} catch (RepositoryException e) {
+					logger.error(e.getMessage());
+				}
+			}
+			device.setPath("/system/devices/default");
+			device.setTitle("default");
+			try {
+				File dir = new File(device.getLocation());
+				if(!dir.exists())
+					dir.mkdirs();
+				device.setStatus("enabled");
+				jcrService.addOrUpdate(device);
+				
+				return device;
+			} catch (RepositoryException e) {
+				logger.error("device:"+e.getMessage());
+			}				
+
+
+		}
+		return new Device();
+	}
+  
     protected static class HttpUtils {
 
         /**

@@ -18,7 +18,7 @@
 				<div id="uploadBox" class="panel-body" ondrop="drop(event)" ondragover="allowDrop(event)" style="border:1px solid #aaaaaa;">
 					<form action="upload.html" method="POST" id="form-upload" enctype="multipart/form-data">
 					<input type="hidden" id="path" name="path" value="/${user.userName}/assets/youchat"/>
-					<input type="hidden" id="override" name="override" value="true"/>
+					<input class="wb-inv" type="checkbox" id="override" name="override" value="true" checked/>
 
 					<div class="panel" id="selectedFiles"  onchange="javascript:uploadFiles()">
 					</div>
@@ -29,7 +29,8 @@
 						<a id="submit_youchat" class="btn btn-default btn-block" title="发送" href="javascript:sendChat('${folder.path}')"><span class="glyphicon glyphicon-send"></span><img class="wb-inv" id="online_chat_running" src="/resources/images/loading16x16.gif" alt=""/></a>
 						<a class="btn btn-default btn-block" title="打开云资源" href="javascript:openOverlay('online_chat_editor','left-bar')"  aria-controls="left-panel" role="button"><span class="glyphicon glyphicon-cloud"></span></a>
 						<a class="btn btn-default btn-block" title="打开网站" href="javascript:openOverlay('online_chat_editor','right-bar')"   aria-controls="left-panel" role="button" ><span class="glyphicon glyphicon-globe"></span></a>
-						<a class="btn btn-default btn-block" title="打开网站" href="javascript:openFiles()"   aria-controls="left-panel" role="button" ><span class="glyphicon glyphicon-picture"></span></a>
+						<a class="btn btn-default btn-block" title="打开本机资源" href="javascript:openFiles()"   aria-controls="left-panel" role="button" ><span class="glyphicon glyphicon-picture"></span></a>
+						<a class="btn btn-default btn-block" title="网络相机" href="javascript:fswebcam()"   aria-controls="left-panel" role="button" style="FONT-FAMILY: 'Arial';"><span class="glyphicon glyphicon-camera"></span></a>
 					</div>
 					</form>
 				</div>
