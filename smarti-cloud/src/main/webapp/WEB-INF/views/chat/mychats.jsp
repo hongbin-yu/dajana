@@ -95,9 +95,8 @@
 </section> 
 <section id="left-float" style="left: 0px; border: 0px none; height: 300px; position: fixed; width: 0px; overflow: hidden; top: 10px; left: 10px; bottom: 0px">
 	<div class="modal-body">
-	<img id="video-iframe" class="img-responsive" src="" alt="">
-<!--     <iframe id="video-iframe" src="" scrolling="no" style="height: 300px; border: 0px none; width: 400px; margin-bottom: 0px; margin-left: 0px;">
-    </iframe> -->
+	<iframe id="video-iframe" src="" scrolling="no" style="height: 300px; border: 0px none; width: 400px; margin-bottom: 0px; margin-left: 0px;">
+    </iframe>
  	</div>
 </section> 
 <input type="hidden" id="pagePath" name="pathPath" value="${folder.path}"/>
