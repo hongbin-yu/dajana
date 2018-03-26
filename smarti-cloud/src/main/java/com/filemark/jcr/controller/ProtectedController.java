@@ -103,6 +103,7 @@ public class ProtectedController extends BaseController {
 		//model.addAttribute("navigation",jcrService.getPageNavigation("/content/"+getUsername(),2));		
    		return "chat/mychat";
    	}
+   	
    	@RequestMapping(value = {"/protected/wojia"}, method = {RequestMethod.GET})
    	public String mysite(String path,String lastModified,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
    		String username = getUsername();
@@ -151,6 +152,17 @@ public class ProtectedController extends BaseController {
    		logger.debug("redirect to "+site);
    		return "redirect:"+site;
 
+   	}
+
+   	@RequestMapping(value = {"/protected/video.html"}, method = RequestMethod.GET)
+   	public @ResponseBody String video(String action, Integer width,Model model,HttpServletRequest request, HttpServletResponse response) {
+   		if (action!=null && action.equals("close")) {
+   			ImageUtil.closevideo();
+   		}else {
+   			if(width==null) width=300;
+   			ImageUtil.video(width, width);
+   		}
+   		return "";
    	}
 
    	@RequestMapping(value = {"/protected/webcam.json"}, method = RequestMethod.GET)

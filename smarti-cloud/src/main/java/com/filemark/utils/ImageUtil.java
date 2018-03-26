@@ -123,6 +123,92 @@ public class ImageUtil
             throw new RuntimeException(ex);
         }
     }
+    /*
+	sudo apt-get update
+	sudo apt-get upgrade
+	wget http://lilnetwork.com/download/raspberrypi/mjpg-streamer.tar.gz
+	tar xvzf mjpg-streamer.tar.gz
+	sudo apt-get install libjpeg8-dev
+	sudo apt-get install imagemagick
+	cd mjpg-streamer/mjpg-streamer
+	make
+	./mjpg_streamer -i "./input_uvc.so" -o "./output_http.so -w ./www"
+     */
+    public static int video(int maxWidth,int maxHeight) {
+    	String s;
+    	Process p;
+    	int exit=1;
+    	if(maxWidth>=720) maxWidth=720;
+    	else if(maxWidth>=450) maxWidth=450;
+    	else maxWidth=300;
+    	String shellCommand = "/mnt/device/dajana/smarti-cloud/streamer"+maxWidth+".sh";
+    	ProcessBuilder pb = new ProcessBuilder("/mnt/device/dajana/smarti-cloud/streamer"+maxWidth+".sh");
+    	pb.redirectErrorStream(true);
+	    try {	
+	        p = pb.start();//Runtime.getRuntime().exec(shellCommand);
+	        BufferedReader br = new BufferedReader(
+	            new InputStreamReader(p.getInputStream()));
+	        while ((s = br.readLine()) != null) {
+	            log.debug("line: " + s);
+	        }
+	        p.waitFor();
+	        exit = p.exitValue();
+	        if(exit !=0) {
+	        	br = new BufferedReader(
+	                    new InputStreamReader(p.getErrorStream()));
+	                while ((s = br.readLine()) != null) {
+	                    log.debug("line: " + s);
+	                }
+	        	log.error(shellCommand);
+	        	log.error("video exit: " + exit);
+	        	
+	        }
+	        p.destroy();
+	    } catch (IOException e) {
+			log.error("video :"+e.getMessage());;
+	    } catch (InterruptedException e) {
+			log.error("video :"+e.getMessage());;
+		}
+	        return exit;
+
+
+    }
+
+    public static int closevideo() {
+    	String s;
+    	Process p;
+    	int exit=1;
+    	ProcessBuilder pb = new ProcessBuilder("killall mjpg_streamer");
+    	pb.redirectErrorStream(true);
+	    try {	
+	        p = pb.start();//Runtime.getRuntime().exec(shellCommand);
+	        BufferedReader br = new BufferedReader(
+	            new InputStreamReader(p.getInputStream()));
+	        while ((s = br.readLine()) != null) {
+	            log.debug("line: " + s);
+	        }
+	        p.waitFor();
+	        exit = p.exitValue();
+	        if(exit !=0) {
+	        	br = new BufferedReader(
+	                    new InputStreamReader(p.getErrorStream()));
+	                while ((s = br.readLine()) != null) {
+	                    log.debug("line: " + s);
+	                }
+
+	        	log.error("video exit: " + exit);
+	        	
+	        }
+	        p.destroy();
+	    } catch (IOException e) {
+			log.error("video :"+e.getMessage());;
+	    } catch (InterruptedException e) {
+			log.error("video :"+e.getMessage());;
+		}
+	        return exit;
+
+
+    }
     //fswebcam -r 1280x720 --no-banner image3.jpg
     public static int fswebcam(String outfile,  int maxWidth,int maxHeight) {
     	String s;
@@ -152,9 +238,9 @@ public class ImageUtil
 	        }
 	        p.destroy();
 	    } catch (IOException e) {
-			log.error("pdf2jpg :"+e.getMessage());;
+			log.error("webcam :"+e.getMessage());;
 	    } catch (InterruptedException e) {
-			log.error("pdf2jpg :"+e.getMessage());;
+			log.error("webcam :"+e.getMessage());;
 		}
 	        return exit;
     

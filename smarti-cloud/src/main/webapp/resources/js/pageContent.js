@@ -345,10 +345,10 @@ function syncChat() {
 
 			});
 		    if(data.pageCount>0) {
-		    	setTimeout(syncChat,5000);
+		    	setTimeout(syncChat,10000);
 		        //checkUnread();		    	
 		    }else {
-		    	setTimeout(syncChat,10000);
+		    	setTimeout(syncChat,30000);
 		    }
 		    if($("#chat").attr("open")) {
 		    	$("#online_notice").html("");	
@@ -437,16 +437,38 @@ function fswebcam() {
 	
 }
 
-function webvideo(view) {
+function webvideo(view,width) {
 	var left_float = document.getElementById("left-float");
 
 	if(left_float!=null && left_float !='undefined') {
 		if(left_float.getAttribute("style")=="left: 0px; border: 0px none; height: 300px; position: fixed; width: 400px; overflow: hidden; top: 10px; left: 10px; bottom: 0px") {
 			left_float.setAttribute("style", "left: 0px; border: 0px none; height: 300px; position: fixed; width: 0px; overflow: hidden; top: 10px; left: 10px; bottom: 0px");
 			$("#video-iframe").attr("src","");	
+		    $.ajax({
+			    url: '/protected/video.html?action=close',
+			    type: "GET",
+			    contentType: "text/html",
+			    timeout: 30000,
+			    success: function(data) {
+				},
+				error: function() {
+			    }
+
+			});				
 		}else {
 			left_float.setAttribute("style", "left: 0px; border: 0px none; height: 300px; position: fixed; width: 400px; overflow: hidden; top: 10px; left: 10px; bottom: 0px");
-			$("#video-iframe").attr("src",view);	
+			$("#video-iframe").attr("src",view);
+		    $.ajax({
+			    url: '/protected/video.html?action=open&width='+width,
+			    type: "GET",
+			    contentType: "text/html",
+			    timeout: 30000,
+			    success: function(data) {
+				},
+				error: function() {
+			    }
+
+			});		
 		}
 		
 	}

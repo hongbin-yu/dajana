@@ -13,7 +13,7 @@
         <div class="row text-center"><img id="online_chat_loading" width="120" height="120" class="wb-inv" src="/resources/images/loadingx400.gif" alt="下载"/></div>
         <div id="online_chat">
 		</div>
-			<div class="panel panel-primary"><header class="panel-heading">${folder.title }<img class="wb-inv" id="online_chat_running" src="/resources/images/loading16x16.gif" alt=""/><a href="#" title="${user.title }"><img id="uploadIcon" class="img-responsive pull-right" src="/site/file/icon.jpg?path=/${username }/assets/icon/x48.jpg" alt="图标"/></a>
+			<div class="panel panel-primary"><header class="panel-heading">${folder.title }<img class="wb-inv" id="online_chat_running" src="/resources/images/loading16x16.gif" alt=""/><a href="#" title="${user.title }"><img id="uploadIcon" class="img-responsive pull-right" src="/protected/file/icon.jpg?path=/${username }/assets/icon/x48.jpg" alt="图标"/></a>
 			</header>
 				<div id="uploadBox" class="panel-body" ondrop="drop(event)" ondragover="allowDrop(event)" style="border:1px solid #aaaaaa;">
 					<form action="upload.html" method="POST" id="form-upload" enctype="multipart/form-data">
@@ -32,7 +32,7 @@
 						<a class="btn btn-default btn-block" title="打开本机资源" href="javascript:openFiles()"   aria-controls="left-panel" role="button" ><span class="glyphicon glyphicon-picture"></span></a>
 						<c:if test="${user.role =='Owner' || user.role == 'Administrator'}">	            
 						<a id="fswebcam" class="btn btn-default btn-block" title="网络相机" href="javascript:fswebcam()"   aria-controls="left-panel" role="button"><span class="glyphicon glyphicon-camera"></span></a>
-						<a id="webvideo" class="btn btn-default btn-block" title="网络直播" href="javascript:webvideo('${video_url}')"   aria-controls="left-panel" role="button"><span class="glyphicon glyphicon-facetime-video"></span></a>
+						<a id="webvideo" class="btn btn-default btn-block" title="网络直播" href="javascript:webvideo('${video_url}',300)"   aria-controls="left-panel" role="button"><span class="glyphicon glyphicon-facetime-video"></span></a>
 						</c:if>
 					</div>
 					</form>
