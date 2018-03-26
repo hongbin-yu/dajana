@@ -32,7 +32,7 @@
 						<a class="btn btn-default btn-block" title="打开本机资源" href="javascript:openFiles()"   aria-controls="left-panel" role="button" ><span class="glyphicon glyphicon-picture"></span></a>
 						<c:if test="${user.role =='Owner' || user.role == 'Administrator'}">	            
 						<a id="fswebcam" class="btn btn-default btn-block" title="网络相机" href="javascript:fswebcam()"   aria-controls="left-panel" role="button"><span class="glyphicon glyphicon-camera"></span></a>
-						<a id="webvideo" class="btn btn-default btn-block" title="网络直播" href="javascript:webvideo('${video_url}',300)"   aria-controls="left-panel" role="button"><span class="glyphicon glyphicon-facetime-video"></span></a>
+						<a id="webvideo" class="btn btn-default btn-block" title="网络直播" href="javascript:webvideo('${video_url}/?action=stream',300)"   aria-controls="left-panel" role="button"><span class="glyphicon glyphicon-facetime-video"></span></a>
 						</c:if>
 					</div>
 					</form>
@@ -95,8 +95,9 @@
 </section> 
 <section id="left-float" style="left: 0px; border: 0px none; height: 300px; position: fixed; width: 0px; overflow: hidden; top: 10px; left: 10px; bottom: 0px">
 	<div class="modal-body">
-    <iframe id="video-iframe" src="" scrolling="no" style="height: 300px; border: 0px none; width: 400px; margin-bottom: 0px; margin-left: 0px;">
-    </iframe>
+	<img id="video-iframe" class="img-responsive" src="" alt="">
+<!--     <iframe id="video-iframe" src="" scrolling="no" style="height: 300px; border: 0px none; width: 400px; margin-bottom: 0px; margin-left: 0px;">
+    </iframe> -->
  	</div>
 </section> 
 <input type="hidden" id="pagePath" name="pathPath" value="${folder.path}"/>
