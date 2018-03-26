@@ -450,6 +450,7 @@ function webvideo(view,width) {
 			    contentType: "text/html",
 			    timeout: 30000,
 			    success: function(data) {
+			    	$("#fswebcam").attr("disabled",false);
 				},
 				error: function() {
 			    }
@@ -464,6 +465,7 @@ function webvideo(view,width) {
 			    contentType: "text/html",
 			    timeout: 30000,
 			    success: function(data) {
+			    	$("#fswebcam").attr("disabled",true);
 				},
 				error: function() {
 			    }
