@@ -47,7 +47,7 @@
 </section> 
 <section id="youchat-bar" class="wb-overlay modal-content overlay-def wb-panel-l col-md-4">
 	<header class="modal-header">
-		<h2 class="modal-title">云站</h2>
+		<h2 class="modal-title">优信</h2>
 	</header>
 	<div class="modal-body">
     <iframe id="left-iframe" src="/protected/chat.html" scrolling="yes" style="height: 600px; border: 0px none; width: 360px; margin-bottom: 0px; margin-left: 10px;">

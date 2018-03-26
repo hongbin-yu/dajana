@@ -90,10 +90,11 @@ public class ProtectedController extends BaseController {
 		}else {
 			model.addAttribute("folder", jcrService.getFolder("/chat"));
 		}
-
+		String video_url = request.getScheme()+"://"+request.getServerName()+":8088";
 		Page page = new Page();
 		page.setTitle("优信");
 		page.setPath("/content/"+username);
+		model.addAttribute("video_url", video_url);
    		model.addAttribute("folders", folders);
    		model.addAttribute("page", page);
    		model.addAttribute("user", user);

@@ -13,7 +13,7 @@
         <div class="row text-center"><img id="online_chat_loading" width="120" height="120" class="wb-inv" src="/resources/images/loadingx400.gif" alt="下载"/></div>
         <div id="online_chat">
 		</div>
-			<div class="panel panel-primary"><header class="panel-heading">${folder.title }					<a href="#" title="${user.title }"><img id="uploadIcon" class="img-responsive pull-right" src="/site/file/icon.jpg?path=/${username }/assets/icon/x48.jpg" alt="图标"/></a>
+			<div class="panel panel-primary"><header class="panel-heading">${folder.title }<img class="wb-inv" id="online_chat_running" src="/resources/images/loading16x16.gif" alt=""/><a href="#" title="${user.title }"><img id="uploadIcon" class="img-responsive pull-right" src="/site/file/icon.jpg?path=/${username }/assets/icon/x48.jpg" alt="图标"/></a>
 			</header>
 				<div id="uploadBox" class="panel-body" ondrop="drop(event)" ondragover="allowDrop(event)" style="border:1px solid #aaaaaa;">
 					<form action="upload.html" method="POST" id="form-upload" enctype="multipart/form-data">
@@ -26,11 +26,14 @@
 
 					<input class="form-control wb-inv" type="file" id="fileUpload" name="file" size="60" required="required"  multiple/>
 					<div class="btn-group btn-group-justified">
-						<a id="submit_youchat" class="btn btn-default btn-block" title="发送" href="javascript:sendChat('${folder.path}')"><span class="glyphicon glyphicon-send"></span><img class="wb-inv" id="online_chat_running" src="/resources/images/loading16x16.gif" alt=""/></a>
+						<a id="online_chat_send" class="btn btn-default btn-block" title="发送" href="javascript:sendChat('${folder.path}')"><span class="glyphicon glyphicon-send"></span></a>
 						<a class="btn btn-default btn-block" title="打开云资源" href="javascript:openOverlay('online_chat_editor','left-bar')"  aria-controls="left-panel" role="button"><span class="glyphicon glyphicon-cloud"></span></a>
 						<a class="btn btn-default btn-block" title="打开网站" href="javascript:openOverlay('online_chat_editor','right-bar')"   aria-controls="left-panel" role="button" ><span class="glyphicon glyphicon-globe"></span></a>
 						<a class="btn btn-default btn-block" title="打开本机资源" href="javascript:openFiles()"   aria-controls="left-panel" role="button" ><span class="glyphicon glyphicon-picture"></span></a>
-						<a class="btn btn-default btn-block" title="网络相机" href="javascript:fswebcam()"   aria-controls="left-panel" role="button" style="FONT-FAMILY: 'Arial';"><span class="glyphicon glyphicon-camera"></span></a>
+						<c:if test="${user.role =='Owner' || user.role == 'Administrator'}">	            
+						<a id="fswebcam" class="btn btn-default btn-block" title="网络相机" href="javascript:fswebcam()"   aria-controls="left-panel" role="button"><span class="glyphicon glyphicon-camera"></span></a>
+						<a id="webvideo" class="btn btn-default btn-block" title="网络直播" href="javascript:webvideo('${video_url}')"   aria-controls="left-panel" role="button"><span class="glyphicon glyphicon-facetime-video"></span></a>
+						</c:if>
 					</div>
 					</form>
 				</div>
@@ -87,6 +90,12 @@
 	</header>
 	<div class="modal-body">
     <iframe id="right-iframe" src="/site/file.html?type=file" scrolling="yes" style="height: 600px; border: 0px none; width: 360px; margin-bottom: 0px; margin-left: 10px;">
+    </iframe>
+ 	</div>
+</section> 
+<section id="left-float" style="left: 0px; border: 0px none; height: 300px; position: fixed; width: 0px; overflow: hidden; top: 10px; left: 10px; bottom: 0px">
+	<div class="modal-body">
+    <iframe id="video-iframe" src="" scrolling="no" style="height: 300px; border: 0px none; width: 400px; margin-bottom: 0px; margin-left: 0px;">
     </iframe>
  	</div>
 </section> 

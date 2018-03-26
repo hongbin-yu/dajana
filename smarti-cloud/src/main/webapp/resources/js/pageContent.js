@@ -296,7 +296,7 @@ function syncChat() {
 	    success: function(data) {
 	    	setTimeout(function() {
 	    		$("#online_chat_send").attr("disabled",false);	    	
-	    	},3000); 
+	    	},1000); 
 	    	$.each(data.items,function(i,c){
 		    	if(c.lastModified>lastModified || firstModified ==0) {
 				    var html = 	"";
@@ -406,6 +406,9 @@ function checkUnread() {
 }
 
 function fswebcam() {
+    $("#online_chat_running").removeClass("wb-inv");
+	$("#online_chat_send").attr("disabled",true);
+	$("#fswebcam").attr("disabled",true);	
     $.ajax({
 	    url: '/protected/webcam.json',
 	    type: "GET",
@@ -419,13 +422,34 @@ function fswebcam() {
 	    	tinyMCE.activeEditor.selection.collapse(false);
 	    	tinyMCE.activeEditor.selection.setContent(html);
 	    	tinyMCE.activeEditor.setDirty(true);
+	        $("#online_chat_running").addClass("wb-inv");
+	    	$("#online_chat_send").attr("disabled",false);
+	    	$("#fswebcam").attr("disabled",false);
 		},
 		error: function() {
+		    $("#online_chat_running").addClass("wb-inv");
+			$("#online_chat_send").attr("disabled",false);
+			$("#fswebcam").attr("disabled",false);
 	    	$("#comment_message").html('<section class="alert alert-warning"><h5>Timeout</h5></section>');
 	    }
 
 	});	
 	
+}
+
+function webvideo(view) {
+	var left_float = document.getElementById("left-float");
+
+	if(left_float!=null && left_float !='undefined') {
+		if(left_float.getAttribute("style")=="left: 0px; border: 0px none; height: 300px; position: fixed; width: 400px; overflow: hidden; top: 10px; left: 10px; bottom: 0px") {
+			left_float.setAttribute("style", "left: 0px; border: 0px none; height: 300px; position: fixed; width: 0px; overflow: hidden; top: 10px; left: 10px; bottom: 0px");
+			$("#video-iframe").attr("src","");	
+		}else {
+			left_float.setAttribute("style", "left: 0px; border: 0px none; height: 300px; position: fixed; width: 400px; overflow: hidden; top: 10px; left: 10px; bottom: 0px");
+			$("#video-iframe").attr("src",view);	
+		}
+		
+	}
 }
 
 function addUser(group,path) {
