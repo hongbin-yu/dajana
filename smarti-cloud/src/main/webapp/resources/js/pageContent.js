@@ -297,6 +297,12 @@ function syncChat() {
 	    	setTimeout(function() {
 	    		$("#online_chat_send").attr("disabled",false);	    	
 	    	},1000); 
+	    	if(data.action.indexOf("/?action=stream")>0) {
+	    		if($("video-iframe").html()=="")
+	    			$("video-iframe").html("<img class=\"img-responsive\" src=\""+action+"&t="+new Date().getTime()+"\" alt=\"\">");
+	    	}else {
+	    		$("video-iframe").html("");
+	    	}
 	    	$.each(data.items,function(i,c){
 		    	if(c.lastModified>lastModified || firstModified ==0) {
 				    var html = 	"";

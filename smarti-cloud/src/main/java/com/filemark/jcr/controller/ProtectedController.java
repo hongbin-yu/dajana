@@ -392,6 +392,10 @@ public class ProtectedController extends BaseController {
 			}
 
 		}
+		if(ImageUtil.video) {
+			String video_url = request.getScheme()+"://"+request.getServerName()+":8088/?action=stream";
+			chats.setAction(video_url);
+		}
 
    		return chats;
    	}

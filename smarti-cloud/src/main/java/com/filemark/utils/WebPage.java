@@ -9,6 +9,7 @@ public class WebPage<E> {
 	private int pageSize;
 	private long availablePages;
 	private long pageCount;
+	private String action;
 	private List<E> items;
 	public WebPage(int pageNumber, int pageSize, long total, List<E> items) {
 		super();
@@ -55,6 +56,12 @@ public class WebPage<E> {
 			return this.pageNumber - this.pageSize/2;
 		}else
 			return 1;
+	}
+	public String getAction() {
+		return action;
+	}
+	public void setAction(String action) {
+		this.action = action;
 	}
 
 
