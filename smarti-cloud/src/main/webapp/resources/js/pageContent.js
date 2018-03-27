@@ -412,7 +412,7 @@ function fswebcam(view) {
 	//$("#online_chat_send").attr("disabled",true);
 	//$("#fswebcam").attr("disabled",true);
 	//var left_float = document.getElementById("video-iframe");
-	$("#video-iframe").html("<img class=\"img-responsive\" src=\""+view+"/?action=snapshot\" alt=\"\">");
+	$("#video-iframe").html("<img class=\"img-responsive\" src=\""+view+"/?action=snapshot\"&t="+new Date().getTime()+" alt=\"\">");
 /*	if(left_float.getAttribute("style")=="height: 300px; border: 0px none; width: 400px; margin-bottom: 0px; margin-left: 0px;") {
     $.ajax({
 	    url: '/protected/video.html?action=close',
@@ -509,7 +509,7 @@ function fswebcam(view) {
 
 function webvideo(view,width) {
 
-	$("#video-iframe").html("<img class=\"img-responsive\" src=\""+view+"/?action=stream\" alt=\"\">");
+	$("#video-iframe").html("<img class=\"img-responsive\" src=\""+view+"/?action=stream&t="+new Date().getTime()+"\" alt=\"\">");
 
 	$.ajax({
 		    url: '/protected/video.html?action=open&width='+width,
