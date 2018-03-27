@@ -407,12 +407,13 @@ function checkUnread() {
 	});	 	
 }
 
-function fswebcam() {
-    $("#online_chat_running").removeClass("wb-inv");
-	$("#online_chat_send").attr("disabled",true);
-	$("#fswebcam").attr("disabled",true);
-	var left_float = document.getElementById("video-iframe");	
-	if(left_float.getAttribute("style")=="height: 300px; border: 0px none; width: 400px; margin-bottom: 0px; margin-left: 0px;") {
+function fswebcam(view) {
+    //$("#online_chat_running").removeClass("wb-inv");
+	//$("#online_chat_send").attr("disabled",true);
+	//$("#fswebcam").attr("disabled",true);
+	//var left_float = document.getElementById("video-iframe");
+	$("#video-iframe").html("<img class=\"img-responsive\" src=\""+view+"/?action=snapshot\" alt=\"\">");
+/*	if(left_float.getAttribute("style")=="height: 300px; border: 0px none; width: 400px; margin-bottom: 0px; margin-left: 0px;") {
     $.ajax({
 	    url: '/protected/video.html?action=close',
 	    type: "GET",
@@ -502,7 +503,7 @@ function fswebcam() {
     	    }
 
     	});				
-	}
+	}*/
 
 }
 
@@ -510,9 +511,9 @@ function webvideo(view,width) {
 	var left_float = document.getElementById("video-iframe");
 
 	if(left_float!=null && left_float !='undefined') {
-		if(left_float.getAttribute("style")=="height: 300px; border: 0px none; width: 400px; margin-bottom: 0px; margin-left: 0px;") {
-			left_float.setAttribute("style", "height: 0px; border: 0px none; width: 400px; margin-bottom: 0px; margin-left: 0px;");
-			$("#video-iframe").attr("src","");	
+/*		if(left_float.getAttribute("style")=="height: 300px; border: 0px none; width: 400px; margin-bottom: 0px; margin-left: 0px;") {
+			left_float.setAttribute("style", "height: 0px; border: 0px none; width: 400px; margin-bottom: 0px; margin-left: 0px;");*/
+			$("#video-iframe").html("");	
 		    $.ajax({
 			    url: '/protected/video.html?action=close',
 			    type: "GET",
@@ -526,8 +527,8 @@ function webvideo(view,width) {
 
 			});				
 		}else {
-			left_float.setAttribute("style", "height: 300px; border: 0px none; width: 400px; margin-bottom: 0px; margin-left: 0px;");
-			$("#video-iframe").attr("src",view);
+			//left_float.setAttribute("style", "height: 300px; border: 0px none; width: 400px; margin-bottom: 0px; margin-left: 0px;");
+			$("#video-iframe").html("<img class=\"img-responsive\" src=\""+view+"/?action=stream\" alt=\"\">");
 		    $.ajax({
 			    url: '/protected/video.html?action=open&width='+width,
 			    type: "GET",
@@ -542,7 +543,7 @@ function webvideo(view,width) {
 			});		
 		}
 		
-	}
+	//}
 }
 
 function addUser(group,path) {
