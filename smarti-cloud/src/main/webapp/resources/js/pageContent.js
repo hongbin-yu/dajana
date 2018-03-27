@@ -411,8 +411,8 @@ function fswebcam() {
     $("#online_chat_running").removeClass("wb-inv");
 	$("#online_chat_send").attr("disabled",true);
 	$("#fswebcam").attr("disabled",true);
-	var left_float = document.getElementById("left-float");	
-	if(left_float.getAttribute("style")=="left: 0px; border: 400px none; height: 300px; position: fixed; width: 400px; overflow: hidden; top: 10px; left: 10px; bottom: 0px") {
+	var left_float = document.getElementById("video-iframe");	
+	if(left_float.getAttribute("style")=="height: 300px; border: 0px none; width: 400px; margin-bottom: 0px; margin-left: 0px;") {
     $.ajax({
 	    url: '/protected/video.html?action=close',
 	    type: "GET",
@@ -459,6 +459,7 @@ function fswebcam() {
 	    	});		    	
 		},
 		error: function() {
+			$("#fswebcam").attr("disabled",false);
 	    }
 
 	});			
