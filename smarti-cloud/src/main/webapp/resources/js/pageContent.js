@@ -508,42 +508,38 @@ function fswebcam(view) {
 }
 
 function webvideo(view,width) {
-	//var left_float = document.getElementById("video-iframe");
+	$("#video-iframe").html("");
+	    $.ajax({
+		    url: '/protected/video.html?action=open&width='+width,
+		    type: "GET",
+		    contentType: "text/html",
+		    timeout: 30000,
+		    success: function(data) {
+				$("#video-iframe").html("<img class=\"img-responsive\" src=\""+view+"/?action=stream\" alt=\"\">");
+			},
+			error: function() {
+		    }
 
-	if($("#video-iframe").html() !='') {
-/*		if(left_float.getAttribute("style")=="height: 300px; border: 0px none; width: 400px; margin-bottom: 0px; margin-left: 0px;") {
-			left_float.setAttribute("style", "height: 0px; border: 0px none; width: 400px; margin-bottom: 0px; margin-left: 0px;");*/
-			$("#video-iframe").html("");	
-		    $.ajax({
-			    url: '/protected/video.html?action=close',
-			    type: "GET",
-			    contentType: "text/html",
-			    timeout: 30000,
-			    success: function(data) {
-			    	//$("#fswebcam").attr("disabled",false);
-				},
-				error: function() {
-			    }
+		});		
 
-			});				
-		}else {
-			//left_float.setAttribute("style", "height: 300px; border: 0px none; width: 400px; margin-bottom: 0px; margin-left: 0px;");
-			$("#video-iframe").html("<img class=\"img-responsive\" src=\""+view+"/?action=stream\" alt=\"\">");
-		    $.ajax({
-			    url: '/protected/video.html?action=open&width='+width,
-			    type: "GET",
-			    contentType: "text/html",
-			    timeout: 30000,
-			    success: function(data) {
-			    	//$("#fswebcam").attr("disabled",true);
-				},
-				error: function() {
-			    }
 
-			});		
-		}
-		
-	//}
+}
+
+function stopvideo() {
+	
+	$("#video-iframe").html("");	
+    $.ajax({
+	    url: '/protected/video.html?action=close',
+	    type: "GET",
+	    contentType: "text/html",
+	    timeout: 30000,
+	    success: function(data) {
+	    	$("#video-iframe").html("");
+		},
+		error: function() {
+	    }
+
+	});		
 }
 
 function addUser(group,path) {
