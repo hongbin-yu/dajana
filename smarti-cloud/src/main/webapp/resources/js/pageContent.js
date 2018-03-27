@@ -297,7 +297,7 @@ function syncChat() {
 	    	setTimeout(function() {
 	    		$("#online_chat_send").attr("disabled",false);	    	
 	    	},1000); 
-	    	if(data.action.indexOf("/?action=stream")>0) {
+	    	if(data.action !=null && data.action.indexOf("/?action=stream")>0) {
 	    		if($("video-iframe").html()=="")
 	    			$("video-iframe").html("<img class=\"img-responsive\" src=\""+action+"&t="+new Date().getTime()+"\" alt=\"\">");
 	    	}else {
