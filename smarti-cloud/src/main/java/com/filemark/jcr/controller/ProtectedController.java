@@ -380,14 +380,15 @@ public class ProtectedController extends BaseController {
 			if(chats.getPageCount()>0) {
 				Chat chat = chats.getItems().get(chats.getItems().size()-1);
 				logger.debug("lastModified:"+chat.getLastModified().getTime());
-				jcrService.updateCalendar(path+"/"+username, "lastModified",chat.getLastModified());
-/*				try {
+				
+				try {
 					User user = (User)jcrService.getObject(path+"/"+username);
-					logger.debug("lastModified:"+user.getLastModified().getTime());
+					if(chat.getLastModified().getTime().getTime()>user.getLastModified().getTime()) {
+						jcrService.updateCalendar(path+"/"+username, "lastModified",chat.getLastModified());
+					}
 				} catch (RepositoryException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}*/
+					logger.error(e.getMessage());
+				}
 				
 			}
 
