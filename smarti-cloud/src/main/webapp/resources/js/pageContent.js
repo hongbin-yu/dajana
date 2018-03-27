@@ -508,7 +508,7 @@ function fswebcam(view) {
 }
 
 function webvideo(view,width) {
-	if($("#video-iframe").html()=="")
+	if($("#video-iframe").html()=="") {
 		$("#video-iframe").html("<img src=\"/resources/images/ui-anim_basic_16x16.gif\">");
 	$.ajax({
 		    url: '/protected/video.html?action=open&width='+width,
@@ -521,10 +521,10 @@ function webvideo(view,width) {
 		    }
 
 		});		
-
+	}
 	setTimeout(function() {
 		$("#video-iframe").html("<img class=\"img-responsive\" src=\""+view+"/?action=stream&t="+new Date().getTime()+"\" alt=\"\">");
-	},5000);
+	},10000);
 }
 
 function stopvideo() {
