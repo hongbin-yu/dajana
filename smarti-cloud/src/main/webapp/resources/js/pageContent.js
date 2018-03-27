@@ -508,9 +508,9 @@ function fswebcam(view) {
 }
 
 function webvideo(view,width) {
-	var left_float = document.getElementById("video-iframe");
+	//var left_float = document.getElementById("video-iframe");
 
-	if(left_float!=null && left_float !='undefined') {
+	if($("#video-iframe").html() !='') {
 /*		if(left_float.getAttribute("style")=="height: 300px; border: 0px none; width: 400px; margin-bottom: 0px; margin-left: 0px;") {
 			left_float.setAttribute("style", "height: 0px; border: 0px none; width: 400px; margin-bottom: 0px; margin-left: 0px;");*/
 			$("#video-iframe").html("");	
