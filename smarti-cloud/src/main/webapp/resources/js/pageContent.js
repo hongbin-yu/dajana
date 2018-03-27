@@ -522,6 +522,7 @@ function webvideo(view,width) {
 		    contentType: "text/html",
 		    timeout: 30000,
 		    success: function(data) {
+		    	$("#video-iframe").html("");
 			},
 			error: function() {
 		    }
@@ -530,7 +531,7 @@ function webvideo(view,width) {
 	}
 	setTimeout(function() {
 		$("#video-iframe").html("<img class=\"img-responsive\" src=\""+view+"/?action=stream&t="+new Date().getTime()+"\" alt=\"\">");
-	},10000);
+	},5000);
 }
 
 function stopvideo() {
