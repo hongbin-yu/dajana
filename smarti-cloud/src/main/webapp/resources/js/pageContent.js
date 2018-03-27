@@ -375,7 +375,7 @@ function syncChat() {
 }
 
 function checkUnread() {
-
+	var path = $("#pagePath").val();
 	var count=0;
 	if( path !=null && path.indexOf('/chat')==0)
     $.ajax({
@@ -399,7 +399,7 @@ function checkUnread() {
 	    	if(count > 3)
 	    		setTimeout(checkUnread,3000);
 	    	else if(count > 0)
-	    		setTimeout(checkUnread,5000);
+	    		setTimeout(checkUnread,10000);
 	    	else
 	    		setTimeout(checkUnread,20000);
 
@@ -609,8 +609,12 @@ function openOverlay(id,view) {
 
 
 if($("#pagePath")) {
-	if( path !=null && path.indexOf('/chat')==0) {
+	var path = $("#pagePath").val();
+	
+	if( path !=null && path.indexOf('/chat/')==0) {
 		syncChat();
+		checkUnread();
+	}else if(path !=null && path == '/chat') {
 		checkUnread();
 	}
 

@@ -338,7 +338,7 @@ public class ProtectedController extends BaseController {
    	@RequestMapping(value = {"/protected/unreadchat.json"}, method = {RequestMethod.GET})
    	public @ResponseBody WebPage<Folder> unreadChatJson(String path,Model model,HttpServletRequest request, HttpServletResponse response) {
    		String username = getUsername();
-		String folderQuery = "select s.* from [nt:base] AS s INNER JOIN [nt:base] AS child ON ISCHILDNODE(child,s) WHERE ISDESCENDANTNODE(s,[/chat])" +" and child.userName like '%"+username+"' and s.ocm_classname='com.filemark.jcr.model.Folder' and child.ocm_classname ='com.filemark.jcr.model.User' order by s.path";
+		String folderQuery = "select s.* from [nt:base] AS s INNER JOIN [nt:base] AS child ON ISCHILDNODE(child,s) WHERE ISCHILDNODE(s,[/chat])" +" and child.userName like '%"+username+"' and s.ocm_classname='com.filemark.jcr.model.Folder' and child.ocm_classname ='com.filemark.jcr.model.User' order by s.path";
 
 		WebPage<Folder> folders = jcrService.queryFolders(folderQuery, 100, 0);
 		//logger.debug("Count="+folders.getPageCount());
@@ -378,7 +378,7 @@ public class ProtectedController extends BaseController {
 		WebPage<Chat> chats = jcrService.queryChats(chatQuery, 12, 0);
 		if(!"/chat".equals(path) && jcrService.nodeExsits(path+"/"+username)) {
 			if(chats.getPageCount()>0) {
-				Chat chat = chats.getItems().get(0);
+				Chat chat = chats.getItems().get(chats.getItems().size()-1);
 				logger.debug("lastModified:"+chat.getLastModified().getTime());
 				jcrService.updateCalendar(path+"/"+username, "lastModified",chat.getLastModified());
 /*				try {
