@@ -35,8 +35,8 @@
 						<a class="btn btn-default btn-block" title="打开网站" href="javascript:openOverlay('online_chat_editor','right-bar')"   aria-controls="left-panel" role="button" ><span class="glyphicon glyphicon-globe"></span></a>
 						<a class="btn btn-default btn-block" title="打开本机资源" href="javascript:openFiles()"   aria-controls="left-panel" role="button" ><span class="glyphicon glyphicon-picture"></span></a>
 						<c:if test="${user.role =='Owner' || user.role == 'Administrator'}">	            
-						<a id="fswebcam" class="btn btn-default btn-block" title="网络相机" href="javascript:fswebcam()"   aria-controls="left-panel" role="button"><span class="glyphicon glyphicon-camera"></span></a>
-						<a id="webvideo" class="btn btn-default btn-block" title="网络直播" href="javascript:webvideo('${video_url}/?action=stream',450)"   aria-controls="left-panel" role="button"><span class="glyphicon glyphicon-facetime-video"></span></a>
+						<a id="fswebcam" class="btn btn-default btn-block" title="网络相机" href="javascript:fswebcam(${video_url})"   aria-controls="left-panel" role="button"><span class="glyphicon glyphicon-camera"></span></a>
+						<a id="webvideo" class="btn btn-default btn-block" title="网络直播" href="javascript:webvideo('${video_url}',450)"   aria-controls="left-panel" role="button"><span class="glyphicon glyphicon-facetime-video"></span></a>
 						</c:if>
 					</div>
 					</form>
