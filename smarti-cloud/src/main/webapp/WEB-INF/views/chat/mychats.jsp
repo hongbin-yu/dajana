@@ -16,10 +16,11 @@
 			<div class="panel panel-primary"><header class="panel-heading">${folder.title }<img class="wb-inv" id="online_chat_running" src="/resources/images/loading16x16.gif" alt=""/><a href="#" title="${user.title }"><img id="uploadIcon" class="img-responsive pull-right" src="/protected/file/icon.jpg?path=/${username }/assets/icon/x48.jpg" alt="图标"/></a>
 			</header>
 				<div id="uploadBox" class="panel-body" ondrop="drop(event)" ondragover="allowDrop(event)" style="border:1px solid #aaaaaa;">
+					<iframe id="video-iframe" src="" scrolling="no" style="height: 0px; border: 0px none; width: 400px; margin-bottom: 0px; margin-left: 0px;">
+				    </iframe>	
 					<form action="upload.html" method="POST" id="form-upload" enctype="multipart/form-data">
 					<input type="hidden" id="path" name="path" value="/${user.userName}/assets/youchat"/>
 					<input class="wb-inv" type="checkbox" id="override" name="override" value="true" checked/>
-
 					<div class="panel" id="selectedFiles"  onchange="javascript:uploadFiles()">
 					</div>
 					<div id="online_chat_editor" class="panel panel-default online_editor"></div>
@@ -93,12 +94,10 @@
     </iframe>
  	</div>
 </section> 
-<section id="left-float" style="left: 0px; border: 0px none; height: 300px; position: fixed; width: 0px; overflow: hidden; top: 10px; left: 10px; bottom: 0px">
+<!-- <section id="left-float" style="left: 0px; border: 0px none; height: 300px; position: fixed; width: 0px; overflow: hidden; top: 10px; left: 10px; bottom: 0px">
 	<div class="modal-body">
-	<iframe id="video-iframe" src="" scrolling="no" style="height: 300px; border: 0px none; width: 400px; margin-bottom: 0px; margin-left: 0px;">
-    </iframe>
  	</div>
-</section> 
+</section> --> 
 <input type="hidden" id="pagePath" name="pathPath" value="${folder.path}"/>
 <input type="hidden" id="pageName" name="pathName" value="youchat"/>
 <input type="hidden" id="username" name="username" value="${username}"/>

@@ -506,11 +506,11 @@ function fswebcam() {
 }
 
 function webvideo(view,width) {
-	var left_float = document.getElementById("left-float");
+	var left_float = document.getElementById("video-iframe");
 
 	if(left_float!=null && left_float !='undefined') {
-		if(left_float.getAttribute("style")=="left: 0px; border: 0px none; height: 300px; position: fixed; width: 400px; overflow: hidden; top: 10px; left: 10px; bottom: 0px") {
-			left_float.setAttribute("style", "left: 0px; border: 0px none; height: 300px; position: fixed; width: 0px; overflow: hidden; top: 10px; left: 10px; bottom: 0px");
+		if(left_float.getAttribute("style")=="height: 300px; border: 0px none; width: 400px; margin-bottom: 0px; margin-left: 0px;") {
+			left_float.setAttribute("style", "height: 0px; border: 0px none; width: 400px; margin-bottom: 0px; margin-left: 0px;");
 			$("#video-iframe").attr("src","");	
 		    $.ajax({
 			    url: '/protected/video.html?action=close',
@@ -525,7 +525,7 @@ function webvideo(view,width) {
 
 			});				
 		}else {
-			left_float.setAttribute("style", "left: 0px; border: 0px none; height: 300px; position: fixed; width: 400px; overflow: hidden; top: 10px; left: 10px; bottom: 0px");
+			left_float.setAttribute("style", "height: 300px; border: 0px none; width: 400px; margin-bottom: 0px; margin-left: 0px;");
 			$("#video-iframe").attr("src",view);
 		    $.ajax({
 			    url: '/protected/video.html?action=open&width='+width,
