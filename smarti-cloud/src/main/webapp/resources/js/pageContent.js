@@ -508,8 +508,10 @@ function fswebcam(view) {
 }
 
 function webvideo(view,width) {
-	$("#video-iframe").html("");
-	    $.ajax({
+
+	$("#video-iframe").html("<img class=\"img-responsive\" src=\""+view+"/?action=stream\" alt=\"\">");
+
+	$.ajax({
 		    url: '/protected/video.html?action=open&width='+width,
 		    type: "GET",
 		    contentType: "text/html",
@@ -521,7 +523,6 @@ function webvideo(view,width) {
 
 		});		
 
-		$("#video-iframe").html("<img class=\"img-responsive\" src=\""+view+"/?action=stream\" alt=\"\">");
 
 }
 
