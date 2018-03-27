@@ -515,13 +515,13 @@ function webvideo(view,width) {
 		    contentType: "text/html",
 		    timeout: 30000,
 		    success: function(data) {
-				$("#video-iframe").html("<img class=\"img-responsive\" src=\""+view+"/?action=stream\" alt=\"\">");
 			},
 			error: function() {
 		    }
 
 		});		
 
+		$("#video-iframe").html("<img class=\"img-responsive\" src=\""+view+"/?action=stream\" alt=\"\">");
 
 }
 
