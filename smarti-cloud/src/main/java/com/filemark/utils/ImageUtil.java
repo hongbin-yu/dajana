@@ -26,6 +26,7 @@ public class ImageUtil
 {
 	private final static Logger log = LoggerFactory.getLogger(ImageUtil.class);
 	private static String HDDPIN = "18";
+	public static boolean video = false;
     /**
      * Takes a file, and resizes it to the given width and height, while keeping
      * original proportions. Note: It resizes a new file rather than resizing 
@@ -138,6 +139,7 @@ public class ImageUtil
     	String s;
     	Process p;
     	int exit=1;
+    	ImageUtil.video = true;
     	if(maxWidth>=720) maxWidth=720;
     	else if(maxWidth>=450) maxWidth=450;
     	else maxWidth=300;
@@ -178,6 +180,7 @@ public class ImageUtil
     	String s;
     	Process p;
     	int exit=1;
+    	ImageUtil.video = false;
     	ProcessBuilder pb = new ProcessBuilder("killall mjpg_streamer");
     	pb.redirectErrorStream(true);
 	    try {	

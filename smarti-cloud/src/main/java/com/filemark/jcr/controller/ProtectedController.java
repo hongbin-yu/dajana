@@ -94,6 +94,7 @@ public class ProtectedController extends BaseController {
 		Page page = new Page();
 		page.setTitle("优信");
 		page.setPath("/content/"+username);
+		model.addAttribute("video", ImageUtil.video);
 		model.addAttribute("video_url", video_url);
    		model.addAttribute("folders", folders);
    		model.addAttribute("page", page);
