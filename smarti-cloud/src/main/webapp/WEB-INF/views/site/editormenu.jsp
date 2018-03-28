@@ -21,8 +21,8 @@
 <ul class="list-inline margin-bottom-none">
 <authz:authorize ifAnyGranted="ROLE_USER,ROLE_ADMINISTRATOR,ROLE_OWNER">
 <li><a href="<c:url value="/site/assets.html"/>" title="<spring:message code="djn.goto_cloud"/>"><span class="glyphicon glyphicon-cloud"></span><spring:message code="djn.cloud"/></a></li>
-<li><a href='<c:url value="/site/preview.html?path=${page.path }"></c:url>' target="_BLANK" title="点击预览"><span class="glyphicon glyphicon-eye-open"></span><spring:message code="djn.preview"/></a></li>
 <li><a href='<c:url value="/protected/chat.html"></c:url>' title="<spring:message code="djn.online_chat"/>"><span class="glyphicon glyphicon-envelope"></span><spring:message code="djn.chat"/><span class="badge"></span></a></li>
+<li><a href='<c:url value="/site/preview.html?path=${page.path }"></c:url>' target="_BLANK" title="点击预览"><span class="glyphicon glyphicon-eye-open"></span><spring:message code="djn.preview"/></a></li>
 <li><a href="javascript:publish('${page.uid}')"  title="<spring:message code="djn.publish"/>"><span class="glyphicon glyphicon-cloud-upload"></span><spring:message code="djn.publish"/></a></li>
 <li><button disabled class="btn btn-success btn-xs" title="<spring:message code="djn.edit_properties"/>" onclick="javascript:ftrClose('<c:url value="/site/editpp.html?uid=${page.uid}"/>')"><span class="glyphicon glyphicon-list"></span><spring:message code="djn.properties"/></button></li>
 <li><button disabled class="btn btn-primary btn-xs" title="<spring:message code="djn.create_page"/>" onclick="javascript:ftrClose('<c:url value="/site/createPage.html?uid=${page.uid}"/>')"><span class="glyphicon glyphicon-plus"></span><spring:message code="djn.create"/></button></li>

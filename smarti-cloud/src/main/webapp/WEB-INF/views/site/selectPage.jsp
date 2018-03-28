@@ -25,14 +25,14 @@
             <a class="list-group-item${item.cssClass }" href="file.html?type=file&input=${input }&path=${item.path}">${item.title} <button class="btn btn-default btn-xs pull-right" onclick="javascript:returnPage('${item.path}','${item.title}')"><span class="glyphicon glyphicon-ok pull-right"></span></button></a>
                 <ul class="list-group menu list-unstyled">
                     <c:forEach items="${item.childPages}" var="child" varStatus="loop">
-                    	<li class="list-group-item"><a href="file.html?type=file&input=${input }&path=${child.path}">${child.title}</a><button class="btn btn-default btn-xs pull-right" onclick="javascript:returnPage('${child.path}','${child.title}')"><span class="glyphicon glyphicon-ok pull-right"></span></button></li>
+                    	<li class="list-group-item"><a href="file.html?type=file&input=${input }&path=${child.path}">${child.title}</a><button class="btn btn-default btn-xs pull-right" onclick="javascript:returnPage('${child.path}','${child.title}')"><span class="glyphicon glyphicon-ok pull-right"></span></button><button class="btn btn-default btn-xs pull-right" onclick="javascript:returnTemplate('${child.path}','${child.title}')"><span class="glyphicon glyphicon-import pull-right"></span></button></li>
                     </c:forEach>
                 </ul>
             </li>           
             </c:if>
             <c:if test="${item.childPages==null}">
             <li class="list-group-item${item.cssClass }">
-	            <a href="file.html?type=file&input=${input }&path=${item.path}">${item.title}<button class="btn btn-default btn-xs pull-right" onclick="javascript:returnPage('${item.path}','${item.title}')"><span class="glyphicon glyphicon-ok pull-right"></span></button></a>
+	            <a href="file.html?type=file&input=${input }&path=${item.path}">${item.title}<button class="btn btn-default btn-xs pull-right" onclick="javascript:returnPage('${item.path}','${item.title}')"><span class="glyphicon glyphicon-ok pull-right"></span></button><button class="btn btn-default btn-xs pull-right" onclick="javascript:returnTemplate('${child.path}','${child.title}')"><span class="glyphicon glyphicon-import pull-right"></span></button></a>
             </li>           
             </c:if>            
         </c:forEach>    
@@ -115,6 +115,40 @@ function returnPage(fileUrl,title) {
 		closeSelf();			
 }
 
+function returnTemplate(fileUrl,title) {
+
+
+     $.ajax({
+		    url: "/template.json?path="+fileUrl,
+		    type: "GET", //ADDED THIS LINE
+		    contentType: "text/html",
+		    processData: false,
+		    success: function(data) {
+		    	tinyMCE.activeEditor.selection.setContent(data.content);
+		    	tinyMCE.activeEditor.setDirty(true);
+				var message = win.document.getElementById("header_message");
+				if(message) {
+					message.innerHTML="";
+					var node = document.createElement("section"); 
+					node.classList.add("alert");
+					node.classList.add("alert-info");
+					var h3 = document.createElement("h3");
+					node.appendChild(h3);   
+					var textnode = document.createTextNode(title+"模板已加入");
+					h3.appendChild(textnode);  
+					message.appendChild(node);
+				}
+						    	
+		    },
+		    error: function() {
+			    alert("出错："+fileUrl);
+	
+		    }			
+			});
+
+	
+	closeSelf();			
+}
 function close() {
     var editor = tinymce.EditorManager.activeEditor;
 	if(editor) {

@@ -36,7 +36,7 @@
     </iframe>
  	</div>
 </section> 
-<section id="right-bar" class="wb-overlay modal-content overlay-def wb-panel-r col-md-4">
+<section id="right-bar" class="wb-overlay modal-content overlay-def wb-panel-l col-md-4">
 	<header class="modal-header">
 		<h2 class="modal-title">网站</h2>
 	</header>
