@@ -848,7 +848,7 @@ function uploadIcon(file) {
 		    	}
 		    },
 		    error: function(jqXHR, exception) {
-		    	alert(data);
+		    	//alert(data);
 		        messageDiv.innerHTML=  "<section class=\"alert alert-warning\"><h2 class=\"h3\">"+i18n("fail")+":"+file.name+",sttus:"+jqXHR+",exception:"+exception+"</h2></section>"; // 
 		    }
 		});	
@@ -884,8 +884,9 @@ function checkProgress() {
 		setTimeout(checkProgress,1000);
 	}else if(i==total -1 || total==0){
 		var override = $("#override").is(":checked")?"true":"false";
+		var path = $("#pagePath").val();
 		$element.trigger( "reset.wb-sessto", settings );
-		if(override=="true") {
+		if(override=="true" && path.indexOf("/chat")<0) {
 	    	if(percentComplete ==1000 && i==total -  1) {
 	    		setTimeout(function() {window.location.reload();},2000);
 	    	}else {
