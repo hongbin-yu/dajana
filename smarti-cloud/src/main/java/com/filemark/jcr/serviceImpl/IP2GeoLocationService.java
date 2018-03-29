@@ -15,13 +15,13 @@ import com.maxmind.geoip2.model.CityResponse;
 //http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz
 public class IP2GeoLocationService {
     private DatabaseReader dbReader =null;
-    private String dbLcation=null;
+    private String dbLocation=null;
 	private final Logger log = LoggerFactory.getLogger(IP2GeoLocationService.class);
     
     public IP2GeoLocationService(){
     	try {
-    		if(dbLcation!=null) {
-		        File database = new File(dbLcation);
+    		if(dbLocation!=null) {
+		        File database = new File(dbLocation);
 		        dbReader = new DatabaseReader.Builder(database).build();
     		}
     	}catch(IOException e) {
@@ -42,13 +42,15 @@ public class IP2GeoLocationService {
         return new GeoIP(ip, cityName, latitude, longitude);
     }
 
-	public String getDbLcation() {
-		return dbLcation;
+	public String getDbLocation() {
+		return dbLocation;
 	}
 
-	public void setDbLcation(String dbLcation) {
-		this.dbLcation = dbLcation;
+	public void setDbLocation(String dbLocation) {
+		this.dbLocation = dbLocation;
 	}
+
+
     
     
 }
