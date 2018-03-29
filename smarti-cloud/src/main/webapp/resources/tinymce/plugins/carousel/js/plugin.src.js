@@ -14,14 +14,14 @@
         init : function(ed, url) {
             // Register the command so that it can be invoked by using tinyMCE.activeEditor.execCommand('mceExample');
             ed.addCommand('mceCarousel', function() {
-            	var url_uid = "./folder.html";
+            	var url_uid = "./browse.html";
             	var carousel = tinyMCE.activeEditor.dom.select('.carousel');
             	if(carousel && carousel !='') {
             		var path = tinyMCE.activeEditor.dom.getAttrib(carousel,"id","");
             		if(path=="") 
-            			url_uid = "./folder.html";
+            			url_uid = "./browse.html";
             		else 
-            			url_uid = "./folder.html?path="+path;
+            			url_uid = "./browse.html?path="+path;
             	}
             	
                 ed.windowManager.open({

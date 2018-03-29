@@ -54,3 +54,4 @@
     </iframe>
  	</div>
 </section> 
+<input type="hidden" id="pageId" name="pageId" value="${page.uid }"/>

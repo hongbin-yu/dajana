@@ -120,7 +120,7 @@ tinymce.init({
 	  plugins: [
 	    'save advlist autolink lists link image imagetools template charmap print preview anchor',
 	    'noneditable searchreplace visualblocks code fullscreen',
-	    'insertdatetime media table carousel contextmenu paste'
+	    'insertdatetime media table cloud web youchat contextmenu paste'
 	  ],
 	  convert_urls: true,
 	  relative_urls: true,
@@ -170,10 +170,10 @@ tinymce.init({
     	  editor.on('blur', function(e) {
     		  $("#left-iframe").addClass("wb-inv");	  
     	  });
-    	     	   	     	  
+    	     outdent indent bullist numlist |	   	     	  
       },*/
       file_browser_callback_types: 'file image media',
-	  toolbar: 'save insert undo redo | outdent indent bullist numlist | link image media paste | template',// styleselect | superscript | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist
+	  toolbar: 'save insert undo redo | link image media paste | template | cloud web youchat',// styleselect | superscript | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist
 	    save_enablewhendirty: true,
 	    save_onsavecallback: function() {
 	                        // USE THIS IN YOUR AJAX CALL
