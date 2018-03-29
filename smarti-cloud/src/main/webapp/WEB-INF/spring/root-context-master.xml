@@ -178,8 +178,11 @@
 			<beans:value>${rep.clusterId}</beans:value>
 		</beans:property>
     </beans:bean>
-    
-	 
+
+    <beans:bean id="ip2GeoLocationService" class="com.filemark.jcr.serviceImpl.IP2GeoLocationService">
+<!--         <beans:property name="dbLocation" value="jcrService"></beans:property>
+ -->    </beans:bean>    
+
 	<beans:bean id="transactionRepository" class="org.springframework.extensions.jcr.TransactionAwareRepository">
 	     <beans:property name="allowNonTxRepository" value="true"/>
 	     <beans:property name="targetFactory" ref="jcrSessionFactory"/>

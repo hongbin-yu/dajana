@@ -56,6 +56,8 @@ public class User implements SmartiNode {
 	private String role;
 	@Field
 	private String icon;	
+	@Field
+	private String city;	
 	@Collection(autoUpdate=false)
 	private Set<Role> roles = new HashSet<Role>();
 	
@@ -275,6 +277,14 @@ public class User implements SmartiNode {
 
 	public void setIcon(String icon) {
 		this.icon = icon;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
 	}
 	
 }

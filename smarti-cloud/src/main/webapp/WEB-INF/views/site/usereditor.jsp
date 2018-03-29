@@ -122,8 +122,12 @@
 			<input class="form-control" id="port" name="port" value="${user.port }" type="text" path="${user.path }" data-rule-minlength="4" size="40"  disabled/>
 		</div>
 		<div class="form-group">
-			<label for="lastIp" class="required"><span class="field-name">登入IP</span> <strong class="required"></strong></label>
+			<label for="lastIp"><span class="field-name">登入IP</span> <strong class="required"></strong></label>
 			<input class="form-control" id="lastIp" name="lastIp" value="${user.lastIp }" type="text" required="required" data-rule-alphanumeric="true" data-rule-minlength="4" size="40" disabled/>
+		</div>	
+		<div class="form-group">
+			<label for="city"><span class="field-name">登入城市</span></label>
+			<input class="form-control" id="city" name="city" value="${user.city }" type="text" required="required" data-rule-alphanumeric="true" data-rule-minlength="4" size="40" disabled/>
 		</div>	
 		<div class="form-group">
 			<label for="hostIp" class="required"><span class="field-name">云地址</span> <strong class="required"></strong></label>
