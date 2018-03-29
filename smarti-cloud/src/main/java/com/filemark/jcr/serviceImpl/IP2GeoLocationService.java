@@ -14,14 +14,16 @@ import com.maxmind.geoip2.exception.GeoIp2Exception;
 import com.maxmind.geoip2.model.CityResponse;
 //http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz
 public class IP2GeoLocationService {
-    private DatabaseReader dbReader;
-    private String dbLcation=Asset.getDevicePath()+"/database/GeoLite2-City_20180327/GeoLite2-City.mmdb";
+    private DatabaseReader dbReader =null;
+    private String dbLcation=null;
 	private final Logger log = LoggerFactory.getLogger(IP2GeoLocationService.class);
     
     public IP2GeoLocationService(){
     	try {
-	        File database = new File(dbLcation);
-	        dbReader = new DatabaseReader.Builder(database).build();
+    		if(dbLcation!=null) {
+		        File database = new File(dbLcation);
+		        dbReader = new DatabaseReader.Builder(database).build();
+    		}
     	}catch(IOException e) {
     		log.error(e.getMessage());
     	}

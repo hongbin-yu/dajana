@@ -159,7 +159,7 @@ public class LoginController extends BaseController {
                 return "login";        		
         	}
         	jcrService.updatePropertyByPath(user.getPath(), "lastIp", lastIp);
-        	try {
+/*        	try {
 				GeoIP geoIP = ip2GeoLocationService.getLocation(lastIp);
 				if(geoIP !=null)
 					jcrService.updatePropertyByPath(user.getPath(), "city", geoIP.getCity());
@@ -167,7 +167,7 @@ public class LoginController extends BaseController {
 				logger.error(e.getMessage());;
 			} catch (GeoIp2Exception e) {
 				logger.error(e.getMessage());;
-			}
+			}*/
         }
 		Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 		authorities.add(new SimpleGrantedAuthority(this.getRolePrefix()+"USER"));
