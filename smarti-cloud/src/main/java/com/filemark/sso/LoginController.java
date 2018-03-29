@@ -1,9 +1,7 @@
 package com.filemark.sso;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Random;
 
@@ -29,20 +27,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.filemark.jcr.controller.BaseController;
 import com.filemark.jcr.controller.SiteController;
-import com.filemark.jcr.model.GeoIP;
 import com.filemark.jcr.model.Page;
 import com.filemark.jcr.model.Role;
 import com.filemark.jcr.model.User;
-import com.filemark.jcr.service.JcrServices;
-import com.filemark.jcr.serviceImpl.IP2GeoLocationService;
-import com.filemark.utils.DjnUtils;
-import com.maxmind.geoip2.exception.GeoIp2Exception;
 
 @Controller
 public class LoginController extends BaseController {
 	private static final Logger logger = LoggerFactory.getLogger(SiteController.class);
-	@Inject
-	private IP2GeoLocationService ip2GeoLocationService;
 	
     public LoginController() {
     }
@@ -159,15 +150,6 @@ public class LoginController extends BaseController {
                 return "login";        		
         	}
         	jcrService.updatePropertyByPath(user.getPath(), "lastIp", lastIp);
-/*        	try {
-				GeoIP geoIP = ip2GeoLocationService.getLocation(lastIp);
-				if(geoIP !=null)
-					jcrService.updatePropertyByPath(user.getPath(), "city", geoIP.getCity());
-			} catch (IOException e) {
-				logger.error(e.getMessage());;
-			} catch (GeoIp2Exception e) {
-				logger.error(e.getMessage());;
-			}*/
         }
 		Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 		authorities.add(new SimpleGrantedAuthority(this.getRolePrefix()+"USER"));
