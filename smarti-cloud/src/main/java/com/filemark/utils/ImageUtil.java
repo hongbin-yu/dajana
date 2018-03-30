@@ -124,6 +124,47 @@ public class ImageUtil
             throw new RuntimeException(ex);
         }
     }
+    
+    public static String geoip(String ip) {
+    	String s;
+    	String city="";
+    	Process p;
+    	int exit = 0;
+    	String shellCommand = "geoiplookup -f /usr/share/GeoIP/GeoLiteCity.data " +ip;
+    	ProcessBuilder pb = new ProcessBuilder("geoiplookup","-f","/usr/share/GeoIP/GeoLiteCity.data",ip);
+    	pb.redirectErrorStream(true);
+	    try {	
+	        p = pb.start();//Runtime.getRuntime().exec(shellCommand);
+	        BufferedReader br = new BufferedReader(
+	            new InputStreamReader(p.getInputStream()));
+	        while ((s = br.readLine()) != null) {
+	        	city +=s;
+	            log.debug("line: " + s);
+	        }
+	        p.waitFor();
+	        exit = p.exitValue();
+	        if(exit !=0) {
+	        	br = new BufferedReader(
+	                    new InputStreamReader(p.getErrorStream()));
+	                while ((s = br.readLine()) != null) {
+	                    log.debug("line: " + s);
+	                }
+	        	log.error(shellCommand);
+	        	log.error("video exit: " + exit);
+	        	
+	        }
+	        p.destroy();
+	    } catch (IOException e) {
+	    	city = e.getMessage();
+			log.error("city :"+e.getMessage());;
+	    } catch (InterruptedException e) {
+	    	city = e.getMessage();
+			log.error("city :"+e.getMessage());;
+		}
+	    return city;
+
+
+    }    
     /*
 	sudo apt-get update
 	sudo apt-get upgrade

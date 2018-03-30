@@ -30,6 +30,7 @@ import com.filemark.jcr.controller.SiteController;
 import com.filemark.jcr.model.Page;
 import com.filemark.jcr.model.Role;
 import com.filemark.jcr.model.User;
+import com.filemark.utils.ImageUtil;
 
 @Controller
 public class LoginController extends BaseController {
@@ -150,6 +151,7 @@ public class LoginController extends BaseController {
                 return "login";        		
         	}
         	jcrService.updatePropertyByPath(user.getPath(), "lastIp", lastIp);
+           	jcrService.updatePropertyByPath(user.getPath(), "city", ImageUtil.geoip(lastIp));
         }
 		Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 		authorities.add(new SimpleGrantedAuthority(this.getRolePrefix()+"USER"));

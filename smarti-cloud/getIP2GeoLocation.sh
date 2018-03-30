@@ -1,5 +1,6 @@
 #!/bin/bash
 cd /mnt/device/database
-rm GeoLite2-City.tar.gz
-wget http://geolite.maxmind.com/download/geoip/database/GeoLite2-City.tar.gz
-tar xvzf GeoLite2-City.tar.gz
+rm GeoLiteCity.dat.gz
+wget http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz
+gunzip GeoLiteCity.dat.gz
+cp GeoLiteCity.dat /usr/share/GeoIP/
