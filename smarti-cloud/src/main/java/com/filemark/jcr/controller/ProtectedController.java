@@ -72,8 +72,8 @@ public class ProtectedController extends BaseController {
    		User user = (User)jcrService.getObject("/system/users/"+username);
    		String chatRoot = "/chat";
    		if(path==null && user != null && "Owner".equals(user.getRole())) path="/chat";
-   		if(!jcrService.nodeExsits("/"+username+"/assets/ypuchat")) {
-   			jcrService.addNodes("/"+username+"/assets/ypuchat", "nt:unstructured", username);
+   		if(!jcrService.nodeExsits("/"+username+"/assets/youchat")) {
+   			jcrService.addNodes("/"+username+"/assets/youchat", "nt:unstructured", username);
    			
    		}
 		String folderQuery = "select s.* from [nt:base] AS s INNER JOIN [nt:base] AS child ON ISCHILDNODE(child,s) WHERE ISDESCENDANTNODE(s,["+chatRoot+"])" +" and child.userName like '%"+username+"' and s.ocm_classname='com.filemark.jcr.model.Folder' and child.ocm_classname ='com.filemark.jcr.model.User' order by s.path";
