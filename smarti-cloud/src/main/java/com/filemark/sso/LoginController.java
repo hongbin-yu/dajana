@@ -151,7 +151,10 @@ public class LoginController extends BaseController {
                 return "login";        		
         	}
         	jcrService.updatePropertyByPath(user.getPath(), "lastIp", lastIp);
-           	jcrService.updatePropertyByPath(user.getPath(), "city", ImageUtil.geoip(lastIp));
+        	if(isIntranet(request))
+        		jcrService.updatePropertyByPath(user.getPath(), "city", "内网");
+        	else
+        		jcrService.updatePropertyByPath(user.getPath(), "city", ImageUtil.geoip(lastIp));
         }
 		Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 		authorities.add(new SimpleGrantedAuthority(this.getRolePrefix()+"USER"));
