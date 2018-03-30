@@ -5,7 +5,7 @@
 
 <section class="modal-dialog modal-content overlay-def">
 	<header class="modal-header">
-		<h2 class="modal-title">优信群编辑</h2>
+		<h2 class="modal-title">共享群编辑</h2>
 	</header>
 	<div class="modal-body wb-frmvld">
 	<form  method="POST" id="page-modify" accept-charset="UTF-8">

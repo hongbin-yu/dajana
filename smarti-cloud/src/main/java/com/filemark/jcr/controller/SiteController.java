@@ -324,7 +324,7 @@ public class SiteController extends BaseController {
 		String intranetFolder = (isIntranet?"":" and (f.intranet is null or f.intranet not like 'true')");
 		String ISDESCENDANTNODE = "ISDESCENDANTNODE";
 		if(type!=null && "child".equals(type)) ISDESCENDANTNODE = "ISCHILDNODE";
-		String sharingQuery = "select * from [nt:base] AS s WHERE s.sharing like '%"+getUsername()+"@%'" +keywords+intranet+" and s.delete not like 'true' and s.ocm_classname='com.filemark.jcr.model.Folder' order by s.path";
+		String sharingQuery = "select * from [nt:base] AS s INNER JOIN [nt:unstructured] AS f ON ISCHILDNODE(s, f) WHERE f.userName like '"+getUsername()+"'" +keywords+intranet+" and s.delete not like 'true' and s.ocm_classname='com.filemark.jcr.model.Folder' and f.ocm_classname='com.filemark.jcr.model.User' order by s.path";
 		WebPage<Folder> shares = jcrService.queryFolders(sharingQuery, 100, 0);
 		model.addAttribute("shares", shares);
 

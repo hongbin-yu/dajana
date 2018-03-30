@@ -64,8 +64,9 @@
 				</select>
 				</div>			
 				<div class="form-group">
-				<label for="sharing">共享-用户名@</label><input class="form-control" id="sharing" name="sharing" value="${folder.sharing }" size="35"  uid="${folder.uid }" onchange="updateNode(this)" placeholder="输入’用户名@‘"/>
-				</div>	
+				<label for="sharing">共享用户</label><a class="wb-lbx" href="groupedit.html?path=${folder.path }"><button class="btn btn-primary btn-xs pull-right"><span class="glyphicon glyphicon-cog"></span></button></a>
+<%-- 				<input class="form-control" id="sharing" name="sharing" value="${folder.sharing }" size="35"  uid="${folder.uid }" onchange="updateNode(this)" placeholder="输入’用户名@‘"/>
+ --%>			</div>	
 				<div class="checkbox">
 				<label for="readonly"><input type="checkbox" name="readonly" value="true" id="readonly" <c:if test="${folder.readonly=='true' }">checked</c:if>  size="35"  uid="${folder.uid }" onchange="updateNode(this)"> 共享只读（共享用户名不能修改目录下文件）</label>
 				</div>								 
@@ -113,9 +114,6 @@
 			<label for="foldername"><spring:message code="djn.path"/><strong class="required">(<spring:message code="djn.required"/>)</strong></label>
 			
 			<input class="form-control" id="foldername" required="required" name="name" pattern="[A-Za-z0-9\-]{2,}" value="" size="80" placeholder="<spring:message code="djn.alpha_number_only"/>"/>
-<!-- 
-			<input class="form-control" id="foldername" required="required" name="name" pattern="[A-Za-z0-9\s]{4,}"  data-rule-alphanumeric="true" data-rule-minlength="4" size="40" value="" size="25" placeholder="<spring:message code="djn.alpha_number_only"/>"/>
- -->
 			</div>
 			<div class="form-group">
 			<label for="titlefolder"><spring:message code="djn.title"/><strong class="required">(<spring:message code="djn.required"/>)</strong></label><input class="form-control" id="titlefolder" required="required"  name="title" value="" size="25"/>

@@ -417,7 +417,7 @@ public class ProtectedController extends BaseController {
    		return "chat/comments";
    	}
 
-   	@RequestMapping(value = {"/protected/groupedit.html"}, method = {RequestMethod.GET})
+   	@RequestMapping(value = {"/site/groupedit.html","/protected/groupedit.html"}, method = {RequestMethod.GET})
    	public String  groupedit(String path,Integer p,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
    		if(p==null) p=0;
    		String userQuery = "select * from [nt:base] AS s WHERE ISCHILDNODE([/system/users]) and s.ocm_classname='com.filemark.jcr.model.User'";
@@ -629,14 +629,14 @@ public class ProtectedController extends BaseController {
 			contentType = " and s.contentType like '"+type+"%'";
 		}
 		boolean isIntranet = isIntranet(request);
-		String intranet = (isIntranet?"":" and (f.intranet is null or f.intranet not like 'true')");
+		String intranet = (isIntranet?"":" and (s.intranet is null or f.intranet not like 'true')");
 		String ISDESCENDANTNODE = "ISDESCENDANTNODE";
 		if(type!=null && "child".equals(type)) ISDESCENDANTNODE = "ISCHILDNODE";
-		String sharingQuery = "select * from [nt:base] AS f WHERE f.sharing like '%"+getUsername()+"@%'" +keywords+intranet+" and f.delete not like 'true' and f.ocm_classname='com.filemark.jcr.model.Folder' order by f.path";
+		String sharingQuery = "select s.* from [nt:base] AS s WHERE s.sharing like '%"+getUsername()+"@%'" +keywords+intranet+" and s.delete not like 'true' and s.ocm_classname='com.filemark.jcr.model.Folder' order by s.path";
 		WebPage<Folder> shares = jcrService.queryFolders(sharingQuery, 100, 0);
 		model.addAttribute("shares", shares);
 
-		String foldersQuery = "select * from [nt:base] AS f WHERE ISCHILDNODE(["+path+"])" +" and (f.sharing like '%"+getUsername()+"@%' or f.sharing is null)" +keywords+intranet+" and f.delete not like 'true' and f.ocm_classname='com.filemark.jcr.model.Folder' order by f.path";
+		String foldersQuery = "select s.* from [nt:base] AS s WHERE ISCHILDNODE(["+path+"])" +" and (s.sharing like '%"+getUsername()+"@%' or s.sharing is null)" +keywords+intranet+" and s.delete not like 'true' and s.ocm_classname='com.filemark.jcr.model.Folder' order by s.path";
 		WebPage<Folder> folders = jcrService.queryFolders(foldersQuery, 100, 0);
 		model.addAttribute("folders", folders);
 
