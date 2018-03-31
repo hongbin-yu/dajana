@@ -567,7 +567,7 @@ function addUser(group,path) {
 	    		alert(data.title);
 	    	}else {
 			    var html = 	'<div id="'+data.uid+'" class="col-md-3">';
-			    	html += '<a href="javascript:removeUser(\''+data.uid+'\',\''+data.path+'\')" title="退群"><img class="img-responsive" src="file/icon.jpg?path=/'+data.userName+'/assets/icon/x120.jpg" alt="删除"></a>';
+			    	html += '<a href="javascript:removeUser(\''+data.uid+'\',\''+data.path+'\')" title="退群"><img class="img-responsive" src="'+data.icon+'" alt="删除"></a>';
 			    	html += '<p>'+data.title+' ('+data.userName+')';
 			    	html += '</div>';
 				$("#inGroup").append(html);	    		

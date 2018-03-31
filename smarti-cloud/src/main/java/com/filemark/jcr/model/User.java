@@ -55,7 +55,7 @@ public class User implements SmartiNode {
 	@Field
 	private String role;
 	@Field
-	private String icon;	
+	private String icon="/resources/images/usericon.png";	
 	@Field
 	private String city;	
 	@Collection(autoUpdate=false)
@@ -270,9 +270,7 @@ public class User implements SmartiNode {
 	}
 	
 	public String getIcon() {
-		String iconpath = Asset.getDevicePath()+"/"+userName+"/assets/icon/x48.jpg";
-		if (new File(iconpath).exists()) return "/protected/file/icon.jpg?path="+"/"+userName+"/assets/icon/x48.jpg";
-		return "/resources/images/user-icon.png";
+		return icon;
 	}
 
 	public void setIcon(String icon) {

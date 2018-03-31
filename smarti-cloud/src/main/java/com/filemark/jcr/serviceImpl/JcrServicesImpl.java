@@ -600,7 +600,7 @@ public class JcrServicesImpl implements JcrServices {
 	             Node node = session.getNode(path);
 	             Page page = (Page)ocm.getObject(path);
 	             if(page.getContent() == null) {
-	            	 page.setContent("<h1 property=\"name\" id=\"wb-cont\">"+page.getTitle()+"</h1><div class=\"row\"><p class=\"pagetag\">"+page.getDescription()+"</p></div>");
+	            	 page.setContent("<h1 property=\"name\" id=\"wb-cont\">"+page.getTitle()+"</h1><div><p class=\"pagetag\">"+page.getDescription()+"</p></div>");
 	             }
 	             page.setDepth(node.getDepth());
 	

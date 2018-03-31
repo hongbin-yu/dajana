@@ -32,7 +32,7 @@
 			<div id="inGroup" class="panel panel-body">
 				<c:forEach items="${usersInGroup.items }" var="item" varStatus="loop">
 					<div id="${item.uid}" class="col-md-3">
-					<a href="javascript:removeUser('${item.uid }','${item.path }')" title="退群"><img class="img-responsive" src="file/icon.jpg?path=/${item.name}/assets/icon/x120.jpg" alt="删除"></a>
+					<a href="javascript:removeUser('${item.uid }','${item.path }')" title="退群"><img class="img-responsive" src="${item.icon}" alt="删除"></a>
 					<p>${item.title } (${item.name})
 					</div>
 					<c:if test="${(loop.index+1) % 4 ==0  }"><div class="clearfix"></div></c:if>
@@ -44,7 +44,7 @@
 		<div class="panel panel-body">
 			<c:forEach items="${users.items }" var="item" varStatus="loop">
 				<div id="${item.uid}" class="col-md-3">
-				<a href="javascript:addUser('${folder.path }','${item.path }')" title="入群"><img class="img-responsive" src="file/icon.jpg?path=/${item.name}/assets/icon/x120.jpg" alt="加入"></a>
+				<a href="javascript:addUser('${folder.path }','${item.path }')" title="入群"><img class="img-responsive" src="${item.icon }" alt="加入"></a>
 				<p>${item.title } (${item.name})
 				</div>
 				<c:if test="${(loop.index+1) % 4 ==0  }"><div class="clearfix"></div></c:if>
