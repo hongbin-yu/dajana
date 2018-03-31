@@ -130,8 +130,8 @@ public class ImageUtil
     	String city="";
     	Process p;
     	int exit = 0;
-    	String shellCommand = "geoiplookup -f /usr/share/GeoIP/GeoLiteCity.data " +ip;
-    	ProcessBuilder pb = new ProcessBuilder("geoiplookup","-f","/usr/share/GeoIP/GeoLiteCity.data",ip);
+    	String shellCommand = "geoiplookup -f /usr/share/GeoIP/GeoLiteCity.dat " +ip;
+    	ProcessBuilder pb = new ProcessBuilder("geoiplookup","-f","/usr/share/GeoIP/GeoLiteCity.dat",ip);
     	pb.redirectErrorStream(true);
 	    try {	
 	        p = pb.start();//Runtime.getRuntime().exec(shellCommand);
