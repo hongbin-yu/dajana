@@ -1113,6 +1113,7 @@ public class SiteController extends BaseController {
 				jcrService.createIcon(asset.getPath(), 48,48);
 				jcrService.createIcon(asset.getPath(), 120,120);
 				jcrService.createIcon(asset.getPath(), 400,400);
+				jcrService.updatePropertyByPath(assetPath, "icon", "/protected/file/"+asset.getName()+"?path="+assetPath+"/x120.jpg");
 			}
 
 		}catch (Exception e){
