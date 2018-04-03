@@ -3028,6 +3028,7 @@ public class SiteController extends BaseController {
 				logger.error("Asset is null:"+spath+",uid="+uid);
 				return "error";
 			}
+			filename +=asset.getName();
 		    String ext =asset.getExt();		
 		    if(ext==null) {
 				try {
