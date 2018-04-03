@@ -917,12 +917,12 @@ function output(data) {
     			  +'</figure>';   		
     	}else if(topInsert != null) {
 	    	html +='<div class="checkbox"><input type="checkbox" class="checkbox" name="puid" value="'+data.uid+'"><a title="打开PDF" href="viewpdf?uid='+data.uid+'" target="_BLANK"><img title="点击选中" src="/resources/images/pdf.gif"></a>'
-	    		  +'<a class="wb-lbx-edit" href="'+data.link+'" target="_BLANK"><img id="img'+data.uid+'" src="'+data.icon+'" class="img-responsive" draggable="true"></img></a>'
+	    		  +'<a href="javascript:openImage(\''+data.link+'\')"><img id="img'+data.uid+'" src="'+data.icon+'" class="img-responsive" draggable="true"></img></a>'
 	    		  +'</div>'
 				  +'<input class="form-control" id="description'+data.uid+'" name="jcr:description" value="'+(data.description==null?"":+data.description)+'" size="42" uid="'+data.uid+'"  onchange="updateNode(this)"/>';
 
     	}else {
-    		html +='<a class="wb-lbx-edit" href="'+data.link+'" target="_BLANK"><img id="img'+data.uid+'" src="'+data.icon+'" class="img-responsive" draggable="true"></img></a>'
+    		html +='<a href="javascript:openImage(\''+data.link+'\')"><img id="img'+data.uid+'" src="'+data.icon+'" class="img-responsive" draggable="true"></img></a>'
     	}	  
     	
     	if(topInsert != null) 	{
@@ -1100,6 +1100,18 @@ function ftrClose(url) {
 	                       				}
 	                       			]
 	                       		]);
+}
+
+function openImage(url) {
+	$(document).trigger( "open.wb-lbx", [
+	 	                       			[
+	 	                       				{
+	 	                       					src: url,
+	 	                       					type: "image"
+	 	                       				}
+	 	                       			]
+	 	                       		]);
+	
 }
 
 function toggle(source) {

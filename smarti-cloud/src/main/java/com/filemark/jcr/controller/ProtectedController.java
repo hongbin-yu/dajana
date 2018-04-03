@@ -194,7 +194,7 @@ public class ProtectedController extends BaseController {
 	public String profile(String path,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String username = getUsername();
 		User user  = (User)jcrService.getObject("/system/users/"+username);
-		File f = new File(jcrService.getDevice());
+		File f = new File(jcrService.getBackup());
 		model.addAttribute("usage",""+f.getUsableSpace()/1000000+"MB/"+f.getTotalSpace()/1000000+"MB");
     	String imgs[] = {"shu","niu","fu","tu","long","she","ma","yang","hou","ji","gou","zhu"};
     	String ids[] = {"A0","A1","A2","B0","B1","B2","C0","C1","C2","D0","D1","D2"};

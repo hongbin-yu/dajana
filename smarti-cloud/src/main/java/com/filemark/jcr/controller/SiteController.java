@@ -94,7 +94,7 @@ public class SiteController extends BaseController {
 	    request.getSession().invalidate();
 	    modelAndView.addObject("error",message);
 	    //modelAndView.addObject("breadcrumb", jcrService.getBreadcrumb(paths[0]));
-	    logger.error(ex.toString());
+	    logger.debug(ex.toString());
 		ImageUtil.HDDOff();
 	    return modelAndView;
     }
