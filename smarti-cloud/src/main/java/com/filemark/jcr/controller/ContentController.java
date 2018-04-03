@@ -378,10 +378,16 @@ public class ContentController extends BaseController {
 				} else {
 					File file =new File(jcrService.getHome()+paths);
 					if(file.exists()) {
-/*						FileInputStream in = new FileInputStream(file);
-						response.setContentLength((int)file.length());
-						IOUtils.copy(in, response.getOutputStream());
-						in.close();*/
+				        long lastModified = file.lastModified();
+				        long ifModifiedSince = request.getDateHeader("If-Modified-Since");
+				        logger.debug("ifModifiedSince="+ifModifiedSince+"/"+lastModified);
+				        if (ifModifiedSince != -1 && ifModifiedSince + 1000 <= lastModified) {
+							FileInputStream in = new FileInputStream(file);
+							IOUtils.copy(in, response.getOutputStream());	
+							in.close();	
+							logger.debug(file+" modified");
+							return null;
+				        }
 						file.setReadOnly();
 						super.serveResource(request, response, file, null);
 

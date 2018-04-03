@@ -3059,7 +3059,7 @@ public class SiteController extends BaseController {
 				ext=".pdf";
 			}else if(link.startsWith("pdf2img")) {
 				filePath = jcrService.getDevice()+asset.getPath()+"/origin-"+p+".jpg";
-				ext=".pdf";
+				ext=".jpg";
 				File file = new File(filePath);
 				if(!file.exists()) {
 					String pdfPath = jcrService.getDevice()+asset.getPath()+"/origin.pdf";
