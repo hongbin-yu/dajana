@@ -105,6 +105,7 @@ public class JcrServicesImpl implements JcrServices {
 	private int keepLog = 180;
 	private String domain="dajana.cn";
 	private String device=null;	
+	private String backup=null;		
     private String asianFont;
     private String home;
     private String workingDir;
@@ -2618,14 +2619,23 @@ public class JcrServicesImpl implements JcrServices {
 
 
 	public void setDevice(String device) {
-		ImageUtil.gpio("mode","18","output");
-		ImageUtil.HDDOn();
 		this.device = device;
 	}
 
 
 	public String getWorkingDir() {
 		return workingDir;
+	}
+
+	
+
+	public String getBackup() {
+		return backup;
+	}
+
+
+	public void setBackup(String backup) {
+		this.backup = backup;
 	}
 
 

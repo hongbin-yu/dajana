@@ -2253,9 +2253,13 @@ public class SiteController extends BaseController {
     		if(path.lastIndexOf(".")>0) {
     			ext = path.substring(path.lastIndexOf("."));
     		}			
-			File file = null;
-			String infile = jcrService.getDevice()+path+"/origin"+ext;
-			String jpgname = jcrService.getDevice()+path+"/x400"+".jpg";
+			String devicePath = jcrService.getDevice();
+
+    		File file = new File(devicePath+path);
+    		if(!file.exists()) devicePath = jcrService.getBackup();
+			
+			String infile = devicePath+path+"/origin"+ext;
+			String jpgname = devicePath+path+"/x400"+".jpg";
 			file = new File(jpgname);
 			if(!file.exists()) {
 				if(ImageUtil.video2jpg(infile, "400x300", jpgname) !=0)
@@ -2292,7 +2296,11 @@ public class SiteController extends BaseController {
     		if(path.lastIndexOf(".")>0) {
     			ext = path.substring(path.lastIndexOf("."));
     		}
-			File file = new File(jcrService.getDevice()+path+"/origin"+ext+".mp4");
+			String devicePath = jcrService.getDevice();
+    		File file = new File(devicePath+path);
+    		if(!file.exists()) devicePath = jcrService.getBackup();
+    		
+			file = new File(jcrService.getDevice()+path+"/origin"+ext+".mp4");
 			String contentType="video/mp4";
 			if(!file.exists()) {
 				file = new File(jcrService.getDevice()+path+"/origin"+ext);
@@ -2331,7 +2339,10 @@ public class SiteController extends BaseController {
 	public @ResponseBody String video2webm(String path,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
 		ImageUtil.HDDOn();	
 		try {
-			File file = new File(jcrService.getDevice()+path+".webm");
+			String devicePath = jcrService.getDevice();
+    		File file = new File(devicePath+path);
+    		if(!file.exists()) devicePath = jcrService.getBackup();
+			file = new File(jcrService.getDevice()+path+".webm");
 			String contentType="video/webm";
 			if(!file.exists() || (path.endsWith(".webm") && isIntranet(request))) {
 				file = new File(jcrService.getDevice()+path);
@@ -2373,7 +2384,12 @@ public class SiteController extends BaseController {
 		try {
 			if(uid!=null && (path==null || "".equals(path)))
 				path = jcrService.getNodeById(uid);
-			File outFile = new File(jcrService.getDevice()+path);
+			String devicePath = jcrService.getDevice();
+			File outFile = new File(devicePath+path);
+			if(!outFile.exists()) {
+				devicePath = jcrService.getBackup();
+				outFile = new File(devicePath+path);
+			}
 			if(outFile.exists() && outFile.isFile()) {
 		        long lastModified = outFile.lastModified();
 		        long ifModifiedSince = request.getDateHeader("If-Modified-Since");
@@ -2390,7 +2406,7 @@ public class SiteController extends BaseController {
 			}
 			String ext = ".jpg";
 			if(path.lastIndexOf(".")>0) ext = path.substring(path.lastIndexOf("."));
-			outFile = new File(jcrService.getDevice()+path+(width==null?"/origin"+ext:"/x"+width+".jpg"));
+			outFile = new File(devicePath+path+(width==null?"/origin"+ext:"/x"+width+".jpg"));
 			if(outFile.exists() && outFile.isFile()) {
 				logger.debug("output:"+outFile.getAbsolutePath());
 				super.serveResource(request, response, outFile, null);
@@ -2502,24 +2518,29 @@ public class SiteController extends BaseController {
 				width = 48;
 		}
 		try {
-			File outfile = new File(jcrService.getDevice()+path);
-			String ext = path.substring(path.lastIndexOf("."));
-			if(outfile.isDirectory()) {
-				outfile = new File(jcrService.getDevice()+path+"/origin"+ext);
+			String devicePath = jcrService.getDevice();
+			File outFile = new File(devicePath+path);
+			if(!outFile.exists()) {
+				devicePath = jcrService.getBackup();
+				outFile = new File(devicePath+path);
 			}
-			if(outfile.exists()) {
-		        String fileName = outfile.getName();
-		        long lastModified = outfile.lastModified();
+			String ext = path.substring(path.lastIndexOf("."));
+			if(outFile.isDirectory()) {
+				outFile = new File(jcrService.getDevice()+path+"/origin"+ext);
+			}
+			if(outFile.exists()) {
+		        String fileName = outFile.getName();
+		        long lastModified = outFile.lastModified();
 		        long ifModifiedSince = request.getDateHeader("If-Modified-Since");
 		        logger.debug("ifModifiedSince="+ifModifiedSince+"/"+lastModified);
 		        if (ifModifiedSince != -1 && ifModifiedSince + 1000 <= lastModified) {
-					FileInputStream in = new FileInputStream(outfile);
+					FileInputStream in = new FileInputStream(outFile);
 					IOUtils.copy(in, response.getOutputStream());	
 					in.close();	
 					logger.debug(fileName+" modified");
 					return null;
 		        }
-				super.serveResource(request, response, outfile, null);				
+				super.serveResource(request, response, outFile, null);				
 			}else if(path !=null && jcrService.nodeExsits(path)) {
 				Asset asset = (Asset)jcrService.getObject(path);
 				if(width!=null && jcrService.nodeExsits(path+"/file-"+width)) {

@@ -2,7 +2,7 @@ Etcher D:\dajana.ca\2017-08-25-raspbian-stretch-preview-bpi-m2u-sd-emmc
 apt-get update
 apt-get install tomcat8
 apt-get install maven
-apt-get install hdparm -y //hdparm -Y /dev/sda --put hdd sleep.
+apt-get install hdparm -y //hdparm -Y /dev/sda --put hdd sleep. nano /etc/hdparm.conf /dev/dsa {spindown=36 write_cache = on}
 nano /usr/share/tomcat8/bin/catalina.sh --> export CATALINA_OPTS="$CATALINA_OPTS -Xms512m -Xmx1024m -XX:MaxPermSize=256m"
 nano /var/lib/tomcat8/conf/server.xml --> change 8080 to 8888
 cd /mnt

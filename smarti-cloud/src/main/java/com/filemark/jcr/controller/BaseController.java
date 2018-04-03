@@ -577,27 +577,9 @@ public class BaseController {
     }
   
 	protected Device getDevice() {
-		String deviceRoot = "/system/devices";
-   		String deviceQuery = "select * from [nt:base] AS s WHERE ISCHILDNODE(["+deviceRoot+"]) and s.ocm_classname='com.filemark.jcr.model.Device' order by s.order";
-		WebPage<Object> devices = jcrService.queryObject(deviceQuery, 20, 0);
-		for(Object d:devices.getItems()) {
-			Device dv = (Device)d;
-			File f = new File(dv.getLocation());
-			float usable = f.getUsableSpace();
-			if(usable/f.getTotalSpace() > 0.1) {
-				dv.setStatus("enabled");
-				try {
-					jcrService.addOrUpdate(dv);
-				} catch (RepositoryException e) {
-					logger.error(e.getMessage());
-				}
-				return dv;
-			}else {
-				continue;
-			}
-		}
+		Device device = new Device();		
 		if(jcrService.getDevice()!=null && !"".equals(jcrService.getDevice())) {
-			Device device = new Device(jcrService.getDevice());
+
 			if(!jcrService.nodeExsits("/system/devices")) {
 				try {
 					jcrService.addNodes("/system/devices", "nt:unstructured", getUsername());
@@ -605,10 +587,24 @@ public class BaseController {
 					logger.error(e.getMessage());
 				}
 			}
+			
+			if(jcrService.nodeExsits("/system/devices/default")) {
+				try {
+					device = (Device)jcrService.getObject("/system/devices/default");
+					if(device.getLocation().equals(jcrService.getDevice())) {
+						jcrService.updatePropertyByPath(device.getPath(), "location", jcrService.getDevice());
+					}
+					return device;
+				} catch (RepositoryException e) {
+					logger.error(e.getMessage());
+				}
+				
+			}
 			device.setPath("/system/devices/default");
 			device.setTitle("default");
+			device.setLocation(jcrService.getDevice());
 			try {
-				File dir = new File(device.getLocation());
+				File dir = new File(jcrService.getDevice());
 				if(!dir.exists())
 					dir.mkdirs();
 				device.setStatus("enabled");
@@ -621,9 +617,54 @@ public class BaseController {
 
 
 		}
-		return new Device();
+		return device;
 	}
-  
+
+	  
+		protected Device getBackup() {
+			Device device = new Device();		
+			if(jcrService.getDevice()!=null && !"".equals(jcrService.getDevice())) {
+
+				if(!jcrService.nodeExsits("/system/devices")) {
+					try {
+						jcrService.addNodes("/system/devices", "nt:unstructured", getUsername());
+					} catch (RepositoryException e) {
+						logger.error(e.getMessage());
+					}
+				}
+				
+				if(jcrService.nodeExsits("/system/devices/backup")) {
+					try {
+						device = (Device)jcrService.getObject("/system/devices/backup");
+						if(device.getLocation().equals(jcrService.getBackup())) {
+							jcrService.updatePropertyByPath(device.getPath(), "location", jcrService.getBackup());
+						}
+						return device;
+					} catch (RepositoryException e) {
+						logger.error(e.getMessage());
+					}
+					
+				}
+				device.setPath("/system/devices/backup");
+				device.setTitle("backup");
+				device.setLocation(jcrService.getBackup());
+				try {
+					File dir = new File(jcrService.getBackup());
+					if(!dir.exists())
+						dir.mkdirs();
+					device.setStatus("enabled");
+					jcrService.addOrUpdate(device);
+					
+					return device;
+				} catch (RepositoryException e) {
+					logger.error("device:"+e.getMessage());
+				}				
+
+
+			}
+			return device;
+		}
+	  	
     protected static class HttpUtils {
 
         /**
