@@ -4,7 +4,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" session="false" %>
 
 <c:forEach items="${assets.items }" var="item" varStatus="loop">
-<div id="${item.uid}" class="col-md-4">
+<div id="${item.uid}" class="col-md-4 well">
 		<c:if test="${item.mp4}">
 			<video poster="video2jpg.jpg?path=${item.path }" controls="controls" width="300" height="200" preload="metadata">
 			<source type="video/mp4" src="video.mp4?path=${item.path }"/>
@@ -40,8 +40,30 @@
 			<p>${item.description}</p>
 <!-- 		</a> -->
 		</c:if>
-
-<details>
+<div>
+	<span class="strong glyphicon glyphicon-link">${item.title} (${item.path})</span>
+	<p>	<a href="javascript:removeAsset('${item.path }','${item.uid}')"><button title="删除" class="btn btn-warning btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span></button></a>${item.description}</p>
+	<div class="row wb-inv">
+	<div class="form-group">
+	<label for="title${item.uid }">标题&nbsp;</label><input class="form-control" id="title${item.uid }" name="jcr:title" value="${item.title}" size="24" uid="${item.uid}" onchange="javascript:updateNode(this)"/>
+	</div>
+	<div class="form-group">
+	<label for="url${item.uid }">链接&nbsp;</label><input class="form-control" id="url${item.uid }" name="url" value="${item.url}" size="24" uid="${item.uid}" onchange="javascript:updateNode(this)"/>
+	</div>
+	<div class="form-group">
+		<label for="contentType${item.uid }">类型&nbsp;</label><input class="form-control" id="contentType${item.uid }" name="contentType" value="${item.contentType}" size="24" uid="${item.uid}" disabled/>
+	</div>	
+	<div class="form-group">
+		<label for="size${item.uid }">长度&nbsp;</label><input class="form-control" id="size${item.uid}" name="size" value="${item.size}" size="24" uid="${item.uid}" disabled/>
+	</div>	
+	<div class="form-group wb-inv">
+	<label for="description${item.uid }">描述 </label><br/>
+	<div class="panel panel-default" id="description${item.uid }" property="description"  uid="${item.uid }">${item.description}</div>
+<%-- 	<textarea class="form-control, form-editable" id="description${item.uid }" name="description" cols="22"  uid="${item.uid}">${item.description}</textarea> --%>
+	</div>
+	</div>
+</div>
+<%-- <details>
 	<summary><span class="glyphicon glyphicon-edit"></span>${item.path}</summary>
 	<div class="row">
 	<div class="form-group">
@@ -61,7 +83,7 @@
 	<div class="panel panel-default" id="description${item.uid }" property="description"  uid="${item.uid }">${item.description}</div>
 	</div>
 	</div>
-</details>
+</details> --%>
 </div>
 <c:if test="${(loop.index + 2) % 3 ==1  }"><div class="clearfix"></div></c:if>
 </c:forEach>

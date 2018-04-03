@@ -244,7 +244,7 @@
 		</figure>
 		</c:if>		
 		<c:if test="${!item.mp4 && !item.doc2pdf && !item.audio}">
-	    <a class="${item.cssClass }" href="<c:url value='${item.link}'></c:url>">
+	    <a href="javascript:openImage('<c:url value='${item.link}'></c:url>')">
 			<img id="img${item.uid}" src="<c:url value='${item.icon }'></c:url>" class="img-responsive" draggable="true"/>
 		</a>
 		</c:if>

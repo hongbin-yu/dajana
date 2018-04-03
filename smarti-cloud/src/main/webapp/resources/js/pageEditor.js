@@ -347,6 +347,16 @@ function deleteAsset(path,uid) {
 	});	 	
 }
 
+function removeAsset(path,id) {
+
+	if(new Date().getTime() - 30000 <  confirmDate) {
+		confirmDate = new Date().getTime();
+		deleteAsset(path,id);		
+	}else if(confirm(i18n("are_you_sure_delete")+"?")) {
+		confirmDate = new Date().getTime();
+		deleteAsset(path,id);
+	}
+}
 function deletePage(path,parent) {
 
     $.ajax({

@@ -13,7 +13,7 @@ var tinymce = tinyMCE = win.tinymce;*/
 var input = "";
 document.addEventListener("DOMContentLoaded", init, false);
 var i18n = window.wb.i18n;
-
+var confirmDate =0;
 var count = 0;
 $(window).on('load',function() {
 	var menu = document.getElementById("wb-lng");
@@ -922,7 +922,7 @@ function output(data) {
 				  +'<input class="form-control" id="description'+data.uid+'" name="jcr:description" value="'+(data.description==null?"":+data.description)+'" size="42" uid="'+data.uid+'"  onchange="updateNode(this)"/>';
 
     	}else {
-    		html +='<a href="javascript:openImage(\''+data.link+'\')"><img id="img'+data.uid+'" src="'+data.icon+'" class="img-responsive" draggable="true"></img></a>'
+    		html +='<a href="javascript-edit:openImage(\''+data.link+'\')"><img id="img'+data.uid+'" src="'+data.icon+'" class="img-responsive" draggable="true" alt=""></img></a>';
     	}	  
     	
     	if(topInsert != null) 	{
@@ -972,49 +972,63 @@ function getDateString(datelong) {
 }
 
 function deleteNode(path) {
-
-	if(confirm(i18n("are_you_sure_delete")+path+"?")) {
-	    $.ajax({
-		    url: '/site/delete.html',
-		    data: {
-		    	path:path
-		    },
-		    type: "POST", 
-		    success: function(msg) {
-		    	if(!msg.indexOf("error:")>=0)
-		    		$("#"+path).remove();
-		    	else
-		    		alert(msg);
-		    },
-		    error: function() {
-		    	alert(i18n("fail"));
-		    }
-		    // ... Other options like success and etc
-		});	 
+	if(new Date().getTime() - 30000 <  confirmDate) {
+		confirmDate = new Date().getTime();
+		removeNode(path);
+	}else if(confirm(i18n("are_you_sure_delete")+path+"?")) {
+		confirmDate = new Date().getTime();
+		removeNode(path);
 	}
 }
 
-function deleteNode(path,uid) {
+function removeNode(path) {
+    $.ajax({
+	    url: '/site/delete.html',
+	    data: {
+	    	path:path
+	    },
+	    type: "POST", 
+	    success: function(msg) {
+	    	if(!msg.indexOf("error:")>=0)
+	    		$("#"+path).remove();
+	    	else
+	    		alert(msg);
+	    },
+	    error: function() {
+	    	alert(i18n("fail"));
+	    }
+	    // ... Other options like success and etc
+	});	 	
+}
 
-	if(confirm(i18n("are_you_sure_delete")+path+"?")) {
-	    $.ajax({
-		    url: '/site/delete.html',
-		    data: {
-		    	path:path
-		    },
-		    type: "POST", 
-		    success: function(msg) {
-		    	if(!msg.indexOf("error:")>=0)
-		    		$("#"+uid).remove();
-		    	else
-		    		alert(msg);
-		    },
-		    error: function() {
-		    	alert(i18n("fail"));
-		    }
-		    // ... Other options like success and etc
-		});	 
+function deleteNode(path,uid) {
+	if(new Date().getTime() - 30000 <  confirmDate) {
+		confirmDate = new Date().getTime();
+		removeNode(path,uid);		
+	}else if(confirm(i18n("are_you_sure_delete")+"?")) {
+		confirmDate = new Date().getTime();
+		removeNode(path,uid);
 	}
+}
+
+function removeNode(path,uid) {
+    $.ajax({
+	    url: '/site/delete.html',
+	    data: {
+	    	path:path
+	    },
+	    type: "POST", 
+	    success: function(msg) {
+	    	if(!msg.indexOf("error:")>=0)
+	    		$("#"+uid).remove();
+	    	else
+	    		alert(msg);
+	    },
+	    error: function() {
+	    	alert(i18n("fail"));
+	    }
+	    // ... Other options like success and etc
+	});	 
 }
 
 function deleteUser(path) {
@@ -1040,26 +1054,33 @@ function deleteUser(path) {
 	}
 }
 function removeTag(id) {
-
-	if(confirm(i18n("are_you_sure_delete")+"?")) {
-		$.ajax({
-		    url: '/site/delete.html',
-		    data: {
-		    	uid:id
-		    },
-		    type: "POST", 
-		    success: function(msg) {
-		    	if(!msg.indexOf("error:")>=0)
-		    		$("#"+id).remove();
-		    	else
-		    		alert(msg);
-		    },
-		    error: function() {
-		    	alert(i18n("fail"));
-		    }
-		    // ... Other options like success and etc
-		});	
+	if(new Date().getTime() - 30000 <  confirmDate) {
+		confirmDate = new Date().getTime();
+		deleteTag(id);		
+	}else if(confirm(i18n("are_you_sure_delete")+"?")) {
+		confirmDate = new Date().getTime();
+		deleteTag(id);
 	}
+}
+
+function deleteTag(id) {
+	$.ajax({
+	    url: '/site/delete.html',
+	    data: {
+	    	uid:id
+	    },
+	    type: "POST", 
+	    success: function(msg) {
+	    	if(!msg.indexOf("error:")>=0)
+	    		$("#"+id).remove();
+	    	else
+	    		alert(msg);
+	    },
+	    error: function() {
+	    	alert(i18n("fail"));
+	    }
+	    // ... Other options like success and etc
+	});	
 }
 
 function setDataView(id,view) {

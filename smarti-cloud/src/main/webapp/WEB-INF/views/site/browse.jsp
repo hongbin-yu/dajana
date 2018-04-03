@@ -64,15 +64,8 @@
 </div>
 </form>
 <div class="form-group col-md-4">
-<div class="form-group">
-<%-- <label>
-<c:if test="${folder.name!='assets' }">
-<a title="${folder.parent }" href='<c:url value="/site/browse.html?path=${folder.parent}&type=${type }&input=${input }"/>'><span class="glyphicon glyphicon-backward"></span>${path }</a>
-</c:if>
-<c:if test="${folder.name=='assets' }">${path }</c:if>
-</label> --%>
-<%-- <input type="text" class="form-editable" id="title${folder.uid}" name="jcr:title" size="18" value="${folder.title}" uid="${folder.uid}"/><button class="btn btn-primary btn-xs" onclick="javascript:returnCarousel('${folder.path}')" title="加入广告"><span class="glyphicon glyphicon-play"></span></button>
- --%></div>
+	<label for="foldertitle"><spring:message code="djn.title"/> : <input id="foldertitle" name="jcr:title" value="${folder.title}" size="25" uid="${folder.uid}"  onchange="updateNode(this)"/></label>
+<%-- 
             <details id="${folder.uid }">
             <summary>${folder.title}</summary>
 				<div class="form-group">
@@ -88,7 +81,7 @@
 				</select>
 				</div>
             </details>
-<details>
+ --%><%-- <details>
 	<summary>
 		<label for="path"><span class="glyphicon glyphicon-folder-close"></span>创建子目录</label>
 		<input type="hidden" id="folder-path" name="path" value="${folder.path }" >
@@ -106,33 +99,10 @@
 		<input id="submit" type="submit" value="提交" class="btn btn-primary"> <input type="reset" value="重填" class="btn btn-default">
 	</form>
 	</div>	
-</details>
+</details> --%>
 </div>
 </div>
 <div class="wb-inv" id="div_uid">    
-<div id="{uid}" class="col-md-4">
-	<div class="checkbox">
-		<input type="checkbox" class="checkbox" name="puid" value="{uid}"><a title="打开PDF" href="<c:url value="viewpdf?uid={uid}"/>" target="_BLANK"><img title="点击选中" src='<c:url value="/resources/images/pdf.gif"></c:url>'></a>
-		<a class="wb-lbx-edit" href="<c:url value='{link}'></c:url>" target="_BLANK"><imgreplace id="<c:url value='viewimage?uid={uid}&w=4'></c:url>" src="<c:url value='{icon}'></c:url>" class="img-responsive" draggable="true"/></a>
-	</div>
-	<details>
-		<summary><span class="glyphicon glyphicon-edit">{title}</span></summary>
-		<a class="wb-lbx" title="删除它" href="<c:url value="/delete.html?uid={uid}&redirect=/assets.html?path=${folder.path }"/>"><span class="glyphicon glyphicon-remove">删除</span></a>
-		<div class="form-group">
-		<label for="title{uid}">标题&nbsp;</label><input class="form-control" id="title{uid}" name="jcr:title" value="" size="25" uid="{uid}"  onchange="updateNode(this)"/>
-		</div>
-		<div class="form-group">
-		<label for="url{uid}">链接&nbsp;</label><input class="form-control" id="url{uid}" name="url" value="" size="25" uid="{uid}"  onchange="updateNode(this)"/>
-		</div>
-		<div class="form-group">
-		<label for="contentType{uid}">类型&nbsp;</label><input class="form-control" id="contentType{uid}" name="contentType" value="" size="24" uid="{uid}" disabled/>
-		</div>		
-		<div class="form-group">
-		<label for="description{uid}">描述 </label><br/>
-		<div class="panel panel-default description" id="description{uid}" property="description"  uid="{uid}" placeholder="description"></div>
-		</div>
-	</details>
-</div>	 
 </div>	
 <div class="clearfix"></div>
 <div class="col-md-4">
@@ -215,7 +185,7 @@
 <div id="top_insert">
 </div>
 <c:forEach items="${assets.items }" var="item" varStatus="loop">
-<div id="${item.uid}" class="col-md-4">
+<div id="${item.uid}" class="col-md-4 well">
 		<c:if test="${item.mp4}">
 			<video poster="video2jpg.jpg?path=${item.path }" controls="controls" width="300" height="200" preload="none">
 			<source type="video/mp4" src="video.mp4?path=${item.path }"/>
@@ -254,10 +224,11 @@
 		<c:if test="${item.contentType=='application/pdf' && item.total>0}">
 		<button class="btn btn-primary btn-sm" onclick="javascript:returnPPT('${item.path}','${item.total }')" title="植入画廊"><span class="glyphicon glyphicon-play">${folder.title } 植入画廊</span></button>
 		</c:if>
-
-<details>
-	<summary><span class="glyphicon glyphicon-edit"></span>${item.path}</summary>
-	<div class="row">
+<div>
+	<span class="strong glyphicon glyphicon-link">${item.title} (${item.path})</span>
+	<p>	<a href="javascript:removeAsset('${item.path }','${item.uid}')"><button title="删除" class="btn btn-warning btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span></button></a>
+	${item.description}</p>
+	<div class="row wb-inv">
 	<div class="form-group">
 	<label for="title${item.uid }">标题&nbsp;</label><input class="form-control" id="title${item.uid }" name="jcr:title" value="${item.title}" size="24" uid="${item.uid}" onchange="javascript:updateNode(this)"/>
 	</div>
@@ -276,7 +247,29 @@
 <%-- 	<textarea class="form-control, form-editable" id="description${item.uid }" name="description" cols="22"  uid="${item.uid}">${item.description}</textarea> --%>
 	</div>
 	</div>
-</details>
+</div>
+<%-- <details>
+	<summary><span class="glyphicon glyphicon-edit"></span>${item.path}</summary>
+	<div class="row">
+	<div class="form-group">
+	<label for="title${item.uid }">标题&nbsp;</label><input class="form-control" id="title${item.uid }" name="jcr:title" value="${item.title}" size="24" uid="${item.uid}" onchange="javascript:updateNode(this)"/>
+	</div>
+	<div class="form-group">
+	<label for="url${item.uid }">链接&nbsp;</label><input class="form-control" id="url${item.uid }" name="url" value="${item.url}" size="24" uid="${item.uid}" onchange="javascript:updateNode(this)"/>
+	</div>
+	<div class="form-group">
+		<label for="contentType${item.uid }">类型&nbsp;</label><input class="form-control" id="contentType${item.uid }" name="contentType" value="${item.contentType}" size="24" uid="${item.uid}" disabled/>
+	</div>	
+	<div class="form-group">
+		<label for="size${item.uid }">长度&nbsp;</label><input class="form-control" id="size${item.uid}" name="size" value="${item.size}" size="24" uid="${item.uid}" disabled/>
+	</div>	
+	<div class="form-group wb-inv">
+	<label for="description${item.uid }">描述 </label><br/>
+	<div class="panel panel-default" id="description${item.uid }" property="description"  uid="${item.uid }">${item.description}</div>
+	<textarea class="form-control, form-editable" id="description${item.uid }" name="description" cols="22"  uid="${item.uid}">${item.description}</textarea>
+	</div>
+	</div>
+</details> --%>
 
 </div>
 <c:if test="${(loop.index + 2) % 3 ==1  }"><div class="clearfix"></div></c:if>

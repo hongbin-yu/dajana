@@ -80,9 +80,9 @@
 	<header class="modal-header">
 		<h2 class="modal-title">云站</h2>
 	</header>
-	<div class="modal-body">
-    <iframe id="left-iframe" src="/protected/browse.html" scrolling="yes" style="height: 600px; border: 0px none; width: 360px; margin-bottom: 0px; margin-left: 10px;">
-    </iframe>
+	<div class="modal-body"> 
+	 <iframe id="left-iframe" src="/protected/browse.html?path=/${user.userName }/assets/youchat" scrolling="yes" style="height: 600px; border: 0px none; width: 360px; margin-bottom: 0px; margin-left: 10px;">
+     </iframe>
  	</div>
 </section> 
 <section id="right-bar" class="wb-overlay modal-content overlay-def wb-panel-r col-md-4">
@@ -104,3 +104,11 @@
 <c:if test="${user.role =='Owner' || user.role == 'Administrator'}">
 <input type="hidden" id="userrole" name="userrole" value="Administrator"/>
 </c:if>
+<section id="confirmation" class="wb-overlay modal-content overlay-def wb-popup-mid">
+<header class="modal-header">
+	<h2 class="modal-title">确认删除吗？</h2>
+</header>
+<div class="modal-body">
+
+</div>
+</section>

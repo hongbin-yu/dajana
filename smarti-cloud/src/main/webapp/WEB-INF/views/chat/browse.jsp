@@ -8,7 +8,7 @@
 <%@include file="header.jsp" %>
 <c:set var="contentPath"><c:url value="/"></c:url></c:set>
 <body class="secondary" vocab="http://schema.org/" typeof="WebPage">
-<main role="main" property="mainContentOfPage" class="container">
+<!-- <main role="main" property="mainContentOfPage" class="container"> -->
 <input type="hidden" id="folderpath" name="path" value="${folder.path}"/>
 <div class="row">
 <div class="col-md-4 wb-frmvld">
@@ -64,10 +64,10 @@
 
 </div>
 </form>
-<div class="form-group col-md-4">
-<div class="form-group">
-</div>
-            <details id="${folder.uid }">
+<div class="col-md-4">
+	<label for="foldertitle"><spring:message code="djn.title"/> : <input id="foldertitle" name="jcr:title" value="${folder.title}" size="25" uid="${folder.uid}"  onchange="updateNode(this)"/></label>
+	
+<%--       <details id="${folder.uid }">
             <summary>${folder.title}</summary>
 				<div class="form-group">
 				<label for="foldertitle"><spring:message code="djn.title"/>&nbsp;</label><input class="form-control" id="foldertitle" name="jcr:title" value="${folder.title}" size="25" uid="${folder.uid}"  onchange="updateNode(this)"/>
@@ -81,8 +81,8 @@
 					<option value="originalDate asc" <c:if test="${folder.orderby=='originalDate asc'}">selected</c:if>><spring:message code="djn.docDate_asc"/></option>
 				</select>
 				</div>
-            </details>
-<details>
+      </details> --%>
+<%-- <details>
 	<summary>
 		<label for="path"><span class="glyphicon glyphicon-folder-close"></span>创建子目录</label>
 		<input type="hidden" id="folder-path" name="path" value="${folder.path }" >
@@ -100,90 +100,10 @@
 		<input id="submit" type="submit" value="提交" class="btn btn-primary"> <input type="reset" value="重填" class="btn btn-default">
 	</form>
 	</div>	
-</details>
+</details> --%>
 </div>
 </div>
-<div class="wb-inv" id="div_uid">    
-<div id="{uid}" class="col-md-4">
-	<details>
-		<summary><span class="glyphicon glyphicon-edit">{title}</span></summary>
-		<a class="wb-lbx" title="删除它" href="<c:url value="/delete.html?uid={uid}&redirect=/assets.html?path=${folder.path }"/>"><span class="glyphicon glyphicon-remove">删除</span></a>
-		<div class="form-group">
-		<label for="title{uid}">标题&nbsp;</label><input class="form-control" id="title{uid}" name="jcr:title" value="" size="25" uid="{uid}"  onchange="updateNode(this)"/>
-		</div>
-		<div class="form-group">
-		<label for="url{uid}">链接&nbsp;</label><input class="form-control" id="url{uid}" name="url" value="" size="25" uid="{uid}"  onchange="updateNode(this)"/>
-		</div>
-		<div class="form-group">
-		<label for="contentType{uid}">类型&nbsp;</label><input class="form-control" id="contentType{uid}" name="contentType" value="" size="24" uid="{uid}" disabled/>
-		</div>		
-		<div class="form-group">
-		<label for="description{uid}">描述 </label><br/>
-		<div class="panel panel-default description" id="description{uid}" property="description"  uid="{uid}" placeholder="description"></div>
-		</div>
-	</details>
-</div>	 
-</div>	
 <div class="clearfix"></div>
-<%-- <div class="col-md-4">
-<c:if test="${carousel.availablePages>0}">
-<div id="carousel" class="wb-tabs carousel-s2 playing">
-	<ul role="tablist">
-	<c:forEach items="${carousel.items }" var="item" varStatus="loop">
-		<c:if test="${loop.count==1}">
-			<li class="active">
-				<a href="#tab${loop.count}">
-					<img class="img-responsive" src="<c:url value='viewimage?uid=${item.uid}&w=12'></c:url>" alt="${item.alt}" />
-					<span class="wb-inv">Tab ${loop.count}:${item.title}</span>
-				</a>
-			</li>
-		</c:if>
-		<c:if test="${loop.count>1}">
-			<li>
-				<a href="#tab${loop.count}">
-					<img class="img-responsive" src="<c:url value='viewimage?uid=${item.uid}&w=12'></c:url>" alt="${item.alt}" />
-					<span class="wb-inv">Tab ${loop.count}:${item.title}</span>
-				</a>
-			</li>
-		</c:if>		
-	</c:forEach>
-	</ul>
-	<div class="tabpanels">
-		<c:forEach items="${carousel.items }" var="item" varStatus="loop">
-			<c:if test="${loop.count==1}">
-				<div role="tabpanel" id="tab${loop.count}" class="fade in">
-					<!-- first child - tabpanel -start -->
-						<figure>
-							<a href="${item.url}" class="learnmore">
-								<img class="img-responsive" src="<c:url value='viewimage?uid=${item.uid}&w=12'></c:url>" alt="${item.alt}" />
-							</a>
-						<figcaption>
-							   <a href="${item.url}" class="learnmore">${item.title}</a>
-								${item.description}
-							</figcaption>
-						</figure>
-				</div>
-			</c:if>	
-			<c:if test="${loop.count>1}">
-				<div role="tabpanel" id="tab${loop.count}" class="fade out">
-					<!-- first child - tabpanel -start -->
-						<figure>
-					<a href="${item.url}" class="learnmore">
-								<img class="img-responsive" src="<c:url value='viewimage?uid=${item.uid}&w=12'></c:url>" alt="${item.alt}" />
-					</a>
-							<figcaption>
-							    <a href="${item.url}" class="learnmore">${item.title}</a>
-								${item.description}
-							</figcaption>
-						</figure>
-				</div>
-			</c:if>	
-		</c:forEach>
-	</div>
-</div>
-<button class="btn btn-primary btn-sm" onclick="javascript:returnCarousel('${folder.path}')" title="植入滚动联播"><span class="glyphicon glyphicon-play">${folder.title } 植入滚动联播</span></button>
-</c:if>
-</div> --%>
 <div class="col-md-4">
 <c:if test="${carousel.availablePages>0}">
 <div id="gallery${folder.uid }" class="wb-lbx-edit lbx-hide-gal">
@@ -205,7 +125,7 @@
 <div id="top_insert">
 </div>
 <c:forEach items="${assets.items }" var="item" varStatus="loop">
-<div id="${item.uid}" class="col-md-4">
+<div id="${item.uid}" class="col-md-4 well">
 		<c:if test="${item.mp4}">
 			<video poster="video2jpg.jpg?path=${item.path }" controls="controls" width="300" height="200" preload="none">
 			<source type="video/mp4" src="video.mp4?path=${item.path }"/>
@@ -214,9 +134,9 @@
 		</c:if>
         <c:if test="${item.doc2pdf}">
         	<a class="download" href="file/${item.name}?path=${item.path}" target="_BLANK" download><span class="glyphicon glyphicon-download">下载</span></a>
-<%-- 		    <a class="${item.cssClass }" href="doc2pdf.pdf?path=${item.path }"> --%>
+		    <a href="javascript-edit:openImage('doc2pdf.pdf?path=${item.path }')">
 				<img id="img${item.uid}" src="<c:url value='${item.icon }'></c:url>" class="img-responsive" draggable="true"/>
-<!-- 			</a> -->
+			</a>
 		</c:if>			
 		<c:if test="${item.audio}">
 		<a class="download" href="file/${item.name}?path=${item.path}" download><span class="glyphicon glyphicon-volume-up">下载</span></a>
@@ -231,18 +151,19 @@
 		</c:if>	
 		
 		<c:if test="${!item.mp4 && !item.audio && !item.doc2pdf}">
-<%-- 		<a class="${item.cssClass }-edit" id="href${item.uid }" href="<c:url value='${item.link}'></c:url>">		
- --%>		<img src="<c:url value='${item.icon }'></c:url>" class="img-responsive" draggable="true" onclick="javascript:returnChatUrl('${item.link}','${item.uid }')"/>
+		<a id="href${item.uid }" href="javascript-edit:openImage('<c:url value='${item.link}'></c:url>')">		
+		<img src="<c:url value='${item.icon }'></c:url>" class="img-responsive" draggable="true" onclick="javascript:returnChatUrl('${item.link}','${item.uid }')"/>
 		${item.description}
-<!-- 		</a> -->
+ 		</a>
 		</c:if>
 		<c:if test="${item.contentType=='application/pdf' && item.total>0}">
 		<button class="btn btn-primary btn-sm" onclick="javascript:returnPPT('${item.path}','${item.total }')" title="植入画廊"><span class="glyphicon glyphicon-play">${folder.title } 植入画廊</span></button>
 		</c:if>
 
-<details>
-	<summary><span class="glyphicon glyphicon-edit"></span>${item.path}</summary>
-	<div class="row">
+<div>
+	<span class="strong glyphicon glyphicon-link">${item.title} (${item.path})</span>
+	<p>	<a href="javascript:removeAsset('${item.path }','${item.uid}')"><button title="删除" class="btn btn-warning btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span></button></a>${item.description}</p>
+	<div class="row wb-inv">
 	<div class="form-group">
 	<label for="title${item.uid }">标题&nbsp;</label><input class="form-control" id="title${item.uid }" name="jcr:title" value="${item.title}" size="24" uid="${item.uid}" onchange="javascript:updateNode(this)"/>
 	</div>
@@ -261,7 +182,7 @@
 <%-- 	<textarea class="form-control, form-editable" id="description${item.uid }" name="description" cols="22"  uid="${item.uid}">${item.description}</textarea> --%>
 	</div>
 	</div>
-</details>
+</div>
 
 </div>
 <c:if test="${(loop.index + 2) % 3 ==1  }"><div class="clearfix"></div></c:if>
@@ -291,7 +212,7 @@
      </ul>
 </section>
 </c:if> --%>
-</main>
+<!-- </main> -->
 <!--[if gte IE 9 | !IE ]><!-->
 <script src="<c:url value='/resources/wet-boew/js/jquery/2.1.4/jquery.js'/>"></script>
 <script src="<c:url value='/resources/wet-boew/js/wet-boew.min.js'/>"></script>
@@ -387,7 +308,7 @@ function returnChatUrl(fileUrl,uid) {
 		var e_type = document.getElementById("contentType"+uid).value;
 		var e_size = document.getElementById("size"+uid).value;
 		if(e_type.indexOf("image/")>=0) {
-			tinyMCE.activeEditor.selection.setContent('<a href="'+fileUrl+'"><img class="img-responsive" alt="" src="'+fileUrl+'&w=4"></a>');
+			tinyMCE.activeEditor.selection.setContent('<a href="javascript:openImage("'+fileUrl+'")"><img class="img-responsive" alt="" src="'+fileUrl+'&w=4"></a>');
 		}else if(e_type.indexOf("video/")>=0) {
 			var html = "<figure class=\"wb-mltmd-edit editable\"><video controls=\"controls\" title=\""+e_title.value+"\" preload=\"metadata\">";
 			if(e_size>10000000) {
