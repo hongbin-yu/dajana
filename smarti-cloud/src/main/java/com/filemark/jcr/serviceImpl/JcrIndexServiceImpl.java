@@ -104,7 +104,7 @@ public class JcrIndexServiceImpl implements JcrIndexService {
 	
 	private void Device2Backup() throws RepositoryException {
 		File device = new File(jcrService.getDevice());
-		if(!jcrService.nodeExsits("/system/devices/backup")) {
+/*		if(!jcrService.nodeExsits("/system/devices/backup")) {
 			Device backup = new Device(jcrService.getBackup());
 			backup.setName("backup");
 			backup.setTitle("backup");
@@ -119,7 +119,7 @@ public class JcrIndexServiceImpl implements JcrIndexService {
 			home.setPath("/system/devices/backup");
 			home.setLocation(jcrService.getDevice());
 			jcrService.addOrUpdate(home);			
-		}
+		}*/
 		Device home = (Device)jcrService.getObject("/system/devices/default");
 		if(!jcrService.getDevice().equals(home.getLocation())) {
 		    jcrService.updatePropertyByPath("/system/devices/default", "location", jcrService.getDevice());

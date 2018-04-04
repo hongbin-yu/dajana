@@ -92,6 +92,30 @@ public class BaseController {
 		if(loadDTKBarReader==0) {
 			loadDTKBarReader = 1;
 			Asset.setDevicePath(jcrService.getDevice());
+			if(!jcrService.nodeExsits("/system/devices/backup")) {
+				Device backup = new Device(jcrService.getBackup());
+				backup.setName("backup");
+				backup.setTitle("backup");
+				backup.setPath("/system/devices/backup");
+				backup.setLocation(jcrService.getBackup());
+				try {
+					jcrService.addOrUpdate(backup);
+				} catch (RepositoryException e) {
+					logger.error(e.getMessage());
+				}
+			}
+			if(!jcrService.nodeExsits("/system/devices/default")) {
+				Device home = new Device(jcrService.getDevice());
+				home.setName("backup");
+				home.setTitle("backup");
+				home.setPath("/system/devices/backup");
+				home.setLocation(jcrService.getDevice());
+				try {
+					jcrService.addOrUpdate(home);
+				} catch (RepositoryException e) {
+					logger.error(e.getMessage());
+				}			
+			}			
 		}
 
 
