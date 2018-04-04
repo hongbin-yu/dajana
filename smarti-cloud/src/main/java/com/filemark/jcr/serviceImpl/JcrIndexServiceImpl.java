@@ -137,6 +137,7 @@ public class JcrIndexServiceImpl implements JcrIndexService {
 				try {
 					if(destDir.exists()) {
 						FileUtils.cleanDirectory(destDir);
+						destDir.delete();
 					}else if(!destDir.getParentFile().exists()) destDir.getParentFile().mkdirs();
 					
 				    FileUtils.moveDirectory(srcDir, destDir);

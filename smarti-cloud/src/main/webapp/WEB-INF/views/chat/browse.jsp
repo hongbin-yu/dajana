@@ -283,7 +283,7 @@ function returnFileUrl(fileUrl) {
 		
 		close();
 	} else {
-		tinyMCE.activeEditor.selection.setContent('<a href="javascript-edit:openImage("'+fileUrl+'")"><img class="img-responsive" alt="" src="'+fileUrl+'&w=4"></a>');
+		tinyMCE.activeEditor.selection.setContent('<a href="javascript-edit:openImage(\''+fileUrl+'\')"><img class="img-responsive" alt="" src="'+fileUrl+'&w=4"></a>');
 		tinyMCE.activeEditor.setDirty(true);
 	}
 	closeSelf();
@@ -308,7 +308,7 @@ function returnChatUrl(fileUrl,uid) {
 		var e_type = document.getElementById("contentType"+uid).value;
 		var e_size = document.getElementById("size"+uid).value;
 		if(e_type.indexOf("image/")>=0) {
-			tinyMCE.activeEditor.selection.setContent('<a href="javascript-edit:openImage("'+fileUrl+'")"><img class="img-responsive" alt="" src="'+fileUrl+'&w=4"></a>');
+			tinyMCE.activeEditor.selection.setContent('<a href="javascript-edit:openImage(\''+fileUrl+'\')"><img class="img-responsive" alt="" src="'+fileUrl+'&w=4"></a>');
 		}else if(e_type.indexOf("video/")>=0) {
 			var html = "<figure class=\"wb-mltmd-edit editable\"><video controls=\"controls\" title=\""+e_title.value+"\" preload=\"metadata\">";
 			if(e_size>10000000) {
@@ -432,7 +432,7 @@ function returnChatGallery(fileUrl,uid) {
 		message.innerHTML="<section class=\"text-right alert alert-success\"><h3>加入画廊</h3></section>";
 
 		}
-	var data = document.getElementById(uid).outerHTML;
+	var data = document.getElementById("gallery"+uid).outerHTML;
 
 /* 	win.gallery = newGallery;	
 	var gallery = tinyMCE.activeEditor.dom.select('.gallery');

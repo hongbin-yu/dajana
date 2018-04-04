@@ -1803,7 +1803,7 @@ public class SiteController extends BaseController {
 
 	}
 
-	@RequestMapping(value = {"/site/deleteassets.html","/protected/deleteasset.html"}, method = RequestMethod.POST)
+	@RequestMapping(value = {"/site/deleteassets.html","/protected/deleteassets.html"}, method = RequestMethod.POST)
 	public @ResponseBody String deleteAssets(String[] uid,Model model,HttpServletRequest request, HttpServletResponse response) {
 		if(uid!=null) {
 			for(String id:uid) {

@@ -957,10 +957,26 @@ function output(data) {
 	    		  +'</div>';	
 	    	$("#top_insert").after(html);		    	
 	    }else if(online_chat_editor){
-	    	document.getElementById("online_chat_editor").focus();
-	    	tinyMCE.activeEditor.selection.select(tinyMCE.activeEditor.getBody(), true);
-	    	tinyMCE.activeEditor.selection.collapse(false);
-	    	tinyMCE.activeEditor.selection.setContent(html);
+	    	if(i==0) {
+		    	document.getElementById("online_chat_editor").focus();
+		    	tinyMCE.activeEditor.selection.select(tinyMCE.activeEditor.getBody(), true);
+		    	tinyMCE.activeEditor.selection.collapse(false);
+	    	}
+	    	var selection = tinyMCE.activeEditor.getBody();
+	    	if(total > 1) {
+	    		html ='<a href="'+data.link+'\"><img id="img'+data.uid+'" src="'+data.icon+'" class="img-responsive" draggable="true" alt=""></img></a>';
+	    		if(i==0) {
+		    		html ='<a id="link'+data.uid+'" href="'+data.link+'"><img id="img'+data.uid+'" src="'+data.icon+'" class="img-responsive" draggable="true" alt=""></img></a>';
+	    			tinyMCE.activeEditor.selection.setContent("<h5><a href=\"javascript-edit:openGallery('"+data.uid+"')\">点击播放"+total+"张照片</a></h5><div id=\"gallery"+data.uid+"\" class=\"wb-lbx-edit lbx-hide-gal\"><ul class=\"list-inline\"><li></li><ul></div>");
+		    		selection = tinymce.activeEditor.dom.select('li')[0];
+		    		tinymce.activeEditor.selection.select(selection);
+	    		}
+    			tinyMCE.activeEditor.selection.setContent("<li>"+html+"</li>");
+
+	    	}else {
+	    		tinyMCE.activeEditor.selection.setContent(html);
+	    	}
+
 	    	tinyMCE.activeEditor.setDirty(true);
 	    }
 }
@@ -1133,6 +1149,14 @@ function openImage(url) {
 	 	                       			]
 	 	                       		]);
 	
+}
+
+function openGallery(id) {
+	$("#gallery"+id).trigger("wb-init.wb-lbx");
+	setTimeout(function(){
+		$("#link"+id).click();		
+	},500);
+
 }
 
 function toggle(source) {
