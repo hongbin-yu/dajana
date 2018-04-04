@@ -532,7 +532,7 @@ function returnFileUrl(fileUrl,uid,poster) {
 			html +="<source type=\""+e_type+"\" src=\""+fileUrl+"\"/>";
 			html +="</audio>";
 			tinyMCE.activeEditor.selection.setContent(html);
-		}else if(e_type.indexOf("msword")>=0) {
+/* 		}else if(e_type.indexOf("msword")>=0) {
 		     $.ajax({
 				    url: contentPath+"/importWord.html?path="+fileUrl,
 				    type: "GET", //ADDED THIS LINE
@@ -547,7 +547,7 @@ function returnFileUrl(fileUrl,uid,poster) {
 
 				    }
 				    // ... Other options like success and etc
-				}); 	    
+				}); 	 */    
 		} else {
 			var html = $("#href"+uid).html();
 			html = "<a title='下载' href='file?uid="+uid+"'>"+html+"</a><p><a title='下载' href='file?uid="+uid+"'>"+e_title.value+"("+e_size+")</a><p>";

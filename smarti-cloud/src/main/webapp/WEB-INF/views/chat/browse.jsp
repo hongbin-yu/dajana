@@ -283,7 +283,7 @@ function returnFileUrl(fileUrl) {
 		
 		close();
 	} else {
-		tinyMCE.activeEditor.selection.setContent('<a href="'+fileUrl+'"><img class="img-responsive" alt="" src="'+fileUrl+'&w=4"></a>');
+		tinyMCE.activeEditor.selection.setContent('<a href="javascript-edit:openImage("'+fileUrl+'")"><img class="img-responsive" alt="" src="'+fileUrl+'&w=4"></a>');
 		tinyMCE.activeEditor.setDirty(true);
 	}
 	closeSelf();
@@ -308,7 +308,7 @@ function returnChatUrl(fileUrl,uid) {
 		var e_type = document.getElementById("contentType"+uid).value;
 		var e_size = document.getElementById("size"+uid).value;
 		if(e_type.indexOf("image/")>=0) {
-			tinyMCE.activeEditor.selection.setContent('<a href="javascript:openImage("'+fileUrl+'")"><img class="img-responsive" alt="" src="'+fileUrl+'&w=4"></a>');
+			tinyMCE.activeEditor.selection.setContent('<a href="javascript-edit:openImage("'+fileUrl+'")"><img class="img-responsive" alt="" src="'+fileUrl+'&w=4"></a>');
 		}else if(e_type.indexOf("video/")>=0) {
 			var html = "<figure class=\"wb-mltmd-edit editable\"><video controls=\"controls\" title=\""+e_title.value+"\" preload=\"metadata\">";
 			if(e_size>10000000) {
@@ -323,7 +323,7 @@ function returnChatUrl(fileUrl,uid) {
 			html +="<source type=\""+e_type+"\" src=\""+fileUrl+"\"/>";
 			html +="</audio>";
 			tinyMCE.activeEditor.selection.setContent(html);
-		}else if(e_type.indexOf("msword")>=0) {
+/* 		}else if(e_type.indexOf("msword")>=0) {
 		     $.ajax({
 				    url: contentPath+"/importWord.html?path="+fileUrl,
 				    type: "GET", //ADDED THIS LINE
@@ -338,7 +338,7 @@ function returnChatUrl(fileUrl,uid) {
 
 				    }
 				    // ... Other options like success and etc
-				}); 	    
+				}); 	 */    
 		} else {
 			var html = $("#href"+uid).html();
 			html = "<a title='下载' href='file?uid="+uid+"'>"+html+"</a><p><a title='下载' href='file?uid="+uid+"'>"+e_title.value+"("+e_size+")</a><p>";
