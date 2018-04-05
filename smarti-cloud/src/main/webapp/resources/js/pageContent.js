@@ -535,7 +535,7 @@ function webvideo(view,width) {
 }
 
 function stopvideo() {
-	
+
 	$("#video-iframe").html("");	
     $.ajax({
 	    url: '/protected/video.html?action=close',
@@ -548,7 +548,9 @@ function stopvideo() {
 		error: function() {
 	    }
 
-	});		
+	});
+	tinyMCE.activeEditor.setContent("<p></p>");
+	$("#selectedFiles").html("");
 }
 
 function addUser(group,path) {
