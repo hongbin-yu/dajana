@@ -239,6 +239,7 @@ public class Asset implements SmartiNode, Serializable {
 	}
 
 	public boolean getDoc2pdf() {
+		if(path==null) return false;
 		if(path.endsWith(".doc") || path.endsWith(".docx") || path.endsWith(".ppt") || path.toLowerCase().endsWith(".xls") || path.toLowerCase().endsWith(".xlsx") ||  path.toLowerCase().endsWith(".csv")  || path.toLowerCase().endsWith(".rtf")) {
 				return true;
 		}

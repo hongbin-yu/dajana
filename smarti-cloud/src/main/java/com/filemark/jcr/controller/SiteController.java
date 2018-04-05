@@ -934,7 +934,7 @@ public class SiteController extends BaseController {
 		return "site/textEditor";
 	}
 
-	@RequestMapping(value = {"/site/uploadAsset.html"}, method = {RequestMethod.GET,RequestMethod.POST})
+	@RequestMapping(value = {"/site/uploadAsset.html","/protected/uploadAsset.html"}, method = {RequestMethod.GET,RequestMethod.POST})
 	public @ResponseBody Asset  assetsUpload(String path,String lastModified,String proccess,Integer total,String override,ScanUploadForm uploadForm,Model model,HttpServletRequest request, HttpServletResponse response) {
 		Asset asset= new Asset();
 		String username = getUsername();
@@ -952,6 +952,7 @@ public class SiteController extends BaseController {
 			}
     		for (MultipartFile multipartFile : uploadForm.getFile()) {
         		String fileName = multipartFile.getOriginalFilename();
+        		
         		if(fileName==null || "".equals(fileName)) {
         			fileName = uploadForm.getFilename();
         		}

@@ -401,6 +401,21 @@ public class ProtectedController extends BaseController {
    		return chats;
    	}
 
+   	@RequestMapping(value = {"/protected/getasset.json"}, method = {RequestMethod.GET})
+   	public @ResponseBody Asset assetJson(String filename,Long lastModified,String operator,Model model,HttpServletRequest request, HttpServletResponse response) {
+   		String username = getUsername();
+   		Asset asset = new Asset();
+   		if(filename==null) return asset;
+		String assetsQuery = "select s.* from [nt:base] AS s WHERE ISDESCENDANTNODE([/"+username+"/assets])" +" and s.[jcr:title] like '"+filename.toLowerCase()+"' and s.[delete] not like 'true' and s.ocm_classname='com.filemark.jcr.model.Asset'";
+		WebPage<Asset> assets = jcrService.searchAssets(assetsQuery, 10, 0);		
+		for(Asset a:assets.getItems()) {
+			if(a.getOriginalDate()!=null && a.getOriginalDate().getTime() == lastModified) {
+				return a;
+			}
+		}
+   		return asset;
+   	}
+   	
    	@RequestMapping(value = {"/protected/comments.html"}, method = {RequestMethod.GET})
    	public String  comments(String path,String status,Integer p,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
    		path += "/comments";
