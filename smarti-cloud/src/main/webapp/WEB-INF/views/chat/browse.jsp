@@ -58,7 +58,7 @@
 		<option value="${item.path }">${item.title }</option>
 	</c:forEach>     
 </select>
-<a href="?path=${folder.path}&type=${type}" title="刷屏"><span class="glyphicon glyphicon-refresh"></span></a>
+<a class="btn btn-default" href="?path=${folder.path}&type=${type}" title="刷屏"><span class="glyphicon glyphicon-refresh"></span></a>
 </label>
 </div>
 
@@ -110,15 +110,22 @@
 <ul class="list-inline">
   <c:forEach items="${carousel.items }" var="item" varStatus="loop">
   	<li>
+  	<c:if test="${loop.index==0}">
+  	  <a id="link${folder.uid }" href="viewimage?uid=${item.uid }&w=12" title="${item.title }">
+        <img src="viewimage?uid=${item.uid }&w=4" alt="图像 ${loop.index }" class="image-actual" />
+      </a>
+    </c:if>
+  	<c:if test="${loop.index>0}">
   	  <a href="viewimage?uid=${item.uid }&w=12" title="${item.title }">
         <img src="viewimage?uid=${item.uid }&w=4" alt="图像 ${loop.index }" class="image-actual" />
       </a>
+    </c:if>    
   	</li>
   </c:forEach>
   </ul>
 </div> 
 <div class="clearfix"></div>
-<button class="btn btn-primary btn-sm" onclick="javascript:returnChatGallery('${folder.path}','gallery${folder.uid }')" title="植入画廊"><span class="glyphicon glyphicon-play">${folder.title } 植入画廊</span></button>
+<button class="btn btn-primary btn-sm" onclick="javascript:returnChatGallery('${folder.path}','${folder.uid }')" title="植入画廊"><span class="glyphicon glyphicon-play">${folder.title } 植入画廊</span></button>
 </c:if>
 </div>
 <div class="row">
@@ -226,7 +233,7 @@
 <script src="<c:url value='/resources/js/djn.js'/>"></script>
 <script type="text/javascript">
 var win = (!window.frameElement && window.dialogArguments) || opener || parent || top;
-
+var total ="${carousel.items.size()}";
 var carousel = win.carousel;
 var newCarousel = "",newGallery="";
 var carelement = document.getElementById("carousel");
@@ -440,7 +447,7 @@ function returnChatGallery(fileUrl,uid) {
 	    
 		gallery[0].innerHTML = $(data);
 	}else  */
-		tinyMCE.activeEditor.selection.setContent('<div id="'+fileUrl+'" class="gallery noneditable">'+data+'</div>');
+		tinyMCE.activeEditor.selection.setContent("<h5><a href=\"javascript-edit:openGallery('"+uid+"')\">点击播放"+total+"张照片</a></h5>"+'<div id="'+fileUrl+'" class="gallery noneditable">'+data+'</div>');
 	tinyMCE.activeEditor.setDirty(true);	
 	closeSelf();
 }
