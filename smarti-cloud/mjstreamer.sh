@@ -1,4 +1,5 @@
 #!/bin/bash
+cd /usr/local/src
 	sudo apt-get update
 	sudo apt-get upgrade
 	wget http://lilnetwork.com/download/raspberrypi/mjpg-streamer.tar.gz

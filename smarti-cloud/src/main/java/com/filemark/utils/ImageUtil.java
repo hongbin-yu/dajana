@@ -222,7 +222,7 @@ public class ImageUtil
     	Process p;
     	int exit=1;
     	ImageUtil.video = false;
-    	ProcessBuilder pb = new ProcessBuilder("killall mjpg_streamer");
+    	ProcessBuilder pb = new ProcessBuilder("killall","mjpg_streamer");
     	pb.redirectErrorStream(true);
 	    try {	
 	        p = pb.start();//Runtime.getRuntime().exec(shellCommand);

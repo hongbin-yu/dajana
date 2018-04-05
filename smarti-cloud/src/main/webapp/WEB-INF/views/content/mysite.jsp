@@ -51,7 +51,7 @@
 </section>
 <section class="col-xs-6">
 <h2 class="wb-inv"><spring:message code="djn.dajana"/></h2>
-<p><a href='<c:url value="/protected/mysite"></c:url>' class="btn btn-primary"><spring:message code="djn.website"/></a></p>
+<p><a href='<c:url value="/content/home.html"></c:url>' class="btn btn-primary"><spring:message code="djn.website"/></a></p>
 </section>
 </div>
 </div>
