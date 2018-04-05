@@ -261,7 +261,7 @@ public class SigninController extends BaseController{
     	}catch(Exception e) {
     		logger.error(e.getMessage());
     		error=e.getMessage();
-    		model.addAttribute("error", error);
+    		model.addAttribute("error", "Barcode error:"+error);
     	}
 
     	return "forget";

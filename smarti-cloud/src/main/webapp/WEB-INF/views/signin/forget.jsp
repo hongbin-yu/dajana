@@ -33,13 +33,13 @@
 </div>
 </c:if>
 
-<c:if test="${param.error eq 'bad_credentials'}">
+<c:if test="${param.error eq 'bad_credentials' || not empty error}">
 <div class="container">
 <div class="col-md-4">
 <section class="alert alert-warning">
 <h3><spring:message code="djn.login_fail"/>!</h3>
 <p>
-  	<spring:message code="djn.login_error"/>。 <spring:message code="djn.try_again"/>。
+  	<spring:message code="djn.login_error"/>。 ${error}<spring:message code="djn.try_again"/>。
  </p>
 </section>
 </div>
@@ -59,13 +59,17 @@
 </c:if>
 
 <div class="wb-frmvld">
-			<form action="/forget" method="POST" id="form-upload" enctype="multipart/form-data">
+			<form action="/forget" method="POST" name="formUpload" id="form-upload" enctype="multipart/form-data">
 				<c:if test="${qrimage !=null}">
 				<img class="img-responsive" src="${qrimage}" alt="">
 				</c:if>
 				<div class="form-group">
-					<label for="fileUpload" class="required">选择二维密码图</label>
-					<input class="form-control" type="file" id="fileUpload" name="file" size="60" required="required"  multiple/>
+					<label for="fileUpload" class="required">点击选择二维密码图</label>
+					<br/><a href="#" onclick="openFiles()"><img id="uploadImg" alt="" src="<c:url value='/resources/images/upload.png'/>"/></a>
+					<div class="panel" id="selectedFiles" >
+					</div>	
+					
+					<input class="form-control wb-inv" type="file" id="fileUpload" name="file" size="60" required="required"  multiple/>
 				</div>
 				<input id="submit_upload" type="submit"  value="<spring:message code="djn.upload"/>" class="btn btn-primary"> <input type="reset" value="<spring:message code="djn.clear"/>" class="btn btn-default">
 
