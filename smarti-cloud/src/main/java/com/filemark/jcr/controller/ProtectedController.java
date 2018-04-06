@@ -525,7 +525,7 @@ public class ProtectedController extends BaseController {
    		return user;
    	}   	
    	@RequestMapping(value = {"/protected/addyouchat.html"}, method = {RequestMethod.POST})
-   	public @ResponseBody String addyouchat(String path,String content,Model model,HttpServletRequest request, HttpServletResponse response){
+   	public @ResponseBody String addyouchat(String path,Long timer, String content,Model model,HttpServletRequest request, HttpServletResponse response){
 			String username = getUsername();
    		try {
 
@@ -538,6 +538,7 @@ public class ProtectedController extends BaseController {
 	   	   		chat.setPath(path+"/"+getDateTime());
 	   	   		chat.setCreatedBy(username);
 	   	   		chat.setTitle((String)request.getAttribute("usertitle"));
+	   	   		chat.setTimer(timer);
 	   	   		jcrService.addOrUpdate(chat);
 	 			
 	   		}
@@ -549,9 +550,8 @@ public class ProtectedController extends BaseController {
    	}
    	
    	@RequestMapping(value = {"/protected/addchat.html"}, method = {RequestMethod.POST})
-   	public @ResponseBody String addchat(String path,String content,Model model,HttpServletRequest request, HttpServletResponse response){
+   	public @ResponseBody String addchat(String path,Long timer,String content,Model model,HttpServletRequest request, HttpServletResponse response){
    		String paths[] = path.split("/content/");
-   		
    		paths = paths[1].split("/");
    		String home = "/youchat/"+paths[0];
    		String username = getUsername();
@@ -574,6 +574,7 @@ public class ProtectedController extends BaseController {
 	   	   		chat.setLastModified(calendar);
 	   	   		chat.setPath(home+"/"+username+"/"+calendar.getTime().getTime());
 	   	   		chat.setCreatedBy(username);
+	   	   		chat.setTimer(timer);
 	   	   		chat.setTitle((String)request.getAttribute("usertitle"));
 	   	   		jcrService.addOrUpdate(chat);
 	 			

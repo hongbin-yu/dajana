@@ -137,7 +137,9 @@ function ScrollHandler(e) {
         						if(firstModified > c.lastModified || firstModified ==0) {
         							firstModified = c.lastModified;
         						}
-        							
+        						if(data.timer && data.timer>0) {
+        							setTimer(removeTag(c.uid),timer);
+        						} 	
         			    	//}
         			    	/*else {
         			    		alert("last="+new Date(c.lastModified).toISOString()+"="+new Date(lastModified).toISOString());		    		
@@ -1176,7 +1178,7 @@ function removeTag(id) {
 
 function deleteTag(id) {
 	$.ajax({
-	    url: '/site/delete.html',
+	    url: 'delete.html',
 	    data: {
 	    	uid:id
 	    },

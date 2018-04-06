@@ -167,10 +167,13 @@ function fileBrowserCallBack(field_name, url, type, win) {
 	}
 
 function sendChat(url) {
+
 	$("#chat_message").html("<section class='alert alert-info'><h5>"+i18n("sending")+"</h5><section>");
 	$("#online_chat_running").removeClass("wb-inv");
 	$("#online_chat_send").attr("disabled",true);
 	var editor = tinymce.get("online_chat_editor");
+	var timer=0;
+	if($("#timer")) timer = $( "#timer option:selected" ).text();
 
 	if(editor) {
 		editor.dom.removeClass("div","wb-data-ajax-replace-inited");
@@ -185,6 +188,7 @@ function sendChat(url) {
 		    type: "POST",
 		    data: {
 		    	path : url,
+		    	timer : timer,
 		    	content: editor.getContent()
 		    },
 		    success: function(msg) {
@@ -343,6 +347,11 @@ function syncChat() {
 						lastModified = c.lastModified;	
 					}
 
+					if(c.timer>0) {
+						var timer = c.timer*1000;
+						var id = c.uid;
+						setTimeout(deleteTag,timer,id);
+					} 	
 						
 		    	}
 /*		    	else {

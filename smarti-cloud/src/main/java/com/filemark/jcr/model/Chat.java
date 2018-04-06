@@ -32,6 +32,8 @@ public class Chat implements SmartiNode, Serializable {
 	private Calendar lastModified;
 	@Field(jcrName="lastRead") 
 	private Date lastRead;
+	@Field
+	private Long timer;
 	
 	@Override
 	public String getPath() {
@@ -124,4 +126,13 @@ public class Chat implements SmartiNode, Serializable {
 		if("2".equals(from)) return "<img alt=\"\" src=\"/smarti-cloud/resources/images/thumbdown.png\">";
 		return "";
 	}
+
+	public Long getTimer() {
+		return timer;
+	}
+
+	public void setTimer(Long timer) {
+		this.timer = timer;
+	}
+	
 }

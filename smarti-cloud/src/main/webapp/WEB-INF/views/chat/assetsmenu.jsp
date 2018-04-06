@@ -122,7 +122,7 @@ ${navigation }
 </div>
 </div>
 </c:if>
-<span class="wb-sessto" data-wb-sessto='{logouturl: "../logout"}'></span>
+<!-- <span class="wb-sessto" data-wb-sessto='{logouturl: "../logout"}'></span> -->
 </header>
 
 

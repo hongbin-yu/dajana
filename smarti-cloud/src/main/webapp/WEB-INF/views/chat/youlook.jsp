@@ -13,7 +13,30 @@
         <div class="row text-center"><img id="online_chat_loading" width="120" height="120" class="wb-inv" src="/resources/images/loadingx400.gif" alt="下载"/></div>
         <div id="online_chat">
 		</div>
-			<div class="panel panel-primary"><header class="panel-heading">${folder.title }<img class="wb-inv" id="online_chat_running" src="/resources/images/loading16x16.gif" alt=""/><a href="#" title="${user.title }"><img id="uploadIcon" class="img-responsive pull-right" src="/protected/file/icon.jpg?path=/${username }/assets/icon/x48.jpg" alt="图标"/></a>
+			<div class="panel panel-primary"><header class="panel-heading">
+			<a href="#" class="pull-right" title="${user.title }"><img id="uploadIcon" class="img-responsive" src="/protected/file/icon.jpg?path=/${username }/assets/icon/x48.jpg" alt="图标"/></a>
+			<span class="text-center btn btn-default btn-xs">
+			<label for="timer">计时器：<select id="timer" name="timer">
+				<option value="10" selected>10</option>
+				<option value="20">20</option>
+				<option value="30">30</option>
+				<option value="40">40</option>
+				<option value="50">50</option>
+				<option value="60">60</option>
+				<option value="70">70</option>
+				<option value="80">80</option>
+				<option value="90">90</option>
+				<option value="100">100</option>
+				<option value="200">200</option>
+				<option value="300">300</option>
+				<option value="400">400</option>
+				<option value="500">500</option>
+				<option value="600">600</option>
+				<option value="0">无限</option>
+
+			</select> (秒)<img class="wb-inv" id="online_chat_running" src="/resources/images/loading16x16.gif" alt=""/>
+			</label>
+			</span>
 			</header>
 				<div id="uploadBox" class="panel-body" ondrop="drop(event)" ondragover="allowDrop(event)" style="border:1px solid #aaaaaa;">
 				<div id="video-iframe"><c:if test="${video }"><img src="${video_url}/?action=stream" class="img-responsive"></c:if></div>				  
