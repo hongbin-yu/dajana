@@ -113,9 +113,9 @@ function ScrollHandler(e) {
         					    if(c.createdBy==username) {
         						    html = '<div id="'+c.uid+'" class="panel panel-default"><header class="panel-heading">';
         							if(userrole=="Administrator") {
-        								html +='<h5 class="panel-title">'+c.title+" ("+c.path+') <span class="small text-left">'+cDate.toLocaleString()+'</span><a href="javascript:removeTag('+"'"+c.uid+"'"+')"><button title="\u70B9\u51FB\u5220\u9664" class="btn btn-warning btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span></button></a></h5>';
+        								html +='<h5 class="panel-title">'+c.title+" ("+c.path+') <span class="small text-left">'+cDate.toLocaleString()+'</span><a href="javascript:removeTag('+"'"+c.uid+"'"+')"><button title="\u70B9\u51FB\u5220\u9664" class="btn btn-warning btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span></button></a><span id="timer'+c.uid+'" class="badge pull-right"></span></h5>';
         							}else {
-        								html +='<h5 class="panel-title">'+c.title+" ("+c.createdBy+') <span class="small text-left">'+cDate.toLocaleString()+'</span><a href="javascript:removeTag('+"'"+c.uid+"'"+')"><button title="\u70B9\u51FB\u5220\u9664" class="btn btn-warning btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span></button></a></h5>';
+        								html +='<h5 class="panel-title">'+c.title+" ("+c.createdBy+') <span class="small text-left">'+cDate.toLocaleString()+'</span><a href="javascript:removeTag('+"'"+c.uid+"'"+')"><button title="\u70B9\u51FB\u5220\u9664" class="btn btn-warning btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span></button></a><span id="timer'+c.uid+'" class="badge pull-right"></span></h5>';
         							}
         							html +='</header><div class="panel-body"><section class="media"><img class=\"media-object pull-right\" src=\"'+c.icon+"\"><div class=\"media-body\">"+c.content+'</div></section></div></div><div class="clearfix"></div>';
 
@@ -129,7 +129,8 @@ function ScrollHandler(e) {
         							    html = '<div id="'+c.uid+'" class="panel panel-success"><header class="panel-heading">';
         								html +='<h5 class="panel-title">'+c.title+" ("+c.createdBy+') <span class="small">'+cDate.toLocaleString()+'</span>';
         								
-        							}        							html +='</h5>';
+        							}        							
+        							html +='<span id="timer'+c.uid+'" class="badge pull-right"></span></h5>';
         							html +='</header><div class="panel-body"><section class="media"><img class=\"media-object pull-left\" src=\"'+c.icon+"\"><div class=\"media-body\">"+c.content+'</div></section></div></div><div class="clearfix"></div>';
         							
         						}
@@ -137,8 +138,14 @@ function ScrollHandler(e) {
         						if(firstModified > c.lastModified || firstModified ==0) {
         							firstModified = c.lastModified;
         						}
-        						if(data.timer && data.timer>0) {
-        							setTimer(removeTag(c.uid),timer);
+        						if(c.timer>0) {
+        							var timer = c.timer*1000;
+        							var id = c.uid;
+        							deleteChat(id,timer);
+/*        							setTimeout((function(id){
+        								deleteTag(id);
+        							})(id),timer);*/
+        							
         						} 	
         			    	//}
         			    	/*else {
@@ -159,6 +166,22 @@ function ScrollHandler(e) {
         }
 
     }, _throttleDelay);
+}
+
+function deleteChat(uid,timer) {
+	  var elem = document.getElementById("timer"+uid);
+	  var count = timer;
+	  var id = uid;
+	  var idVar = setInterval(countDown, 1000);
+	  function countDown() {
+	    if (count == 0) {
+	      clearInterval(idVar);
+	      deleteTag(id);
+	    } else {
+	      count-=1000;
+	      elem.innerHTML = ""+count/1000;
+	    }
+	  }
 }
 
 /*function pw(s) {

@@ -318,9 +318,9 @@ function syncChat() {
 						    html = '<div id="'+c.uid+'" class="panel panel-default"><header class="panel-heading">';
 
 					    if(userrole=="Administrator") {
-							html +='<h5 class="panel-title">'+c.title+" ("+c.path+') <span class="small text-left">'+cDate.toLocaleString()+'</span><a href="javascript:removeTag('+"'"+c.uid+"'"+')"><button title="\u70B9\u51FB\u5220\u9664" class="btn btn-warning btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span></button></a></h5>';
+							html +='<h5 class="panel-title">'+c.title+" ("+c.path+') <span class="small text-left">'+cDate.toLocaleString()+'</span><a href="javascript:removeTag('+"'"+c.uid+"'"+')"><button title="\u70B9\u51FB\u5220\u9664" class="btn btn-warning btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span></button></a><span id="timer'+c.uid+'" class="badge pull-right"></span></h5>';
 						}else {
-							html +='<h5 class="panel-title">'+c.title+" ("+c.createdBy+') <span class="small text-left">'+cDate.toLocaleString()+'</span><a href="javascript:removeTag('+"'"+c.uid+"'"+')"><button title="\u70B9\u51FB\u5220\u9664" class="btn btn-warning btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span></button></a></h5>';
+							html +='<h5 class="panel-title">'+c.title+" ("+c.createdBy+') <span class="small text-left">'+cDate.toLocaleString()+'</span><a href="javascript:removeTag('+"'"+c.uid+"'"+')"><button title="\u70B9\u51FB\u5220\u9664" class="btn btn-warning btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span></button></a><span id="timer'+c.uid+'" class="badge pull-rigt"></span></h5>';
 						}
 						html +='</header><div class="panel-body"><section class="media"><img class=\"media-object pull-right\" src=\"'+c.icon+"\"><div class=\"media-body\">"+c.content+'</div></section></div></div></div><div class="clearfix"></div>';
 
@@ -335,7 +335,7 @@ function syncChat() {
 							html +='<h5 class="panel-title">'+c.title+" ("+c.createdBy+') <span class="small">'+cDate.toLocaleString()+'</span>';
 							
 						}
-						html +='</h5>';
+						html +='<span id="timer'+c.uid+'" class="badge pull-right"></span></h5>';
 						html +='</header><div class="panel-body"><section class="media"><img class=\"media-object pull-left\" src=\"'+c.icon+"\"><div class=\"media-body\">"+c.content+'</div></section></div></div><div class="clearfix"></div>';
 						
 					}
@@ -354,7 +354,10 @@ function syncChat() {
 					if(c.timer>0) {
 						var timer = c.timer*1000;
 						var id = c.uid;
-						setTimeout(deleteTag,timer,id);
+						deleteChat(id,timer);
+/*						setTimeout((function(id){
+							deleteTag(id);
+						})(id),timer);*/
 					} 	
 						
 		    	}
