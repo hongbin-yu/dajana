@@ -312,8 +312,12 @@ function syncChat() {
 				    var html = 	"";
 				    var cDate = new Date(c.lastModified);
 				    if(c.createdBy==username) {
-					    html = '<div id="'+c.uid+'" class="panel panel-default"><header class="panel-heading">';
-						if(userrole=="Administrator") {
+					    if(c.timer>0)
+					    	html = '<div id="'+c.uid+'" class="panel panel-warning"><header class="panel-heading">';
+					    else
+						    html = '<div id="'+c.uid+'" class="panel panel-default"><header class="panel-heading">';
+
+					    if(userrole=="Administrator") {
 							html +='<h5 class="panel-title">'+c.title+" ("+c.path+') <span class="small text-left">'+cDate.toLocaleString()+'</span><a href="javascript:removeTag('+"'"+c.uid+"'"+')"><button title="\u70B9\u51FB\u5220\u9664" class="btn btn-warning btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span></button></a></h5>';
 						}else {
 							html +='<h5 class="panel-title">'+c.title+" ("+c.createdBy+') <span class="small text-left">'+cDate.toLocaleString()+'</span><a href="javascript:removeTag('+"'"+c.uid+"'"+')"><button title="\u70B9\u51FB\u5220\u9664" class="btn btn-warning btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span></button></a></h5>';
@@ -622,14 +626,16 @@ function openOverlay(id,view) {
 if($("#pagePath")) {
 	var path = $("#pagePath").val();
 	
-	if( path !=null && (path.indexOf('/youchat/')==0 || path.indexOf('/youlook/'))) {
+	if( path !=null && (path.indexOf('/youchat/')==0 || path.indexOf('/youlook/')==0)) {
 		syncChat();
 		checkUnread();
 	}else if(path !=null && (path == '/youchat' || path == '/youlook')) {
 		checkUnread();
 	}
 
-
+	if(path !=null && path.indexOf('/youlook')>=0 ){
+		document.addEventListener("contextmenu",function() {$(".panel-warning").remove(); event.preventDefault();});
+	}
 }
 
 
