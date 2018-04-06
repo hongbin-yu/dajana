@@ -20,7 +20,7 @@
 <div class="col-md-12">
 <ul class="list-inline margin-bottom-none">
 <authz:authorize ifAnyGranted="ROLE_USER,ROLE_ADMINISTRATOR,ROLE_OWNER">
-<li><a title="编辑首页" href="<c:url value="/site/editor.html"/>"><span class="glyphicon glyphicon-edit"></span>首页</a></li>
+<li><a title="编辑首页" href="<c:url value="/site/editor.html"/>"><span class="glyphicon glyphicon-edit"></span><spring:message code="djn.website"/></a></li>
 <li><a href='<c:url value="/site/assets.html"></c:url>'><span class="glyphicon glyphicon-cloud"></span><spring:message code="djn.cloud"/></a></li>
 <li><a href='<c:url value="/protected/youchat.html"></c:url>' title="<spring:message code="djn.online_chat"/>"><span class="glyphicon glyphicon-envelope"></span><spring:message code="djn.chat"/><span class="badge"></span></a></li>
 <li><a href="/protected/profile.html"><button class="btn btn-warning btn-xs" title="${user.role }"><span class="glyphicon glyphicon-user"></span><authz:authentication property='name' /></button></a></li>

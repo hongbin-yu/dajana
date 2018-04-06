@@ -1,5 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" session="false" %>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="authz" %>
 
@@ -21,7 +22,9 @@
 <ul class="list-inline margin-bottom-none">
 <authz:authorize ifAnyGranted="ROLE_USER,ROLE_ADMINISTRATOR,ROLE_OWNER">
 <li><a href="<c:url value="/site/assets.html"/>" target='_blank'><img title="<spring:message code="djn.goto_cloud"/>" alt="" src='<c:url value="/resources/images/cloud-icon.png"></c:url>'><spring:message code="djn.cloud"/></a></li>
-<li><a href='<c:url value="/protected/chat.html"></c:url>'><img title="<spring:message code="djn.online_chat"/>" alt="" src='<c:url value="/resources/images/chat16X16.png"></c:url>'><spring:message code="djn.chat"/><span class="badge"></span></a></li>
+<li><a href='<c:url value="/protected/youchat.html"></c:url>'><img title="<spring:message code="djn.online_chat"/>" alt="" src='<c:url value="/resources/images/chat16X16.png"></c:url>'><spring:message code="djn.chat"/><span class="badge"></span></a></li>
+<li><a href='<c:url value="/protected/youlook.html"></c:url>' title="<spring:message code="djn.online_chat"></spring:message>"><span class="glyphicon glyphicon-facetime-video"></span><spring:message code="djn.youlook"></spring:message><span class="badge"></span></a></li>
+
 <li><a href="<c:url value="/site/editProperties"/>"><img title="<spring:message code="djn.publish"/>" src='<c:url value="/resources/images/up.gif"></c:url>'><spring:message code="djn.publish"/></a></li>
 <li class="wb-inv"><img title="<spring:message code="djn.edit_properties"/>" alt="" src='<c:url value="/resources/images/editIcon.gif"></c:url>'><a class="wb-lbx" title="<spring:message code="djn.edit_properties"/>" href="<c:url value="/editpp.html?uid=${page.uid}"/>"><spring:message code="djn.properties"/></a></li>
 <li class="wb-inv"><img title="<spring:message code="djn.create_page"/>" alt="" src='<c:url value="/resources/images/add.gif"></c:url>'><a class="wb-lbx" title="<spring:message code="djn.create_page"/>" href="<c:url value="/site/createPage.html?uid=${page.uid}"/>"><spring:message code="djn.create"/></a></li>
