@@ -1000,6 +1000,8 @@ public class SiteController extends BaseController {
         		if(lastModified!=null && lastModified.matches("-?\\d+(\\.\\d+)?")) {
         			
         			asset.setOriginalDate(new Date(Long.parseLong(lastModified)));
+        		}else {
+        			asset.setOriginalDate(new Date());
         		}
         		String contentType = multipartFile.getContentType();
         		asset.setContentType(contentType);
