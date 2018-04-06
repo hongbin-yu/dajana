@@ -87,7 +87,7 @@
 		</c:if>
         <ul class="list-group menu list-unstyled">
 	        <c:forEach items="${folders.items}" var="item" varStatus="loop">
-	            <li class="list-group-item" id="${item.uid }"><a  href='<c:url value="/protected/chat.html?path=${item.path}"></c:url>'><span class="glyphicon glyphicon-user">${item.title}</span><span id="unread-${item.uid }" class="badge"></span></a>
+	            <li class="list-group-item" id="${item.uid }"><a  href='<c:url value="/protected/youlook.html?path=${item.path}"></c:url>'><span class="glyphicon glyphicon-user">${item.title}</span><span id="unread-${item.uid }" class="badge"></span></a>
 				<c:if test="${user.role =='Owner' || user.role == 'Administrator'}">	            
 	            <button class="btn btn-warning btn-xs pull-right" onclick="javascript:removeTag('${item.uid}')"><span class="glyphicon glyphicon-trash"></span></button>
 	            <a class="wb-lbx" href="groupedit.html?path=${item.path }"><button class="btn btn-primary btn-xs pull-right"><span class="glyphicon glyphicon-cog"></span></button></a>
