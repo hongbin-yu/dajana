@@ -6,9 +6,9 @@
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="authz" %>
 <div class="container">
 <div class="row">
-        <main role="main" property="mainContentOfPage" class="col-md-8 col-md-push-4">
-        <h1>优信<c:if test="${folder.title != null}"> - ${folder.title }</c:if><a href="#" title="${user.title }" onclick="ftrClose('/protected/profile.html')"><img id="uploadIcon" class="img-responsive pull-right" src="${user.icon}" alt="图标"/></a></h1>
-	<c:if test="${folder==null || folder.path == '/youchat'}"><div data-ajax-replace="/templates/assets/html/youchat.html"></div></c:if>        
+        <main role="main" property="mainContentOfPage" class="col-md-9 col-md-push-3">
+        <h1>优视<c:if test="${folder.title != null}"> - ${folder.title }</c:if><a href="#" title="${user.title }" onclick="ftrClose('/protected/profile.html')"><img id="uploadIcon" class="img-responsive pull-right" src="${user.icon}" alt="图标"/></a></h1>
+	<c:if test="${folder==null || folder.path == '/youlook'}"><div data-ajax-replace="/templates/assets/html/youlook.html"></div></c:if>        
 	<c:if test="${folder.title != null && folder.path != '/youchat'}">
         <div class="row text-center"><img id="online_chat_loading" width="120" height="120" class="wb-inv" src="/resources/images/loadingx400.gif" alt="下载"/></div>
         <div id="online_chat">
@@ -41,14 +41,14 @@
 			</div>
 	</c:if>			
  		</main>
-        <nav class="wb-sec col-md-4 col-md-pull-8" typeof="SiteNavigationElement" id="wb-sec" role="navigation">
+        <nav class="wb-sec col-md-3 col-md-pull-9" typeof="SiteNavigationElement" id="wb-sec" role="navigation">
         		<h3 class="wb-navcurr"><a href="/protected/chat.html"><span class="glyphicon glyphicon-th-list"></span> 通讯目录</a></h3>
 		<c:if test="${user.role =='Owner' || user.role == 'Administrator'}">
 			<details>
-			<summary><label for="path"><span class="glyphicon glyphicon-folder-close"></span><spring:message code="djn.create_group"/></label></summary>
+			<summary><label for="path"><span class="glyphicon glyphicon-folder-close"></span><spring:message code="djn.create_youlook"/></label></summary>
 			<div class="wb-frmvld">
 			<form action="javascript:createFolder()" id="createFolder" method="POST">
-			<input type="hidden" id="folderPath" name="path" value="/youchat"/>	
+			<input type="hidden" id="folderPath" name="path" value="/youlook"/>	
 			<div class="form-group">
 			<label for="foldername"><spring:message code="djn.path"/><strong class="required">(<spring:message code="djn.required"/>)</strong></label>
 			
@@ -104,11 +104,3 @@
 <c:if test="${user.role =='Owner' || user.role == 'Administrator'}">
 <input type="hidden" id="userrole" name="userrole" value="Administrator"/>
 </c:if>
-<section id="confirmation" class="wb-overlay modal-content overlay-def wb-popup-mid">
-<header class="modal-header">
-	<h2 class="modal-title">确认删除吗？</h2>
-</header>
-<div class="modal-body">
-
-</div>
-</section>

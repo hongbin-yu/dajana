@@ -8,6 +8,11 @@
         <put-attribute name="topmenu" value="/WEB-INF/views/chat/topmenu.jsp" />        
         <put-attribute name="content" value="/WEB-INF/views/chat/mychats.jsp" />
 	</definition>
+    <definition name="chat/youlook" extends="contentpage">
+        <put-attribute name="footer" value="/WEB-INF/views/chat/footer.jsp" />	
+        <put-attribute name="topmenu" value="/WEB-INF/views/chat/youlookmenu.jsp" />        
+        <put-attribute name="content" value="/WEB-INF/views/chat/youlook.jsp" />
+	</definition>	
 	<definition name="chat/comments" templateExpression="/WEB-INF/views/chat/comments.jsp">
 	</definition>	
 	<definition name="chat/asset" extends="sitepage">

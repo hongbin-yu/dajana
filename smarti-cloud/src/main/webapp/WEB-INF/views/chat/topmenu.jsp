@@ -22,6 +22,7 @@
 <authz:authorize ifAnyGranted="ROLE_USER,ROLE_ADMINISTRATOR,ROLE_OWNER">
 <li><a title="编辑首页" href="<c:url value="/site/editor.html"/>"><span class="glyphicon glyphicon-edit"></span>首页</a></li>
 <li><a href='<c:url value="/site/assets.html"></c:url>'><span class="glyphicon glyphicon-cloud"></span><spring:message code="djn.cloud"/></a></li>
+<li><a href='<c:url value="/protected/youlook.html"></c:url>' title="<spring:message code="djn.online_chat"></spring:message>"><span class="glyphicon glyphicon-facetime-video"></span><spring:message code="djn.youlook"></spring:message><span class="badge"></span></a></li>
 <li><a href="/protected/profile.html"><button class="btn btn-warning btn-xs" title="${user.role }"><span class="glyphicon glyphicon-user"></span><authz:authentication property='name' /></button></a></li>
 <li><a href="<c:url value="/logout"/>"><span class="glyphicon glyphicon-log-out"></span><spring:message code="djn.logout"/></a></li>
 <%-- <li><a href="/mycart.html" title="<authz:authentication property="name" />"><authz:authentication property="name" /><img title="点击进入购物车" src='<c:url value="/resources/images/mycart.png"></c:url>'><span class="badge">0</span></a></li>

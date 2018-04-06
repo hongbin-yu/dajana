@@ -66,16 +66,20 @@ public class ProtectedController extends BaseController {
 		return "redirect:/site/assets.html";
 
     }         
-   	@RequestMapping(value = {"/protected/chat.html"}, method = {RequestMethod.GET})
+   	@RequestMapping(value = {"/protected/chat.html","/protected/youchat.html"}, method = {RequestMethod.GET})
    	public String mychat(Model model,String path,HttpServletRequest request, HttpServletResponse response) throws Exception {
    		String username = getUsername();
    		User user = (User)jcrService.getObject("/system/users/"+username);
-   		String chatRoot = "/chat";
-   		if(path==null && user != null && "Owner".equals(user.getRole())) path="/chat";
+   		String chatRoot = "/youchat";
+   		if(path==null && user != null && "Owner".equals(user.getRole())) path="/youchat";
    		if(!jcrService.nodeExsits("/"+username+"/assets/youchat")) {
    			jcrService.addNodes("/"+username+"/assets/youchat", "nt:unstructured", username);
    			
    		}
+   		if(!jcrService.nodeExsits("/youchat")) {
+   			jcrService.addNodes("/youchat", "nt:unstructured", username);
+   			
+   		}   		
 		String folderQuery = "select s.* from [nt:base] AS s INNER JOIN [nt:base] AS child ON ISCHILDNODE(child,s) WHERE ISDESCENDANTNODE(s,["+chatRoot+"])" +" and child.userName like '%"+username+"' and s.ocm_classname='com.filemark.jcr.model.Folder' and child.ocm_classname ='com.filemark.jcr.model.User' order by s.path";
 
    		if(user.getRole().equals("Administrator")||user.getRole().equals("Owner"))
@@ -88,7 +92,7 @@ public class ProtectedController extends BaseController {
 			model.addAttribute("chats", chats);
 			model.addAttribute("folder", jcrService.getFolder(path));
 		}else {
-			model.addAttribute("folder", jcrService.getFolder("/chat"));
+			model.addAttribute("folder", jcrService.getFolder("/youchat"));
 		}
 		String video_url = request.getScheme()+"://"+request.getServerName()+":8088";
 		Page page = new Page();
@@ -104,7 +108,48 @@ public class ProtectedController extends BaseController {
 		//model.addAttribute("navigation",jcrService.getPageNavigation("/content/"+getUsername(),2));		
    		return "chat/mychat";
    	}
-   	
+   	@RequestMapping(value = {"/protected/youlook.html"}, method = {RequestMethod.GET})
+   	public String youlook(Model model,String path,HttpServletRequest request, HttpServletResponse response) throws Exception {
+   		String username = getUsername();
+   		User user = (User)jcrService.getObject("/system/users/"+username);
+   		String chatRoot = "/youlook";
+   		if(path==null && user != null && "Owner".equals(user.getRole())) path="/youlook";
+   		if(!jcrService.nodeExsits("/"+username+"/assets/youlook")) {
+   			jcrService.addNodes("/"+username+"/assets/youlook", "nt:unstructured", username);
+   			
+   		}
+   		if(!jcrService.nodeExsits("/youlook")) {
+   			jcrService.addNodes("/youlook", "nt:unstructured", username);
+   			
+   		}   		
+		String folderQuery = "select s.* from [nt:base] AS s INNER JOIN [nt:base] AS child ON ISCHILDNODE(child,s) WHERE ISDESCENDANTNODE(s,["+chatRoot+"])" +" and child.userName like '%"+username+"' and s.ocm_classname='com.filemark.jcr.model.Folder' and child.ocm_classname ='com.filemark.jcr.model.User' order by s.path";
+
+   		if(user.getRole().equals("Administrator")||user.getRole().equals("Owner"))
+   			folderQuery = "select s.* from [nt:base] AS s WHERE ISDESCENDANTNODE(["+chatRoot+"])" +" and s.ocm_classname='com.filemark.jcr.model.Folder' order by s.path";
+
+		WebPage<Folder> folders = jcrService.queryFolders(folderQuery, 100, 0);
+		if(path !=null) {
+			String chatQuery = "select * from [nt:base] AS s WHERE ISDESCENDANTNODE(["+path+"])" +" and s.ocm_classname='com.filemark.jcr.model.Chat' order by s.[jcr:lastModified] DESC";
+			WebPage<Chat> chats = jcrService.queryChats(chatQuery, 12, 0);
+			model.addAttribute("chats", chats);
+			model.addAttribute("folder", jcrService.getFolder(path));
+		}else {
+			model.addAttribute("folder", jcrService.getFolder("/youlook"));
+		}
+		String video_url = request.getScheme()+"://"+request.getServerName()+":8088";
+		Page page = new Page();
+		page.setTitle("优视");
+		page.setPath("/content/"+username);
+		model.addAttribute("video", ImageUtil.video);
+		model.addAttribute("video_url", video_url);
+   		model.addAttribute("folders", folders);
+   		model.addAttribute("page", page);
+   		model.addAttribute("user", user);
+   		model.addAttribute("username", request.getAttribute("username"));
+   		model.addAttribute("usertitle", request.getAttribute("usertitle"));   		
+		//model.addAttribute("navigation",jcrService.getPageNavigation("/content/"+getUsername(),2));		
+   		return "chat/youlook";
+   	}   	
    	@RequestMapping(value = {"/protected/wojia"}, method = {RequestMethod.GET})
    	public String mysite(String path,String lastModified,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
    		String username = getUsername();
@@ -338,7 +383,7 @@ public class ProtectedController extends BaseController {
    	@RequestMapping(value = {"/protected/unreadchat.json"}, method = {RequestMethod.GET})
    	public @ResponseBody WebPage<Folder> unreadChatJson(String path,Model model,HttpServletRequest request, HttpServletResponse response) {
    		String username = getUsername();
-		String folderQuery = "select s.* from [nt:base] AS s INNER JOIN [nt:base] AS child ON ISCHILDNODE(child,s) WHERE ISCHILDNODE(s,[/chat])" +" and child.userName like '%"+username+"' and s.ocm_classname='com.filemark.jcr.model.Folder' and child.ocm_classname ='com.filemark.jcr.model.User' order by s.path";
+		String folderQuery = "select s.* from [nt:base] AS s INNER JOIN [nt:base] AS child ON ISCHILDNODE(child,s) WHERE ISCHILDNODE(s,[/youchat])" +" and child.userName like '%"+username+"' and s.ocm_classname='com.filemark.jcr.model.Folder' and child.ocm_classname ='com.filemark.jcr.model.User' order by s.path";
 
 		WebPage<Folder> folders = jcrService.queryFolders(folderQuery, 100, 0);
 		//logger.debug("Count="+folders.getPageCount());
@@ -352,7 +397,7 @@ public class ProtectedController extends BaseController {
 				continue;
 			}
 	   		String operator=">";
-	   		if(path==null) path="/chat";
+	   		if(path==null) path="/youchat";
 	   		SimpleDateFormat sdf;
 	   		sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
 	   		//logger.debug(userpath+"="+sdf.format(user.getLastModified()));
@@ -370,13 +415,13 @@ public class ProtectedController extends BaseController {
    	@RequestMapping(value = {"/protected/chat.json"}, method = {RequestMethod.GET})
    	public @ResponseBody WebPage<Chat> mychatJson(String path,String lastModified,String operator,Model model,HttpServletRequest request, HttpServletResponse response) {
    		String username = getUsername();
-   		//String chatRoot = "/chat/"+username;
+   		//String chatRoot = "/youchat/"+username;
    		if(operator==null) operator=">";
-   		if(path==null) path="/chat";
+   		if(path==null) path="/youchat";
    		String dateRange = lastModified==null?"":"and s.[jcr:lastModified] "+operator+" CAST('"+lastModified+"' AS DATE)";
 		String chatQuery = "select * from [nt:base] AS s WHERE ISDESCENDANTNODE(["+path+"]) "+dateRange+" and s.ocm_classname='com.filemark.jcr.model.Chat' order by s.[jcr:lastModified] DESC";
 		WebPage<Chat> chats = jcrService.queryChats(chatQuery, 12, 0);
-		if(!"/chat".equals(path) && jcrService.nodeExsits(path+"/"+username)) {
+		if(!"/youchat".equals(path) && jcrService.nodeExsits(path+"/"+username)) {
 			if(chats.getPageCount()>0) {
 				Chat chat = chats.getItems().get(chats.getItems().size()-1);
 				logger.debug("lastModified:"+chat.getLastModified().getTime());
@@ -508,7 +553,7 @@ public class ProtectedController extends BaseController {
    		String paths[] = path.split("/content/");
    		
    		paths = paths[1].split("/");
-   		String home = "/chat/"+paths[0];
+   		String home = "/youchat/"+paths[0];
    		String username = getUsername();
    		try {
    		if(!jcrService.nodeExsits(home)) {

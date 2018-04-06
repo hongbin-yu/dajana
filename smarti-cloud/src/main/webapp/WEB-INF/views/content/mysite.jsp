@@ -47,7 +47,7 @@
 <div class="row">
 <section class="col-xs-6 text-right">
 <h2 class="wb-inv"><spring:message code="djn.cloud"/></h2>
-<p><a href='<c:url value="/protected/mycloud"></c:url>' class="btn btn-primary"><spring:message code="djn.cloud"/></a></p>
+<p><a href='<c:url value="/protected/mycloud"></c:url>' class="btn btn-danger"><spring:message code="djn.cloud"/></a></p>
 </section>
 <section class="col-xs-6">
 <h2 class="wb-inv"><spring:message code="djn.dajana"/></h2>
@@ -65,19 +65,20 @@
 </div>
 <div class="row">
 <div class="col-xs-4 text-right">
-<a class="btn btn-default" href="http://dajana.cn:8888/yhyun">
+<a class="btn btn-default" href="http://dajana.cn/yhyun">
 <img title="<spring:message code="djn.scan_qr"/><spring:message code="djn.dajana"/>" class="img-responsive" src="/templates/assets/images/dajana.qr.png" alt="<spring:message code="djn.dajana"/>"/>
 </a>
 </div>
 <div class="col-xs-4 col-md-4 text-center">
-<a class="btn btn-success" href='<c:url value="/protected/chat.html"></c:url>' title="<spring:message code="djn.online_chat"></spring:message>"><span class="glyphicon glyphicon-envelope"></span><spring:message code="djn.chat"></spring:message><span class="badge"></span></a>
-<%-- <authz:authorize ifAnyGranted="ROLE_USER,ROLE_ADMINISTRATOR,ROLE_OWNER"> --%>
-<%--  </authz:authorize> --%>
+<ul class="list-unstyled lst-spcd">
+<li><a class="btn btn-success" href='<c:url value="/protected/youchat.html"></c:url>' title="<spring:message code="djn.online_chat"></spring:message>"><spring:message code="djn.chat"></spring:message></a></li>
+<li><a class="btn btn-warning" href='<c:url value="/protected/youlook.html"></c:url>' title="<spring:message code="djn.you_look"></spring:message>"><spring:message code="djn.you_look"></spring:message></a></li>
+</ul>
  </div>
 <div class="col-xs-4 pull-right">
-<a class="btn btn-default" href="/protected/chat.html"><img class="img-responsive" src ="/resources/images/yuhong-icon.png" alt="内网登入"/></a>
-<%-- <img class="img-responsive" src="<c:url value="/resources/images/hongicon.png"></c:url>" title="<spring:message code="djn.yuhongweb"/>">
- --%></div>
+<a class="btn btn-default" href="/protected/youchat.html"><img class="img-responsive" src ="/resources/images/yuhong-icon.png" alt="内网登入"/></a>
+</div>
+
 </div>
 </div>
 </div>

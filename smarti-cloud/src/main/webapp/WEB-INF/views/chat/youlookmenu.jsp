@@ -1,33 +1,35 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" session="false" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ page contentType="text/html; charset=GB18030" pageEncoding="UTF-8" session="false" %>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="authz" %>
 
 <ul id="wb-tphp">
 <li class="wb-slc">
-<a class="wb-sl" href="#wb-cont"><spring:message code="djn.goto_main"/></a>
+<a class="wb-sl" href="#wb-cont">跳到主内容</a>
 </li>
 <li class="wb-slc visible-sm visible-md visible-lg">
-<a class="wb-sl" href="#wb-info"><spring:message code="djn.goto_about_this_site"/></a>
+<a class="wb-sl" href="#wb-info">跳到 "关于本网站"</a>
 </li>
 </ul>
 <header role="banner">
 <div id="wb-bnr" class="container">
-<section id="wb-lng" class="visible-md visible-lg text-right wb-inv">
-<h2><spring:message code="djn.select_menu"/></h2>
+<section id="wb-lng" class="visible-md visible-lg text-right">
+<h2>选择管理菜单</h2>
 <div class="row">
 <div class="col-md-12">
 <ul class="list-inline margin-bottom-none">
 <authz:authorize ifAnyGranted="ROLE_USER,ROLE_ADMINISTRATOR,ROLE_OWNER">
-<li><img title="点击编辑打开窗口" alt="" src='<c:url value="/resources/images/editIcon.gif"></c:url>'><a class="wb-lbx" title="编辑页面属性" href="<c:url value="/site/editpp.html?uid=${page.uid}"/>">编辑</a></li>
-<li><img title="点击创建打开窗口" alt="" src='<c:url value="/resources/images/add.gif"></c:url>'><a class="wb-lbx" title="创建新页面" href="<c:url value="/site/createPage.html?uid=${page.uid}"/>">创建</a></li>
-<li><img title="点击删除此页" alt="" src='<c:url value="/resources/images/cut.gif"></c:url>'><a class="wb-lbx" title="删除页面" href="<c:url value="/site/delete.html?path=${page.path}&redirect=${page.parent }"/>">删除</a></li>
-<li><a href='<c:url value="/protected/youchat.html"></c:url>'><img title="点击打开在线通讯" alt="" src='<c:url value="/resources/images/chat22X22.png"></c:url>'>网信<span class="badge"></span></a></li>
-<li><a href="<c:url value="/site/editProperties"/>"><img title="点击出版" alt="" src='<c:url value="/resources/images/up.gif"></c:url>'>出版</a></li>
-<li><a href="<c:url value="/site/assets.html"/>" target='_blank'><img title="点击打开资源窗口,点击右键从下拉菜单选择打开新窗口" alt="" src='<c:url value="/resources/images/image.gif"></c:url>'>云站</a></li>
-<li><button class="btn btn-warning btn-xs" onclick="javascript:ftrClose('/site/profile.html')" title="${user.role }"><span class="glyphicon glyphicon-user"></span><authz:authentication property='name' /></button></li>
-<li><a href="<c:url value="/logout"/>"><spring:message code="djn.goback"/></a></li>
-<li><a class="wb-lbx lbx-modal" href="#" title="<authz:authentication property='name' />"><authz:authentication property='name' /></a></li>
+<li><a title="编辑首页" href="<c:url value="/site/editor.html"/>"><span class="glyphicon glyphicon-edit"></span>首页</a></li>
+<li><a href='<c:url value="/site/assets.html"></c:url>'><span class="glyphicon glyphicon-cloud"></span><spring:message code="djn.cloud"/></a></li>
+<li><a href='<c:url value="/protected/youchat.html"></c:url>' title="<spring:message code="djn.online_chat"/>"><span class="glyphicon glyphicon-envelope"></span><spring:message code="djn.chat"/><span class="badge"></span></a></li>
+<li><a href="/protected/profile.html"><button class="btn btn-warning btn-xs" title="${user.role }"><span class="glyphicon glyphicon-user"></span><authz:authentication property='name' /></button></a></li>
+<li><a href="<c:url value="/logout"/>"><span class="glyphicon glyphicon-log-out"></span><spring:message code="djn.logout"/></a></li>
+<%-- <li><a href="/mycart.html" title="<authz:authentication property="name" />"><authz:authentication property="name" /><img title="点击进入购物车" src='<c:url value="/resources/images/mycart.png"></c:url>'><span class="badge">0</span></a></li>
+ --%></authz:authorize>
+<authz:authorize ifNotGranted="ROLE_USER">
+<li><a href="<c:url value="/login"/>"><span class="glyphicon glyphicon-edit"></span><spring:message code="djn.edit"/></a></li>
+<li><a href="<c:url value="/signup"/>"><span class="glyphicon glyphicon-upload"></span><spring:message code="djn.register"/></a></li>
 </authz:authorize>
 </ul>
 </div>
@@ -65,18 +67,10 @@
 </section>
 </div>
 </div>
-<nav role="navigation" id="wb-sm" data-ajax-replace='<c:url value="${page.path}.menu"></c:url>' data-trgt="mb-pnl" class="wb-menu visible-md visible-lg" typeof="SiteNavigationElement">
-<div class="container nvbar">
-<h2><spring:message code="djn.main_menu"/></h2>
-<div class="row">
-<ul class="list-inline menu">
-${navigation }
-</ul>
-</div>
-</div>
+<nav role="navigation" id="wb-sm" data-trgt="mb-pnl" class="wb-menu visible-md visible-lg" style="border-top:8px solid #335075" typeof="SiteNavigationElement">
 </nav>
 <nav role="navigation" id="wb-bc" property="breadcrumb">
-	<h2><spring:message code="djn.you_are_here"/>:</h2>
+	<h2>你在这里:</h2>
 	<div class="container">
 	<div class="row">
 	${page.breadcrumb}
@@ -88,7 +82,7 @@ ${navigation }
 <c:if test="${error !=null }">
 <div class="container">
 <section class="alert alert-warning">
-<h2><spring:message code="djn.system_error"/>!</h2>
+<h2>系统出错!</h2>
 <div class="error" id="error">${error}</div>
 </section>
 </div>
