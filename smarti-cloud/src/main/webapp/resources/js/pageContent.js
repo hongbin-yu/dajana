@@ -622,10 +622,10 @@ function openOverlay(id,view) {
 if($("#pagePath")) {
 	var path = $("#pagePath").val();
 	
-	if( path !=null && path.indexOf('/chat/')==0) {
+	if( path !=null && (path.indexOf('/youchat/')==0 || path.indexOf('/youlook/'))) {
 		syncChat();
 		checkUnread();
-	}else if(path !=null && path == '/chat') {
+	}else if(path !=null && (path == '/youchat' || path == '/youlook')) {
 		checkUnread();
 	}
 
