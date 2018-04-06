@@ -58,6 +58,11 @@
 						<a id="stopvideo" class="btn btn-default btn-block" title="直播停止" href="javascript:stopvideo()"   aria-controls="left-panel" role="button"><span class="glyphicon glyphicon-stop"></span></a>
 						<a id="webvideo" class="btn btn-default btn-block" title="网络直播" href="javascript:webvideo('${video_url}',450)"   aria-controls="left-panel" role="button"><span class="glyphicon glyphicon-facetime-video"></span></a>
 						</c:if>
+						<c:if test="${user.role !='Owner' && user.role != 'Administrator'}">	            
+						<a id="fswebcam" class="btn btn-default btn-block" title="网络相机" href="javascript:fswebcam('${video_url}')"   aria-controls="left-panel" role="button"><span class="glyphicon glyphicon-camera"></span></a>
+						<a id="webvideo" class="btn btn-default btn-block" title="网络直播" href="javascript:fswebvideo('${video_url}')"   aria-controls="left-panel" role="button"><span class="glyphicon glyphicon-facetime-video"></span></a>
+						</c:if>
+
 					</div>
 					</form>
 				</div>

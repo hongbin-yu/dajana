@@ -135,4 +135,5 @@ public class Chat implements SmartiNode, Serializable {
 		this.timer = timer;
 	}
 	
+	
 }
