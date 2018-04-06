@@ -1770,13 +1770,19 @@ public class SiteController extends BaseController {
 	} 
 
 	@RequestMapping(value = {"/admin/delete.html","/site/delete.html","/protected/delete.html"}, method = RequestMethod.POST)
-	public @ResponseBody String deleteNode(String uid,String path,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
-		if(uid!=null && !uid.equals("")) {
-			path = jcrService.getNodeById(uid);
-		}else if( path==null || "".equals(path)) {
-			throw new Exception("路径没找到");
-		}
-		return jcrService.deleteNode(path);
+	public @ResponseBody String deleteNode(String uid,String path,Model model,HttpServletRequest request, HttpServletResponse response) {
+		String parentPath = "";
+			try {
+				if(uid!=null && !uid.equals("")) 
+					path = jcrService.getNodeById(uid);
+				if(jcrService.nodeExsits(parentPath))
+					parentPath =jcrService.deleteNode(path);
+			} catch (RepositoryException e) {
+				//mya node deleted by other user
+			}
+
+
+		return parentPath;
 	} 
 
 	@RequestMapping(value = {"/site/deleteasset.html","/protected/deleteasset.html"}, method = RequestMethod.POST)

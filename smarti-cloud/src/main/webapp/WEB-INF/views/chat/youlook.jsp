@@ -17,9 +17,9 @@
 			<a href="#" class="pull-right" title="${user.title }"><img id="uploadIcon" class="img-responsive" src="/protected/file/icon.jpg?path=/${username }/assets/icon/x48.jpg" alt="图标"/></a>
 			<span class="text-center btn btn-default btn-xs">
 			<label for="timer">计时器：<select id="timer" name="timer">
-				<option value="10" selected>10</option>
+				<option value="10">10</option>
 				<option value="20">20</option>
-				<option value="30">30</option>
+				<option value="30" selected>30</option>
 				<option value="40">40</option>
 				<option value="50">50</option>
 				<option value="60">60</option>
