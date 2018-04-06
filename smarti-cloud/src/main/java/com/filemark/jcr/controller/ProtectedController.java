@@ -454,7 +454,7 @@ public class ProtectedController extends BaseController {
 		String assetsQuery = "select s.* from [nt:base] AS s WHERE ISDESCENDANTNODE([/"+username+"/assets])" +" and s.[jcr:title] like '"+filename.toLowerCase()+"' and s.[delete] not like 'true' and s.ocm_classname='com.filemark.jcr.model.Asset'";
 		WebPage<Asset> assets = jcrService.searchAssets(assetsQuery, 10, 0);		
 		for(Asset a:assets.getItems()) {
-			if(lastModified==null || a.getOriginalDate()==null || a.getOriginalDate().getTime() == lastModified) {
+			if(lastModified==null || lastModified ==0 || a.getOriginalDate()==null || a.getOriginalDate().getTime() == lastModified) {
 				return a;
 			}
 		}

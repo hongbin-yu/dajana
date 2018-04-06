@@ -903,7 +903,7 @@ function sendFormData(formData,file) {
 
 function getAsset(formData,file) {
 	var filename = file.name;
-	var lastModified = file.lastModified;
+	var lastModified = file.lastModified==null?0:file.lastModified;
 
     $.ajax({
 	    url: 'getasset.json?filename='+filename+'&lastModified='+lastModified,
