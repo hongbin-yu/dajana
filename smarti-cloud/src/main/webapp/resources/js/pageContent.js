@@ -434,7 +434,7 @@ function fswebcam(view) {
 	$("#video-iframe").html("<img class=\"img-responsive\" src=\""+view+"/?action=snapshot&t="+new Date().getTime()+"\" alt=\"\" onclick=\"javascript:fswebvideo('"+view+"')\">");
 }
 function fswebvideo(view) {
-	$("#video-iframe").html("<img class=\"img-responsive\" src=\""+view+"/?action=stream\" alt=\"\" onclick=\"javascript:fswebvideo('"+view+"')\">");
+	$("#video-iframe").html("<img class=\"img-responsive\" src=\""+view+"/?action=stream&t="+new Date().getTime()+"\" alt=\"\" onclick=\"javascript:fswebvideo('"+view+"')\">");
 }
 
 function webvideo(view,width) {
@@ -455,7 +455,7 @@ function webvideo(view,width) {
 		});		
 	}
 	setTimeout(function() {
-		$("#video-iframe").html("<img class=\"img-responsive\" src=\""+view+"/?action=stream\" alt=\"\" onclick=\"javascript:fswebvideo('"+view+"')\">");
+		$("#video-iframe").html("<img class=\"img-responsive\" src=\""+view+"/?action=stream&t="+new Date().getTime()+"\" alt=\"\" onclick=\"javascript:fswebvideo('"+view+"')\">");
 	},2000);
 /*	setTimeout(function() {
 		$("#video-iframe").html("<img class=\"img-responsive\" src=\""+view+"/?action=stream&t="+new Date().getTime()+"\" alt=\"\">");
