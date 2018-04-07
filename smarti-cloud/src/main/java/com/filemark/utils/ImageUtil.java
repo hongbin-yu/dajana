@@ -180,7 +180,7 @@ public class ImageUtil
     	String s;
     	Process p;
     	String exit="";
-    	ImageUtil.video = true;
+
     	if(maxWidth>=720) maxWidth=720;
     	else if(maxWidth>=450) maxWidth=450;
     	else maxWidth=300;
@@ -224,7 +224,6 @@ public class ImageUtil
     	String s;
     	Process p;
     	int exit=1;
-    	ImageUtil.video = false;
     	ProcessBuilder pb = new ProcessBuilder("killall","mjpg_streamer");
     	pb.redirectErrorStream(true);
 	    try {	
