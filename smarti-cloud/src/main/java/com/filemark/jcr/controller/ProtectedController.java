@@ -205,9 +205,11 @@ public class ProtectedController extends BaseController {
    		String result="";
    		if (action!=null && action.equals("close")) {
    			ImageUtil.closevideo();
+   			ImageUtil.video = false;	
    		}else {
    			if(width==null) width=300;
    				result = ImageUtil.video(width, width);
+   			ImageUtil.video = true;	
    		}
    		return result;
    	}

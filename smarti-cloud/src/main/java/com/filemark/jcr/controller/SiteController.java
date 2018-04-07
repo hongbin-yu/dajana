@@ -1775,7 +1775,7 @@ public class SiteController extends BaseController {
 			try {
 				if(uid!=null && !uid.equals("")) 
 					path = jcrService.getNodeById(uid);
-				if(jcrService.nodeExsits(parentPath))
+				if(jcrService.nodeExsits(path))
 					parentPath =jcrService.deleteNode(path);
 			} catch (RepositoryException e) {
 				//mya node deleted by other user
