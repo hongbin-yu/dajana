@@ -304,7 +304,7 @@ function syncChat() {
 
 	    	if(data.action !=null && data.action.indexOf("/?action=stream")>0) {
 	    		if($("video-iframe").html().indexOf("action=stream")<0)
-	    			$("video-iframe").html("<img class=\"img-responsive\" src=\""+action+"&t="+new Date().getTime()+"\" alt=\"\" onclick=\"javascript:fswebvideo('"+data.action+"')\">");
+	    			$("video-iframe").html("<img class=\"img-responsive\" src=\""+data.action+"&t="+new Date().getTime()+"\" alt=\"\" onclick=\"javascript:fswebvideo('"+data.action+"')\">");
 	    	}else {
 	    		$("video-iframe").html("");
 	    	}
@@ -431,10 +431,10 @@ function checkUnread() {
 }
 
 function fswebcam(view) {
-	$("#video-iframe").html("<img class=\"img-responsive\" src=\""+view+"/?action=snapshot\"&t="+new Date().getTime()+" alt=\"\">");
+	$("#video-iframe").html("<img class=\"img-responsive\" src=\""+view+"/?action=snapshot\" alt=\"\" onclick=\"javascript:fswebvideo('"+view+"')\">");
 }
 function fswebvideo(view) {
-	$("#video-iframe").html("<img class=\"img-responsive\" src=\""+view+"/?action=stream\"&t="+new Date().getTime()+" alt=\"\">");
+	$("#video-iframe").html("<img class=\"img-responsive\" src=\""+view+"/?action=stream\" alt=\"\"> onclick=\"javascript:fswebvideo('"+view+"')\">");
 }
 
 function webvideo(view,width) {
@@ -447,15 +447,17 @@ function webvideo(view,width) {
 		    timeout: 30000,
 		    success: function(data) {
 		    	$("#video-iframe").html("");
-			},
+				$("#video-iframe").html("<img class=\"img-responsive\" src=\""+view+"/?action=stream\" alt=\"\">  onclick=\"javascript:fswebvideo('"+view+"')\">");
+
+		    },
 			error: function() {
 		    }
 
 		});		
 	}
-	setTimeout(function() {
+/*	setTimeout(function() {
 		$("#video-iframe").html("<img class=\"img-responsive\" src=\""+view+"/?action=stream&t="+new Date().getTime()+"\" alt=\"\">");
-	},5000);
+	},5000);*/
 }
 
 function stopvideo() {
