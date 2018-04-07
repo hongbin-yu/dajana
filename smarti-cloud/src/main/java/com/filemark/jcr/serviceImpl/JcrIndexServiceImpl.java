@@ -104,34 +104,22 @@ public class JcrIndexServiceImpl implements JcrIndexService {
 	
 	private void Device2Backup() throws RepositoryException {
 		File device = new File(jcrService.getDevice());
-/*		if(!jcrService.nodeExsits("/system/devices/backup")) {
-			Device backup = new Device(jcrService.getBackup());
-			backup.setName("backup");
-			backup.setTitle("backup");
-			backup.setPath("/system/devices/backup");
-			backup.setLocation(jcrService.getBackup());
-			jcrService.addOrUpdate(backup);
-		}
-		if(!jcrService.nodeExsits("/system/devices/default")) {
-			Device home = new Device(jcrService.getDevice());
-			home.setName("backup");
-			home.setTitle("backup");
-			home.setPath("/system/devices/backup");
-			home.setLocation(jcrService.getDevice());
-			jcrService.addOrUpdate(home);			
-		}*/
+
 		Device home = (Device)jcrService.getObject("/system/devices/default");
 		if(!jcrService.getDevice().equals(home.getLocation())) {
 		    jcrService.updatePropertyByPath("/system/devices/default", "location", jcrService.getDevice());
 		}
 		int count =0;
 		if(device.getUsableSpace()*100/device.getTotalSpace()<30) {
-			String assetsQuery = "select * from [nt:base] AS s WHERE s.ocm_classname='com.filemark.jcr.model.Asset' and s.[path] not like '/templates/%' and s.[path] not like '%/icon' and s.[device] = '/system/devices/default'  order by s.lastModified, s.size desc";
+			String assetsQuery = "select * from [nt:base] AS s WHERE s.ocm_classname='com.filemark.jcr.model.Asset' and s.[path] not like '/templates/%' and s.[path] not like '%/icon' and s.[device] = '/system/devices/default' and s.move not like 'no'  order by s.lastModified, s.size desc";
 			WebPage<Asset> assets = jcrService.searchAssets(assetsQuery, 100, 0);
 			for(Asset asset:assets.getItems()) {
 				String source = jcrService.getDevice()+asset.getPath();
 				File srcDir = new File(source);
-				if(!srcDir.isDirectory()) continue;
+				if(!srcDir.isDirectory() || "icon".equals(srcDir.getName())) {
+					jcrService.updatePropertyByPath(asset.getPath(), "move", "no");
+					continue;
+				}
 				String destination = jcrService.getBackup()+asset.getPath();;
 				File destDir = new File(destination);
 				try {
