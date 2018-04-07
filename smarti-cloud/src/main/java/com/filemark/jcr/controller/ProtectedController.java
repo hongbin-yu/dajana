@@ -487,7 +487,7 @@ public class ProtectedController extends BaseController {
 		WebPage<Object> users = jcrService.queryObject(userQuery, 20, p);
    		String userInGroup = "select * from [nt:base] AS s WHERE ISCHILDNODE(["+path+"]) and s.ocm_classname='com.filemark.jcr.model.User'";
 		WebPage<Object> usersInGroup = jcrService.queryObject(userInGroup, 20, p);
-    	model.addAttribute("url", request.getRequestURL().toString().replaceAll("/site/profile.html", ""));
+    	model.addAttribute("url", request.getRequestURL().toString().replaceAll("/protected/groupedit.html", ""));
 		model.addAttribute("users", users);
 		model.addAttribute("usersInGroup", usersInGroup);
 		model.addAttribute("folder", jcrService.getObject(path));   		
