@@ -32,7 +32,7 @@ import com.filemark.utils.WebPage;
 public class ProtectedController extends BaseController {
 
 	private static final Logger logger = LoggerFactory.getLogger(ProtectedController.class);
-
+	private static String replacement[]  = {"习近平","习大大","习主席","共产党","阿共","老毛","六四","6.4","特殊服务","小姐"};
     
     @ExceptionHandler(Exception.class)
     public ModelAndView  handleException(Exception ex,HttpServletRequest request) {
@@ -572,6 +572,9 @@ public class ProtectedController extends BaseController {
 	   		if(content!=null && !content.equals("<p></p>") && !content.equals("") ) {
 	   	   		Chat chat = new Chat();
 	   	   		chat.setFrom(path);
+	   	   		for(String replace:replacement) {
+	   	   			content = content.replaceAll(replace, "XXX");
+	   	   		}
 	   	   		chat.setContent(content.replace("-edit",""));
 	   	   		Calendar calendar = Calendar.getInstance();
 	   	   		chat.setLastModified(calendar);
