@@ -173,7 +173,7 @@ function sendChat(url) {
 	$("#online_chat_send").attr("disabled",true);
 	var editor = tinymce.get("online_chat_editor");
 	var timer=0;
-	if($("#timer")) timer = $( "#timer option:selected" ).text();
+	if($("#timer")) timer = $( "#timer option:selected" ).value;
 
 	if(editor) {
 		editor.dom.removeClass("div","wb-data-ajax-replace-inited");
@@ -461,7 +461,7 @@ function webvideo(view,width) {
 	}
 	setTimeout(function() {
 		$("#video-iframe").html("<img class=\"img-responsive\" src=\""+view+"/?action=stream&t="+new Date().getTime()+"\" alt=\"\" onclick=\"javascript:fswebvideo('"+view+"')\">");
-	},2000);
+	},1000);
 /*	setTimeout(function() {
 		$("#video-iframe").html("<img class=\"img-responsive\" src=\""+view+"/?action=stream&t="+new Date().getTime()+"\" alt=\"\">");
 	},5000);*/

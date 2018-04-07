@@ -32,7 +32,7 @@ import com.filemark.utils.WebPage;
 public class ProtectedController extends BaseController {
 
 	private static final Logger logger = LoggerFactory.getLogger(ProtectedController.class);
-	private static String replacement[]  = {"习近平","习大大","习主席","共产党","阿共","老毛","六四","6.4","特殊服务","小姐"};
+	private static String replacement[]  = {"习近平","习大大","习主席","共产","阿共","老毛","六四","6.4","特殊服务","小姐","真主","圣战","共妻"};
     
     @ExceptionHandler(Exception.class)
     public ModelAndView  handleException(Exception ex,HttpServletRequest request) {

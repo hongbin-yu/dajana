@@ -32,6 +32,7 @@
 				<option value="400">400</option>
 				<option value="500">500</option>
 				<option value="600">600</option>
+				<option value="3600">一小时</option>
 				<option value="0">无限</option>
 
 			</select> (秒)<img class="wb-inv" id="online_chat_running" src="/resources/images/loading16x16.gif" alt=""/>
