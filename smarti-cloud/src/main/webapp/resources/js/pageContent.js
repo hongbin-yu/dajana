@@ -434,7 +434,7 @@ function fswebcam(view) {
 	$("#video-iframe").html("<img class=\"img-responsive\" src=\""+view+"/?action=snapshot&t="+new Date().getTime()+"\" alt=\"\" onclick=\"javascript:fswebvideo('"+view+"')\">");
 }
 function fswebvideo(view) {
-	var video = ("#video-iframe").html();
+	var video = $("#video-iframe").html();
 	if(video.indexOf("action=stream")>0)
 		$("#video-iframe").html("<img class=\"img-responsive\" src=\""+view+"/?action=snapshot&t="+new Date().getTime()+"\" alt=\"\" onclick=\"javascript:fswebvideo('"+view+"')\">");
 	else
