@@ -187,7 +187,8 @@ public class ImageUtil
     	String shellCommand = "/mnt/device/dajana/smarti-cloud/streamer"+maxWidth+".sh";
     	ProcessBuilder pb = new ProcessBuilder("/mnt/device/dajana/smarti-cloud/streamer"+maxWidth+".sh");
     	pb.redirectErrorStream(true);
-	    try {	
+	    try {
+	    	closevideo();
 	        p = pb.start();//Runtime.getRuntime().exec(shellCommand);
 	        BufferedReader br = new BufferedReader(
 	            new InputStreamReader(p.getInputStream()));
