@@ -202,13 +202,14 @@ public class ProtectedController extends BaseController {
 
    	@RequestMapping(value = {"/protected/video.html"}, method = RequestMethod.GET)
    	public @ResponseBody String video(String action, Integer width,Model model,HttpServletRequest request, HttpServletResponse response) {
+   		String result="";
    		if (action!=null && action.equals("close")) {
    			ImageUtil.closevideo();
    		}else {
    			if(width==null) width=300;
-   			ImageUtil.video(width, width);
+   				result = ImageUtil.video(width, width);
    		}
-   		return "";
+   		return result;
    	}
 
    	@RequestMapping(value = {"/protected/webcam.json"}, method = RequestMethod.GET)

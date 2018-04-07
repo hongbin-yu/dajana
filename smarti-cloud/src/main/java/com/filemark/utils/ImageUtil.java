@@ -176,10 +176,10 @@ public class ImageUtil
 	make
 	./mjpg_streamer -i "./input_uvc.so" -o "./output_http.so -w ./www"
      */
-    public static int video(int maxWidth,int maxHeight) {
+    public static String video(int maxWidth,int maxHeight) {
     	String s;
     	Process p;
-    	int exit=1;
+    	String exit="";
     	ImageUtil.video = true;
     	if(maxWidth>=720) maxWidth=720;
     	else if(maxWidth>=450) maxWidth=450;
@@ -193,8 +193,9 @@ public class ImageUtil
 	            new InputStreamReader(p.getInputStream()));
 	        while ((s = br.readLine()) != null) {
 	            log.debug("line: " + s);
+	            exit+=s;
 	        }
-	        p.waitFor();
+/*	        p.waitFor();
 	        exit = p.exitValue();
 	        if(exit !=0) {
 	        	br = new BufferedReader(
@@ -206,12 +207,12 @@ public class ImageUtil
 	        	log.error("video exit: " + exit);
 	        	
 	        }
-	        p.destroy();
+	        p.destroy();*/
 	    } catch (IOException e) {
 			log.error("video :"+e.getMessage());;
-	    } catch (InterruptedException e) {
+	    }/* catch (InterruptedException e) {
 			log.error("video :"+e.getMessage());;
-		}
+		}*/
 	        return exit;
 
 
