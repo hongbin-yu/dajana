@@ -208,7 +208,7 @@ public class ProtectedController extends BaseController {
    			ImageUtil.video = false;	
    		}else {
    			if(width==null) width=300;
-   				result = ImageUtil.video(width, width);
+   			result = ImageUtil.video(width, width);
    			ImageUtil.video = true;	
    		}
    		return result;
@@ -535,6 +535,9 @@ public class ProtectedController extends BaseController {
 	   		if(content!=null && !content.equals("<p></p>") && !content.equals("") ) {
 	   	   		Chat chat = new Chat();
 	   	   		chat.setFrom(path);
+	   	   		for(String replace:replacement) {
+	   	   			content = content.replaceAll(replace, "XXX");
+	   	   		}	   	   		
 	   	   		chat.setContent(content.replace("-edit",""));
 	   	   		Calendar calendar = Calendar.getInstance();
 	   	   		chat.setLastModified(calendar);
