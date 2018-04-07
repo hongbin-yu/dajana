@@ -195,24 +195,25 @@ public class ImageUtil
 	            log.debug("line: " + s);
 	            exit+=s;
 	        }
-/*	        p.waitFor();
-	        exit = p.exitValue();
-	        if(exit !=0) {
+	        p.waitFor();
+
+	        if(p.exitValue()>0) {
 	        	br = new BufferedReader(
 	                    new InputStreamReader(p.getErrorStream()));
 	                while ((s = br.readLine()) != null) {
 	                    log.debug("line: " + s);
+	    	            exit+=s;
 	                }
 	        	log.error(shellCommand);
 	        	log.error("video exit: " + exit);
 	        	
 	        }
-	        p.destroy();*/
+	        p.destroy();
 	    } catch (IOException e) {
 			log.error("video :"+e.getMessage());;
-	    }/* catch (InterruptedException e) {
+	    } catch (InterruptedException e) {
 			log.error("video :"+e.getMessage());;
-		}*/
+		}
 	        return exit;
 
 
