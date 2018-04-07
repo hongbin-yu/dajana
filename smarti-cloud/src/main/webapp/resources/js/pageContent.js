@@ -304,7 +304,7 @@ function syncChat() {
 
 	    	if(data.action !=null && data.action.indexOf("/?action=stream")>0) {
 	    		if($("video-iframe").html().indexOf("action=stream")<0)
-	    			$("video-iframe").html("<img class=\"img-responsive\" src=\""+action+"&t="+new Date().getTime()+"\" alt=\"\">");
+	    			$("video-iframe").html("<img class=\"img-responsive\" src=\""+action+"&t="+new Date().getTime()+"\" alt=\"\" onclick=\"javascript:fswebvideo('"+data.action+"')\">");
 	    	}else {
 	    		$("video-iframe").html("");
 	    	}

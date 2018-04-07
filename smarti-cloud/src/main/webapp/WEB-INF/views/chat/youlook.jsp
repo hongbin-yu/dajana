@@ -39,7 +39,7 @@
 			</span>
 			</header>
 				<div id="uploadBox" class="panel-body" ondrop="drop(event)" ondragover="allowDrop(event)" style="border:1px solid #aaaaaa;">
-				<div id="video-iframe"><c:if test="${video }"><img src="${video_url}/?action=stream" class="img-responsive"></c:if></div>				  
+				<div id="video-iframe"><c:if test="${video }"><img src="${video_url}/?action=stream" class="img-responsive" onclick="javascript:fswebvideo('${video_url}')"></c:if></div>				  
 					<form action="upload.html" method="POST" id="form-upload" enctype="multipart/form-data">
 					<input type="hidden" id="path" name="path" value="/${user.userName}/assets/youchat"/>
 					<input class="wb-inv" type="checkbox" id="override" name="override" value="true" checked/>
