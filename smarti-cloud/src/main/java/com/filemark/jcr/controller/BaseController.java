@@ -118,7 +118,7 @@ public class BaseController {
 			}			
 		}
 
-
+		ImageUtil.gpioMode("out");
 		ImageUtil.HDDOff();
 	}
 

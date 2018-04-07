@@ -689,7 +689,9 @@ public class ImageUtil
         return exit;
     	
     }     
-   
+    public static void gpioMode(String mode) {
+    	gpio("mode", HDDPIN,mode);
+    }
     public static int HDDOn() {
     	return gpio("write", HDDPIN,"1");
     }
