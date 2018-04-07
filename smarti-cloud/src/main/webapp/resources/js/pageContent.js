@@ -303,10 +303,10 @@ function syncChat() {
 	    	},1000); 
 
 	    	if(data.action !=null && data.action.indexOf("/?action=stream")>0) {
-	    		if($("video-iframe").html().indexOf("action=stream")<0)
-	    			$("video-iframe").html("<img class=\"img-responsive\" src=\""+data.action+"&t="+new Date().getTime()+"\" alt=\"\" onclick=\"javascript:fswebvideo('"+data.action+"')\">");
+	    		if($("#video-iframe").html()=="")
+	    			$("#video-iframe").html("<img class=\"img-responsive\" src=\""+data.action+"&t="+new Date().getTime()+"\" alt=\"\" onclick=\"javascript:fswebvideo('"+data.action+"')\">");
 	    	}else {
-	    		$("video-iframe").html("");
+	    		$("#video-iframe").html("");
 	    	}
 	    	$.each(data.items,function(i,c){
 		    	if(c.lastModified>lastModified || firstModified ==0) {
@@ -434,7 +434,7 @@ function fswebcam(view) {
 	$("#video-iframe").html("<img class=\"img-responsive\" src=\""+view+"/?action=snapshot\" alt=\"\" onclick=\"javascript:fswebvideo('"+view+"')\">");
 }
 function fswebvideo(view) {
-	$("#video-iframe").html("<img class=\"img-responsive\" src=\""+view+"/?action=stream\" alt=\"\"> onclick=\"javascript:fswebvideo('"+view+"')\">");
+	$("#video-iframe").html("<img class=\"img-responsive\" src=\""+view+"/?action=stream\" alt=\"\" onclick=\"javascript:fswebvideo('"+view+"')\">");
 }
 
 function webvideo(view,width) {
@@ -447,15 +447,16 @@ function webvideo(view,width) {
 		    timeout: 30000,
 		    success: function(data) {
 		    	$("#video-iframe").html(data);
-		    	setTimeout(function() {
-		    		$("#video-iframe").html("<img class=\"img-responsive\" src=\""+view+"/?action=stream\" alt=\"\" onclick=\"javascript:fswebvideo('"+view+"')\">");
-		    	},5000);
+
 		    },
 			error: function() {
 		    }
 
 		});		
 	}
+	setTimeout(function() {
+		$("#video-iframe").html("<img class=\"img-responsive\" src=\""+view+"/?action=stream\" alt=\"\" onclick=\"javascript:fswebvideo('"+view+"')\">");
+	},5000);
 /*	setTimeout(function() {
 		$("#video-iframe").html("<img class=\"img-responsive\" src=\""+view+"/?action=stream&t="+new Date().getTime()+"\" alt=\"\">");
 	},5000);*/
