@@ -257,6 +257,7 @@ public class SigninController extends BaseController{
 				os.close();
 				String qrimage =  "data:image/png;base64,"+Base64.getEncoder().encodeToString(os.toByteArray());
 				model.addAttribute("qrimage",qrimage);
+
 			}
     	}catch(Exception e) {
     		logger.error(e.getMessage());

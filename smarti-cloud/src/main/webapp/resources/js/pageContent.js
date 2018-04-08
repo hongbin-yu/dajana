@@ -173,7 +173,7 @@ function sendChat(url) {
 	$("#online_chat_send").attr("disabled",true);
 	var editor = tinymce.get("online_chat_editor");
 	var timer=0;
-	if($("#timer")) timer = $( "#timer option:selected" ).value;
+	if($("#timer")) timer = $( "#timer" ).val();
 
 	if(editor) {
 		editor.dom.removeClass("div","wb-data-ajax-replace-inited");
