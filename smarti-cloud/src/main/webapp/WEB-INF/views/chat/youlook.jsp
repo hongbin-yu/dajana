@@ -9,7 +9,7 @@
         <main role="main" property="mainContentOfPage" class="col-md-9 col-md-push-3">
         <h1>优视<c:if test="${folder.title != null}"> - ${folder.title }</c:if><a href="#" title="${user.title }" onclick="ftrClose('/protected/profile.html')"><img id="uploadIcon" class="img-responsive pull-right" src="${user.icon}" alt="图标"/></a></h1>
 	<c:if test="${folder==null || folder.path == '/youlook'}"><div data-ajax-replace="/templates/assets/html/youlook.html"></div></c:if>        
-	<c:if test="${folder.title != null && folder.path != '/youchat'}">
+	<c:if test="${folder.title != null}">
         <div class="row text-center"><img id="online_chat_loading" width="120" height="120" class="wb-inv" src="/resources/images/loadingx400.gif" alt="下载"/></div>
         <div id="online_chat">
 		</div>
@@ -42,7 +42,7 @@
 				<div id="uploadBox" class="panel-body" ondrop="drop(event)" ondragover="allowDrop(event)" style="border:1px solid #aaaaaa;">
 				<div id="video-iframe"><c:if test="${video }"><img src="${video_url}/?action=stream" class="img-responsive" onclick="javascript:fswebvideo('${video_url}')"></c:if></div>				  
 					<form action="upload.html" method="POST" id="form-upload" enctype="multipart/form-data">
-					<input type="hidden" id="path" name="path" value="/${user.userName}/assets/youchat"/>
+					<input type="hidden" id="path" name="path" value="/${user.userName}/assets/youlook"/>
 					<input class="wb-inv" type="checkbox" id="override" name="override" value="true" checked/>
 					<div class="panel" id="selectedFiles"  onchange="javascript:uploadFiles()">
 					</div>
