@@ -244,9 +244,16 @@
 		</figure>
 		</c:if>		
 		<c:if test="${!item.mp4 && !item.doc2pdf && !item.audio}">
-	    <a href="javascript:openImage('<c:url value='${item.link}'></c:url>')">
-			<img id="img${item.uid}" src="<c:url value='${item.icon }'></c:url>" class="img-responsive" draggable="true"/>
-		</a>
+				<c:if test="${item.contentType=='application/pdf'}">
+				    <a href="<c:url value='${item.link}'></c:url>">
+						<img id="img${item.uid}" src="<c:url value='${item.icon }'></c:url>" class="img-responsive" draggable="true"/>
+					</a>
+				</c:if>	
+				<c:if test="${item.contentType!='application/pdf'}">
+				    <a href="javascript:openImage('<c:url value='${item.link}'></c:url>')">
+						<img id="img${item.uid}" src="<c:url value='${item.icon }'></c:url>" class="img-responsive" draggable="true"/>
+					</a>
+				</c:if>	
 		</c:if>
 	</div>
 	<div class="panel panel-default description" id="description${item.uid }" property="description"  uid="${item.uid}" placeholder="description">${item.description}</div>

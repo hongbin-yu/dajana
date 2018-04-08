@@ -66,12 +66,7 @@
 				<div class="form-group">
 					<label for="fileUpload" class="required">点击选择二维密码图</label>
 					<br/><a href="#" onclick="openFiles()">
-					<c:if test="${qrimage }">
-					<img id="uploadImg" alt="" class="img-responsive" src="${qrimage}"/>
-					</c:if>
-					<c:if test="${!qrimage }">
 					<img id="uploadImg" alt="" src="<c:url value='/resources/images/upload.png'/>"/>
-					</c:if>
 					</a>
 					<div class="panel" id="selectedFiles" >
 					</div>	

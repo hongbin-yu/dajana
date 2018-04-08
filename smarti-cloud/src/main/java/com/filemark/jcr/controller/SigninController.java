@@ -244,7 +244,10 @@ public class SigninController extends BaseController{
 	    		InputStream in = multipartFile.getInputStream();
 	    		BufferedImage image = ImageIO.read(in);
 	    		in.close();
-
+				ImageIO.write(image, "jpg", os);
+				os.close();
+	    		String qrimage =  "data:image/png;base64,"+Base64.getEncoder().encodeToString(os.toByteArray());
+				model.addAttribute("qrimage",qrimage);
 	            LuminanceSource tmpSource = new BufferedImageLuminanceSource(image);
 	            BinaryBitmap tmpBitmap = new BinaryBitmap(new HybridBinarizer(tmpSource));
 	    		MultiFormatReader tmpBarcodeReader = new MultiFormatReader();
@@ -253,14 +256,12 @@ public class SigninController extends BaseController{
 	    		if(url.startsWith("http")) {
 	    			return "redirect:"+url;
 	    		}
-				ImageIO.write(image, "jpg", os);
-				os.close();
-				String qrimage =  "data:image/png;base64,"+Base64.getEncoder().encodeToString(os.toByteArray());
-				model.addAttribute("qrimage",qrimage);
+
+
 
 			}
     	}catch(Exception e) {
-    		logger.error(e.getMessage());
+    		logger.error("Barcode error:"+e.getMessage());
     		error=e.getMessage();
     		model.addAttribute("error", "Barcode error:"+error);
     	}
