@@ -169,11 +169,11 @@ public class SigninController extends BaseController{
     			String json = JwtUtil.decode(j);
     			JsonParser parser = new JsonParser();
     			final JsonObject jsonObject = parser.parse(json).getAsJsonObject();
-    			String username = jsonObject.get("username")==null?"":jsonObject.get("username").getAsString();
-    			String password = jsonObject.get("password")==null?"":jsonObject.get("password").getAsString();
-    			String isIntranet = jsonObject.get("isIntranet")==null?"false":jsonObject.get("isIntranet").getAsString();    			
-    			long expired = jsonObject.get("expired")==null?0:jsonObject.get("expired").getAsLong();
-    			String redirect = jsonObject.get("redirect")==null?null:jsonObject.get("redirect").getAsString();
+    			String username = jsonObject.get("username").isJsonNull()?"":jsonObject.get("username").getAsString();
+    			String password = jsonObject.get("password").isJsonNull()?"":jsonObject.get("password").getAsString();
+    			String isIntranet = (jsonObject.get("isIntranet")==null || jsonObject.get("isIntranet").isJsonNull())?"false":jsonObject.get("isIntranet").getAsString();    			
+    			long expired = (jsonObject.get("expired")==null || jsonObject.get("expired").isJsonNull())?0:jsonObject.get("expired").getAsLong();
+    			String redirect = (jsonObject.get("redirect")==null || jsonObject.get("redirect").isJsonNull())?"":jsonObject.get("redirect").getAsString();
     			if("yes".equals(isIntranet) && !isIntranet(request)) {
     	            model.addAttribute("error", "login_intranet"); 
     	            return "redirect:/forget?error=login_intranet"; 		    				

@@ -33,8 +33,7 @@
 				<c:forEach items="${usersInGroup.items }" var="item" varStatus="loop">
 					<div id="${item.uid}" class="col-md-3">
 					<a href="javascript:removeUser('${item.uid }','${item.path }')" title="退群"><img class="img-responsive" src="${item.icon}" alt="删除"></a>
-					<p><a class="wb-lbx" href="/content/password.qrb?path=${url }/forget?j=${item.encodedJson}" title="密码图"><span class="glyphicon glyphicon-qrcode"></span></a>
-					${item.title } (${item.name})
+					<p>${item.title } (${item.name})</p>
 					</div>
 					<c:if test="${(loop.index+1) % 4 ==0  }"><div class="clearfix"></div></c:if>
 				</c:forEach>
@@ -46,7 +45,7 @@
 			<c:forEach items="${users.items }" var="item" varStatus="loop">
 				<div id="${item.uid}" class="col-md-3">
 				<a href="javascript:addUser('${folder.path }','${item.path }')" title="入群"><img class="img-responsive" src="${item.icon }" alt="加入"></a>
-				<p>${item.title } (${item.name})
+				<p><a class="wb-lbx" href="/content/password.qrb?path=${url }/forget?j=${item.encodedJson}" title="密码图"><span class="glyphicon glyphicon-qrcode"></span></a>${item.title } (${item.name})</p>
 				</div>
 				<c:if test="${(loop.index+1) % 4 ==0  }"><div class="clearfix"></div></c:if>
 			</c:forEach>
