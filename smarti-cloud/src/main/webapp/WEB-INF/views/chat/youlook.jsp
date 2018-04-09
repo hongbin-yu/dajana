@@ -110,7 +110,7 @@
 		<h2 class="modal-title">云站</h2>
 	</header>
 	<div class="modal-body"> 
-	 <iframe id="left-iframe" src="/protected/browse.html?path=/${user.userName }/assets/youchat" scrolling="yes" style="height: 600px; border: 0px none; width: 360px; margin-bottom: 0px; margin-left: 10px;">
+	 <iframe id="left-iframe" src="/protected/browse.html?path=/${user.userName }/assets/youlook" scrolling="yes" style="height: 600px; border: 0px none; width: 360px; margin-bottom: 0px; margin-left: 10px;">
      </iframe>
  	</div>
 </section> 

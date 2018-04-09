@@ -138,7 +138,7 @@ public class ImageUtil
 	        BufferedReader br = new BufferedReader(
 	            new InputStreamReader(p.getInputStream()));
 	        while ((s = br.readLine()) != null) {
-	        	city +=s;
+	        	city +=s+"<br/>";
 	            log.debug("line: " + s);
 	        }
 	        p.waitFor();
@@ -147,6 +147,7 @@ public class ImageUtil
 	        	br = new BufferedReader(
 	                    new InputStreamReader(p.getErrorStream()));
 	                while ((s = br.readLine()) != null) {
+	    	        	city +=s+"<br/>";
 	                    log.debug("line: " + s);
 	                }
 	        	log.error(shellCommand);
@@ -164,7 +165,49 @@ public class ImageUtil
 	    return city;
 
 
-    }    
+    }  
+    //atp-get install speedtest-cli
+    public static String speedtest() {
+    	String s;
+    	String city="";
+    	Process p;
+    	int exit = 0;
+    	String shellCommand = "speedtest-cli";
+    	ProcessBuilder pb = new ProcessBuilder("speedtext-cli");
+    	pb.redirectErrorStream(true);
+	    try {	
+	        p = pb.start();//Runtime.getRuntime().exec(shellCommand);
+	        BufferedReader br = new BufferedReader(
+	            new InputStreamReader(p.getInputStream()));
+	        while ((s = br.readLine()) != null) {
+	        	city +=s+"<br/>";
+	            log.debug("line: " + s);
+	        }
+	        p.waitFor();
+	        exit = p.exitValue();
+	        if(exit !=0) {
+	        	br = new BufferedReader(
+	                    new InputStreamReader(p.getErrorStream()));
+	                while ((s = br.readLine()) != null) {
+	    	        	city +=s+"<br/>";
+	                    log.debug("line: " + s);
+	                }
+	        	log.error(shellCommand);
+	        	log.error("video exit: " + exit);
+	        	
+	        }
+	        p.destroy();
+	    } catch (IOException e) {
+	    	city = e.getMessage();
+			log.error("city :"+e.getMessage());;
+	    } catch (InterruptedException e) {
+	    	city = e.getMessage();
+			log.error("city :"+e.getMessage());;
+		}
+	    return city;
+
+
+    }      
     /*
 	sudo apt-get update
 	sudo apt-get upgrade
@@ -194,7 +237,7 @@ public class ImageUtil
 	            new InputStreamReader(p.getInputStream()));
 	        while ((s = br.readLine()) != null) {
 	            log.debug("line: " + s);
-	            exit+=s;
+	            exit+=s+"<br/>";
 	        }
 	        p.waitFor();
 
@@ -203,7 +246,7 @@ public class ImageUtil
 	                    new InputStreamReader(p.getErrorStream()));
 	                while ((s = br.readLine()) != null) {
 	                    log.debug("line: " + s);
-	    	            exit+=s;
+	    	            exit+=s+"<br/>";
 	                }
 	        	log.error(shellCommand);
 	        	log.error("video exit: " + exit);

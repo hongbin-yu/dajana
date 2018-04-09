@@ -1006,7 +1006,7 @@ function checkProgress() {
 		var override = $("#override").is(":checked")?"true":"false";
 		var path = $("#pagePath").val();
 		$element.trigger( "reset.wb-sessto", settings );
-		if(override=="true" && path.indexOf("/chat")<0) {
+		if(override=="true" && path.indexOf("/you")<0) {
 	    	if(percentComplete ==1000 && i==total -  1) {
 	    		setTimeout(function() {window.location.reload();},2000);
 	    	}else {
@@ -1099,6 +1099,7 @@ function output(data) {
 
 	    	tinyMCE.activeEditor.setDirty(true);
 	    }
+
 }
 
 function getDateString(datelong) {
