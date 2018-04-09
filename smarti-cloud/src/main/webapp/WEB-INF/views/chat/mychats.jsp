@@ -30,6 +30,8 @@
 						<a class="btn btn-default btn-block" title="打开云资源" href="javascript:openOverlay('online_chat_editor','left-bar')"  aria-controls="left-panel" role="button"><span class="glyphicon glyphicon-cloud"></span></a>
 						<a class="btn btn-default btn-block" title="打开网站" href="javascript:openOverlay('online_chat_editor','right-bar')"   aria-controls="left-panel" role="button" ><span class="glyphicon glyphicon-globe"></span></a>
 						<a class="btn btn-default btn-block" title="打开本机资源" href="javascript:openFiles()"   aria-controls="left-panel" role="button" ><span class="glyphicon glyphicon-picture"></span></a>
+						<a class="btn btn-default btn-block" title="清除内容" href="javascript:clear()"   aria-controls="left-panel" role="button" ><span class="glyphicon glyphicon-stop"></span></a>
+
 <%-- 						<c:if test="${user.role =='Owner' || user.role == 'Administrator'}">	            
 						<a id="fswebcam" class="btn btn-default btn-block" title="网络相机" href="javascript:fswebcam('${video_url}')"   aria-controls="left-panel" role="button"><span class="glyphicon glyphicon-camera"></span></a>
 						<a id="stopvideo" class="btn btn-default btn-block" title="直播停止" href="javascript:stopvideo()"   aria-controls="left-panel" role="button"><span class="glyphicon glyphicon-stop"></span></a>

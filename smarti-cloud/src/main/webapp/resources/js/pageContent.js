@@ -202,12 +202,13 @@ function sendChat(url) {
 		    	path = msg;
 		    	syncChat();
 		    	checkUnread();
-		    	tinyMCE.activeEditor.setContent("<p></p>");
+		    	clear();
+		    	//tinyMCE.activeEditor.setContent("<p></p>");
 		    	$("#online_chat_running").addClass("wb-inv");
 		    },
 		    error: function() {
-		    	window.location.href=contentPath+"/login?redirect="+window.location.href
-		    	//$("#online_chat").html('<section class="alert alert-warning"><h5>\u4F60\u6CA1\u6709\u767B\u5165\uFF01</53></section>');
+		    	//window.location.href=contentPath+"/login?redirect="+window.location.href
+		    	$("#online_chat").html('<section class="alert alert-warning"><h5>\u4F60\u6CA1\u6709\u767B\u5165\uFF01</53></section>');
 		    }
 		});	
 	    

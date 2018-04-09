@@ -1,4 +1,5 @@
 var files=[];
+var droppedFiles = [];
 var contentPath = "";
 if(window.location.pathname.indexOf("/smarti-cloud")>=0) {
 	contentPath = "/smarti-cloud";
@@ -438,8 +439,9 @@ function handleFileSelect(e) {
 	if(!e.target.files) return;
 	selDiv = document.querySelector("#selectedFiles");
 	selDiv.innerHTML = "";
-	
+
 	files = e.target.files;
+
 	for(var i=0; i<files.length; i++) {
 		var f = files[i];
 		
@@ -916,6 +918,14 @@ function getAsset(formData,file) {
 	    		i++;
 	    		if(i <total)
 	    			uploadFile(files[i]);		
+	    		else if(i==total -1 || total==0) {
+	    			setTimeout(function () {
+	    				files = [];
+	    				droppedFiles = [];
+		    			total = 0;
+	    			},1000);
+
+	    		}
 	    	}else {
 	    		sendFormData(formData,file);
 	    	}
@@ -1013,7 +1023,9 @@ function checkProgress() {
 	    		setTimeout(checkProgress,1000);
 	    	}			
 		}
-
+		files = [];
+		total = 0;
+		droppedFiles = [];
 	} 
 
 	
@@ -1023,6 +1035,7 @@ function checkProgress() {
 function output(data) {
 	var html = "";
 	var online_chat_editor = document.getElementById("online_chat_editor");
+
 	if(topInsert != null) 
 	    html = '<div id="'+data.uid+'" class="col-md-4 well">';
     	if(data.contentType.indexOf('video/')>=0) {
@@ -1091,13 +1104,13 @@ function output(data) {
 		    		selection = tinymce.activeEditor.dom.select('li')[0];
 		    		tinymce.activeEditor.selection.select(selection);
 	    		}
-    			tinyMCE.activeEditor.selection.setContent("<li>"+html+"</li>");
+	    		tinyMCE.activeEditor.selection.setContent("<li>"+html+"</li>");
 
 	    	}else {
 	    		tinyMCE.activeEditor.selection.setContent(html);
 	    	}
 
-	    	tinyMCE.activeEditor.setDirty(true);
+	    	tinyMCE.activeEditor.setDirty(false);
 	    }
 
 }
@@ -1107,7 +1120,14 @@ function getDateString(datelong) {
 	d.setTime(datelong);
 	return d.getFullYear()+"-"+d.getMonth()+"-"+d.getDay();
 }
-
+function clear() {
+	$("#selectedFiles").html("");
+	tinyMCE.activeEditor.setContent("<p></p>");
+	files = [];
+	droppedFiles = [];
+	total = 0;
+	
+}
 function deleteNode(path) {
 	if(new Date().getTime() - 30000 <  confirmDate) {
 		confirmDate = new Date().getTime();

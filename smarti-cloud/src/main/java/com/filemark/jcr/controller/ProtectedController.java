@@ -56,7 +56,7 @@ public class ProtectedController extends BaseController {
     }
     
    
-    @RequestMapping(value = {"/protected/mycloud"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/protected","/protected/","/protected/mycloud"}, method = RequestMethod.GET)
    	public String mycloud(Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
     	String host="";
     	if(request.getRemoteHost().endsWith(jcrService.getDomain())) { 
