@@ -780,7 +780,7 @@ function uploadFile(file) {
     }
 
 	var online_chat_editor = document.getElementById("online_chat_editor");
-	if(online_chat_editor) {
+	if(online_chat_editor || override == 'false') {
 		getAsset(formData,file);
 	}else 
 		sendFormData(formData,file);

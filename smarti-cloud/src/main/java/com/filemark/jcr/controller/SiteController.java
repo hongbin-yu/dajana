@@ -977,11 +977,13 @@ public class SiteController extends BaseController {
         		}else {
         			
         			if(jcrService.nodeExsits(path+"/"+fileName)) {
+        				asset = (Asset)jcrService.getObject(path+"/"+fileName);
         				if("true".equals(override) ) {
-	        				asset = (Asset)jcrService.getObject(path+"/"+fileName);
 	        				assetPath = path+"/"+fileName;
         				}else {
-        					assetPath = path+"/"+getDateTime()+ext;
+        					ImageUtil.HDDOff();
+        					return asset;
+        					//assetPath = path+"/"+getDateTime()+ext;
         				}
         			}else {
         				assetPath = jcrService.getUniquePath(path, fileName);
@@ -1201,8 +1203,12 @@ public class SiteController extends BaseController {
 		}
 		if(!fileName.endsWith(ext)) fileName +=ext;
 		String assetPath =  path+"/"+fileName;
-		if("true".equals(override) && jcrService.nodeExsits(path+"/"+fileName)) {
+		if(jcrService.nodeExsits(path+"/"+fileName)) {
 			asset = (Asset)jcrService.getObject(path+"/"+fileName);
+			if(!"true".equals(override)) {
+				ImageUtil.HDDOff();
+				return asset;
+			}
 		}else {
 			assetPath = jcrService.getUniquePath(path, fileName);
 		}
