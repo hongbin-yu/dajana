@@ -263,7 +263,7 @@ function sendComment(url,status) {
 	    },
 	    error: function() {
 	    	$("#online_comment_running"+status).addClass("wb-inv");
-	    	window.location.href=contentPath+"/login?redirect="+window.location.href
+	    	//window.location.href=contentPath+"/login?redirect="+window.location.href
 	    	//$("#online_chat").html('<section class="alert alert-warning"><h5>\u4F60\u6CA1\u6709\u767B\u5165\uFF01</53></section>');
 	    }
 	});	
@@ -296,7 +296,7 @@ function syncChat() {
 		    },
 	    type: "GET",
 	    contentType: "application/json",
-	    timeout: 50000,
+	    timeout: 30000,
 	    success: function(data) {
 	    	setTimeout(function() {
 	    		$("#online_chat_send").attr("disabled",false);	    	
@@ -384,6 +384,9 @@ function syncChat() {
 		error: function() {
 		    $("#online_chat_running").addClass("wb-inv");
 	    	$("#comment_message").html('<section class="alert alert-warning"><h5>Timeout</h5></section>');
+	    	setTimeout(function() {
+	    		$("#online_chat_send").attr("disabled",false);	    	
+	    	},1000);
 	    	setTimeout(syncChat,30000);
 	    }
 
