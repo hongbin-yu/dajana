@@ -740,5 +740,36 @@ public class ImageUtil
     }
     public static int HDDOff() {
     	return gpio("write", HDDPIN,"0");
-    }    
+    }
+    
+    public static String HDDSleep() throws IOException, InterruptedException {
+    	String s;
+    	Process p;
+    	String exit="";
+    	ProcessBuilder pb = new ProcessBuilder("hdparm","-Y","/dev/sda");
+    	pb.redirectErrorStream(true);
+        p = pb.start();
+
+
+        BufferedReader br = new BufferedReader(
+            new InputStreamReader(p.getInputStream()));
+        while ((s = br.readLine()) != null) {
+            log.debug("line: " + s);
+            exit +=s;
+        }
+        p.waitFor();
+
+        if(p.exitValue() !=0) {
+        	br = new BufferedReader(
+                    new InputStreamReader(p.getErrorStream()));
+                while ((s = br.readLine()) != null) {
+                    log.debug("line: " + s);
+                    exit +=s;
+                }
+        	//log.error("convert exit: " + exit);
+        	
+        }
+        p.destroy();    	
+        return exit;
+    }
 }

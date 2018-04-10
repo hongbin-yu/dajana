@@ -558,7 +558,7 @@ if($("#pagePath")) {
 	}
 
 	if(path !=null && path.indexOf('/youlook')>=0 ){
-		document.addEventListener("contextmenu",function(event) {$(".panel-warning").remove(); event.preventDefault();});
+		document.addEventListener("contextmenu",function(event) {$(".panel-warning").remove();  $.magnificPopup.close(); event.preventDefault();});
 	}
 }
 

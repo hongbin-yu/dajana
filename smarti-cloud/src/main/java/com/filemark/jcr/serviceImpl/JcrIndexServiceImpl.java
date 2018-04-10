@@ -19,6 +19,7 @@ import com.filemark.jcr.model.Device;
 import com.filemark.jcr.model.Folder;
 import com.filemark.jcr.service.JcrIndexService;
 import com.filemark.jcr.service.JcrServices;
+import com.filemark.utils.ImageUtil;
 import com.filemark.utils.WebPage;
 import com.lowagie.text.pdf.PdfReader;
 
@@ -99,7 +100,13 @@ public class JcrIndexServiceImpl implements JcrIndexService {
 			}
 		}
 		
-		
+		try {
+			ImageUtil.HDDSleep();
+		} catch (IOException e) {
+			log.error(e.getMessage());
+		} catch (InterruptedException e) {
+			log.error(e.getMessage());
+		}
 	}
 	
 	private void Device2Backup() throws RepositoryException {
