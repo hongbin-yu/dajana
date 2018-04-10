@@ -122,8 +122,7 @@ public class JcrServicesImpl implements JcrServices {
         		QueryResult result = q.execute();
 
         		long totalCount = 0;
-        		if(result.getRows() !=null)
-        			totalCount = result.getRows().getSize();;//result.getNodes().getSize();
+        		totalCount = result.getRows().getSize();;//result.getNodes().getSize();
         		q.setLimit(limit);
         		q.setOffset(offset*limit);
         		result = q.execute();
@@ -135,9 +134,12 @@ public class JcrServicesImpl implements JcrServices {
         			//totalCount++;
         			final Row row = iterator.nextRow(); 
         			Node node = session.getNode(row.getPath("s"));
-        			Asset asset = (Asset)ocm.getObject(Asset.class, node.getPath());
-        			asset.setUid(node.getIdentifier());
-        			assets.add(asset);        			
+        			if(node != null) {
+            			Asset asset = (Asset)ocm.getObject(Asset.class, node.getPath());
+            			asset.setUid(node.getIdentifier());
+            			assets.add(asset);          				
+        			}
+      			
         		}
 /*        		NodeIterator it = result.getNodes();
         		while(it.hasNext()) {
