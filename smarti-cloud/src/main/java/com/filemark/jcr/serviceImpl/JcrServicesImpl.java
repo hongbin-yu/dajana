@@ -1681,7 +1681,7 @@ public class JcrServicesImpl implements JcrServices {
         	    	log.info("/templates/assets/folder360x360.png not found!");
         	    	return null;
         	    }
-    	    	log.info("image found:"+assets.getPageCount());
+    	    	log.debug("image found:"+path+"="+assets.getPageCount());
 
         	    int i = 0, x=30, y=90;
         	    for(Asset asset : assets.getItems()) {
@@ -1714,8 +1714,6 @@ public class JcrServicesImpl implements JcrServices {
 	        	    	}else {
 	        	    		x = 180; y = 200;
 	        	    	}
-        	    	}else {
-        	    		continue;
         	    	}
         	    }
         	    

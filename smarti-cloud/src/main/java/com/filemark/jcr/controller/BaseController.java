@@ -48,6 +48,7 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 
 
+
 import com.filemark.jcr.model.Asset;
 import com.filemark.jcr.model.Device;
 import com.filemark.jcr.model.Folder;
@@ -120,6 +121,13 @@ public class BaseController {
 
 		ImageUtil.gpioMode("out");
 		ImageUtil.HDDOn();
+		try {
+			ImageUtil.HDDSleep();
+		} catch (IOException e) {
+			logger.error(e.getMessage());
+		} catch (InterruptedException e) {
+			logger.error(e.getMessage());
+		}
 	}
 
 	
