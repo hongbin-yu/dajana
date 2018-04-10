@@ -690,7 +690,7 @@ public class ImageUtil
     	String output = filename+".mp4";
     	//String webmOutput = device+filename+".webm";
     	//String icon = device+"/publish/icon400"+filename+".jpg";
-		BufferedWriter writer = new BufferedWriter(new FileWriter("/var/lib/tomcat8/conf/video2mp4.sh",true));
+		BufferedWriter writer = new BufferedWriter(new FileWriter("/home/device/workingDir/video2mp4.sh",true));
     	//writer.write("ffmpeg -ss 00:00:02 -i "+device+filename +" -nostats -nostdin -s 400X400 -vframes 1 "+icon);
     	//writer.newLine();
 

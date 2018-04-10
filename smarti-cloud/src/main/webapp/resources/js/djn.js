@@ -873,7 +873,6 @@ function getAsset(formData,file) {
 	    			setTimeout(function () {
 	    				files = [];
 	    				droppedFiles = [];
-		    			total = 0;
 	    			},1000);
 
 	    		}
@@ -974,9 +973,7 @@ function checkProgress() {
 	    		setTimeout(checkProgress,1000);
 	    	}			
 		}
-		files = [];
-		total = 0;
-		droppedFiles = [];
+
 	} 
 
 	
