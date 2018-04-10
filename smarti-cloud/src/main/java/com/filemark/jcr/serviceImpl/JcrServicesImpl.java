@@ -1690,8 +1690,11 @@ public class JcrServicesImpl implements JcrServices {
         	    	File file = getFile(asset.getPath());
         	    	if(file.isDirectory()) file = new File(file,"origin"+ext);
         	    	File icon = new File(device+asset.getPath()+"/x400.jpg");
+        	    	if(!icon.exists()) {
+        	    		icon = new File(backup+asset.getPath()+"/x400.jpg");
+        	    	}
         	    	if(icon.exists()) {
-        	    		image = ImageIO.read(icon);
+         	    		image = ImageIO.read(icon);
         	    	}else if(file !=null && file.exists()) {
         	    		image = ImageIO.read(file);
         	    	}else if(session.nodeExists(asset.getPath()+"/original")){
@@ -1711,6 +1714,8 @@ public class JcrServicesImpl implements JcrServices {
 	        	    	}else {
 	        	    		x = 180; y = 200;
 	        	    	}
+        	    	}else {
+        	    		continue;
         	    	}
         	    }
         	    
