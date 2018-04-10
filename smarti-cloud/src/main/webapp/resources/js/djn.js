@@ -1051,7 +1051,7 @@ function output(data) {
 	    		html ='<a href="'+data.link+'\"><img id="img'+data.uid+'" src="'+data.icon+'" class="img-responsive" draggable="true" alt=""></img></a>';
 	    		if(i==0) {
 		    		html ='<a id="link'+data.uid+'" href="'+data.link+'"><img id="img'+data.uid+'" src="'+data.icon+'" class="img-responsive" draggable="true" alt=""></img></a>';
-	    			tinyMCE.activeEditor.selection.setContent("<h5><a href=\"javascript-edit:openGallery('"+data.uid+"')\">点击播放"+total+"张照片</a></h5><div id=\"gallery"+data.uid+"\" class=\"wb-lbx-edit lbx-hide-gal\"><ul class=\"list-inline\"><li></li><ul></div>");
+	    			tinyMCE.activeEditor.selection.setContent("<h5><a href=\"javascript-edit:openGallery('"+data.uid+"')\">点击播放"+total+"张连环画</a></h5><div id=\"gallery"+data.uid+"\" class=\"wb-lbx-edit lbx-hide-gal\"><ul class=\"list-inline\"><li></li><ul></div>");
 		    		selection = tinymce.activeEditor.dom.select('li')[0];
 		    		tinymce.activeEditor.selection.select(selection);
 	    		}

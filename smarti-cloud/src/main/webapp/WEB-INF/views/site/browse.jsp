@@ -178,7 +178,7 @@
   </ul>
 </div> 
 <div class="clearfix"></div>
-<button class="btn btn-primary btn-sm" onclick="javascript:returnGallery('${folder.path}')" title="植入画廊"><span class="glyphicon glyphicon-play">${folder.title } 植入画廊</span></button>
+<button class="btn btn-primary btn-sm" onclick="javascript:returnGallery('${folder.path}')" title="植入连环画"><span class="glyphicon glyphicon-play">${folder.title } 植入连环画</span></button>
 </c:if>
 </div>
 <div class="row">
@@ -586,7 +586,7 @@ function returnCarousel(fileUrl) {
 function returnGallery(fileUrl) {
 	var message = win.document.getElementById("header_message");
 	if(message) {
-		message.innerHTML="<section class=\"text-right alert alert-success\"><h3>加入画廊</h3></section>";
+		message.innerHTML="<section class=\"text-right alert alert-success\"><h3>加入连环画</h3></section>";
 
 		}
 	var data = document.getElementById("gallery").outerHTML;
@@ -604,7 +604,7 @@ function returnGallery(fileUrl) {
 function returnPPT(path,total) {
 	var message = win.document.getElementById("header_message");
 	if(message) {
-		message.innerHTML="<section class=\"text-right alert alert-success\"><h3>加入画廊</h3></section>";
+		message.innerHTML="<section class=\"text-right alert alert-success\"><h3>加入连环画</h3></section>";
 
 		}
 	var html="<div class=\"wb-lbx lbx-hide-gal noneditable\">"
