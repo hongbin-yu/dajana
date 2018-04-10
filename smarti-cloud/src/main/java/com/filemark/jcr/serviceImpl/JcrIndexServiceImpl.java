@@ -117,7 +117,7 @@ public class JcrIndexServiceImpl implements JcrIndexService {
 		    jcrService.updatePropertyByPath("/system/devices/default", "location", jcrService.getDevice());
 		}
 		int count =0;
-		if(device.getUsableSpace()*100/device.getTotalSpace()<30) {
+		if(device.getUsableSpace()*100/device.getTotalSpace()<20) {
 			String assetsQuery = "select * from [nt:base] AS s WHERE s.ocm_classname='com.filemark.jcr.model.Asset' and s.[path] not like '/templates/%' and s.[path] not like '%/icon' and s.[device] = '/system/devices/default' and s.move not like 'no'  order by s.lastModified, s.size desc";
 			WebPage<Asset> assets = jcrService.searchAssets(assetsQuery, 100, 0);
 			for(Asset asset:assets.getItems()) {

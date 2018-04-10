@@ -121,7 +121,9 @@ public class JcrServicesImpl implements JcrServices {
         		
         		QueryResult result = q.execute();
 
-        		long totalCount = result.getRows().getSize();;//result.getNodes().getSize();
+        		long totalCount = 0;
+        		if(result.getRows() !=null)
+        			totalCount = result.getRows().getSize();;//result.getNodes().getSize();
         		q.setLimit(limit);
         		q.setOffset(offset*limit);
         		result = q.execute();
