@@ -539,6 +539,7 @@ function drop(ev) {
 		    					    }
 		    					    // ... Other options like success and etc
 		    					}); 
+
 		    			      return;
 	    	    			
 	    	    		}else {
@@ -564,6 +565,7 @@ function drop(ev) {
 		    					}); 
 
 	    	    		}
+
 	    	    		return;
 	    	    	}
 	    		
@@ -607,6 +609,7 @@ function drop(ev) {
 				    					    }
 				    					    // ... Other options like success and etc
 				    					}); 
+
 				    			      return;			    	    			  
 			    	    		}else	{
 				    	    		selDiv.innerHTML=  "<section class=\"alert alert-info\"><h2 class=\"h3\">"+i18n("upload")+"</h2><p><img alt='' src='"+contentPath+"/resources/images/ui-anim_basic_16x16.gif'/> "+url+"</p></section>";
@@ -629,6 +632,7 @@ function drop(ev) {
 				    					    // ... Other options like success and etc
 				    					}); 
 				    			    imported[url] = true;   
+
 				    	    		return;
 			    	    		}  
 
@@ -784,60 +788,7 @@ function uploadFile(file) {
 		getAsset(formData,file);
 	}else 
 		sendFormData(formData,file);
-/*    var start = new Date();
-    var end = new Date();
-      $.ajax({
-    	    xhr: function() {
-    	        var xhr = new window.XMLHttpRequest();
 
-    	        // Upload progress
-    	        xhr.upload.addEventListener("progress", function(evt){
-    	            if (evt.lengthComputable) {
-    				    end = new Date();
-    				    var speed = 0;
-    				    speed = evt.loaded*8/(end.getTime() - start.getTime());
-    	                percentComplete = (evt.loaded / evt.total)*100;
-    	                selDiv.innerHTML="<section id=\""+file.name+"\"><h5>"+running+"</h5><progress class=\"full-width\" value=\""+evt.loaded +"\" max=\""+evt.total+"\"><span class=\"wb-inv\">"+percentComplete+"%</span></progress></section>";
-    		    		selDiv.innerHTML += "<p>"+(speed/1000).toFixed(2)+" MB/s</p>";
-    	                
-    	            }
-    	       }, false);
-
-    	       // Download progress
-    	       xhr.addEventListener("progress", function(evt){
-    	           if (evt.lengthComputable) {
-	   	                percentComplete = (evt.loaded / evt.total)*100;
-    	                selDiv.innerHTML="<section id=\""+file.name+"\"><h5>"+file.name+"</h5><progress class=\"full-width\" value=\""+evt.loaded +"\" max=\""+evt.total+"\"><span class=\"wb-inv\">"+percentComplete+"%</span></progress></section>";
-    	           }
-    	       }, false);
-
-    	       return xhr;
-    	    },    	  
-		    url: 'uploadAsset.html',
-		    data: formData,
-		    type: "POST", //ADDED THIS LINE
-		    // THIS MUST BE DONE FOR FILE UPLOADING
-		    contentType: false,
-		    processData: false,
-		    enctype: 'multipart/form-data',
-		    success: function(data) {
-		    	percentComplete = 1000;
-		    	if(data.title !=null && data.title.indexOf("error:")>=0) {
-			        selDiv.innerHTML=  "<section class=\"alert alert-warning\"><h2 class=\"h5\">"+i18n("fail")+"</h2><p>"+data.title+"</p></section>"; // 
-		    	}else {
-				    var speed = 0;
-				    speed = fileSize*8/(end.getTime() - start.getTime());
-	                selDiv.innerHTML ="<section id=\""+file.name+"\"><h5>"+file.name+"("+(speed/1000).toFixed(2)+" MB/s)</h5><progress class=\"full-width\" value=\""+fileSize +"\" max=\""+fileSize+"\"><span class=\"wb-inv\">"+100+"%</span></progress></section>";
-		    		selDiv.innerHTML += "<section class=\"alert alert-success\"><h3 class=\"5\">"+(i+1)+"/"+total+i18n("document_uploaded")+i18n("success")+"</h3></section>";
-		    		output(data);
-
-
-		    	}
-		    },
-		    error: function(jqXHR, exception) {
-		        selDiv.innerHTML=  "<section class=\"alert alert-warning\"><h2 class=\"h3\">"+i18n("fail")+":"+file.name+",sttus:"+jqXHR+",exception:"+exception+"</h2></section>"; // 
-		    }
-		});	*/
 }
 
 function sendFormData(formData,file) {
@@ -906,10 +857,10 @@ function sendFormData(formData,file) {
 function getAsset(formData,file) {
 	var filename = file.name;
 	var lastModified = file.lastModified==null?0:file.lastModified;
-
+	var path = $("#path").val();
     $.ajax({
-	    url: 'getasset.json?filename='+filename+'&lastModified='+lastModified,
-	    type: "GET", 
+	    url: 'getasset.json?path='+path+'&filename='+filename+'&lastModified='+lastModified,
+	    type: "GET",
 	    success: function(data) {
 	    	if(data.uid) {
 	    		output(data);

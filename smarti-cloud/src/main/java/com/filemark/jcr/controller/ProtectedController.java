@@ -450,7 +450,7 @@ public class ProtectedController extends BaseController {
    		return chats;
    	}
 
-   	@RequestMapping(value = {"/protected/getasset.json","/site/getasset.json"}, method = {RequestMethod.GET})
+   	@RequestMapping(value = {"/protected/getasset.json"}, method = {RequestMethod.GET})
    	public @ResponseBody Asset assetJson(String filename,Long lastModified,String operator,Model model,HttpServletRequest request, HttpServletResponse response) {
    		String username = getUsername();
    		Asset asset = new Asset();

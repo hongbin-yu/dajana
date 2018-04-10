@@ -933,7 +933,20 @@ public class SiteController extends BaseController {
 		model.addAttribute("asset", asset);
 		return "site/textEditor";
 	}
-
+   	@RequestMapping(value = {"/site/getasset.json"}, method = {RequestMethod.GET})
+   	public @ResponseBody Asset assetJson(String path,String filename,Long lastModified,String operator,Model model,HttpServletRequest request, HttpServletResponse response) {
+   		String username = getUsername();
+   		Asset asset = new Asset();
+   		if(filename==null) return asset;
+		String assetsQuery = "select s.* from [nt:base] AS s WHERE ISDESCENDANTNODE(["+path+"])" +" and s.[jcr:title] like '"+filename.toLowerCase()+"' and s.[delete] not like 'true' and s.ocm_classname='com.filemark.jcr.model.Asset'";
+		WebPage<Asset> assets = jcrService.searchAssets(assetsQuery, 10, 0);		
+		for(Asset a:assets.getItems()) {
+			if(lastModified==null || lastModified ==0 || a.getOriginalDate()==null || a.getOriginalDate().getTime() == lastModified) {
+				return a;
+			}
+		}
+   		return asset;
+   	}
 	@RequestMapping(value = {"/site/uploadAsset.html","/protected/uploadAsset.html"}, method = {RequestMethod.GET,RequestMethod.POST})
 	public @ResponseBody Asset  assetsUpload(String path,String lastModified,String proccess,Integer total,String override,ScanUploadForm uploadForm,Model model,HttpServletRequest request, HttpServletResponse response) {
 		Asset asset= new Asset();
