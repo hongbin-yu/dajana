@@ -284,7 +284,7 @@ function djchat(path) {
 
 function syncChat() {
 	$("#online_chat_running").removeClass("wb-inv");
-	$("#online_chat_send").attr("disabled",true);	
+	//$("#online_chat_send").attr("disabled",true);	
 	path = $("#pagePath").val();
 	username = $("#username").val();
 	var userrole = $("#userrole").val();
@@ -299,9 +299,9 @@ function syncChat() {
 	    contentType: "application/json",
 	    timeout: 30000,
 	    success: function(data) {
-	    	setTimeout(function() {
+/*	    	setTimeout(function() {
 	    		$("#online_chat_send").attr("disabled",false);	    	
-	    	},1000); 
+	    	},1000); */
 
 	    	if(data.action !=null && data.action.indexOf("/?action=stream")>0) {
 	    		if($("#video-iframe").html()=="")
@@ -385,9 +385,9 @@ function syncChat() {
 		error: function() {
 		    $("#online_chat_running").addClass("wb-inv");
 	    	$("#comment_message").html('<section class="alert alert-warning"><h5>Timeout</h5></section>');
-	    	setTimeout(function() {
+/*	    	setTimeout(function() {
 	    		$("#online_chat_send").attr("disabled",false);	    	
-	    	},1000);
+	    	},1000);*/
 	    	setTimeout(syncChat,30000);
 	    }
 
