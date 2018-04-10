@@ -1073,7 +1073,7 @@ function clear() {
 	tinyMCE.activeEditor.setContent("<p></p>");
 	files = [];
 	droppedFiles = [];
-	total = 0;
+	//total = 0;
 	
 }
 function deleteNode(path) {
