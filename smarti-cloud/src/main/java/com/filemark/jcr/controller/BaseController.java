@@ -121,13 +121,13 @@ public class BaseController {
 
 		ImageUtil.gpioMode("out");
 		ImageUtil.HDDOn();
-		try {
+/*		try {
 			ImageUtil.HDDSleep();
 		} catch (IOException e) {
 			logger.error(e.getMessage());
 		} catch (InterruptedException e) {
 			logger.error(e.getMessage());
-		}
+		}*/
 	}
 
 	

@@ -104,14 +104,14 @@ public class JcrIndexServiceImpl implements JcrIndexService {
 				log.error(e.getMessage());
 			}
 		}
-		
+/*		
 		try {
 			ImageUtil.HDDSleep();
 		} catch (IOException e) {
 			log.error(e.getMessage());
 		} catch (InterruptedException e) {
 			log.error(e.getMessage());
-		}
+		}*/
 	}
 	
 	private void Device2Backup() throws RepositoryException {
