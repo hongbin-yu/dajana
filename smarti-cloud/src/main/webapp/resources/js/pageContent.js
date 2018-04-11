@@ -396,9 +396,9 @@ function syncChat() {
 }
 
 function checkUnread() {
-	var path = $("#pagePath").val();
+	var path = $("#folderPath").val();
 	var count=0;
-	if( path !=null && path.indexOf('/you')==0)
+	if( $("#folderPath") && path.indexOf('/you')>=0) {
     $.ajax({
 	    url: '/protected/unreadchat.json',
 	    data: {
@@ -426,12 +426,14 @@ function checkUnread() {
 
 		},
 		error: function() {
-	    	setTimeout(checkUnread,60000);
+			if( path !=null && path.indexOf('/you')>=0)
+				setTimeout(checkUnread,60000);
 		    $("#online_chat_running").addClass("wb-inv");
 	    	$("#comment_message").html('<section class="alert alert-warning"><h5>Timeout</h5></section>');
 	    }
 
 	});	 	
+	}
 }
 
 function fswebcam(view) {
@@ -547,8 +549,8 @@ function openOverlay(id,view) {
 }
 
 
-if($("#pagePath")) {
-	var path = $("#pagePath").val();
+if($("#folderPath")) {
+	var path = $("#folderPath").val();
 	
 	if( path !=null && (path.indexOf('/youchat/')==0 || path.indexOf('/youlook')==0)) {
 		syncChat();
@@ -562,7 +564,9 @@ if($("#pagePath")) {
 	}
 }
 
-
+function openYouchat(url) {
+	$("#youchat-iframe").attr("src",url);
+}
 
 function errorException(jqXHR, exception) {
     busy = 0;
