@@ -153,8 +153,8 @@ public class ContentController extends BaseController {
 
     } 
 
-    @RequestMapping(value = {"/yhyun"}, method = RequestMethod.GET)
-   	public String yhyun(HttpServletRequest request, HttpServletResponse response) {
+    @RequestMapping(value = {"/yhyun/{uid}"}, method = RequestMethod.GET)
+   	public String yhyun(@PathVariable String uid,HttpServletRequest request, HttpServletResponse response) {
     	String myip = "dajana.cn",localIp = "";
     	//try {
 	    try {
@@ -163,8 +163,15 @@ public class ContentController extends BaseController {
 		} catch (UnknownHostException e1) {
 			logger.debug("getLocalHost error:"+e1.getMessage());
 		}
-	    if(isIntranet(request)) {
+	    if(uid != null) {
 	    	myip = localIp;
+	    	try {
+				User user = (User)jcrService.getObject("/system/users/"+uid);
+				if(user.getLocalIp() !=null)
+					myip = user.getLocalIp();
+			} catch (RepositoryException e) {
+				logger.debug("getLocalIp error:"+e.getMessage());;
+			}
         	return "redirect:http://"+myip+":8888/signin";
 	    } else
 	    	myip = getClientIpAddress(request);/*ipAddr.getHostAddress()+"="+request.getRemoteAddr()+"="+getPublicIpAddress()+"ip"+*/
@@ -198,6 +205,7 @@ public class ContentController extends BaseController {
 				if(!myip.equals(hostIp)) {
 					jcrService.setProperty(user.getPath(), "hostIp", myip);
 				}
+				jcrService.setProperty(user.getPath(), "localIp", user.getLocalIp());
 				jcrService.updateCalendar(user.getPath(), "lastModified");				
 			}else {
 				jcrService.addOrUpdate(user);

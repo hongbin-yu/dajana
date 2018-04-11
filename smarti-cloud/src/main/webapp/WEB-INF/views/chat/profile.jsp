@@ -106,6 +106,10 @@
 			<input class="form-control" id="hostIp" name="hostIp" value="${user.hostIp }" type="text" required="required" data-rule-alphanumeric="true" data-rule-minlength="4" size="40" disabled/>
 		</div>				
 		<div class="form-group">
+			<label for="localIp" class="required"><span class="field-name">内网地址</span> <strong class="required"></strong></label>
+			<input class="form-control" id="localIp" name="localIp" value="${user.localIp }" type="text" required="required" data-rule-alphanumeric="true" data-rule-minlength="4" size="40" disabled/>
+		</div>	
+		<div class="form-group">
 			<label for="usage" class="required"><span class="field-name">可用云空间/总空间</span> <strong class="required"></strong></label>
 			<input class="form-control" id="usage" name="usage" value="${usage}" type="text" required="required" data-rule-alphanumeric="true" data-rule-minlength="4" size="40" disabled/>
 		</div>

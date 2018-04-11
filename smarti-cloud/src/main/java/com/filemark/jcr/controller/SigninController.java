@@ -110,7 +110,8 @@ public class SigninController extends BaseController{
         }
 		Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 		authorities.add(new SimpleGrantedAuthority(this.getRolePrefix()+user.getRole().toLowerCase()));//default role
-
+        String domain = request.getServerName();
+        String port = request.getRemoteHost();
 		for(Role role:user.getRoles()) {
 			authorities.add(new SimpleGrantedAuthority(this.getRolePrefix()+role.getRoleName().toUpperCase()));
 		} 
@@ -119,7 +120,7 @@ public class SigninController extends BaseController{
 		}else {
 			user.setPort(":"+user.getPort());
 		}
-        String token_author = user.getHost()+"/"+user.getPort()+"/"+j_username+"/"+user.getTitle()+"/"+request.getRemoteAddr();
+        String token_author = domain+"/"+port+"/"+j_username+"/"+user.getTitle()+"/"+request.getRemoteAddr();
 		for(Role role:user.getRoles()) {
 			token_author += "/"+role.getRoleName();
 		}
@@ -137,8 +138,8 @@ public class SigninController extends BaseController{
 		request.setAttribute("usertitle", user.getTitle()); 
 		request.setAttribute("signingKey", user.getSigningKey());  
         String token = JwtUtil.generateToken(JwtUtil.signingKey, token_author);
-        String domain = request.getServerName();
 
+        logger.debug(token_author);
         //(user.getHost()==null || "".equals(user.getHost()))? request.getServerName():user.getHost();
 /*        if(redirect !=null) {
         	try {
@@ -150,8 +151,8 @@ public class SigninController extends BaseController{
         }*/
         
         CookieUtil.create(httpServletResponse, JwtUtil.jwtTokenCookieName, token, false, -1, domain);
-        if(user.getHost()!=null && !domain.equals(user.getHost()))
-        	CookieUtil.create(httpServletResponse, JwtUtil.jwtTokenCookieName, token, false, -1, user.getHost());
+        //if(user.getHost()!=null && !domain.equals(user.getHost()))
+        	//CookieUtil.create(httpServletResponse, JwtUtil.jwtTokenCookieName, token, false, -1, user.getHost());
         if(redirect==null || "".equals(redirect) || "signin".equals(redirect)) {
     		return "redirect:/site/assets.html";
         }else {

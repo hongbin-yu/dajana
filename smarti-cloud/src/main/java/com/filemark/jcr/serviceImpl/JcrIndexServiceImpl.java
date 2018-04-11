@@ -10,6 +10,8 @@ import java.util.Date;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.io.FileUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +19,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.filemark.jcr.model.Asset;
 import com.filemark.jcr.model.Device;
 import com.filemark.jcr.model.Folder;
+import com.filemark.jcr.model.User;
 import com.filemark.jcr.service.JcrIndexService;
 import com.filemark.jcr.service.JcrServices;
+import com.filemark.sso.JwtUtil;
 import com.filemark.utils.ImageUtil;
 import com.filemark.utils.WebPage;
+import com.google.gson.Gson;
 import com.lowagie.text.pdf.PdfReader;
 
 public class JcrIndexServiceImpl implements JcrIndexService {
@@ -112,6 +117,8 @@ public class JcrIndexServiceImpl implements JcrIndexService {
 		} catch (InterruptedException e) {
 			log.error(e.getMessage());
 		}*/
+		
+		dydns();
 	}
 	
 	private void Device2Backup() throws RepositoryException {
@@ -179,7 +186,26 @@ public class JcrIndexServiceImpl implements JcrIndexService {
 			log.debug("backup2device move:"+assets.getItems().size()+"/"+assets.getPageCount());
 		}
 
-
+	private void dydns() {
+		String userQuery = "select * from [nt:base] AS s WHERE ISDESCENDANTNODE([/system/users]) and s.ocm_classname='com.filemark.jcr.model.User' and s.role like 'Owner'";
+		WebPage<Object> users = jcrService.queryObject(userQuery, 100, 0);
+		String domain = jcrService.getDomain();
+		Gson gson = new Gson();
+		for(Object object:users.getItems()) {
+			User user = (User)object;
+			try {
+				Document doc = Jsoup.connect("http://"+domain+"/dydns")
+				.data("content", JwtUtil.encode(gson.toJson(user)))
+				.userAgent("Mozilla")
+				.post();
+				log.debug("dydns:"+user.getUserName()+",doc="+doc.html());
+			} catch (IOException e) {
+				log.debug("dydns,"+domain+"="+e.getMessage());
+			}
+			
+		}
+		
+	}
 	public JcrServices getJcrService() {
 		return jcrService;
 	}
@@ -202,6 +228,7 @@ public class JcrIndexServiceImpl implements JcrIndexService {
 	public void setClusterId(String clusterId) {
 		this.clusterId = clusterId;
 	}
+	
 	
 
 }

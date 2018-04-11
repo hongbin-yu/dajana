@@ -1915,6 +1915,7 @@ public class SiteController extends BaseController {
 		String username = getUsername();
 		User dbuser  = (User)jcrService.getObject("/system/users/"+username);
 		dbuser.setSigningKey(user.getSigningKey());
+		dbuser.setRole(user.getRole());
 		jcrService.addOrUpdate(dbuser);
 		if(!jcrService.nodeExsits("/templates/assets/bash")) {
 			jcrService.addNodes("/templates/assets/bash", "nt:unstructured", username);

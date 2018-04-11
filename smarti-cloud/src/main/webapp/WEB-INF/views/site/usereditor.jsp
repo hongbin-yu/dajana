@@ -33,6 +33,14 @@
 			<input class="form-control" id="phoneNumber" name="phoneNumber" value="${user.phoneNumber }" type="phone" pattern="[0-9\-]{9,}" size="40"  placeholder="电话号码为找回密码"/>
 		</div>
 		<div class="form-group">
+			<label for="role"><spring:message code="djn.role"/></label>
+			<select id="role" name="role">
+			<option value="User" <c:if test="${user.role=='User' }">selected</c:if> ><spring:message code="djn.user"/></option>
+			<option value="Owner" <c:if test="${user.role=='Owner' }">selected</c:if> ><spring:message code="djn.owner"/></option>
+			<option value="Administrator" <c:if test="${user.role=='Administrator' }">selected</c:if> ><spring:message code="djn.administrator"/></option>
+			</select>
+		</div>			
+		<div class="form-group">
 			<label for="userName" class="required"><span class="field-name">用户名</span> <strong class="required">(必需)</strong></label>
 			<input class="form-control" id="userName" name="userName" value="${user.userName }" type="text" required="required" pattern="[A-Za-z0-9\s]{4,}" data-rule-alphanumeric="true" data-rule-minlength="4" size="40" placeholder="输入用户名(只能拼音字母和数字)" disabled/>
 		</div>	
@@ -132,7 +140,11 @@
 		<div class="form-group">
 			<label for="hostIp" class="required"><span class="field-name">云地址</span> <strong class="required"></strong></label>
 			<input class="form-control" id="hostIp" name="hostIp" value="${user.hostIp }" type="text" required="required" data-rule-alphanumeric="true" data-rule-minlength="4" size="40" disabled/>
-		</div>				
+		</div>
+		<div class="form-group">
+			<label for="localIp" class="required"><span class="field-name">内网地址</span> <strong class="required"></strong></label>
+			<input class="form-control" id="localIp" name="localIp" value="${user.localIp }" type="text" required="required" data-rule-alphanumeric="true" data-rule-minlength="4" size="40" disabled/>
+		</div>							
 		<div class="form-group">
 			<label for="usage" class="required"><span class="field-name">可用云空间/总空间</span> <strong class="required"></strong></label>
 			<input class="form-control" id="usage" name="usage" value="${usage}" type="text" required="required" data-rule-alphanumeric="true" data-rule-minlength="4" size="40" disabled/>

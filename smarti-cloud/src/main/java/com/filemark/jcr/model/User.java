@@ -1,6 +1,8 @@
 package com.filemark.jcr.model;
 
 import java.io.File;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
@@ -198,6 +200,16 @@ public class User implements SmartiNode {
 	}
 
 	public String getLocalIp() {
+		if(localIp == null) {
+			InetAddress ipAddr;
+			try {
+				ipAddr = InetAddress.getLocalHost();
+				localIp = ipAddr.getHostAddress();
+			} catch (UnknownHostException e) {
+				e.printStackTrace();
+			}
+
+		}
 		return localIp;
 	}
 
@@ -246,9 +258,12 @@ public class User implements SmartiNode {
 	}
 
 	public String getRole() {
-		if("home".equals(userName)) return "Owner";
-		if("templates".equals(userName)) return "Administrator";
-		if(role == null) return "User";		
+
+		if(role == null) {
+			if("home".equals(userName)) return "Owner";
+			if("templates".equals(userName)) return "Administrator";
+			return "User";		
+		}
 		return role;
 	}
 
@@ -262,6 +277,7 @@ public class User implements SmartiNode {
 		JsonObject jsonObject = new JsonObject();
 		jsonObject.addProperty("username", userName);
 		jsonObject.addProperty("password", password);
+		jsonObject.addProperty("localIp", getLocalIp());
 		jsonObject.addProperty("signingKey", signingKey);
 		jsonObject.addProperty("expired",lastUpdated==null?0:lastUpdated.getTime());
 		encodedJson = jsonObject.toString();
