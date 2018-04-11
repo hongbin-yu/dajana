@@ -200,18 +200,9 @@ public class User implements SmartiNode {
 	}
 
 	public String getLocalIp() {
-		if(localIp == null) {
-			InetAddress ipAddr;
-			try {
-				ipAddr = InetAddress.getLocalHost();
-				localIp = ipAddr.getHostAddress();
-			} catch (UnknownHostException e) {
-				e.printStackTrace();
-			}
-
-		}
 		return localIp;
 	}
+
 
 	public void setLocalIp(String localIp) {
 		this.localIp = localIp;

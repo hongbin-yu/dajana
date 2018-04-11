@@ -192,7 +192,7 @@ public class ContentController extends BaseController {
     } 
     @RequestMapping(value = {"/dydns"}, method = {RequestMethod.POST,RequestMethod.GET})
    	public @ResponseBody String dydns(String content,HttpServletRequest request, HttpServletResponse response) {
-    	String myip = "dajana.cn";
+    	String myip = "dajana.cn",localIp = "";
 	    myip = getClientIpAddress(request);/*ipAddr.getHostAddress()+"="+request.getRemoteAddr()+"="+getPublicIpAddress()+"ip"+*/
 		String json_user = JwtUtil.decode(content);
         try {
@@ -200,6 +200,7 @@ public class ContentController extends BaseController {
 			User user = gson.fromJson(json_user, User.class);
 			user.setHostIp(myip);
 			user.setLastModified(new Date());
+			localIp = user.getLocalIp();
 			if(jcrService.nodeExsits(user.getPath())) {
 				String hostIp = jcrService.getProperty(user.getPath(), "hostIp");
 				if(!myip.equals(hostIp)) {
@@ -217,7 +218,7 @@ public class ContentController extends BaseController {
             response.setStatus(HttpStatus.SC_BAD_REQUEST);
          }
         
-        return myip;
+        return myip+"/"+localIp;
     } 
     
     @RequestMapping(value = {"/uinfo/{uid}"}, method = RequestMethod.GET)

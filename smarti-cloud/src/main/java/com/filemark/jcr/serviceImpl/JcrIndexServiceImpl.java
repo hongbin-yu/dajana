@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -191,8 +193,17 @@ public class JcrIndexServiceImpl implements JcrIndexService {
 		WebPage<Object> users = jcrService.queryObject(userQuery, 100, 0);
 		String domain = jcrService.getDomain();
 		Gson gson = new Gson();
+		String ip = "";
+		InetAddress ipAddr;
+		try {
+			ipAddr = InetAddress.getLocalHost();
+			ip = ipAddr.getHostAddress();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
 		for(Object object:users.getItems()) {
 			User user = (User)object;
+			user.setLocalIp(ip);
 			try {
 				Document doc = Jsoup.connect("http://"+domain+"/dydns")
 				.data("content", JwtUtil.encode(gson.toJson(user)))
