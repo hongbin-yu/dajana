@@ -508,6 +508,7 @@ public class ProtectedController extends BaseController {
    				user.setUserName(yun_user.getUserName());
    				user.setTitle(yun_user.getTitle());
    				user.setPath(group+"/"+yun_user.getName());
+   				user.setIcon(yun_user.getIcon());
    				user.setLastModified(new Date());
    				jcrService.addOrUpdate(user);
    			}
