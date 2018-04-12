@@ -33,8 +33,7 @@
 		<h2 class="modal-title">优信</h2>
 	</header>
 	<div class="modal-body">
-	<a class="btn btn-default" href="javascript:openYouchat('/protected/youchat.html')" title="刷屏"><span class="glyphicon glyphicon-refresh">打开优信</span></a>
-    <iframe id="youchat-iframe" src="" scrolling="yes" style="height: 600px; border: 0px none; width: 360px; margin-bottom: 0px; margin-left: 10px;">
+    <iframe id="youchat-iframe" src="/protected/youchat.html" scrolling="yes" style="height: 600px; border: 0px none; width: 360px; margin-bottom: 0px; margin-left: 10px;">
     </iframe>
  	</div>
 </section> 
