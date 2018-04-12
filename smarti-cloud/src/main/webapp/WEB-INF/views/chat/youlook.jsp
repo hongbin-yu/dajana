@@ -127,7 +127,7 @@
 	<div class="modal-body">
  	</div>
 </section> --> 
-<input type="hidden" id="folderPath" name="pathPath" value="${folder.path}"/>
+<input type="hidden" id="pagePath" name="pagePath" value="${folder.path}"/>
 <input type="hidden" id="pageName" name="pathName" value="youchat"/>
 <input type="hidden" id="username" name="username" value="${username}"/>
 <c:if test="${user.role =='Owner' || user.role == 'Administrator'}">

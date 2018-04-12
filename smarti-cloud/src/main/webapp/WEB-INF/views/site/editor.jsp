@@ -27,7 +27,7 @@
 </div>
 </div>
 <input type="hidden" id="pageId" name="pageId" value="${page.uid }"/>
-<input type="hidden" id="folderPath" name="pagePath" value="${page.path }"/>
+<input type="hidden" id="pagePath" name="pagePath" value="${page.path }"/>
 <section id="youchat-bar" class="wb-overlay modal-content overlay-def wb-panel-l col-md-4">
 	<header class="modal-header">
 		<h2 class="modal-title">优信</h2>

@@ -549,8 +549,8 @@ function openOverlay(id,view) {
 }
 
 
-if($("#folderPath")) {
-	var path = $("#folderPath").val();
+if($("#pagePath")) {
+	var path = $("#pagePath").val();
 	
 	if( path !=null && (path.indexOf('/youchat/')==0 || path.indexOf('/youlook')==0)) {
 		syncChat();
