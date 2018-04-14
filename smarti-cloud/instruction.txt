@@ -13,3 +13,6 @@ mount /dev/sda /mnt/device
 resize2fs /dev/mmcblk0p2
 cd /usr/local/src
 ./mnt/device/dajana/smarti-cloud/mjstreamer.sh
+
+crontab -e 
+*/5 * * * * /sbin/hdparm -y /dev/sda

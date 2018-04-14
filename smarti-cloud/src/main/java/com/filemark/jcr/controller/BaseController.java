@@ -92,6 +92,7 @@ public class BaseController {
 			*/
 		if(loadDTKBarReader==0) {
 			loadDTKBarReader = 1;
+			jcrService.init();
 			Asset.setDevicePath(jcrService.getDevice());
 			if(!jcrService.nodeExsits("/system/devices/backup")) {
 				Device backup = new Device(jcrService.getBackup());
@@ -359,7 +360,8 @@ public class BaseController {
     	if (response == null || request == null) {
             return;
         }
-		ImageUtil.HDDOn();
+    	if(file.getAbsolutePath().indexOf("/mnt/devide/")>0)
+    		ImageUtil.HDDOn();
         if (!file.exists()) {
             logger.error("File doesn't exist at URI : {}", file.getAbsolutePath());
             response.sendError(HttpServletResponse.SC_NOT_FOUND);

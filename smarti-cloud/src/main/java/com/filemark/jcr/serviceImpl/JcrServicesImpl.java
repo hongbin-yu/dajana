@@ -109,7 +109,26 @@ public class JcrServicesImpl implements JcrServices {
     private String asianFont;
     private String home;
     private String workingDir;
+   
     
+	@Override
+	public void init() {
+
+			try {
+				if(!nodeExsits("/system/users"))
+					addNodes("/system/users", "nt:unstructured", "sysuser");
+				if(!nodeExsits("/system/devices")) {
+					addNodes("/system/devices", "nt:unstructured", "sysuser");
+				}
+			} catch (RepositoryException e) {
+				
+				log.error(e.getMessage());
+			}
+		
+		
+	}
+
+
 	@SuppressWarnings("unchecked")
 	public WebPage<Asset> searchAssets(final String queryString, final long limit,final long offset) {
 		return (WebPage<Asset>) jcrTemplate.execute(new JcrCallback() { 
