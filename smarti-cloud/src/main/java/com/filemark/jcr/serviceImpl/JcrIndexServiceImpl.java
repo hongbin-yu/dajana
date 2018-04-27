@@ -135,6 +135,7 @@ public class JcrIndexServiceImpl implements JcrIndexService {
 			String assetsQuery = "select * from [nt:base] AS s WHERE s.ocm_classname='com.filemark.jcr.model.Asset' and s.[path] not like '/templates/%' and s.[path] not like '%/icon' and s.[device] = '/system/devices/default' and s.move not like 'no'  order by s.lastModified, s.size desc";
 			WebPage<Asset> assets = jcrService.searchAssets(assetsQuery, 100, 0);
 			for(Asset asset:assets.getItems()) {
+				if(asset.getPath().startsWith("/templates")) continue;
 				String source = jcrService.getDevice()+asset.getPath();
 				File srcDir = new File(source);
 				if(!srcDir.isDirectory() || "icon".equals(srcDir.getName())) {

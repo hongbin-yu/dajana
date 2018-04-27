@@ -2715,15 +2715,17 @@ public class SiteController extends BaseController {
 			if(path !=null) {
 				//Folder folder = jcrService.getFolder(path);
 				if(!jcrService.nodeExsits(path+"/original")) {
-					
-					jcrService.readAsset("/templates/assets/folder360x360.png/original", response);
-					return null;
-					//jcrService.updateFolderIcon(path);
-				//}else if(folder.getLastUpdated()==null || folder.getLastModified() == null || folder.getLastModified().after(folder.getLastUpdated())) {
-					//new CreateFolderIconOperation(jcrService,path).run();
-	    			//logger.info("Update folder Icon="+path);   
-	    			//jcrService.updateFolderIcon(path);
-					//assetManager.executeCreateFolderIconOperationFrontend(path);
+					File out = new File(jcrService.getDevice()+"/templates/assets/folder360x360.png");
+					if(out.isDirectory()) out = new File(out,"origin.png");
+					if(!out.exists()) out = new File(jcrService.getBackup()+"/templates/assets/folder360x360.png/origin.png");
+
+					FileInputStream in = new FileInputStream(out);
+					IOUtils.copy(in, response.getOutputStream());	
+					in.close();	
+					return null;					
+					//jcrService.readAsset("/templates/assets/folder360x360.png/original", response);
+					//return null;
+
 				}
 				if(width!=null) {
 					if(jcrService.nodeExsits(path+"/file-"+width)) {
