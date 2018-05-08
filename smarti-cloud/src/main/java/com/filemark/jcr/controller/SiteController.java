@@ -1885,7 +1885,7 @@ public class SiteController extends BaseController {
 		if(!user.getUserName().equals(username)) {
 			response.setStatus(HttpStatus.SC_UNAUTHORIZED);
 		}*/
-		File f = new File(jcrService.getDevice());
+		File f = new File(jcrService.getBackup());
 		model.addAttribute("usage",""+f.getUsableSpace()/1000000+"MB/"+f.getTotalSpace()/1000000+"MB");
     	String imgs[] = {"shu","niu","fu","tu","long","she","ma","yang","hou","ji","gou","zhu"};
     	String ids[] = {"A0","A1","A2","B0","B1","B2","C0","C1","C2","D0","D1","D2"};

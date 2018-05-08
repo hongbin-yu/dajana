@@ -24,10 +24,10 @@
 			<label for="title" class="required"><span class="field-name">网名</span> <strong class="required">(必需)</strong></label>
 			<input class="form-control" id="title" value="${user.title }" type="text" required="required" pattern=".{2,}" data-rule-minlength="2" size="40"  id="title${user.uid}" name="title" size="25" uid="${user.uid}" path="${user.path }" onchange="updateNode(this)"  placeholder="输入笔名"/>
 		</div>
-		<div class="form-group">
+<%-- 		<div class="form-group">
 			<label for="email" class="required"><span class="field-name">电子邮件地址</span></label>
 			<input class="form-control" id="email" name="email" value="${user.email }" type="email" size="40" placeholder="电子邮件地址为找回密码"/>
-		</div>
+		</div> --%>
 		<div class="form-group">
 			<label for="phone" class="required"><span class="field-name">电话号码</span></label>
 			<input class="form-control" id="phoneNumber" name="phoneNumber" value="${user.phoneNumber }" type="phone" pattern="[0-9\-]{9,}" size="40"  placeholder="电话号码为找回密码"/>

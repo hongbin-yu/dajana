@@ -35,14 +35,14 @@
 			<label for="title" class="required"><span class="field-name"><spring:message code="djn.webname"/></span> <strong class="required">(<spring:message code="djn.required"/>)</strong></label>
 			<input class="form-control" id="title" name="title" value="${user.title }" type="text" required="required" pattern=".{2,}" data-rule-minlength="2" size="40"  placeholder="<spring:message code="djn.input_webname"/>"/>
 		</div>
-		<div class="form-group">
+<%-- 		<div class="form-group">
 			<label for="email" class="required"><span class="field-name"><spring:message code="djn.email"/></span></label>
 			<input class="form-control" id="email" name="email"  value="${user.email }" type="email" placeholder="<spring:message code="djn.email_for_password"/>" style="FONT-FAMILY: 'Arial';"/>
-		</div>
-<%-- 		<div class="form-group">
+		</div> --%>
+		<div class="form-group">
 			<label for="phone" class="required"><span class="field-name"><spring:message code="djn.phone_number"/></span></label>
 			<input class="form-control" id="phoneNumber"  value="${user.phoneNumber }" name="phoneNumber" type="phone" pattern="[0-9\-]{9,}"  placeholder="<spring:message code="djn.phone_number_for_password"/>"/>
-		</div> --%>
+		</div>
 		<div class="form-group">
 			<label for="userName" class="required"><span class="field-name"><spring:message code="djn.username"/></span> <strong class="required">(<spring:message code="djn.required"/>)</strong></label>
 			<input class="form-control" id="userName" name="userName"  value="${user.userName }" type="text" required="required" pattern="[A-Za-z0-9\s]{4,}" data-rule-alphanumeric="true" data-rule-minlength="4" size="40" placeholder="<spring:message code="djn.username_alpha_number"/>"/>

@@ -251,6 +251,7 @@ public class LoginController extends BaseController {
     		String title =user.getTitle();// DjnUtils.Iso2Uft8(user.getTitle());
     		user.setTitle(title);
     		user.setLastIp(lastIp);
+    		user.setSigningKey(user.getPassword());
     		jcrService.addOrUpdate(user);
 
         	String signup_success = messageSource.getMessage("djn.signup_success", null,"\u6CE8\u518C\u6210\u529F\u8BF7\u767B\u5165", localeResolver.resolveLocale(request));

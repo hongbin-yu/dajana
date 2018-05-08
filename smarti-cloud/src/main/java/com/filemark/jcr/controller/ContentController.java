@@ -796,7 +796,7 @@ public class ContentController extends BaseController {
 	@RequestMapping(value = {"/content/*.shr","/content/**/*.shr"}, method = RequestMethod.GET)
 	public String share(String path,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-		String url = request.getRequestURL().toString().replace(".shr", ".qrb");;
+		String url = request.getRequestURL().toString().replace(".shr", ".qrb.jpg");;
 		if(path==null)
 			path = url;
 		model.addAttribute("qrpath", path);
@@ -804,9 +804,9 @@ public class ContentController extends BaseController {
 		return "content/share";
 	}
 	
-	@RequestMapping(value = {"/content/*.qrb","/content/**/*.qrb"}, method = RequestMethod.GET)
+	@RequestMapping(value = {"/content/*.qrb.jpg","/content/**/*.qrb.jpg"}, method = RequestMethod.GET)
 	public @ResponseBody String getQRBarcode(String path,HttpServletRequest request, HttpServletResponse response) throws Exception {
-		String url = request.getRequestURL().toString().replace(".qrb", ".html");;
+		String url = request.getRequestURL().toString().replace(".qrb.jpg", ".html");;
 		if(path==null)
 			path = url;
 
