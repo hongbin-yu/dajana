@@ -210,7 +210,7 @@ public class JcrIndexServiceImpl implements JcrIndexService {
 				.data("content", JwtUtil.encode(gson.toJson(user)))
 				.userAgent("Mozilla")
 				.post();
-				log.debug("dydns:"+user.getUserName()+",doc="+doc.html());
+				log.debug("dydns:"+domain+"/"+user.getUserName()+",doc="+doc.html());
 			} catch (IOException e) {
 				log.debug("dydns,"+domain+"="+e.getMessage());
 			}

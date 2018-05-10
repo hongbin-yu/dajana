@@ -65,8 +65,8 @@
 </div>
 <div class="row">
 <div class="col-xs-4 text-right">
-<a class="btn btn-default" href="http://dajana.cn/yhyun">
-<img title="<spring:message code="djn.scan_qr"/><spring:message code="djn.dajana"/>" class="img-responsive" src="/templates/assets/images/dajana.qr.png" alt="<spring:message code="djn.dajana"/>"/>
+<a class="btn btn-default" href='<c:url value="/signup"></c:url>'>
+<img title="<spring:message code="djn.scan_qr"/><spring:message code="djn.dajana"/>" class="img-responsive" src="/content/signup.qrb.jpg?path=http://${pageContext.request.serverName }:${pageContext.request.serverPort }<c:url value='/signup'/>" alt="<spring:message code="djn.dajana"/>"/>
 </a>
 </div>
 <div class="col-xs-4 col-md-4 text-center">

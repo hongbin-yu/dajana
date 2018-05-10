@@ -110,7 +110,8 @@ public class SigninController extends BaseController{
         }
 		Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 		authorities.add(new SimpleGrantedAuthority(this.getRolePrefix()+user.getRole().toLowerCase()));//default role
-        String domain = request.getServerName();
+        String domain =request.getServerName();//.replaceAll(".*\\.(?=.*\\.)", "");
+        logger.debug("domain="+domain);
         String port = request.getRemoteHost();
 		for(Role role:user.getRoles()) {
 			authorities.add(new SimpleGrantedAuthority(this.getRolePrefix()+role.getRoleName().toUpperCase()));
@@ -255,7 +256,8 @@ public class SigninController extends BaseController{
 	    		Result result = tmpBarcodeReader.decode(tmpBitmap);
 	    		String url = result.getText();
 	    		if(url.startsWith("http")) {
-	    			return "redirect:"+url;
+	    			response.sendRedirect(url);
+	    			return null;
 	    		}
 
 

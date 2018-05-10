@@ -34,7 +34,7 @@ import com.filemark.utils.ImageUtil;
 
 @Controller
 public class LoginController extends BaseController {
-	private static final Logger logger = LoggerFactory.getLogger(SiteController.class);
+	private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 	
     public LoginController() {
     }
@@ -44,7 +44,7 @@ public class LoginController extends BaseController {
     @RequestMapping(value="/login",method = RequestMethod.GET)
     public String login(Model model,HttpServletRequest request,HttpServletResponse httpServletResponse, String redirect,String info, Integer loginCount) throws UnsupportedEncodingException{
     	if(redirect!=null && redirect.equals("")) {
-            String domain = request.getServerName().replaceAll(".*\\.(?=.*\\.)", "");
+            String domain = request.getServerName();//.replaceAll(".*\\.(?=.*\\.)", "");
             CookieUtil.clear(httpServletResponse, JwtUtil.jwtTokenCookieName,domain);
             
             request.getSession().invalidate();
@@ -164,7 +164,8 @@ public class LoginController extends BaseController {
 		if(user.getPort()==null || "".equals(user.getPort())) {
 			user.setPort("");
 		}else {
-			user.setPort(":"+user.getPort());
+			user.setPort(":8888");
+			//user.setPort(":"+user.getPort());
 		}
         String token_author = user.getHost()+"/"+user.getPort()+"/"+j_username+"/"+user.getTitle()+"/"+request.getRemoteAddr();
 		for(Role role:user.getRoles()) {
@@ -184,7 +185,8 @@ public class LoginController extends BaseController {
 		request.setAttribute("usertitle", user.getTitle()); 
 		request.setAttribute("signingKey", user.getSigningKey());  
         String token = JwtUtil.generateToken(JwtUtil.signingKey, token_author);
-        String domain =(user.getHost()==null || "".equals(user.getHost()))? request.getServerName():user.getHost();
+        //String domain =(user.getHost()==null || "".equals(user.getHost()))? request.getServerName():user.getHost();
+        String domain =request.getServerName();//.replaceAll(".*\\.(?=.*\\.)", "");
         logger.debug("domain:"+domain);
         CookieUtil.create(httpServletResponse, JwtUtil.jwtTokenCookieName, token, false, -1, domain);
 
@@ -193,6 +195,8 @@ public class LoginController extends BaseController {
 
     		if(user.getHost()!=null && !"".equals(user.getHost())) {
     			String url = "http://"+(user.getHost()+(user.getPort()==null || "".equals(user.getPort())?"":user.getPort()) + content+".html");
+    	        CookieUtil.create(httpServletResponse, JwtUtil.jwtTokenCookieName, token, false, -1, user.getHost());
+
     			logger.debug("redirect:"+url);
     			return "redirect:"+url;
     		}

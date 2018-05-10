@@ -27,7 +27,8 @@ public class ResourceController  extends BaseController{
     @RequestMapping("/logout")
     public String logout(String redirect,HttpServletRequest request,HttpServletResponse httpServletResponse) {
     	//String username = getUsername();
-        String domain = request.getServerName().replaceAll(".*\\.(?=.*\\.)", "");
+        String domain = request.getServerName();//.replaceAll(".*\\.(?=.*\\.)", "");
+        
         CookieUtil.clear(httpServletResponse, JwtUtil.jwtTokenCookieName,domain);
         
         request.getSession().invalidate();

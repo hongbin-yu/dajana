@@ -101,6 +101,14 @@ public class ContentController extends BaseController {
     @RequestMapping(value = {"/{site}","/mysite"}, method = RequestMethod.GET)
    	public String homesite(@PathVariable String site,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
     	String host="";
+    	if(jcrService.nodeExsits("/system/users/"+site)) {
+    		User user = (User)jcrService.getObject("/system/users/"+site);
+    		if(user.getHostIp()!=null) {
+    			logger.debug("redirect:"+"http://"+user.getHostIp()+":"+user.getPort());
+    			response.sendRedirect("http://"+user.getHostIp()+":"+user.getPort());
+    		}
+    	}
+    	
     	if(request.getRemoteHost().endsWith(jcrService.getDomain())) host = request.getRemoteHost();
 		String assetsQuery = "select s.* from [nt:base] AS s WHERE ISCHILDNODE([/templates/assets/splash]) and s.[delete] not like 'true' and s.ocm_classname='com.filemark.jcr.model.Asset' order by s.[lastModified] desc";
 		//logger.info(isIntranet+",ip="+getClientIpAddress(request)+",q="+assetsQuery);;

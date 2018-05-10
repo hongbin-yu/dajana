@@ -135,7 +135,7 @@
 		</div>	
 		<div class="form-group">
 			<label for="city"><span class="field-name">登入城市</span></label>
-			<div class="form-control" id="city"><p>${user.city }</p></div>
+			<div id="city"><p>${user.city }</p></div>
 		</div>	
 		<div class="form-group">
 			<label for="hostIp" class="required"><span class="field-name">云地址</span> <strong class="required"></strong></label>
