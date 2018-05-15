@@ -1300,10 +1300,11 @@ public class SiteController extends BaseController {
 			//String names[]=asset.getPath().split("/");
 			//String nodeName = asset.getPath().split("/")[names.length-1];
 			//String frompath = asset.getPath();
-			String topath = path+"/"+getDateTime();
+			String ext = asset.getPath().substring(asset.getPath().lastIndexOf("."));
+
+			String topath = path+"/"+getDateTime()+ext;
 			String contentType = asset.getContentType();
 			Device device = getDevice();
-			String ext = asset.getPath().substring(asset.getPath().lastIndexOf("."));
 
     		Asset new_asset = new Asset();
     		new_asset.setPath(topath);
