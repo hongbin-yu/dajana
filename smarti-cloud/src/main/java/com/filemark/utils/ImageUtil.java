@@ -663,7 +663,7 @@ public class ImageUtil
     public static int doc2pdf(String filename,String outdir) throws IOException, InterruptedException {
     	int exit=1;
 
-		BufferedWriter writer = new BufferedWriter(new FileWriter("/var/lib/tomcat8/conf/doc2pdf.sh",true));
+		BufferedWriter writer = new BufferedWriter(new FileWriter("/home/device/workingDir/doc2pdf.sh",true));
 
     	writer.write("cd "+outdir+" && lowriter --convert-to pdf:writer_pdf_Export --outdir "+outdir+" "+filename);
     	writer.newLine();
@@ -676,7 +676,7 @@ public class ImageUtil
     public static int xls2pdf(String filename,String outdir) throws IOException, InterruptedException {
     	int exit=1;
 
-		BufferedWriter writer = new BufferedWriter(new FileWriter("/var/lib/tomcat8/conf/doc2pdf.sh",true));
+		BufferedWriter writer = new BufferedWriter(new FileWriter("/home/device/workingDir/doc2pdf.sh",true));
 
     	writer.write("cd "+outdir+" && libreoffice --headless --convert-to pdf --outdir "+outdir+" "+filename);
     	writer.newLine();
