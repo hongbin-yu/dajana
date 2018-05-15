@@ -118,7 +118,7 @@
         <c:forEach items="${folders.items}" var="item" varStatus="loop">
             <div class="col-md-4">
             <a title="<spring:message code="djn.open"/>PDF" href="<c:url value="viewf2p?path=${item.path}"/>" target="_BLANK"><img title="<spring:message code="djn.open"/>PDF" src='<c:url value="/resources/images/pdf.gif"></c:url>'></a>
-            <a href="assets.html?path=${item.path}"> <img id="folder${item.uid }" path="${item.path }"  ondrop="drop(event)" ondragover="allowDrop(event)" alt="${item.title}" class="img-responsive" src='<c:url value="viewfolder?path=${item.path}"></c:url>'/></a>
+            <a href="sharing.html?path=${item.path}"> <img id="folder${item.uid }" path="${item.path }"  ondrop="drop(event)" ondragover="allowDrop(event)" alt="${item.title}" class="img-responsive" src='<c:url value="/site/viewfolder?path=${item.path}"></c:url>'/></a>
 			<div class="panel" id="selectFiles${item.uid }">
 			</div>	            
             <details>

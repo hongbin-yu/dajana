@@ -8,7 +8,7 @@
 	<http pattern="/resources/**" security="none" />
 	<http pattern="/protected/**" security="none" />
 	<http pattern="/content/**" security="none" />	
-	<http pattern="/templates/**" security="none" />		
+	<http pattern="/assets/templates/**" security="none" />		
 	<http pattern="/myip/**" security="none" />		
 	<http pattern="/yhyun/**" security="none" />			
 	<http pattern="/forget/**" security="none" />	

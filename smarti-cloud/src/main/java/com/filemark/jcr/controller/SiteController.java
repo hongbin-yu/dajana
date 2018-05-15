@@ -103,12 +103,12 @@ public class SiteController extends BaseController {
 	@RequestMapping(value = {"/site/browse.html","/site/image.html"}, method = {RequestMethod.GET,RequestMethod.POST},produces = "text/plain;charset=UTF-8")
 	public String browse(String path,String type, String input,String kw,Integer p,Integer m,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
 		ImageUtil.HDDOn();
-		String assetFolder = "/"+getUsername()+"/assets";
+		String assetFolder = "/assets"+"/"+getUsername();
 		if(!jcrService.nodeExsits(assetFolder)) {
 			jcrService.addNodes(assetFolder, "nt:unstructured",getUsername());		
 		}
 		int max = 20;
-		if(path == null) {
+		if(path == null || !path.startsWith(assetFolder)) {
 			path=assetFolder;
 			max = 20;
 		}
@@ -163,16 +163,16 @@ public class SiteController extends BaseController {
 	@RequestMapping(value = {"/site/browsemore.html"}, method = {RequestMethod.GET,RequestMethod.POST},produces = "text/plain;charset=UTF-8")
 	public String browsemore(String path,String type, String input,String kw,Integer p,Integer m,String topage,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
 		ImageUtil.HDDOn();
-		String assetFolder = "/"+getUsername()+"/assets";
+		String assetFolder =  "/assets"+"/"+getUsername();
 		if(!jcrService.nodeExsits(assetFolder)) {
 			jcrService.addNodes(assetFolder, "nt:unstructured",getUsername());		
 		}
 		int max = 20;
-		if(path == null) {
+		if(path == null || !path.startsWith(assetFolder)) {
 			path=assetFolder;
 			max = 20;
 		}
-		if(topage==null) topage="browsemorew";
+		if(topage==null) topage="browsemore";
 		Folder currentNode = jcrService.getFolder(path);
 		String orderby = "[lastModified] desc";
 		if(currentNode.getOrderby()!=null && !"".equals(currentNode.getOrderby()) && !"rank,name".equals(currentNode.getOrderby())) {
@@ -209,7 +209,7 @@ public class SiteController extends BaseController {
 	@RequestMapping(value = {"/site/media.html","/protected/media.html"}, method = {RequestMethod.GET,RequestMethod.POST})
 	public String media(String path,String type, String input,String kw,Integer p,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-		String assetFolder = "/"+getUsername()+"/assets";
+		String assetFolder =  "/assets"+"/"+getUsername();
 		if(!jcrService.nodeExsits(assetFolder)) {
 			jcrService.addNodes(assetFolder, "nt:unstructured",getUsername());		
 		}
@@ -279,11 +279,12 @@ public class SiteController extends BaseController {
 	@RequestMapping(value = {"/site/assets.html","/site/assets"}, method = {RequestMethod.GET,RequestMethod.POST},produces = "text/plain;charset=UTF-8")
 	public String assets(String path,String type, String input,String kw,Integer p,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
 		ImageUtil.HDDOn();
-		String assetFolder = "/"+getUsername()+"/assets";
+		String assetFolder = "/assets"+"/"+getUsername();
+		String oldFolder = "/"+getUsername()+"/assets";
 		if(!jcrService.nodeExsits(assetFolder)) {
 			jcrService.addNodes(assetFolder, "nt:unstructured",getUsername());		
 		}		
-		if(path == null || !path.startsWith(assetFolder)) path=assetFolder;
+		if(path == null || (!path.startsWith(assetFolder) && !path.startsWith(oldFolder))) path=assetFolder;
 	
 		Folder currentNode = jcrService.getFolder(path);
 		String page_passcode = currentNode.getPasscode();
@@ -324,7 +325,7 @@ public class SiteController extends BaseController {
 		String intranetFolder = (isIntranet?"":" and (f.intranet is null or f.intranet not like 'true')");
 		String ISDESCENDANTNODE = "ISDESCENDANTNODE";
 		if(type!=null && "child".equals(type)) ISDESCENDANTNODE = "ISCHILDNODE";
-		String sharingQuery = "select * from [nt:base] AS s INNER JOIN [nt:unstructured] AS f ON ISCHILDNODE(s, f) WHERE f.userName like '"+getUsername()+"'" +keywords+intranet+" and s.delete not like 'true' and s.ocm_classname='com.filemark.jcr.model.Folder' and f.ocm_classname='com.filemark.jcr.model.User' order by s.path";
+		String sharingQuery = "select * from [nt:base] AS s INNER JOIN [nt:unstructured] AS f ON ISCHILDNODE(f,s) WHERE ISDESCENDANTNODE(s,[/assets]) and f.userName like '"+getUsername()+"'" +keywords+intranet+" and s.delete not like 'true' and s.ocm_classname='com.filemark.jcr.model.Folder' and f.ocm_classname='com.filemark.jcr.model.User' order by s.[jcr:path]";
 		WebPage<Folder> shares = jcrService.queryFolders(sharingQuery, 100, 0);
 		model.addAttribute("shares", shares);
 
@@ -977,7 +978,7 @@ public class SiteController extends BaseController {
         		String assetPath = fileName;
         		if(!fileName.matches("(\\w|\\.|\\-|\\s|_)+")) {
         			if("true".equals(override) ) {
-        				String assetsQuery = "select * from [nt:base] AS s WHERE ISCHILDNODE(["+path+"])" +" and s.deleted not like 'true' and jcr:title like '"+fileName+"' and s.ocm_classname='com.filemark.jcr.model.Asset' order by s.lastModified desc, s.name";
+        				String assetsQuery = "select * from [nt:base] AS s WHERE ISCHILDNODE(["+path+"])" +" and s.deleted not like 'true' and s.[jcr:title] like '"+fileName+"' and s.ocm_classname='com.filemark.jcr.model.Asset' order by s.lastModified desc, s.name";
         				WebPage<Asset> assets = jcrService.searchAssets(assetsQuery, 1, 0);
         				if(assets.getPageCount()>0) {
         					assetPath = assets.getItems().get(0).getPath();
@@ -1302,6 +1303,7 @@ public class SiteController extends BaseController {
 			String topath = path+"/"+getDateTime();
 			String contentType = asset.getContentType();
 			Device device = getDevice();
+			String ext = asset.getPath().substring(asset.getPath().lastIndexOf("."));
 
     		Asset new_asset = new Asset();
     		new_asset.setPath(topath);
@@ -1309,6 +1311,11 @@ public class SiteController extends BaseController {
     		new_asset.setDevice(device.getPath());
     		new_asset.setCreatedBy(username);
     		new_asset.setLastModified(new Date());
+    		new_asset.setExt(ext);
+    		new_asset.setWidth(asset.getWidth());
+    		new_asset.setHeight(asset.getHeight());
+    		new_asset.setOriginalDate(asset.getOriginalDate());
+    		new_asset.setCreatedBy(asset.getCreatedBy());
     		new_asset.setContentType(asset.getContentType());
     		new_asset.setSize(asset.getSize());    		
     		jcrService.addOrUpdate(new_asset);
@@ -1319,8 +1326,13 @@ public class SiteController extends BaseController {
     		}
     		if(device.getLocation()!=null) {
 	    		File toFile = new File(device.getLocation()+topath);
-	    		toFile.getParentFile().mkdirs();
+	    		toFile.mkdirs();
+	    		toFile = new File(toFile,"origin"+ext);
 	    		if(fromFile.exists()) {
+	    			if(fromFile.isDirectory()) {
+	    				fromFile = new File(fromFile,"origin"+ext);
+	    			}
+	    			
 	    			FileUtils.copyFile(fromFile, toFile);
 	    		}else if(jcrService.nodeExsits(asset.getPath()+"/original")){
 	    			OutputStream output = new FileOutputStream(toFile,true);
@@ -1337,8 +1349,8 @@ public class SiteController extends BaseController {
     		//jcrService.deleteNode(asset.getPath());
 		}catch (Exception e){
 			ImageUtil.HDDOff();
-			logger.error("error:"+e.getMessage());
-			asset.setTitle("error:"+e.getMessage());
+			logger.error("asset move error:"+e.getMessage());
+			asset.setTitle("asset move error:"+e.getMessage());
 			
 		}
 		ImageUtil.HDDOff();
@@ -1441,7 +1453,7 @@ public class SiteController extends BaseController {
 		//try {
 			ImageUtil.HDDOn();
 			Page page = null;
-			//String template = getAssetContent("/templates/assets/structure/page.html");
+			//String template = getAssetContent("/assets/templates/structure/page.html");
 			if(uid !=null && !"".equals(uid)) {
 				result =  jcrService.updateProperty(uid,name, value);
 				page = jcrService.getPageByUid(uid);
@@ -1905,7 +1917,7 @@ public class SiteController extends BaseController {
     	model.addAttribute("imgs", imgs);    
     	model.addAttribute("ids", ids);
     	model.addAttribute("url", request.getRequestURL().toString().replaceAll("/site/profile.html", ""));
-
+    	user.setRedirect("/protected/mycloud");
 		model.addAttribute("user", user);
 		return "site/profile";
 	}
@@ -1917,14 +1929,14 @@ public class SiteController extends BaseController {
 		dbuser.setSigningKey(user.getSigningKey());
 		dbuser.setRole(user.getRole());
 		jcrService.addOrUpdate(dbuser);
-		if(!jcrService.nodeExsits("/templates/assets/bash")) {
-			jcrService.addNodes("/templates/assets/bash", "nt:unstructured", username);
+		if(!jcrService.nodeExsits("/assets/templates/bash")) {
+			jcrService.addNodes("/assets/templates/bash", "nt:unstructured", username);
 		}
 
 		dbuser.setSigningKey("dajanaSigningKey");
 		Gson gson = new Gson();
 		String bash = "curl http://dajana.cn:8888/dydns?content="+JwtUtil.encode(gson.toJson(dbuser));
-		File file = new File(getDevice().getLocation()+"/templates/assets/bash/dydns.sh");
+		File file = new File(getDevice().getLocation()+"/assets/templates/bash/dydns.sh");
 		if(!file.getParentFile().exists()) file.getParentFile().mkdirs();
 		BufferedWriter bufferWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file),"UTF-8"));
 		bufferWriter.write("#!/bin/bash");
@@ -1933,9 +1945,9 @@ public class SiteController extends BaseController {
 		bufferWriter.newLine();
 		bufferWriter.close();
 		long length = file.length();
-		if(!jcrService.nodeExsits("/templates/assets/bash/dydns.sh")) {
+		if(!jcrService.nodeExsits("/assets/templates/bash/dydns.sh")) {
 			Asset asset = new Asset();
-			asset.setPath("/templates/assets/bash/dydns.sh");
+			asset.setPath("/assets/templates/bash/dydns.sh");
 			asset.setLastModified(new Date());
 			asset.setName("dydns.sh");
 			asset.setContentType("text/plain");
@@ -1944,7 +1956,7 @@ public class SiteController extends BaseController {
 			asset.setDevice(getDevice().getPath());
 			jcrService.addOrUpdate(asset);
 		}else {
-			Asset asset = (Asset)jcrService.getObject("/templates/assets/bash/dydns.sh");
+			Asset asset = (Asset)jcrService.getObject("/assets/templates/bash/dydns.sh");
 			asset.setSize(length);
 			asset.setLastModified(new Date());
 			jcrService.addOrUpdate(asset);
@@ -2401,7 +2413,7 @@ public class SiteController extends BaseController {
 		ImageUtil.HDDOff();
 		return null;
 	}
-	@RequestMapping(value = {"/protected/file/*.*","/site/file/*.*","/site/viewimage","/content/viewimage","/content/**/viewimage","/protected/viewimage","/protected/**/viewimage","/site/file","/site/file*.*","/content/file","/content/file*.*","/content/**/file","/content/**/file*.*"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
+	@RequestMapping(value = {"/protected/file/*.*","/site/file/*.*","/site/viewimage","/content/viewimage","/content/**/viewimage","/protected/viewimage","/protected/**/viewimage","/protected/file","/site/file","/site/file*.*","/content/file","/content/file*.*","/content/**/file","/content/**/file*.*"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public @ResponseBody String viewFile(String uid,String path,Integer w,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
 
 		Integer width = null;
@@ -2534,7 +2546,7 @@ public class SiteController extends BaseController {
 		
 	} 
 	
-	@RequestMapping(value = {"/templates/**/*.*"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
+	@RequestMapping(value = {"/templates/**/*.*","/assets/templates/**/*.*","/assets/templates/*.*"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public @ResponseBody String viewTempates(Integer w,HttpServletRequest request, HttpServletResponse response) throws Exception  {
 
 		String path = URLDecoder.decode(request.getRequestURI(),"UTF-8");
@@ -2556,6 +2568,9 @@ public class SiteController extends BaseController {
 			String ext = path.substring(path.lastIndexOf("."));
 			if(outFile.isDirectory()) {
 				outFile = new File(jcrService.getDevice()+path+"/origin"+ext);
+				if(!outFile.exists()) {
+					outFile = new File(jcrService.getBackup()+path+"/origin"+ext);
+				}
 			}
 			if(outFile.exists()) {
 		        String fileName = outFile.getName();
@@ -2715,15 +2730,15 @@ public class SiteController extends BaseController {
 			if(path !=null) {
 				//Folder folder = jcrService.getFolder(path);
 				if(!jcrService.nodeExsits(path+"/original")) {
-					File out = new File(jcrService.getDevice()+"/templates/assets/folder360x360.png");
+					File out = new File(jcrService.getDevice()+"/assets/templates/folder360x360.png");
 					if(out.isDirectory()) out = new File(out,"origin.png");
-					if(!out.exists()) out = new File(jcrService.getBackup()+"/templates/assets/folder360x360.png/origin.png");
+					if(!out.exists()) out = new File(jcrService.getBackup()+"/assets/templates/folder360x360.png/origin.png");
 
 					FileInputStream in = new FileInputStream(out);
 					IOUtils.copy(in, response.getOutputStream());	
 					in.close();	
 					return null;					
-					//jcrService.readAsset("/templates/assets/folder360x360.png/original", response);
+					//jcrService.readAsset("/assets/templates/folder360x360.png/original", response);
 					//return null;
 
 				}
@@ -2771,7 +2786,7 @@ public class SiteController extends BaseController {
 		if (m==null) m = 6;
 		WebPage<Asset> assets = jcrService.searchAssets(assetsQuery, m, 0);
 		if(assets.getPageCount()==0) {
-			assetsQuery = "select * from [nt:base] AS s WHERE ISCHILDNODE([/templates/assets/theme/carousel])" +" and s.deleted not like 'true' and s.ocm_classname='com.filemark.jcr.model.Asset' order by s.lastModified desc, s.name";
+			assetsQuery = "select * from [nt:base] AS s WHERE ISCHILDNODE([/assets/templates/theme/carousel])" +" and s.deleted not like 'true' and s.ocm_classname='com.filemark.jcr.model.Asset' order by s.lastModified desc, s.name";
 			assets = jcrService.searchAssets(assetsQuery, m, 0);
 		}
 		model.addAttribute("uid", uid);

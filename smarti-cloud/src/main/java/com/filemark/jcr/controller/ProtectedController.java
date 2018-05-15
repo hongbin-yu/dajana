@@ -73,8 +73,8 @@ public class ProtectedController extends BaseController {
    		User user = (User)jcrService.getObject("/system/users/"+username);
    		String chatRoot = "/youchat";
    		if(path==null && user != null && "Owner".equals(user.getRole())) path="/youchat";
-   		if(!jcrService.nodeExsits("/"+username+"/assets/youchat")) {
-   			jcrService.addNodes("/"+username+"/assets/youchat", "nt:unstructured", username);
+   		if(!jcrService.nodeExsits("/assets/"+username+"/youchat")) {
+   			jcrService.addNodes("/assets/"+username+"//youchat", "nt:unstructured", username);
    			
    		}
    		if(!jcrService.nodeExsits("/youchat")) {
@@ -280,12 +280,12 @@ public class ProtectedController extends BaseController {
 	@RequestMapping(value = {"/protected/browse.html","/protected/image.html"}, method = {RequestMethod.GET,RequestMethod.POST},produces = "text/plain;charset=UTF-8")
 	public String browse(String path,String type, String input,String kw,Integer p,Integer m,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
 		ImageUtil.HDDOn();
-		String assetFolder = "/"+getUsername()+"/assets";
+		String assetFolder =  "/assets"+"/"+getUsername();
 		if(!jcrService.nodeExsits(assetFolder)) {
 			jcrService.addNodes(assetFolder, "nt:unstructured",getUsername());		
 		}
 		int max = 12;
-		if(path == null) {
+		if(path == null  || !path.startsWith(assetFolder)) {
 			path=assetFolder;
 			max = 12;
 		}
@@ -340,12 +340,12 @@ public class ProtectedController extends BaseController {
 	@RequestMapping(value = {"/protected/browsemore.html","/protected/**/browsemore.html"}, method = {RequestMethod.GET,RequestMethod.POST},produces = "text/plain;charset=UTF-8")
 	public String browsemore(String path,String type, String input,String kw,Integer p,Integer m,String topage,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
 		ImageUtil.HDDOn();
-		String assetFolder = "/"+getUsername()+"/assets";
+		String assetFolder =  "/assets"+"/"+getUsername();
 		if(!jcrService.nodeExsits(assetFolder)) {
 			jcrService.addNodes(assetFolder, "nt:unstructured",getUsername());		
 		}
 		int max = 12;
-		if(path == null) {
+		if(path == null || !path.startsWith(assetFolder)) {
 			path=assetFolder;
 			max = 12;
 		}
@@ -490,7 +490,7 @@ public class ProtectedController extends BaseController {
 		WebPage<Object> usersInGroup = jcrService.queryObject(userInGroup, 20, p);
 		InetAddress ipAddr = InetAddress.getLocalHost();
 		String localIp = ipAddr.getHostAddress();
-    	model.addAttribute("url", request.getRequestURL().toString().replaceAll("/protected/groupedit.html", "").replaceAll("localhost", localIp));
+    	model.addAttribute("url", request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort());
 		model.addAttribute("users", users);
 		model.addAttribute("usersInGroup", usersInGroup);
 		model.addAttribute("folder", jcrService.getObject(path));   		
@@ -678,9 +678,7 @@ public class ProtectedController extends BaseController {
 		Folder folder = jcrService.getFolder(path);
 		Folder parent = jcrService.getFolder(folder.getParent());		
 		
-		if((folder.getSharing()==null || folder.getSharing().indexOf(username+"@")<0) && (parent.getSharing()==null || parent.getSharing().indexOf(username+"@")<0)) {
-			throw new Exception("æ²¡æœ‰æ�ƒé™�ï¼�");
-		}
+
 		String orderby = "[lastModified] desc";
 		if(folder.getOrderby()!=null && !"".equals(folder.getOrderby()) && !"rank,name".equals(folder.getOrderby())) {
 			orderby = folder.getOrderby();

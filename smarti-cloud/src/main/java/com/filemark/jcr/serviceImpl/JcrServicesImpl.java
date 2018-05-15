@@ -1691,13 +1691,13 @@ public class JcrServicesImpl implements JcrServices {
         	    Graphics2D g2 = resizedImg.createGraphics();
         	    g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
         	    Node folder = getNode(path);
-        	    File file360 = new File(device+"/templates/assets/folder360x360.png");
-        	    if(file360.isDirectory()) file360 = new File(device+"/templates/assets/folder360x360.png/origin.png");
+        	    File file360 = new File(device+"/assets/templates/folder360x360.png");
+        	    if(file360.isDirectory()) file360 = new File(device+"/assets/templates/folder360x360.png/origin.png");
         	    if(file360.exists()) {
         	    	BufferedImage folderImage = ImageIO.read(file360);
         	    	g2.drawImage(folderImage, 0, 0, null);
         	    }else {
-        	    	log.info("/templates/assets/folder360x360.png not found!");
+        	    	log.info("/assets/templates/folder360x360.png not found!");
         	    	return null;
         	    }
     	    	log.debug("image found:"+path+"="+assets.getPageCount());

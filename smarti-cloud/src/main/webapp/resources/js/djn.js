@@ -477,6 +477,7 @@ function drag(ev) {
 }
 
 function drop(ev) {
+	//clear();
     ev.preventDefault();
     var id = ev.target.id;
 	ev.target.classList.remove("well");
@@ -843,7 +844,10 @@ function sendFormData(formData,file) {
 	                selDiv.innerHTML ="<section id=\""+file.name+"\"><h5>"+file.name+"("+(speed/1000).toFixed(2)+" MB/s)</h5><progress class=\"full-width\" value=\""+fileSize +"\" max=\""+fileSize+"\"><span class=\"wb-inv\">"+100+"%</span></progress></section>";
 		    		selDiv.innerHTML += "<section class=\"alert alert-success\"><h3 class=\"5\">"+(i+1)+"/"+total+i18n("document_uploaded")+i18n("success")+"</h3></section>";
 		    		output(data);
-
+		    		if(i+1==total) {
+		    			files=[];
+		    			total=0;
+		    		}
 
 		    	}
 		    },
@@ -873,6 +877,7 @@ function getAsset(formData,file) {
 	    			setTimeout(function () {
 	    				files = [];
 	    				droppedFiles = [];
+	    				total = 0;
 	    			},1000);
 
 	    		}
@@ -945,6 +950,7 @@ function uploadFiles() {
 	percentComplete = 0;
 	total = files.length;
 	i = 0;
+
 	var submit_upload = document.getElementById("submit_upload");
 	if(submit_upload)
 		submit_upload.disabled=true;

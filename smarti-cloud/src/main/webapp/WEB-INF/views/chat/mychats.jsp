@@ -8,7 +8,7 @@
 <div class="row">
         <main role="main" property="mainContentOfPage" class="col-md-8 col-md-push-4">
         <h1>优信<c:if test="${folder.title != null}"> - ${folder.title }</c:if><a href="#" title="${user.title }" onclick="ftrClose('/protected/profile.html')"><img id="uploadIcon" class="img-responsive pull-right" src="${user.icon}" alt="图标"/></a></h1>
-	<c:if test="${folder==null || folder.path == '/youchat'}"><div data-ajax-replace="/templates/assets/html/youchat.html"></div></c:if>        
+	<c:if test="${folder==null || folder.path == '/youchat'}"><div data-ajax-replace="/assets/templates/html/youchat.html"></div></c:if>        
 	<c:if test="${folder.title != null && folder.path != '/youchat'}">
         <div class="row text-center"><img id="online_chat_loading" width="120" height="120" class="wb-inv" src="/resources/images/loadingx400.gif" alt="下载"/></div>
         <div id="online_chat">
@@ -83,7 +83,7 @@
 		<h2 class="modal-title">云站</h2>
 	</header>
 	<div class="modal-body"> 
-	 <iframe id="left-iframe" src="/protected/browse.html?path=/${user.userName }/assets/youchat" scrolling="yes" style="height: 600px; border: 0px none; width: 360px; margin-bottom: 0px; margin-left: 10px;">
+	 <iframe id="left-iframe" src="/protected/browse.html?path=/assets/${user.userName }/youchat" scrolling="yes" style="height: 600px; border: 0px none; width: 360px; margin-bottom: 0px; margin-left: 10px;">
      </iframe>
  	</div>
 </section> 

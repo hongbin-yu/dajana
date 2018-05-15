@@ -129,7 +129,7 @@ tinymce.init({
 	  noneditable_editable_class:"editable",
 	  noneditable_regexp:/\[\[[^\]]+\]\]/g,
 	  contextmenu: "link image media inserttable template | cell row column deletetable",
-	  templates:contentPath+"/templates/assets/json/components.json",//"resources/templates/wet.json",
+	  templates:contentPath+"/assets/templates/json/components.json",//"resources/templates/wet.json",
 	  table_class_list: [    {title: 'None', value: ''},
 	                         {title: 'Wet-table', value: 'wb-tables table'},
 	                         {title: 'Wet-table,strip', value: 'wb-tables table table-striped table-hover'},

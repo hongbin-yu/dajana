@@ -42,7 +42,7 @@
         <c:forEach items="${folders.items}" var="item" varStatus="loop">
             <div class="col-md-4">
             <a title="<spring:message code="djn.open"/>PDF" href="<c:url value="/site/viewf2p?path=${item.path}"/>" target="_BLANK"><span class="glyphicon glyphicon-open">PDF</span></a>
-            <a href="?path=${item.path}"> <img id="folder${item.uid }" path="${item.path }" alt="${item.title}" class="img-responsive" src='<c:url value="/site/viewfolder?path=${item.path}"></c:url>'/></a>
+            <a href="sharing?path=${item.path}"> <img id="folder${item.uid }" path="${item.path }" alt="${item.title}" class="img-responsive" src='<c:url value="/site/viewfolder?path=${item.path}"></c:url>'/></a>
 			<div class="panel" id="selectFiles${item.uid }">
 			</div>	  
             <p>${item.title} (${item.path })</p>

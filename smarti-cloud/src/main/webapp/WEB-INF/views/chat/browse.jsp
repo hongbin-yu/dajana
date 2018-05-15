@@ -159,7 +159,7 @@
 		
 		<c:if test="${!item.mp4 && !item.audio && !item.doc2pdf}">
 		<a id="href${item.uid }" href="javascript-edit:openImage('<c:url value='${item.link}'></c:url>')">		
-		<img src="<c:url value='${item.icon }'></c:url>" class="img-responsive" draggable="true" onclick="javascript:returnChatUrl('${item.link}','${item.uid }')"/>
+		<img src="<c:url value='${item.icon }'></c:url>" class="img-responsive" draggable="true" onclick="javascript:returnChatUrl('file/${item.name}?path=${item.path}','${item.uid }')"/>
 		${item.description}
  		</a>
 		</c:if>
@@ -348,7 +348,7 @@ function returnChatUrl(fileUrl,uid) {
 				}); 	 */    
 		} else {
 			var html = $("#href"+uid).html();
-			html = "<a title='下载' href='file?uid="+uid+"'>"+html+"</a><p><a title='下载' href='file?uid="+uid+"'>"+e_title.value+"("+e_size+")</a><p>";
+			html = "<a title='下载' href='"+fileUrl+"&uid="+uid+"'>"+html+"</a><p><a title='下载' href='file?uid="+uid+"'>"+e_title.value+"("+e_size+")</a><p>";
 			tinyMCE.activeEditor.selection.setContent(html);
 			}
 		

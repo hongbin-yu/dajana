@@ -41,7 +41,7 @@
 </div>
 
 <section id="wb-srch" class="col-xs-6 text-right visible-md visible-lg">
-<h2><spring:message code="djn.search"/></h2>
+<%-- <h2><spring:message code="djn.search"/></h2>
 <form action="#" method="post" name="cse-search-box" role="search" class="form-inline">
 <div class="form-group">
 <label for="wb-srch-q" class="wb-inv"><spring:message code="djn.search"/></label>
@@ -55,7 +55,7 @@
 <button type="submit" id="wb-srch-sub" class="btn btn-primary btn-small" name="wb-srch-sub"><span class="glyphicon-search glyphicon"></span><span class="wb-inv">搜索</span></button>
 </div>
 </form>
-</section>
+</section> --%>
 </div>
 </div>
 

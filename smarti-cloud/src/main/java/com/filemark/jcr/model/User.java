@@ -63,6 +63,7 @@ public class User implements SmartiNode {
 	@Collection(autoUpdate=false)
 	private Set<Role> roles = new HashSet<Role>();
 	
+	String redirect=null;
 	public User() {
 		
 	}
@@ -270,6 +271,7 @@ public class User implements SmartiNode {
 		jsonObject.addProperty("password", password);
 		jsonObject.addProperty("localIp", getLocalIp());
 		jsonObject.addProperty("signingKey", signingKey);
+		jsonObject.addProperty("rediret", redirect);
 		jsonObject.addProperty("expired",lastUpdated==null?0:lastUpdated.getTime());
 		encodedJson = jsonObject.toString();
 		
@@ -292,6 +294,14 @@ public class User implements SmartiNode {
 
 	public void setCity(String city) {
 		this.city = city;
+	}
+
+	public String getRedirect() {
+		return redirect;
+	}
+
+	public void setRedirect(String redirect) {
+		this.redirect = redirect;
 	}
 	
 }

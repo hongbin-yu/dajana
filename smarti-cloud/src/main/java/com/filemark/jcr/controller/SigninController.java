@@ -225,7 +225,7 @@ public class SigninController extends BaseController{
     	        if(user.getHost()!=null && !domain.equals(user.getHost()))
     	        	CookieUtil.create(response, JwtUtil.jwtTokenCookieName, token, false, -1, user.getHost());
     	        if(redirect==null || "".equals(redirect) || "signin".equals(redirect)) {
-    	    		return "redirect:/protected/youchat.html";
+    	    		return "redirect:/protected/youlook.html";
     	        }else {
     	       		return "redirect:"+ redirect+"&domain="+domain;
     	        }

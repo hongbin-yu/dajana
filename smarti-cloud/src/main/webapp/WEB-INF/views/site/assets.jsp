@@ -211,7 +211,10 @@
 	</div>
 	<c:forEach items="${assets.items }" var="item" varStatus="loop">
 	<div id="${item.uid}" class="col-md-4 well">
+	<a class="download" href="file/${item.name}?path=${item.path}" target="_BLANK" download="${item.title }"><span class="glyphicon glyphicon-download pull-right">下载</span></a>
+	
 	<div class="checkbox"><input type="checkbox" class="checkbox" name="puid" value="${item.uid }">
+
         <c:if test="${item.pdf}">
 		<a title="<spring:message code="djn.open"/>PDF" href="<c:url value="/site/viewpdf.pdf?uid=${item.uid}"/>" target="_BLANK"><span class="glyphicon glyphicon-open"></span> <spring:message code="djn.open"/>PDF</a>
 		</c:if>
@@ -219,13 +222,14 @@
 			<a  class="wb-lbx" title="<spring:message code="djn.edit"/>" href="<c:url value="texteditor.html?uid=${item.uid}"/>"><span class="glyphicon glyphicon-pencil"></span><spring:message code="djn.onlineEdit"/></a>
 		</c:if>
         <c:if test="${item.doc2pdf}">
-        	<a class="download" href="file/${item.name}?path=${item.path}" target="_BLANK" download><span class="glyphicon glyphicon-download">下载</span></a>
+<%--         	<a class="download" href="file/${item.name}?path=${item.path}" target="_BLANK" download><span class="glyphicon glyphicon-download">下载</span></a> --%>
 		    <a class="${item.cssClass }" href="doc2pdf.pdf?path=${item.path }" target="_BLANK">
 				<img id="img${item.uid}" src="<c:url value='${item.icon }'></c:url>" class="img-responsive" draggable="true"/>
 			</a>
 		</c:if>	
 		<c:if test="${item.mp4}">
-		<a class="download" href="file/${item.name}?path=${item.path}" target="_BLANK" download><span class="glyphicon glyphicon-download">下载</span></a>
+		<p>MP4</p>
+<%-- 		<a class="download" href="file/${item.name}?path=${item.path}" target="_BLANK" download><span class="glyphicon glyphicon-download">下载</span></a> --%>
 		<figure class="wb-mltmd">
 				<video poster="video2jpg.jpg?path=${item.path }" title="${item.title }" controls="controls" preload="none">
 					<source type="video/mp4" src="video.mp4?path=${item.path }"/>
@@ -236,8 +240,8 @@
 		</figure>
 		</c:if>
 		<c:if test="${item.audio}">
-		<a class="download" href="file/${item.name}?path=${item.path}" download><span class="glyphicon glyphicon-volume-up">下载</span></a>
-		<figure class="wb-mltmd">
+<%-- 		<a class="download" href="file/${item.name}?path=${item.path}" download><span class="glyphicon glyphicon-volume-up">下载</span></a>
+ --%>		<figure class="wb-mltmd">
 				<audio title="${item.title }" preload="none">
 					<source type="${item.contentType }" src="file/${item.name}?path=${item.path}"/>
 				</audio>

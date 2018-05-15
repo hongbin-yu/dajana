@@ -30,7 +30,7 @@
         
 <div id="bg"><img id="splash-image" src='<c:url value="/resources/images/splash1.jpg"></c:url>' alt=""></div>
 <main role="main" property="mainContentOfPage" >
-<div class="sp-hb" data-ajax-replace="/templates/assets/html/spash.html">
+<div class="sp-hb">
 <div class="sp-bx col-xs-12">
 <h1 property="name" class="wb-inv">dajana.ca</h1>
 <div class="row">
@@ -87,7 +87,6 @@
     var splashImagePaths = "${splashImagePaths}".split(",");
     var numImages = ${numImages};
     var selectedImageIndex = 1;
-
     document.getElementById("splash-image").src = splashImagePaths[Math.floor((Math.random() * numImages))];
 
 </script>

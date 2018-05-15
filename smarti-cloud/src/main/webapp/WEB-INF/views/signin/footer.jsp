@@ -24,7 +24,7 @@
 </ul>
 </section>
  <section class="col-sm-3">
- <img title="扫描QR二维码" class="img-responsive" src="${contentPath}content/home.qrb?path=http://www.dajana.ca/signup" alt=""/>
+ <img title="扫描QR二维码" class="img-responsive" src="${contentPath}content/home.qrb.jpg?path=http://${pageContext.request.serverName }:${pageContext.request.serverPort }/signup" alt=""/>
   </section>
 </nav>
 

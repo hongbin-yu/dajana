@@ -37,7 +37,7 @@
 <div class="row">
 <div class="brand col-xs-8 col-sm-9 col-md-6">
 <a href="<c:url value="/"/>">
-<object type="image/svg+xml" tabindex="-1" data="<c:url value="/templates/assets/images/djnlogo.svg" />"></object>
+<object type="image/svg+xml" tabindex="-1" data="<c:url value="/resources/images/djnlogo.svg" />"></object>
 </a>
 </div>
 

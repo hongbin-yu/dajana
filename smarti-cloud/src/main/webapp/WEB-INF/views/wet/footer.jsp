@@ -4,24 +4,24 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" session="false" %>
 <c:set var="host"><c:url value="/"></c:url></c:set>
 <footer role="contentinfo" id="wb-info">
-<nav role="navigation" class="container wb-navcurr"  data-ajax-replace='<c:url value="/templates/assets/html/replace.html"/>'>
+<nav role="navigation" class="container wb-navcurr">
 <h2><spring:message code="djn.about_this_site"/></h2>
 <section class="col-sm-3">
 <h3><spring:message code="djn.about_this_site"/></h3>
 <ul class="list-unstyled">
-<li><a href='<c:url value="/templates/assets/help/termnuse.html"></c:url>'><spring:message code="djn.term_use"/></a></li>
+<li><a href='<c:url value="/assets/templates/help/termnuse.html"></c:url>'><spring:message code="djn.term_use"/></a></li>
 </ul>
 </section>
 <section class="col-sm-3">
 <h3><spring:message code="djn.contact_us"/></h3>
 <ul class="list-unstyled">
-<li><a href='<c:url value="/templates/assets/help/qna.html"></c:url>'><spring:message code="djn.qna"/></a></li>
+<li><a href='<c:url value="/assets/templates/help/qna.html"></c:url>'><spring:message code="djn.qna"/></a></li>
 </ul>
 </section>
 <section class="col-sm-3">
 <h3><spring:message code="djn.customer_service"/></h3>
 <ul class="list-unstyled">
-<li><a href='<c:url value="/templates/assets/help/help.html"></c:url>'><spring:message code="djn.online_help"/></a></li>
+<li><a href='<c:url value="/assets/templates/help/help.html"></c:url>'><spring:message code="djn.online_help"/></a></li>
 </ul>
 </section>
  <section class="col-xs-3 col-sm-3 text-right">

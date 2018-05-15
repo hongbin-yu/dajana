@@ -4,24 +4,24 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" session="false" %>
 <c:set var="host"><c:url value="/"></c:url></c:set>
 <footer role="contentinfo" id="wb-info">
-<nav role="navigation" class="container wb-navcurr"  data-ajax-replace='<c:url value="/templates/assets/html/replace.html"/>'>
+<nav role="navigation" class="container wb-navcurr"  data-ajax-replace='<c:url value="/assets/templates/html/replace.html"/>'>
 <h2>关于本网站</h2>
 <section class="col-sm-3">
 <h3>关于本网站</h3>
 <ul class="list-unstyled">
-<li><a href='<c:url value="/templates/assets/help/termnuse.html"></c:url>'>期限和使用</a></li>
+<li><a href='<c:url value="/assets/templates/help/termnuse.html"></c:url>'>期限和使用</a></li>
 </ul>
 </section>
 <section class="col-sm-3">
 <h3>联系我们</h3>
 <ul class="list-unstyled">
-<li><a href='<c:url value="/templates/assets/help/qna.html"></c:url>'>问题与答案</a></li>
+<li><a href='<c:url value="/assets/templates/help/qna.html"></c:url>'>问题与答案</a></li>
 </ul>
 </section>
 <section class="col-sm-3">
 <h3>客户服务</h3>
 <ul class="list-unstyled">
-<li><a href='<c:url value="/templates/assets/help/help.html"></c:url>'>在线帮助</a></li>
+<li><a href='<c:url value="/assets/templates/help/help.html"></c:url>'>在线帮助</a></li>
 </ul>
 </section>
  <section class="col-sm-3">

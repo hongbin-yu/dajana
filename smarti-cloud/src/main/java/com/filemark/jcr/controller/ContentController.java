@@ -104,13 +104,16 @@ public class ContentController extends BaseController {
     	if(jcrService.nodeExsits("/system/users/"+site)) {
     		User user = (User)jcrService.getObject("/system/users/"+site);
     		if(user.getHostIp()!=null) {
-    			logger.debug("redirect:"+"http://"+user.getHostIp()+":"+user.getPort());
-    			response.sendRedirect("http://"+user.getHostIp()+":"+user.getPort());
+    			logger.debug("redirect:"+"http://"+user.getHostIp()+":8888");
+    			if("0:0:0:0:0:0:0:1".equals(user.getHostIp())) {
+    				user.setHostIp(user.getLocalIp());
+    			}
+    			response.sendRedirect("http://"+user.getHostIp()+":8888");
     		}
     	}
     	
     	if(request.getRemoteHost().endsWith(jcrService.getDomain())) host = request.getRemoteHost();
-		String assetsQuery = "select s.* from [nt:base] AS s WHERE ISCHILDNODE([/templates/assets/splash]) and s.[delete] not like 'true' and s.ocm_classname='com.filemark.jcr.model.Asset' order by s.[lastModified] desc";
+		String assetsQuery = "select s.* from [nt:base] AS s WHERE ISCHILDNODE([/assets/templates/splash]) and s.[delete] not like 'true' and s.ocm_classname='com.filemark.jcr.model.Asset' order by s.[lastModified] desc";
 		//logger.info(isIntranet+",ip="+getClientIpAddress(request)+",q="+assetsQuery);;
 		WebPage<Asset> assets = jcrService.searchAssets(assetsQuery, 12, 0);
 		String splashImagePaths = "";
@@ -433,7 +436,7 @@ public class ContentController extends BaseController {
 				if(passcode==null || parent_path==null || !passcode.equals(page_passcode)) {
 			    	String host="";
 			    	if(request.getRemoteHost().endsWith(jcrService.getDomain())) host = request.getRemoteHost();
-					String assetsQuery = "select s.* from [nt:base] AS s WHERE ISCHILDNODE([/templates/assets/splash]) and s.[delete] not like 'true' and s.ocm_classname='com.filemark.jcr.model.Asset' order by s.[lastModified] desc";
+					String assetsQuery = "select s.* from [nt:base] AS s WHERE ISCHILDNODE([/assets/templates/splash]) and s.[delete] not like 'true' and s.ocm_classname='com.filemark.jcr.model.Asset' order by s.[lastModified] desc";
 					WebPage<Asset> assets = jcrService.searchAssets(assetsQuery, 12, 0);
 					String splashImagePaths = "";
 					int i = 0;
