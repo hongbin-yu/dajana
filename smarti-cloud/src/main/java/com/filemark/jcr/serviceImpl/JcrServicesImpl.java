@@ -2124,6 +2124,9 @@ public class JcrServicesImpl implements JcrServices {
             			if(node.hasProperty("orderby")) {
             				folder.setOrderby(node.getProperty("orderby").getString());
             			}
+            			if(node.hasProperty("createdBy")) {
+            				folder.setCreatedBy(node.getProperty("createdBy").getString());
+            			}            			
                         if(node.hasProperty("intranet"))
                        	 folder.setIntranet(node.getProperty("intranet").getString());   
                         if(node.hasProperty("resolution"))

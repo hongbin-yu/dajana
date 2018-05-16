@@ -81,12 +81,21 @@ public class ProtectedController extends BaseController {
    			jcrService.addNodes("/youchat", "nt:unstructured", username);
    			
    		}   		
-		String folderQuery = "select s.* from [nt:base] AS s INNER JOIN [nt:base] AS child ON ISCHILDNODE(child,s) WHERE ISDESCENDANTNODE(s,["+chatRoot+"])" +" and child.userName like '%"+username+"' and s.ocm_classname='com.filemark.jcr.model.Folder' and child.ocm_classname ='com.filemark.jcr.model.User' order by s.path";
 
+   		String createdQuery = "select s.* from [nt:base] AS s WHERE ISDESCENDANTNODE(["+chatRoot+"])" +" and s.createdBy like '"+username+"' and s.ocm_classname='com.filemark.jcr.model.Folder' order by s.[jcr:title]";
    		if(user.getRole().equals("Administrator")||user.getRole().equals("Owner"))
-   			folderQuery = "select s.* from [nt:base] AS s WHERE ISDESCENDANTNODE(["+chatRoot+"])" +" and s.ocm_classname='com.filemark.jcr.model.Folder' order by s.path";
+   			createdQuery = "select s.* from [nt:base] AS s WHERE ISDESCENDANTNODE(["+chatRoot+"])" +" and s.ocm_classname='com.filemark.jcr.model.Folder' order by s.[jcr:title]";
+
+   		WebPage<Folder> creaters = jcrService.queryFolders(createdQuery, 100, 0);
+		
+		String folderQuery = "select s.* from [nt:base] AS s LEFT OUTER JOIN [nt:base] AS child ON ISCHILDNODE(child,s) WHERE ISDESCENDANTNODE(s,["+chatRoot+"])" +" and child.userName like '"+username+"' and s.createdBy not like '"+username+"' and s.ocm_classname='com.filemark.jcr.model.Folder' and  child.userName like '"+username+"' order by s.[jcr:title]";
+
 		logger.debug(folderQuery);
 		WebPage<Folder> folders = jcrService.queryFolders(folderQuery, 100, 0);
+   		if(user.getRole().equals("Administrator") || user.getRole().equals("Owner"))
+			folders = creaters;
+   		else 
+   			folders.getItems().addAll(creaters.getItems());
 		if(path !=null) {
 			String chatQuery = "select * from [nt:base] AS s WHERE ISDESCENDANTNODE(["+path+"])" +" and s.ocm_classname='com.filemark.jcr.model.Chat' order by s.[jcr:lastModified] DESC";
 			WebPage<Chat> chats = jcrService.queryChats(chatQuery, 12, 0);
@@ -123,12 +132,20 @@ public class ProtectedController extends BaseController {
    			jcrService.addNodes("/youlook", "nt:unstructured", username);
    			
    		}   		
-		String folderQuery = "select s.* from [nt:base] AS s INNER JOIN [nt:base] AS child ON ISCHILDNODE(child,s) WHERE ISDESCENDANTNODE(s,["+chatRoot+"])" +" and child.userName like '%"+username+"' and s.ocm_classname='com.filemark.jcr.model.Folder' and child.ocm_classname ='com.filemark.jcr.model.User' order by s.path";
-
+   		String createdQuery = "select s.* from [nt:base] AS s WHERE ISDESCENDANTNODE(["+chatRoot+"])" +" and s.createdBy like '"+username+"' and s.ocm_classname='com.filemark.jcr.model.Folder' order by s.[jcr:title]";
    		if(user.getRole().equals("Administrator")||user.getRole().equals("Owner"))
-   			folderQuery = "select s.* from [nt:base] AS s WHERE ISDESCENDANTNODE(["+chatRoot+"])" +" and s.ocm_classname='com.filemark.jcr.model.Folder' order by s.path";
+   			createdQuery = "select s.* from [nt:base] AS s WHERE ISDESCENDANTNODE(["+chatRoot+"])" +" and s.ocm_classname='com.filemark.jcr.model.Folder' order by s.[jcr:title]";
 
+   		WebPage<Folder> creaters = jcrService.queryFolders(createdQuery, 100, 0);
+		
+		String folderQuery = "select s.* from [nt:base] AS s LEFT OUTER JOIN [nt:base] AS child ON ISCHILDNODE(child,s) WHERE ISDESCENDANTNODE(s,["+chatRoot+"])" +" and child.userName like '"+username+"' and s.createdBy not like '"+username+"' and s.ocm_classname='com.filemark.jcr.model.Folder' and  child.userName like '"+username+"' order by s.[jcr:title]";
+
+		logger.debug(folderQuery);
 		WebPage<Folder> folders = jcrService.queryFolders(folderQuery, 100, 0);
+   		if(user.getRole().equals("Administrator") || user.getRole().equals("Owner"))
+			folders = creaters;
+   		else 
+   			folders.getItems().addAll(creaters.getItems());
 		if(path !=null) {
 			String chatQuery = "select * from [nt:base] AS s WHERE ISDESCENDANTNODE(["+path+"])" +" and s.ocm_classname='com.filemark.jcr.model.Chat' order by s.[jcr:lastModified] DESC";
 			WebPage<Chat> chats = jcrService.queryChats(chatQuery, 12, 0);

@@ -13,7 +13,7 @@
 	<div id="messageDiv"></div>
 	<div class="form-group" ondrop="drop(event)" ondragover="allowDrop(event)" style="border:1px solid #aaaaaa;">
 	<a class="btn btn-default pull-right" onclick="openIcon()">
-	<img id="uploadIcon" class="img-responsive well-lg" src="/site/file/icon.jpg?path=/${user.userName }/assets/icon/x120.jpg" alt="图标"/>
+	<img id="uploadIcon" class="img-responsive well-lg" src="/site/file/icon.jpg?path=/assets/${user.userName }/icon/x120.jpg" alt="图标"/>
 	</a>
 	<input class="form-control wb-inv" type="file" id="iconUpload" name="file" size="60" required="required"/>
 	</div>

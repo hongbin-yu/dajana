@@ -453,6 +453,7 @@ public class SiteController extends BaseController {
     		}
 			folder.setPath(jcrService.getUniquePath(path, folderName));
 			folder.setLastModified(new Date());
+			folder.setCreatedBy(getUsername());
 			jcrService.addOrUpdate(folder);
 
 		} catch (RepositoryException e) {
@@ -1112,7 +1113,7 @@ public class SiteController extends BaseController {
 	    		if(fileName.lastIndexOf(".")>0) {
 	    			ext = fileName.substring(fileName.lastIndexOf("."), fileName.length());
 	    		}
-	    		String assetPath = "/"+username+"/assets/icon";
+	    		String assetPath = "/assets/"+username+"/icon";
 				asset.setExt(ext);
 	     		asset.setName(fileName);
 	    		asset.setCreatedBy(username);
@@ -1132,7 +1133,7 @@ public class SiteController extends BaseController {
 				jcrService.createIcon(asset.getPath(), 48,48);
 				jcrService.createIcon(asset.getPath(), 120,120);
 				jcrService.createIcon(asset.getPath(), 400,400);
-				jcrService.updatePropertyByPath(assetPath, "icon", "/protected/file/"+asset.getName()+"?path="+assetPath+"/x120.jpg");
+				jcrService.updatePropertyByPath(assetPath, "icon", "/protected/file/icon.jpg?path="+assetPath+"/x120.jpg");
 			}
 
 		}catch (Exception e){

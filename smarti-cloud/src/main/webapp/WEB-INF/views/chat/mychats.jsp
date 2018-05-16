@@ -13,7 +13,7 @@
         <div class="row text-center"><img id="online_chat_loading" width="120" height="120" class="wb-inv" src="/resources/images/loadingx400.gif" alt="下载"/></div>
         <div id="online_chat">
 		</div>
-			<div class="panel panel-primary"><header class="panel-heading">${folder.title }<img class="wb-inv" id="online_chat_running" src="/resources/images/loading16x16.gif" alt=""/><a href="#" title="${user.title }"><img id="uploadIcon" class="img-responsive pull-right" src="/protected/file/icon.jpg?path=/${username }/assets/icon/x48.jpg" alt="图标"/></a>
+			<div class="panel panel-primary"><header class="panel-heading">${folder.title }<img class="wb-inv" id="online_chat_running" src="/resources/images/loading16x16.gif" alt=""/><a href="#" title="${user.title }"><img id="uploadIcon" class="img-responsive pull-right" src="/protected/file/icon.jpg?path=/assets/${username }/icon/x48.jpg" alt="图标"/></a>
 			</header>
 				<div id="uploadBox" class="panel-body" ondrop="drop(event)" ondragover="allowDrop(event)" style="border:1px solid #aaaaaa;">
 <%-- 				<div id="video-iframe"><c:if test="${video }"><img src="${video_url}/?action=stream" class="img-responsive"></c:if></div>				  
@@ -67,7 +67,7 @@
         <ul class="list-group menu list-unstyled">
 	        <c:forEach items="${folders.items}" var="item" varStatus="loop">
 	            <li class="list-group-item" id="${item.uid }"><a  href='<c:url value="/protected/youchat.html?path=${item.path}"></c:url>'><span class="glyphicon glyphicon-user">${item.title}</span><span id="unread-${item.uid }" class="badge"></span></a>
-				<c:if test="${user.role =='Owner' || user.role == 'Administrator'}">	            
+				<c:if test="${user.role =='Owner' || user.role == 'Administrator' || item.createdBy == user.userName}">	            
 	            <button class="btn btn-warning btn-xs pull-right" onclick="javascript:removeTag('${item.uid}')"><span class="glyphicon glyphicon-trash"></span></button>
 	            <a class="wb-lbx" href="groupedit.html?path=${item.path }"><button class="btn btn-primary btn-xs pull-right"><span class="glyphicon glyphicon-cog"></span></button></a>
 	            </c:if>
