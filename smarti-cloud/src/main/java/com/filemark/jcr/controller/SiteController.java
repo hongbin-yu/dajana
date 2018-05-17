@@ -1014,19 +1014,24 @@ public class SiteController extends BaseController {
 /*        		if(!assetPath.endsWith(ext)) {
         			assetPath += ext;
         		}*/
+        		String contentType = multipartFile.getContentType();
+            	String devicePath = this.getDevice().getPath();
+        		if(contentType != null && contentType.startsWith("video/")) {
+        			devicePath = this.getBackup().getPath();
+        		}        		
     			asset.setExt(ext);
          		asset.setName(fileName);
         		asset.setCreatedBy(username);
         		asset.setPath(assetPath);
        			asset.setLastModified(new Date());
-     			asset.setDevice(this.getDevice().getPath());
+     			asset.setDevice(devicePath);
         		if(lastModified!=null && lastModified.matches("-?\\d+(\\.\\d+)?")) {
         			
         			asset.setOriginalDate(new Date(Long.parseLong(lastModified)));
         		}else {
         			asset.setOriginalDate(new Date());
         		}
-        		String contentType = multipartFile.getContentType();
+
         		asset.setContentType(contentType);
         		asset.setSize(multipartFile.getSize());
         		jcrService.addOrUpdate(asset);
@@ -1199,6 +1204,10 @@ public class SiteController extends BaseController {
     	}        
         
     	String contentType = conn.getContentType();
+    	String devicePath = this.getDevice().getPath();
+		if(contentType != null && contentType.startsWith("video/")) {
+			devicePath = this.getBackup().getPath();
+		}
 	    MimeTypes allTypes = MimeTypes.getDefaultMimeTypes();
 	    logger.debug("contentType="+contentType);
 	    String ext="";
@@ -1242,7 +1251,7 @@ public class SiteController extends BaseController {
 		asset.setPath(assetPath);
 		asset.setLastModified(new Date());
 		asset.setContentType(contentType);
-		asset.setDevice(this.getDevice().getPath());
+		asset.setDevice(devicePath);
 		
 		//jcrService.addOrUpdate(asset);
 		//jcrService.updateCalendar(path,"lastModified");

@@ -76,7 +76,6 @@ function ScrollHandler(e) {
     			    success: function(data) {
     			    	$("#contentmore").append(data);
     	                $("#loading").html("");
-
     			    },
     			    error: function() {
     	                $("#loading").html("");

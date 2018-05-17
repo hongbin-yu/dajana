@@ -171,7 +171,7 @@
 </div>	 
 </div>	   
 	    <div class="clearfix"></div>	
-	    <c:if test="${folders.pageCount>3}">
+	    <c:if test="${folders.pageCount>3 && assets.pageCount > 12}">
 	    <details>
 	    <summary>${folders.pageCount} 子目录</summary>
 	    </c:if>
@@ -202,7 +202,7 @@
             </div>  
             	<c:if test="${(loop.index+1) % 3 ==0  }"><div class="clearfix"></div></c:if>         
         </c:forEach> 
-         <c:if test="${folders.pageCount>3}">
+	    <c:if test="${folders.pageCount>3 && assets.pageCount > 12}">
         </details>	
         </c:if>
         <div class="clearfix"></div>	    
@@ -211,24 +211,24 @@
 	</div>
 	<c:forEach items="${assets.items }" var="item" varStatus="loop">
 	<div id="${item.uid}" class="col-md-4 well">
-	<a class="download" href="file/${item.name}?path=${item.path}" target="_BLANK" download="${item.title }"><span class="glyphicon glyphicon-download pull-right">下载</span></a>
-	
 	<div class="checkbox"><input type="checkbox" class="checkbox" name="puid" value="${item.uid }">
-
-        <c:if test="${item.pdf}">
+	<a class="download pull-right" href="file${item.ext}?path=${item.path}" target="_BLANK" download="${item.title }"><span class="glyphicon glyphicon-download pull-right">下载</span></a>
+	</div>	
+		<c:if test="${item.pdf}">
 		<a title="<spring:message code="djn.open"/>PDF" href="<c:url value="/site/viewpdf.pdf?uid=${item.uid}"/>" target="_BLANK"><span class="glyphicon glyphicon-open"></span> <spring:message code="djn.open"/>PDF</a>
 		</c:if>
         <c:if test="${item.text}">
 			<a  class="wb-lbx" title="<spring:message code="djn.edit"/>" href="<c:url value="texteditor.html?uid=${item.uid}"/>"><span class="glyphicon glyphicon-pencil"></span><spring:message code="djn.onlineEdit"/></a>
 		</c:if>
         <c:if test="${item.doc2pdf}">
+        <p>&nbsp;</p>
 <%--         	<a class="download" href="file/${item.name}?path=${item.path}" target="_BLANK" download><span class="glyphicon glyphicon-download">下载</span></a> --%>
 		    <a class="${item.cssClass }" href="doc2pdf.pdf?path=${item.path }" target="_BLANK">
 				<img id="img${item.uid}" src="<c:url value='${item.icon }'></c:url>" class="img-responsive" draggable="true"/>
 			</a>
 		</c:if>	
 		<c:if test="${item.mp4}">
-		<p>MP4</p>
+		<p>&nbsp;</p>
 <%-- 		<a class="download" href="file/${item.name}?path=${item.path}" target="_BLANK" download><span class="glyphicon glyphicon-download">下载</span></a> --%>
 		<figure class="wb-mltmd">
 				<video poster="video2jpg.jpg?path=${item.path }" title="${item.title }" controls="controls" preload="none">
@@ -249,6 +249,7 @@
 		</c:if>		
 		<c:if test="${!item.mp4 && !item.doc2pdf && !item.audio}">
 				<c:if test="${item.contentType=='application/pdf'}">
+				<p>&nbsp;</p>
 				    <a href="<c:url value='${item.link}'></c:url>">
 						<img id="img${item.uid}" src="<c:url value='${item.icon }'></c:url>" class="img-responsive" draggable="true"/>
 					</a>
@@ -259,7 +260,7 @@
 					</a>
 				</c:if>	
 		</c:if>
-	</div>
+
 	<div class="panel panel-default description" id="description${item.uid }" property="description"  uid="${item.uid}" placeholder="description">${item.description}</div>
 	
 	<details>
