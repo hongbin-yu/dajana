@@ -510,7 +510,9 @@ public class SiteController extends BaseController {
 
 	@RequestMapping(value = {"/site/editor.html"}, method = RequestMethod.GET)
 	public String editPage(String uid,String path,String input,String kw,Integer p,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String username = getUsername();
 		String content = "/content/"+getUsername();
+   		User user = (User)jcrService.getObject("/system/users/"+username);
 		Page currentpage = new Page();
 		ImageUtil.HDDOn();
 		if(!jcrService.nodeExsits(content)) {//create root
@@ -574,6 +576,7 @@ public class SiteController extends BaseController {
 		
 		model.addAttribute("navigation", menu);
 		model.addAttribute("page", currentpage); 
+		model.addAttribute("user", user);
 		model.addAttribute("origin", request.getRequestURL()+"?"+request.getQueryString());
 		if(currentpage.getPath().startsWith("/content/templates")) {
 			ImageUtil.HDDOff();
@@ -585,7 +588,9 @@ public class SiteController extends BaseController {
 
 	@RequestMapping(value = {"/content/{site}.edit","/content/{site}/*.edit","/content/{site}/**/*.edit"}, method = RequestMethod.GET)
 	public String editor(String input,String kw,Integer p,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String username = getUsername();
 		String content = "/content/"+getUsername();
+   		User user = (User)jcrService.getObject("/system/users/"+username);
 		Page currentpage = new Page();
 		if(!jcrService.nodeExsits(content)) {//create root
 			if(!jcrService.nodeExsits("/content")) {
@@ -642,6 +647,7 @@ public class SiteController extends BaseController {
 		
 		//model.addAttribute("navigation", menu);
 		model.addAttribute("page", currentpage); 
+		model.addAttribute("user", user);
 		model.addAttribute("origin", request.getRequestURL()+"?"+request.getQueryString());
 		if(currentpage.getPath().startsWith("/content/templates"))
 			return "site/template";
@@ -2896,8 +2902,8 @@ public class SiteController extends BaseController {
 					String filename = toFile(src,prefix+i,folder.getAbsolutePath(),path,allTypes);
 					i++;
 					e.attr("src", location+filename);
-					e.removeAttr("height");
-					e.removeAttr("width");					
+					//e.removeAttr("height");
+					//e.removeAttr("width");					
 					urls.put(src, location+filename);				    			
 				} catch (MalformedURLException e2) {
 					logger.error(e2.getMessage());
@@ -3076,6 +3082,8 @@ public class SiteController extends BaseController {
 				logger.error("Asset is null:"+spath+",uid="+uid);
 				return "error";
 			}
+			Device device = (Device)jcrService.getObject(asset.getDevice());
+			String devicePath = device.getLocation();
 			filename +=asset.getName();
 		    String ext =asset.getExt();		
 		    if(ext==null) {
@@ -3087,31 +3095,31 @@ public class SiteController extends BaseController {
 				}				    	
 		    }
 			ext =asset.getPath().substring(asset.getPath().lastIndexOf("."));
-			String filePath = jcrService.getDevice()+asset.getPath();
+			String filePath = devicePath+asset.getPath();
 			if(link.startsWith("doc2jpg")) {
-				filePath = jcrService.getDevice()+asset.getPath()+"/x400"+".jpg";
+				filePath = devicePath+asset.getPath()+"/x400"+".jpg";
 				ext=".jpg";
 			}else if(link.startsWith("pdf2jpg")) {					
-				filePath = jcrService.getDevice()+asset.getPath()+"/x400"+".jpg";
+				filePath = devicePath+asset.getPath()+"/x400"+".jpg";
 				ext=".jpg";
 			}else if(link.startsWith("video2jpg")) {
-				filePath = jcrService.getDevice()+asset.getPath()+"/x400"+".jpg";
+				filePath = devicePath+asset.getPath()+"/x400"+".jpg";
 				ext=".jpg";
 			}else if(link.startsWith("video.mp4")) {
-				if(new File(jcrService.getDevice()+asset.getPath()+"/origin"+ext+".mp4").exists()) {
-					filePath = jcrService.getDevice()+asset.getPath()+"/origin"+ext+".mp4";
+				if(new File(devicePath+asset.getPath()+"/origin"+ext+".mp4").exists()) {
+					filePath = devicePath+asset.getPath()+"/origin"+ext+".mp4";
 				} else 
-					filePath = jcrService.getDevice()+asset.getPath();
+					filePath = devicePath+asset.getPath();
 					ext=".mp4";
 			}else if(link.startsWith("doc2pdf")) {
-				filePath = jcrService.getDevice()+asset.getPath()+"/origin.pdf";
+				filePath = devicePath+asset.getPath()+"/origin.pdf";
 				ext=".pdf";
 			}else if(link.startsWith("pdf2img")) {
-				filePath = jcrService.getDevice()+asset.getPath()+"/origin-"+p+".jpg";
+				filePath = devicePath+asset.getPath()+"/origin-"+p+".jpg";
 				ext=".jpg";
 				File file = new File(filePath);
 				if(!file.exists()) {
-					String pdfPath = jcrService.getDevice()+asset.getPath()+"/origin.pdf";
+					String pdfPath = devicePath+asset.getPath()+"/origin.pdf";
 					int exit = ImageUtil.pdf2jpg(pdfPath,Integer.parseInt(p),"1600x1600", filePath);
 
 				}			
@@ -3119,7 +3127,7 @@ public class SiteController extends BaseController {
 		    
 			FileOutputStream output = new FileOutputStream(assetFolder+"/"+filename+ext);
 			if(w != null) {
-				File icon = new File(jcrService.getDevice()+asset.getPath()+"/x"+w+"00.jpg");
+				File icon = new File(devicePath+asset.getPath()+"/x"+w+"00.jpg");
 				if(icon.exists()) {
 					FileInputStream in = new FileInputStream(icon);
 					IOUtils.copy(in, output);	

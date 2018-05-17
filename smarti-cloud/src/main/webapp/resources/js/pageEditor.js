@@ -120,7 +120,7 @@ tinymce.init({
 	  plugins: [
 	    'save advlist autolink lists link image imagetools template charmap print preview anchor',
 	    'noneditable searchreplace visualblocks code fullscreen',
-	    'insertdatetime media table cloud web youchat contextmenu paste'
+	    'insertdatetime media table cloud web contextmenu paste'
 	  ],
 	  convert_urls: true,
 	  relative_urls: true,

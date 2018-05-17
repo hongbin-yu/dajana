@@ -18,7 +18,7 @@
 				<div id="uploadBox" class="panel-body" ondrop="drop(event)" ondragover="allowDrop(event)" style="border:1px solid #aaaaaa;">
 <%-- 				<div id="video-iframe"><c:if test="${video }"><img src="${video_url}/?action=stream" class="img-responsive"></c:if></div>				  
  --%>					<form action="upload.html" method="POST" id="form-upload" enctype="multipart/form-data">
-					<input type="hidden" id="path" name="path" value="/${user.userName}/assets/youchat"/>
+					<input type="hidden" id="path" name="path" value="/assets/${user.userName}/youchat"/>
 					<input class="wb-inv" type="checkbox" id="override" name="override" value="true" checked/>
 					<div class="panel" id="selectedFiles"  onchange="javascript:uploadFiles()">
 					</div>

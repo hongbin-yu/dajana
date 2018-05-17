@@ -97,7 +97,7 @@ ${navigation }
 	<div class="btn-group btn-group-justified">
 	 <button class="btn btn-default btn-sm pull-right" onclick="javascript:openOverlay('${page.uid }','right-bar')" title="打开/关闭微网"><span class="glyphicon glyphicon-globe pull-right"></span></button>
 	 <button class="btn btn-default btn-sm pull-right" onclick="javascript:openOverlay('${page.uid }','left-bar')" title="打开/关闭微云"><span class="glyphicon glyphicon-cloud pull-right"></span></button>
-	 <button class="btn btn-default btn-sm pull-right" onclick="javascript:openOverlay('${page.uid }','youchat-bar')" title="打开/关闭微"><span class="glyphicon glyphicon-envelope pull-right"></span></button>
+<!-- 	 <button class="btn btn-default btn-block pull-right" title="打开本机资源" onclick="javascript:openFiles()"><span class="glyphicon glyphicon-picture pull-right"></span></button>		 -->		 
 	${page.breadcrumb}
     </div>
 	</div>
