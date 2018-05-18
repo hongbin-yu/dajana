@@ -173,7 +173,7 @@ public class ImageUtil
     	Process p;
     	int exit = 0;
     	String shellCommand = "speedtest-cli";
-    	ProcessBuilder pb = new ProcessBuilder("speedtext-cli");
+    	ProcessBuilder pb = new ProcessBuilder("speedtest-cli");
     	pb.redirectErrorStream(true);
 	    try {	
 	        p = pb.start();//Runtime.getRuntime().exec(shellCommand);

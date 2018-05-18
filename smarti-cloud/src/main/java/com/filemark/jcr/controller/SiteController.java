@@ -1987,8 +1987,9 @@ public class SiteController extends BaseController {
 		try {
 			//String pdfpath = path.substring(0, path.lastlastIndexOf("."))+".pdf";
 
-
-			File pdffile = new File(jcrService.getDevice()+path+"/origin.pdf");
+			String devicePath = jcrService.getDevice();
+    		if(!new File(devicePath+path).exists()) devicePath = jcrService.getBackup();
+			File pdffile = new File(devicePath+path+"/origin.pdf");
 			if(pdffile.exists()) {
 /*				FileInputStream in = new FileInputStream(pdffile);
 				response.setContentType("application/pdf");
@@ -2060,10 +2061,12 @@ public class SiteController extends BaseController {
 
 		try {
 			if (p==null) p=0;
+			String devicePath = jcrService.getDevice();
+    		if(!new File(devicePath+path).exists()) devicePath = jcrService.getBackup();			
 			String pdfpath = path+"/origin.pdf";
 			String jpgpath = path+"/origin"+"-"+p+".jpg";
-			File pdffile = new File(jcrService.getDevice()+pdfpath);
-			File jpgfile = new File(jcrService.getDevice()+jpgpath);
+			File pdffile = new File(devicePath+pdfpath);
+			File jpgfile = new File(devicePath+jpgpath);
 			if(pdffile.exists() && !jpgfile.exists()) {
 				if(ImageUtil.pdf2jpg(pdffile.getAbsolutePath(), p, "1600x1600", jpgfile.getAbsolutePath())==0) {
 /*					FileInputStream in = new FileInputStream(jpgfile);
@@ -2159,10 +2162,11 @@ public class SiteController extends BaseController {
 
 			}
 			String pdfpath = path+"/origin.pdf";
-
+			String devicePath = jcrService.getDevice();
+    		if(!new File(devicePath+path).exists()) devicePath = jcrService.getBackup();
 			File file = null;
-			String jpgname = jcrService.getDevice()+path+"/x400"+".jpg";
-			String pdfname = jcrService.getDevice()+pdfpath;
+			String jpgname = devicePath+path+"/x400"+".jpg";
+			String pdfname = devicePath+pdfpath;
 			file = new File(jpgname);
 			if(!file.exists()) {
 
@@ -2207,10 +2211,11 @@ public class SiteController extends BaseController {
 			if(p==null) p=0;
 			//String pdfbase = path.substring(0, path.lastlastIndexOf("."));
 			String pdfpath = path+"/origin.pdf";
-
+			String devicePath = jcrService.getDevice();
+    		if(!new File(devicePath+path).exists()) devicePath = jcrService.getBackup();
 			File file = null;
-			String jpgname = jcrService.getDevice()+path+"/origin-"+p+".jpg";
-			String pdfname = jcrService.getDevice()+pdfpath;
+			String jpgname = devicePath+path+"/origin-"+p+".jpg";
+			String pdfname = devicePath+pdfpath;
 			file = new File(jpgname);
 			if(!file.exists()) {
 
@@ -2256,10 +2261,12 @@ public class SiteController extends BaseController {
 			}
 			if(p==null) p=0;
 			File file = null;
-			//String filebase = path.substring(0, path.lastlastIndexOf("."));
-			String jpgname = jcrService.getDevice()+path+"/origin-"+p+".jpg";
+			String devicePath = jcrService.getDevice();
+    		if(!new File(devicePath+path).exists()) devicePath = jcrService.getBackup();	
+			String jpgname = devicePath+path+"/origin-"+p+".jpg";
+
 			String pdfpath = path+"/origin.pdf";
-			String pdfname = jcrService.getDevice()+ pdfpath;
+			String pdfname = devicePath+ pdfpath;
 			file = new File(jpgname);
 			if(!file.exists()) {
 
@@ -2358,10 +2365,10 @@ public class SiteController extends BaseController {
     		File file = new File(devicePath+path);
     		if(!file.exists()) devicePath = jcrService.getBackup();
     		
-			file = new File(jcrService.getDevice()+path+"/origin"+ext+".mp4");
+			file = new File(devicePath+path+"/origin"+ext+".mp4");
 			String contentType="video/mp4";
 			if(!file.exists()) {
-				file = new File(jcrService.getDevice()+path+"/origin"+ext);
+				file = new File(devicePath+path+"/origin"+ext);
 				logger.debug("video original:"+file.getAbsolutePath());
 				try {
 					Asset asset = (Asset)jcrService.getObject(path);
@@ -2403,7 +2410,7 @@ public class SiteController extends BaseController {
 			file = new File(jcrService.getDevice()+path+".webm");
 			String contentType="video/webm";
 			if(!file.exists() || (path.endsWith(".webm") && isIntranet(request))) {
-				file = new File(jcrService.getDevice()+path);
+				file = new File(devicePath+path);
 				logger.debug("video original:"+file.getAbsolutePath());
 				try {
 					Asset asset = (Asset)jcrService.getObject(path);
