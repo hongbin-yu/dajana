@@ -87,7 +87,7 @@
     var splashImagePaths = "${splashImagePaths}".split(",");
     var numImages = ${numImages};
     var selectedImageIndex = 1;
-    document.getElementById("splash-image").src = splashImagePaths[Math.floor((Math.random() * numImages))];
+    document.getElementById("splash-image").src = splashImagePaths[Math.floor((Math.random() * numImages))]+"/origin.jpg";
 
 </script>
         
