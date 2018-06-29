@@ -20,13 +20,13 @@
 <div class="col-md-12">
 <ul class="list-inline margin-bottom-none">
 <authz:authorize ifAnyGranted="ROLE_USER,ROLE_ADMINISTRATOR,ROLE_OWNER">
-<li><a title="<spring:message code="djn.website"></spring:message>" href="<c:url value="/site/editor.html"/>"><span class="glyphicon glyphicon-globe"></span><spring:message code="djn.website"></spring:message></a></li>
-<%-- <li><a title="<spring:message code="djn.b2c"></spring:message>" href="<c:url value="/site/b2c.html"/>"><span class="glyphicon glyphicon-gift"></span><spring:message code="djn.b2c"></spring:message></a></li>
- --%><li><a href='<c:url value="/protected/youchat.html"></c:url>' title="<spring:message code="djn.online_chat"></spring:message>"><span class="glyphicon glyphicon-envelope"></span><spring:message code="djn.chat"></spring:message><span class="badge"></span></a></li>
-<li><a href='<c:url value="/protected/youlook.html"></c:url>' title="<spring:message code="djn.online_chat"></spring:message>"><span class="glyphicon glyphicon-facetime-video"></span><spring:message code="djn.youlook"></spring:message><span class="badge"></span></a></li>
+<li><a title="<spring:message code="djn.website"></spring:message>" href="<c:url value="editor.html"/>"><span class="glyphicon glyphicon-globe"></span><spring:message code="djn.website"></spring:message></a></li>
+<%-- <li><a title="<spring:message code="djn.b2c"></spring:message>" href="<c:url value="b2c.html"/>"><span class="glyphicon glyphicon-gift"></span><spring:message code="djn.b2c"></spring:message></a></li>
+ --%><li><a href='<c:url value="protected/youchat.html"></c:url>' title="<spring:message code="djn.online_chat"></spring:message>"><span class="glyphicon glyphicon-envelope"></span><spring:message code="djn.chat"></spring:message><span class="badge"></span></a></li>
+<li><a href='<c:url value="protected/youlook.html"></c:url>' title="<spring:message code="djn.online_chat"></spring:message>"><span class="glyphicon glyphicon-facetime-video"></span><spring:message code="djn.youlook"></spring:message><span class="badge"></span></a></li>
 <li><a href="javascript:openPdf()" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-open"></span>PDF</a>
 <li><a href="javascript:deleteFiles()" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-remove"></span><spring:message code="djn.delete"></spring:message></a>
-<li><a href="/site/profile.html"><button class="btn btn-danger btn-xs" title="${user.role }"><span class="glyphicon glyphicon-user"></span><authz:authentication property='name' /></button></a></li>
+<li><a href="profile.html"><button class="btn btn-danger btn-xs" title="${user.role }"><span class="glyphicon glyphicon-user"></span><authz:authentication property='name' /></button></a></li>
 <li><a href="<c:url value="/logout"/>"><span class="glyphicon glyphicon-log-out"></span><spring:message code="djn.logout"/></a></li>
 </authz:authorize>
 <%-- <li><a class="wb-lbx lbx-modal" href="#" title="${user.name }">${user.title }</a></li>
@@ -43,7 +43,7 @@
 
 <section id="wb-srch" class="col-xs-6 text-right visible-md visible-lg">
 <h2 class="wb-inv"><spring:message code="djn.search"/></h2>
-<form action='<c:url value="/site/assets.html"></c:url>' method="get" name="cse-search-box" role="search" class="form-inline" accept-charset="UTF-8">
+<form action='<c:url value="assets.html"></c:url>' method="get" name="cse-search-box" role="search" class="form-inline" accept-charset="UTF-8">
 <div class="form-group">
 <label for="wb-srch-q" class="wb-inv"><spring:message code="djn.search"/></label>
 <%-- <select name="type" onchange="this.form.submit()">
@@ -117,5 +117,5 @@
 </div>
 </div>
 </c:if>
-<span class="wb-sessto" data-wb-sessto='{logouturl: "/logout"}'></span>
+<span class="wb-sessto" data-wb-sessto='{logouturl: "logout"}'></span>
 </header>

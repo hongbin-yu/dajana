@@ -17,7 +17,7 @@
 		        <h3><c:if test="${folder.name!='assets' }"><a href="assets.html?path=${folder.parent}&type=${type}"><span class="glyphicon glyphicon-backward"></span>${folder.parent}</a></c:if>
 		        <a href="?path=${folder.path}&type=${type}" title="刷屏"><span class="glyphicon glyphicon-refresh"></span>${folder.path}</a>
 		        </h3>
-		    <form action='<c:url value="/site/assets.html"></c:url>' method="get" name="cse-search-box" role="search" class="form-inline" accept-charset="UTF-8">
+		    <form action='<c:url value="assets.html"></c:url>' method="get" name="cse-search-box" role="search" class="form-inline" accept-charset="UTF-8">
 			<input type="hidden" id="path" name="path" value="${folder.path}"/>
 			<input type="hidden" id= "input" name="input" value="${input}"/>
 			<input type="hidden" id="kw" name="kw" value="${kw}"/>		
@@ -177,7 +177,7 @@
 	    </c:if>
         <c:forEach items="${folders.items}" var="item" varStatus="loop">
             <div class="col-md-4">
-            <a title="<spring:message code="djn.open"/>PDF" href="<c:url value="viewf2p?path=${item.path}"/>" target="_BLANK"><img title="<spring:message code="djn.open"/>PDF" src='<c:url value="/resources/images/pdf.gif"></c:url>'></a>
+            <a title="<spring:message code="djn.open"/>PDF" href="viewf2p?path=${item.path}" target="_BLANK"><img title="<spring:message code="djn.open"/>PDF" src='<c:url value="/resources/images/pdf.gif"></c:url>'></a>
             <a href="assets.html?path=${item.path}&type=${type}"> <img id="folder${item.uid }" path="${item.path }"  ondrop="drop(event)" ondragover="allowDrop(event)" alt="${item.title}" class="img-responsive" src='<c:url value="viewfolder?path=${item.path}"></c:url>'/></a>
 			<div class="panel" id="selectFiles${item.uid }">
 			</div>	            
@@ -215,7 +215,7 @@
 	<a class="download pull-right" href="file${item.ext}?path=${item.path}" target="_BLANK" download="${item.title }"><span class="glyphicon glyphicon-download pull-right">下载</span></a>
 	</div>	
 		<c:if test="${item.pdf}">
-		<a title="<spring:message code="djn.open"/>PDF" href="<c:url value="/site/viewpdf.pdf?uid=${item.uid}"/>" target="_BLANK"><span class="glyphicon glyphicon-open"></span> <spring:message code="djn.open"/>PDF</a>
+		<a title="<spring:message code="djn.open"/>PDF" href="viewpdf.pdf?uid=${item.uid}" target="_BLANK"><span class="glyphicon glyphicon-open"></span> <spring:message code="djn.open"/>PDF</a>
 		</c:if>
         <c:if test="${item.text}">
 			<a  class="wb-lbx" title="<spring:message code="djn.edit"/>" href="<c:url value="texteditor.html?uid=${item.uid}"/>"><span class="glyphicon glyphicon-pencil"></span><spring:message code="djn.onlineEdit"/></a>

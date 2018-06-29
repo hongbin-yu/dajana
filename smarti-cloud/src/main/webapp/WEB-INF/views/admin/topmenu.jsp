@@ -20,17 +20,17 @@
 <div class="col-md-12">
 <ul class="list-inline margin-bottom-none">
 <authz:authorize ifAnyGranted="ROLE_USER,ROLE_ADMINISTRATOR,ROLE_OWNER">
-<li><a title="<spring:message code="djn.edit_this_page"/>" href="<c:url value="/site/editor.html"/>" title="<spring:message code="djn.edit_this_page"/>"><span class="glyphicon glyphicon-edit"></span><spring:message code="djn.edit"/></a></li>
-<li><a href='<c:url value="/protected/youchat.html"></c:url>' title="<spring:message code="djn.online_chat"/>"><span class="glyphicon glyphicon-log-out"></span><spring:message code="djn.chat"/><span class="badge"></span></a></li>
-<li><a href='<c:url value="/protected/youlook.html"></c:url>' title="<spring:message code="djn.online_chat"></spring:message>"><span class="glyphicon glyphicon-facetime-video"></span><spring:message code="djn.youlook"></spring:message><span class="badge"></span></a></li>
+<li><a title="<spring:message code="djn.edit_this_page"/>" href="<c:url value="site/editor.html"/>" title="<spring:message code="djn.edit_this_page"/>"><span class="glyphicon glyphicon-edit"></span><spring:message code="djn.edit"/></a></li>
+<li><a href='<c:url value="protected/youchat.html"></c:url>' title="<spring:message code="djn.online_chat"/>"><span class="glyphicon glyphicon-log-out"></span><spring:message code="djn.chat"/><span class="badge"></span></a></li>
+<li><a href='<c:url value="protected/youlook.html"></c:url>' title="<spring:message code="djn.online_chat"></spring:message>"><span class="glyphicon glyphicon-facetime-video"></span><spring:message code="djn.youlook"></spring:message><span class="badge"></span></a></li>
 <li><a href="javascript:deleteAll()" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-remove"></span><spring:message code="djn.delete"></spring:message></a>
-<li><a href="<c:url value="/signout"/>" title="<spring:message code="djn.logout"/>"><span class="glyphicon glyphicon-log-out"></span><spring:message code="djn.logout"/></a></li>
-<li><a href="/site/profile.html" title="<authz:authentication property="name" />"><authz:authentication property="name" /><span class="glyphicon glyphicon-user"></span></a></li>
+<li><a href="<c:url value="signout"/>" title="<spring:message code="djn.logout"/>"><span class="glyphicon glyphicon-log-out"></span><spring:message code="djn.logout"/></a></li>
+<li><a href="site/profile.html" title="<authz:authentication property="name" />"><authz:authentication property="name" /><span class="glyphicon glyphicon-user"></span></a></li>
 </authz:authorize>
 <authz:authorize ifNotGranted="ROLE_USER">
-<li><a href="<c:url value="/editor.html?path=${page.path }"/>" title="<spring:message code="djn.edit_this_page"/>"><span class="glyphicon glyphicon-edit"></span><spring:message code="djn.edit"/></a></li>
-<li><a href="<c:url value="/signup"/>" title="<spring:message code="djn.register"/>"><span class="glyphicon glyphicon-flag"></span><spring:message code="djn.register"/></a></li>
-<li><a href="<c:url value="/signout"/>" title="<spring:message code="djn.logout"/>"><span class="glyphicon glyphicon-log-out"></span><spring:message code="djn.logout"/></a></li>
+<li><a href="<c:url value="editor.html?path=${page.path }"/>" title="<spring:message code="djn.edit_this_page"/>"><span class="glyphicon glyphicon-edit"></span><spring:message code="djn.edit"/></a></li>
+<li><a href="<c:url value="signup"/>" title="<spring:message code="djn.register"/>"><span class="glyphicon glyphicon-flag"></span><spring:message code="djn.register"/></a></li>
+<li><a href="<c:url value="signout"/>" title="<spring:message code="djn.logout"/>"><span class="glyphicon glyphicon-log-out"></span><spring:message code="djn.logout"/></a></li>
 </authz:authorize>
 </ul>
 </div>
