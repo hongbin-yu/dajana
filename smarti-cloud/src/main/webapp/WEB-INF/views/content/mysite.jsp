@@ -47,7 +47,7 @@
 <div class="row">
 <section class="col-xs-6 text-right">
 <h2 class="wb-inv"><spring:message code="djn.cloud"/></h2>
-<p><a href='<c:url value="protected/mycloud"></c:url>' class="btn btn-danger"><spring:message code="djn.cloud"/></a></p>
+<p><a href='<c:url value="../protected/mycloud"></c:url>' class="btn btn-danger"><spring:message code="djn.cloud"/></a></p>
 </section>
 <section class="col-xs-6">
 <h2 class="wb-inv"><spring:message code="djn.dajana"/></h2>
