@@ -1,5 +1,5 @@
 echo "update tomcat8 ROOT.war"
-new_war=/mnt/device/dajana/smarti-cloud/target/smarti-cloud-1.0.war
+new_war=/home/device/dajana/smarti-cloud/target/smarti-cloud-1.0.war
 old_war=/var/lib/tomcat8/webapps/ROOT.war
 if [ "$new_war" -nt "$old_war" ]
 then
