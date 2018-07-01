@@ -27,7 +27,8 @@
 	<filter-mapping>
 	   <filter-name>etagFilter</filter-name>
 	   <url-pattern>/site/*</url-pattern>
-	</filter-mapping>		
+	</filter-mapping>
+	
 	<filter>
 	    <filter-name>jwtSSO</filter-name>
 	    <filter-class>com.filemark.sso.resources.JwtFilter</filter-class>
@@ -54,7 +55,8 @@
 	      <param-name>services.key</param-name>
 	      <param-value>dajanaSigningKey</param-value>
 	    </init-param>      
-	</filter>			
+	</filter>	
+
 <!-- Secures the application -->
 	<filter>
 		<filter-name>springSecurityFilterChain</filter-name>
@@ -64,22 +66,25 @@
 	    <filter-name>encodingFilter</filter-name>
 	    <url-pattern>/*</url-pattern>	
 	</filter-mapping>
-		
-	<filter-mapping>
+	 	
+<filter-mapping>
 		<filter-name>jwtSSO</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
-		 
+	 
 	<filter-mapping>
 		<filter-name>jwtProtected</filter-name>
 		<url-pattern>/protected/*</url-pattern>
- 		<!-- url-pattern>/site/*</url-pattern-->
+		
+ 		<!--url-pattern>/site/*</url-pattern-->
+ 		
 	</filter-mapping>
 
 	<filter-mapping>
 		<filter-name>jwtAdmin</filter-name>
  		<url-pattern>/site/*</url-pattern>
-	</filter-mapping>			
+	</filter-mapping>
+				
 	<filter-mapping>
 		<filter-name>springSecurityFilterChain</filter-name>
 		<url-pattern>/*</url-pattern>

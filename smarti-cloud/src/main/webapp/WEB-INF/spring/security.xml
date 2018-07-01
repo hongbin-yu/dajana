@@ -23,7 +23,7 @@
 	<http pattern="/" security="none" />									
 <http use-expressions="true">
 		<!-- Authentication policy -->
-		<form-login login-page="/login" login-processing-url="/signin/authenticate" authentication-failure-url="/signin?error=bad_credentials" default-target-url="/site/assets.html"/>
+		<form-login login-page="/signin" login-processing-url="/signin/authenticate" authentication-failure-url="/signin?error=bad_credentials" default-target-url="/site/assets.html"/>
 		<logout logout-url="/signout" delete-cookies="JSESSIONID" />
 		<intercept-url pattern="/favicon.ico" access="permitAll" />
 		<intercept-url pattern="/resources/**" access="permitAll" />
@@ -31,6 +31,7 @@
 		<intercept-url pattern="/published/**" access="permitAll" />	
 		<intercept-url pattern="/forget/**" access="permitAll" />	
 		<intercept-url pattern="/protected/**" access="isAuthenticated()" />
+		<intercept-url pattern="/site/**" access="isAuthenticated()" />
 		<intercept-url pattern="/yhyun" access="permitAll" />			
 		<intercept-url pattern="/signin" access="permitAll" />
 		<intercept-url pattern="/signup" access="permitAll" />
