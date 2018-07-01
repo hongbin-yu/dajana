@@ -21,7 +21,7 @@
 <ul class="list-inline margin-bottom-none">
 <authz:authorize ifAnyGranted="ROLE_USER,ROLE_ADMINISTRATOR,ROLE_OWNER">
 <li><a href="<c:url value="/site/editor.html?path=${page.path }"/>" title="<spring:message code="djn.edit_this_page"/>" ><span class="glyphicon glyphicon-edit"></span><spring:message code="djn.edit"/></a></li>
-<li><a href='<c:url value="/protected/youchat.html"></c:url>' title="<spring:message code="djn.online_chat"/>"><span class="glyphicon glyphicon-envelope"></span><spring:message code="djn.chat"/><span class="badge"></span></a></li>
+<li><a href='<c:url value="/site/youchat.html"></c:url>' title="<spring:message code="djn.online_chat"/>"><span class="glyphicon glyphicon-envelope"></span><spring:message code="djn.chat"/><span class="badge"></span></a></li>
 <li><a href="<c:url value="/logout"/>"  title="<spring:message code="djn.logout"/>" ><span class="glyphicon glyphicon-log-out"></span><spring:message code="djn.logout"/></a></li>
 <%-- <li><a href="/mycart.html" title="<authz:authentication property="name" />"><authz:authentication property="name" /><img title="<spring:message code="djn.shopping_cart"/>" src='<c:url value="/resources/images/mycart.png"></c:url>'><span class="badge"></span></a></li> --%>
 </authz:authorize>

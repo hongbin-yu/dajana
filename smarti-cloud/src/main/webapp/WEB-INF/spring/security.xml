@@ -30,11 +30,12 @@
 		<intercept-url pattern="/content/**" access="permitAll" />	
 		<intercept-url pattern="/published/**" access="permitAll" />	
 		<intercept-url pattern="/forget/**" access="permitAll" />	
-		<intercept-url pattern="/protected/**" access="isAuthenticated()" />
+		<intercept-url pattern="/protected/**" access="hasAnyRole('ROLE_USER','ROLE_ADMINISTRATOR')" />
 		<intercept-url pattern="/site/**" access="isAuthenticated()" />
 		<intercept-url pattern="/yhyun" access="permitAll" />			
 		<intercept-url pattern="/signin" access="permitAll" />
 		<intercept-url pattern="/signup" access="permitAll" />
+<!-- 		<intercept-url pattern="/you**" access="hasAnyRole('ROLE_USER','ROLE_ADMINISTRATOR')" />
 		<intercept-url pattern="/edit**" access="hasAnyRole('ROLE_USER','ROLE_ADMINISTRATOR')" />
 		<intercept-url pattern="/browse**" access="hasAnyRole('ROLE_USER','ROLE_ADMINISTRATOR')" />
 		<intercept-url pattern="/assets**" access="hasAnyRole('ROLE_USER','ROLE_ADMINISTRATOR')" />
@@ -50,7 +51,7 @@
 		<intercept-url pattern="/create**" access="hasAnyRole('ROLE_USER','ROLE_ADMINISTRATOR')"  />
 		<intercept-url pattern="/menu**" access="hasAnyRole('ROLE_USER','ROLE_ADMINISTRATOR')"  />
 		<intercept-url pattern="/folder**" access="hasAnyRole('ROLE_USER','ROLE_ADMINISTRATOR')"  />
-		<intercept-url pattern="/media**" access="hasAnyRole('ROLE_USER','ROLE_ADMINISTRATOR')"  />
+		<intercept-url pattern="/media**" access="hasAnyRole('ROLE_USER','ROLE_ADMINISTRATOR')"  /> -->
 		<intercept-url pattern="/*" access="permitAll" />	
 		<intercept-url pattern="/**/*" access="hasAnyRole('ROLE_USER','ROLE_ADMINISTRATOR')"  />
 		<access-denied-handler/>										

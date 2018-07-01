@@ -44,7 +44,7 @@
 	</c:if>			
  		</main>
         <nav class="wb-sec col-md-4 col-md-pull-8" typeof="SiteNavigationElement" id="wb-sec" role="navigation">
-        		<h3 class="wb-navcurr"><a href="/protected/youchat.html"><span class="glyphicon glyphicon-th-list"></span> 通讯目录</a></h3>
+        		<h3 class="wb-navcurr"><a href="/site/youchat.html"><span class="glyphicon glyphicon-th-list"></span> 通讯目录</a></h3>
 <%-- 		<c:if test="${user.role =='Owner' || user.role == 'Administrator'}"> --%>
 			<details>
 			<summary><label for="path"><span class="glyphicon glyphicon-folder-close"></span><spring:message code="djn.create_group"/></label></summary>
@@ -66,7 +66,7 @@
 <%-- 		</c:if> --%>
         <ul class="list-group menu list-unstyled">
 	        <c:forEach items="${folders.items}" var="item" varStatus="loop">
-	            <li class="list-group-item" id="${item.uid }"><a  href='<c:url value="/protected/youchat.html?path=${item.path}"></c:url>'><span class="glyphicon glyphicon-user">${item.title}</span><span id="unread-${item.uid }" class="badge"></span></a>
+	            <li class="list-group-item" id="${item.uid }"><a  href='<c:url value="/site/youchat.html?path=${item.path}"></c:url>'><span class="glyphicon glyphicon-user">${item.title}</span><span id="unread-${item.uid }" class="badge"></span></a>
 				<c:if test="${user.role =='Owner' || user.role == 'Administrator' || item.createdBy == user.userName}">	            
 	            <button class="btn btn-warning btn-xs pull-right" onclick="javascript:removeTag('${item.uid}')"><span class="glyphicon glyphicon-trash"></span></button>
 	            <a class="wb-lbx" href="groupedit.html?path=${item.path }"><button class="btn btn-primary btn-xs pull-right"><span class="glyphicon glyphicon-cog"></span></button></a>

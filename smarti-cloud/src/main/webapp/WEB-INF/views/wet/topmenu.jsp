@@ -21,7 +21,7 @@
 <ul class="list-inline margin-bottom-none">
 <authz:authorize ifAnyGranted="ROLE_USER,ROLE_ADMINISTRATOR,ROLE_OWNER">
 <li><img title="<spring:message code="djn.edit_this_page"/>" lat="" src='<c:url value="/resources/images/web-icon.png"></c:url>'><a title="<spring:message code="djn.edit_this_page"/>" href="<c:url value="/site/editor.html?path=${page.path }"/>"><spring:message code="djn.edit"/></a></li>
-<li><a href='<c:url value="/protected/chat.html"></c:url>'><img title="<spring:message code="djn.online_chat"/>" alt="" src='<c:url value="/resources/images/chat16X16.png"></c:url>'><spring:message code="djn.chat"/><span class="badge"></span></a></li>
+<li><a href='<c:url value="/site/youchat.html"></c:url>'><img title="<spring:message code="djn.online_chat"/>" alt="" src='<c:url value="/resources/images/chat16X16.png"></c:url>'><spring:message code="djn.chat"/><span class="badge"></span></a></li>
 <li><a href="<c:url value="/logout"/>"><img title="<spring:message code="djn.logout"/>" alt="" src='<c:url value="/resources/images/lock.gif"></c:url>'><spring:message code="djn.logout"/></a></li>
 <li><a href="/mycart.html" title="<authz:authentication property="name" />"><authz:authentication property="name" /><img title="<spring:message code="djn.shopping_cart"/>" alt="" src='<c:url value="/resources/images/mycart.png"></c:url>'><span class="badge"></span></a></li>
 </authz:authorize>
