@@ -74,7 +74,7 @@ public class ProtectedController extends BaseController {
    		String chatRoot = "/youchat";
    		if(path==null && user != null && "Owner".equals(user.getRole())) path="/youchat";
    		if(!jcrService.nodeExsits("/assets/"+username+"/youchat")) {
-   			jcrService.addNodes("/assets/"+username+"//youchat", "nt:unstructured", username);
+   			jcrService.addNodes("/assets/"+username+"/youchat", "nt:unstructured", username);
    			
    		}
    		if(!jcrService.nodeExsits("/youchat")) {

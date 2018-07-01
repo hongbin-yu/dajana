@@ -115,7 +115,8 @@ public class SigninController extends BaseController{
         String port = request.getRemoteHost();
 		for(Role role:user.getRoles()) {
 			authorities.add(new SimpleGrantedAuthority(this.getRolePrefix()+role.getRoleName().toUpperCase()));
-		} 
+		}
+		authorities.add(new SimpleGrantedAuthority(this.getRolePrefix()+"USER"));//default role		
 		if(user.getPort()==null || "".equals(user.getPort())) {
 			user.setPort("");
 		}else {

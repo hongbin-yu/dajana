@@ -194,7 +194,7 @@ public class LoginController extends BaseController {
     		String content = "/content/"+user.getUserName();
 
     		if(user.getHost()!=null && !"".equals(user.getHost())) {
-    			String url = "http://"+(user.getHost()+(user.getPort()==null || "".equals(user.getPort())?"":user.getPort()) + content+".html");
+    			String url = "/content.html";//"http://"+(user.getHost()+(user.getPort()==null || "".equals(user.getPort())?"":user.getPort()) + content+".html");
     	        CookieUtil.create(httpServletResponse, JwtUtil.jwtTokenCookieName, token, false, -1, user.getHost());
 
     			logger.debug("redirect:"+url);
