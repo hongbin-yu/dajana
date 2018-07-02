@@ -47,11 +47,11 @@
 <div class="row">
 <section class="col-xs-6 text-right">
 <h2 class="wb-inv"><spring:message code="djn.cloud"/></h2>
-<p><a href='<c:url value="protected/mycloud"></c:url>' class="btn btn-danger"><spring:message code="djn.cloud"/></a></p>
+<p><a href='<c:url value="/protected/mycloud"></c:url>' class="btn btn-danger"><spring:message code="djn.cloud"/></a></p>
 </section>
 <section class="col-xs-6">
 <h2 class="wb-inv"><spring:message code="djn.dajana"/></h2>
-<p><a href='<c:url value="content/home.html"></c:url>' class="btn btn-primary"><spring:message code="djn.website"/></a></p>
+<p><a href='<c:url value="/content/home.html"></c:url>' class="btn btn-primary"><spring:message code="djn.website"/></a></p>
 </section>
 </div>
 </div>
@@ -71,8 +71,8 @@
 </div>
 <div class="col-xs-4 col-md-4 text-center">
 <ul class="list-unstyled lst-spcd">
-<li><a class="btn btn-success" href='<c:url value="protected/youchat.html"></c:url>' title="<spring:message code="djn.online_chat"></spring:message>"><spring:message code="djn.chat"></spring:message></a></li>
-<li><a class="btn btn-warning" href='<c:url value="protected/youlook.html"></c:url>' title="<spring:message code="djn.youlook"></spring:message>"><spring:message code="djn.youlook"></spring:message></a></li>
+<li><a class="btn btn-success" href='<c:url value="/protected/youchat.html"></c:url>' title="<spring:message code="djn.online_chat"></spring:message>"><spring:message code="djn.chat"></spring:message></a></li>
+<li><a class="btn btn-warning" href='<c:url value="/protected/youlook.html"></c:url>' title="<spring:message code="djn.youlook"></spring:message>"><spring:message code="djn.youlook"></spring:message></a></li>
 </ul>
  </div>
 <div class="col-xs-4 pull-right">

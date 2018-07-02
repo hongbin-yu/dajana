@@ -67,7 +67,7 @@ public class ProtectedController extends BaseController {
 		return "redirect:/site/assets.html";
 
     }         
-   	@RequestMapping(value = {"/protected/chat.html","/protected/youchat.html","/site/youchat.html"}, method = {RequestMethod.GET})
+   	@RequestMapping(value = {"/protected/chat.html","/protected/youchat.html"}, method = {RequestMethod.GET})
    	public String mychat(Model model,String path,HttpServletRequest request, HttpServletResponse response) throws Exception {
    		String username = getUsername();
    		User user = (User)jcrService.getObject("/system/users/"+username);
@@ -118,7 +118,7 @@ public class ProtectedController extends BaseController {
 		//model.addAttribute("navigation",jcrService.getPageNavigation("/content/"+getUsername(),2));		
    		return "chat/mychat";
    	}
-   	@RequestMapping(value = {"/protected/youlook.html","/site/youlook.html"}, method = {RequestMethod.GET})
+   	@RequestMapping(value = {"/protected/youlook.html"}, method = {RequestMethod.GET})
    	public String youlook(Model model,String path,HttpServletRequest request, HttpServletResponse response) throws Exception {
    		String username = getUsername();
    		User user = (User)jcrService.getObject("/system/users/"+username);
@@ -256,7 +256,7 @@ public class ProtectedController extends BaseController {
    		return asset;
 
    	}
-	@RequestMapping(value = {"/protected/profile.html","/site/profile.html"}, method = RequestMethod.GET)
+	@RequestMapping(value = {"/protected/profile.html"}, method = RequestMethod.GET)
 	public String profile(String path,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String username = getUsername();
 		User user  = (User)jcrService.getObject("/system/users/"+username);
@@ -498,7 +498,7 @@ public class ProtectedController extends BaseController {
    		return "chat/comments";
    	}
 
-   	@RequestMapping(value = {"/site/groupedit.html","/protected/groupedit.html"}, method = {RequestMethod.GET})
+   	@RequestMapping(value = {"/protected/groupedit.html","/protected/groupedit.html"}, method = {RequestMethod.GET})
    	public String  groupedit(String path,Integer p,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
    		if(p==null) p=0;
    		String userQuery = "select * from [nt:base] AS s WHERE ISCHILDNODE([/system/users]) and s.ocm_classname='com.filemark.jcr.model.User'";

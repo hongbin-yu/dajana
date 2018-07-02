@@ -6,7 +6,6 @@
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 	<http pattern="/publish/**" security="none" />
 	<http pattern="/resources/**" security="none" />
-	<http pattern="/protected/**" security="none" />
 	<http pattern="/content/**" security="none" />	
 	<http pattern="/assets/templates/**" security="none" />		
 	<http pattern="/templates/**" security="none" />			

@@ -71,7 +71,7 @@
 	</c:if>			
  		</main>
         <nav class="wb-sec col-md-3 col-md-pull-9" typeof="SiteNavigationElement" id="wb-sec" role="navigation">
-        		<h3 class="wb-navcurr"><a href="/site/youlook.html"><span class="glyphicon glyphicon-th-list"></span> 通讯目录</a></h3>
+        		<h3 class="wb-navcurr"><a href="/protected/youlook.html"><span class="glyphicon glyphicon-th-list"></span> 通讯目录</a></h3>
 <%-- 		<c:if test="${user.role =='Owner' || user.role == 'Administrator'}"> --%>
 			<details>
 			<summary><label for="path"><span class="glyphicon glyphicon-folder-close"></span><spring:message code="djn.create_youlook"/></label></summary>
