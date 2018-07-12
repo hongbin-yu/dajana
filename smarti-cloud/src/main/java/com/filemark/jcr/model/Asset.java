@@ -229,7 +229,35 @@ public class Asset implements SmartiNode, Serializable {
 			return "/resources/images/document-icon.png";
 		}
 	}
-
+	public String getIconSmall() {
+		//if(icon !=null) {
+			//return icon;
+		//}
+		if(contentType == null) {
+			return "/resources/images/document-icon100.png";
+		}else if((contentType.equals("image/tiff") || contentType.equals("image/x-tiff") )) {
+			return "/resources/images/pdf-icon100.png";
+		}else if(contentType.startsWith("image/")) {
+			return "viewimage?path="+path+"&w=1";
+		}else if(contentType.startsWith("video/")) {
+			return "video2jpg.jpg?path="+path+"&w=1";			
+		}else if(contentType.startsWith("audio/")) {
+			return "/resources/images/audio-icon100.png";	
+		}else if("application/pdf".equals(contentType)){
+			return "pdf2img.jpg?p=0&path="+path+"&w=1";//"resources/images/pdf-icon.png";
+		}else if(path.endsWith(".doc") || path.endsWith(".docx") || path.endsWith(".ppt")) {	
+			return "doc2jpg.jpg?p=0&path="+path+"&w=1";
+		}else if(path.toLowerCase().endsWith(".xls") || path.toLowerCase().endsWith(".xlsx") ||  path.toLowerCase().endsWith(".csv")  || path.toLowerCase().endsWith(".rtf")) {
+			//if(getDoc2pdf()) {
+			return "doc2jpg.jpg?path="+path+"&w=1";
+			//}
+			//return "resources/images/excel-icon.png";
+		}else if(path.endsWith(".zip")) {
+			return "/resources/images/zip-icon100.png";
+		}else {	
+			return "/resources/images/document-icon100.png";
+		}
+	}
 	public boolean getPdf() {
 		if(contentType != null && contentType.startsWith("image/")) {
 			return true;

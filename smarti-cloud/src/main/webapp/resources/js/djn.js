@@ -7,7 +7,7 @@ if(window.location.pathname.indexOf("/smarti-cloud")>=0) {
 var path = "";
 var type = "image";
 //var win = (!window.frameElement && window.dialogArguments) || opener || parent || top;
-var selDiv = "", topInsert="";
+var selDiv = "", topInsert="", viewInsert=null;
 //var form_upload = document.getElementById("form-upload");
 /*var tinyMCE;
 var tinymce = tinyMCE = win.tinymce;*/
@@ -293,6 +293,7 @@ function init() {
 		}
 	selDiv = document.querySelector("#selectedFiles");
 	topInsert = document.querySelector("#top_insert");
+	viewInsert = document.querySelector("#view_insert");
 	path_input= document.getElementById("path");
 
 	var form = document.getElementById("assets");
@@ -988,7 +989,10 @@ function checkProgress() {
 function output(data) {
 	var html = "";
 	var online_chat_editor = document.getElementById("online_chat_editor");
-	
+	if(viewInsert !=null) {
+		outputView(data);
+		return;
+	}
 	if(topInsert != null) 
 	    html = '<div id="'+data.uid+'" class="col-md-4 well">';
     	if(data.contentType.indexOf('video/')>=0) {
@@ -1002,8 +1006,13 @@ function output(data) {
     			  +'</figcaption>'
     			  +'</figure>';   		
     	}else if(topInsert != null) {
-	    	html +='<div class="checkbox"><input type="checkbox" class="checkbox" name="puid" value="'+data.uid+'"><a title="打开PDF" href="viewpdf?uid='+data.uid+'" target="_BLANK"><img title="点击选中" src="/resources/images/pdf.gif"></a>'
-	    		  +'<a href="javascript:openImage(\''+data.link+'\')"><img id="img'+data.uid+'" src="'+data.icon+'" class="img-responsive" draggable="true"></img></a>'
+	    	html +='<div class="checkbox"><input type="checkbox" class="checkbox" name="puid" value="'+data.uid+'">';
+		  	if(data.pdf) {
+		  		 html +='<a title="打开PDF" href="viewpdf.pdf?uid='+data.uid+'" target="_BLANK"><span class="glyphicon glyphicon-open"></span> 打开PDF</a>';
+		  	}
+		  	html	+='	<a class="download pull-right" href="file'+data.ext+'?path='+data.path+'" target="_BLANK" download="'+data.title+'"><span class="glyphicon glyphicon-download pull-right">下载</span></a>';
+
+	    	html +='<a href="javascript:openImage(\''+data.link+'\')"><img id="img'+data.uid+'" src="'+data.icon+'" class="img-responsive" draggable="true"></img></a>'
 	    		  +'</div>'
 				  +'<input class="form-control" id="description'+data.uid+'" name="jcr:description" value="'+(data.description==null?"":+data.description)+'" size="42" uid="'+data.uid+'"  onchange="updateNode(this)"/>';
 
@@ -1088,6 +1097,32 @@ function output(data) {
 
 	    	tinyMCE.activeEditor.setDirty(true);	    	
 	    }
+	
+}
+
+function outputView(data) {
+	var html = "";
+
+	    html = '<div id="'+data.uid+'" class="col-md-4 well">';
+    	if(data.contentType.indexOf('video/')>=0) {
+    		html +='<a class="download" href="file/'+data.name+'?path='+data.path+'" target="_BLANK" download><span class="glyphicon glyphicon-download">下载</span></a>'
+    			  +'<figure class="pull-left mrgn-md">'
+    			  +'<video poster="video2jpg.jpg?path='+data.path+'" title="'+data.title+'" controls="controls" preload="none" width="150" height="100">'
+    			  +'<source type="video/mp4" src="video.mp4?path='+data.path+'"/>'
+    			  +'</video>'
+    			  +'</figure>';   		
+    	}else {
+	    	html +='<a href="javascript:openImage(\''+data.link+'\')"><img id="img'+data.uid+'" src="'+data.iconSmall+'" class="img-responsive  pull-left mrgn-rght-md" draggable="true"></img></a>';
+    	}
+    	html +='<div><input type="checkbox" name="puid" value="'+data.uid+'"> '+data.title
+	  		 +'</div>';
+	  	if(data.pdf) {
+	  		 html +='<a title="打开PDF" href="viewpdf.pdf?uid='+data.uid+'" target="_BLANK"><span class="glyphicon glyphicon-open"></span> 打开PDF</a>';
+	  	}
+
+	  	html	+='	<a class="download pull-right" href="file'+data.ext+'?path='+data.path+'" target="_BLANK" download="'+data.title+'"><span class="glyphicon glyphicon-download pull-right">下载</span></a><div class="clearfix"></div></div>';
+    	
+    	$("#view_insert").after(html);		
 
 }
 

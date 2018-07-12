@@ -22,7 +22,7 @@
 	<http pattern="/" security="none" />									
 <http use-expressions="true">
 		<!-- Authentication policy -->
-		<form-login login-page="/signin" login-processing-url="/signin/authenticate" authentication-failure-url="/signin?error=bad_credentials" default-target-url="/site/assets.html"/>
+		<form-login login-page="/signin" login-processing-url="/signin/authenticate" authentication-failure-url="/signin?error=bad_credentials" default-target-url="/site/view.html"/>
 		<logout logout-url="/signout" delete-cookies="JSESSIONID" />
 		<intercept-url pattern="/favicon.ico" access="permitAll" />
 		<intercept-url pattern="/resources/**" access="permitAll" />

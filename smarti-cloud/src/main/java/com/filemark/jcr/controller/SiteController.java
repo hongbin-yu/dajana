@@ -348,6 +348,12 @@ public class SiteController extends BaseController {
 		ImageUtil.HDDOff();
 		return "site/asset";
 	}
+
+	@RequestMapping(value = {"/site/view.html","/site/view"}, method = {RequestMethod.GET,RequestMethod.POST},produces = "text/plain;charset=UTF-8")
+	public String view(String path,String type, String input,String kw,Integer p,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
+		assets(path,type,input,kw,p,model,request,response);
+		return "site/view";
+	}
 	
 	@RequestMapping(value = {"/site/createPage.html"}, method = RequestMethod.GET)
 	public String createPageGet(String path,String uid,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -2154,11 +2160,14 @@ public class SiteController extends BaseController {
 
 	
 	@RequestMapping(value = {"/site/pdf2jpg.jpg","/protected/pdf2jpg.jpg"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
-	public @ResponseBody String pdf2jpg(String path,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
+	public @ResponseBody String pdf2jpg(String path, Integer w, HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
 
 		try {
 			if(path==null) {
-				response.sendRedirect("/resources/images/pdf-icon.png");									
+				if(w != null && w==1)
+					response.sendRedirect("/resources/images/pdf-icon100.png");
+				else
+					response.sendRedirect("/resources/images/pdf-icon.png");								
 
 			}
 			String pdfpath = path+"/origin.pdf";
@@ -2172,7 +2181,10 @@ public class SiteController extends BaseController {
 
 				int exit = ImageUtil.pdf2jpg(pdfname,0,"400x400", jpgname);
 				if(exit != 0) {
-					response.sendRedirect("/resources/images/pdf-icon.png");									
+					if(w != null && w==1)
+						response.sendRedirect("/resources/images/pdf-icon100.png");
+					else
+						response.sendRedirect("/resources/images/pdf-icon.png");								
 				}
 
 			}
@@ -2201,11 +2213,14 @@ public class SiteController extends BaseController {
 	}
 	
 	@RequestMapping(value = {"/site/pdf2img.jpg","/protected/pdf2img.jpg"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
-	public @ResponseBody String pdf2img(String path,Integer p,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
+	public @ResponseBody String pdf2img(String path,Integer p,Integer w,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
 	
 		try {
 			if(path==null) {
-				response.sendRedirect("/resources/images/pdf-icon.png");									
+				if(w != null && w==1)
+					response.sendRedirect("/resources/images/pdf-icon100.png");
+				else
+					response.sendRedirect("/resources/images/pdf-icon.png");
 
 			}
 			if(p==null) p=0;
@@ -2221,7 +2236,10 @@ public class SiteController extends BaseController {
 
 				int exit = ImageUtil.pdf2jpg(pdfname,p,"1600x1600", jpgname);
 				if(exit != 0) {
-					response.sendRedirect("/resources/images/pdf-icon.png");									
+					if(w != null && w==1)
+						response.sendRedirect("/resources/images/pdf-icon100.png");
+					else
+						response.sendRedirect("/resources/images/pdf-icon.png");								
 				}
 
 			}
@@ -2251,12 +2269,15 @@ public class SiteController extends BaseController {
 	
 
 	@RequestMapping(value = {"/site/doc2jpg.jpg","/protected/doc2jpg.jpg"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
-	public @ResponseBody String doc2jpg(String path,Integer p,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
+	public @ResponseBody String doc2jpg(String path,Integer p,Integer w,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
 
 
 		try {
 			if(path==null) {
-				response.sendRedirect("/resources/images/word-icon.png");									
+				if(w != null && w==1)
+					response.sendRedirect("/resources/images/word-icon100.png");
+				else
+					response.sendRedirect("/resources/images/word-icon.png");									
 
 			}
 			if(p==null) p=0;
@@ -2273,13 +2294,25 @@ public class SiteController extends BaseController {
 				int exit = ImageUtil.pdf2jpg(pdfname,p,"1600x1600", jpgname);
 				if(exit != 0) {
 				    if(path.endsWith(".doc") || path.endsWith(".docx")) {	
-						response.sendRedirect("/resources/images/word-icon.png");	
+						if(w != null && w==1)
+							response.sendRedirect("/resources/images/word-icon100.png");
+						else
+							response.sendRedirect("/resources/images/word-icon.png");;	
 				    }else if(path.endsWith(".xls") || path.endsWith(".xlsx") || path.endsWith(".csv") || path.endsWith(".rtf")) {
-				    	response.sendRedirect("resources/images/excel-icon.png");
+						if(w != null && w==1)
+							response.sendRedirect("/resources/images/excel-icon100.png");
+						else
+							response.sendRedirect("resources/images/excel-icon.png");
 				    }else if(path.endsWith(".ppt")) {
-				    	response.sendRedirect("resources/images/ppt-icon.png");
+						if(w != null && w==1)
+							response.sendRedirect("resources/images/ppt-icon100.png");
+						else
+							response.sendRedirect("resources/images/ppt-icon.png");
 				    }else {
-				    	response.sendRedirect("resources/images/document-icon.png");
+						if(w != null && w==1)
+							response.sendRedirect("resources/images/document-icon100.png");
+						else
+							response.sendRedirect("resources/images/document-icon.png");
 				    }
 				}
 
@@ -2307,11 +2340,14 @@ public class SiteController extends BaseController {
 		return null;
 	}	
 	@RequestMapping(value = {"/site/video2jpg.jpg","/protected/video2jpg.jpg"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
-	public @ResponseBody String video2jpg(String path,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
+	public @ResponseBody String video2jpg(String path,Integer w,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
 		ImageUtil.HDDOn();	
 		try {
 			if(path==null) {
-				response.sendRedirect("/resources/images/video-icon.png");									
+				if(w != null && w==1)
+					response.sendRedirect("resources/images/video-icon100.png");
+				else
+					response.sendRedirect("/resources/images/video-icon.png");									
 				
 			}
     		String ext = "";
@@ -2328,7 +2364,10 @@ public class SiteController extends BaseController {
 			file = new File(jpgname);
 			if(!file.exists()) {
 				if(ImageUtil.video2jpg(infile, "400x300", jpgname) !=0)
-					response.sendRedirect("/resources/images/video-icon.png");									
+					if(w != null && w==1)
+						response.sendRedirect("resources/images/video-icon100.png");
+					else
+						response.sendRedirect("/resources/images/video-icon.png");								
 			}
 			file.setReadOnly();
 			super.serveResource(request, response, file, "image/jpeg");
