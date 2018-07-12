@@ -2290,8 +2290,11 @@ public class SiteController extends BaseController {
 			String pdfname = devicePath+ pdfpath;
 			file = new File(jpgname);
 			if(!file.exists()) {
-
-				int exit = ImageUtil.pdf2jpg(pdfname,p,"1600x1600", jpgname);
+				String WXH = "1600x1600";
+				if(w!=null && w==1) {
+					WXH = "100x100";
+				}
+				int exit = ImageUtil.pdf2jpg(pdfname,p,WXH, jpgname);
 				if(exit != 0) {
 				    if(path.endsWith(".doc") || path.endsWith(".docx")) {	
 						if(w != null && w==1)
