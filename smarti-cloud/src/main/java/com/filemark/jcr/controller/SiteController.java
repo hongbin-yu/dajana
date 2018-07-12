@@ -2063,7 +2063,7 @@ public class SiteController extends BaseController {
 	}
 	
 	@RequestMapping(value = {"/site/doc2pdf.jpg","/protected/doc2pdf.jpg"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
-	public @ResponseBody String doc2pdf2jpg(String path,Integer p,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
+	public @ResponseBody String doc2pdf2jpg(String path,Integer p,Integer w,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
 
 		try {
 			if (p==null) p=0;
@@ -2074,7 +2074,11 @@ public class SiteController extends BaseController {
 			File pdffile = new File(devicePath+pdfpath);
 			File jpgfile = new File(devicePath+jpgpath);
 			if(pdffile.exists() && !jpgfile.exists()) {
-				if(ImageUtil.pdf2jpg(pdffile.getAbsolutePath(), p, "1600x1600", jpgfile.getAbsolutePath())==0) {
+				String WXH = "1600x1600";
+				if(w!=null && w==1) {
+					WXH = "100x100";
+				}
+				if(ImageUtil.pdf2jpg(pdffile.getAbsolutePath(), p, WXH, jpgfile.getAbsolutePath())==0) {
 /*					FileInputStream in = new FileInputStream(jpgfile);
 					response.setContentType("image/jpeg");
 					IOUtils.copy(in, response.getOutputStream());
@@ -2122,7 +2126,11 @@ public class SiteController extends BaseController {
 						}
 					}
 					if(pdffile.exists() && !jpgfile.exists()) {
-						if(ImageUtil.pdf2jpg(pdffile.getAbsolutePath(), p, "1600x1600", jpgfile.getAbsolutePath())==0) {
+						String WXH = "1600x1600";
+						if(w!=null && w==1) {
+							WXH = "100x100";
+						}
+						if(ImageUtil.pdf2jpg(pdffile.getAbsolutePath(), p, WXH, jpgfile.getAbsolutePath())==0) {
 /*							FileInputStream in = new FileInputStream(jpgfile);
 							response.setContentType("image/jpeg");
 							IOUtils.copy(in, response.getOutputStream());
@@ -2233,8 +2241,11 @@ public class SiteController extends BaseController {
 			String pdfname = devicePath+pdfpath;
 			file = new File(jpgname);
 			if(!file.exists()) {
-
-				int exit = ImageUtil.pdf2jpg(pdfname,p,"1600x1600", jpgname);
+				String WXH = "1600x1600";
+				if(w!=null && w==1) {
+					WXH = "100x100";
+				}
+				int exit = ImageUtil.pdf2jpg(pdfname,p,WXH, jpgname);
 				if(exit != 0) {
 					if(w != null && w==1)
 						response.sendRedirect("/resources/images/pdf-icon100.png");
