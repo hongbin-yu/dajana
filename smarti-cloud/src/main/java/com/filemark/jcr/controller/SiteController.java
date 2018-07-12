@@ -2071,6 +2071,9 @@ public class SiteController extends BaseController {
     		if(!new File(devicePath+path).exists()) devicePath = jcrService.getBackup();			
 			String pdfpath = path+"/origin.pdf";
 			String jpgpath = path+"/origin"+"-"+p+".jpg";
+			if(w!=null && w==1) {
+				jpgpath = devicePath+path+"/origin100-"+p+".jpg";
+			}				
 			File pdffile = new File(devicePath+pdfpath);
 			File jpgfile = new File(devicePath+jpgpath);
 			if(pdffile.exists() && !jpgfile.exists()) {
@@ -2183,11 +2186,17 @@ public class SiteController extends BaseController {
     		if(!new File(devicePath+path).exists()) devicePath = jcrService.getBackup();
 			File file = null;
 			String jpgname = devicePath+path+"/x400"+".jpg";
+			if(w!=null && w==1) {
+				jpgname = devicePath+path+"/x100"+".jpg";
+			}			
 			String pdfname = devicePath+pdfpath;
 			file = new File(jpgname);
 			if(!file.exists()) {
-
-				int exit = ImageUtil.pdf2jpg(pdfname,0,"400x400", jpgname);
+				String WXH = "400x400";
+				if(w!=null && w==1) {
+					WXH = "100x100";
+				}
+				int exit = ImageUtil.pdf2jpg(pdfname,0,WXH, jpgname);
 				if(exit != 0) {
 					if(w != null && w==1)
 						response.sendRedirect("/resources/images/pdf-icon100.png");
@@ -2238,6 +2247,9 @@ public class SiteController extends BaseController {
     		if(!new File(devicePath+path).exists()) devicePath = jcrService.getBackup();
 			File file = null;
 			String jpgname = devicePath+path+"/origin-"+p+".jpg";
+			if(w!=null && w==1) {
+				jpgname = devicePath+path+"/origin100-"+p+".jpg";
+			}			
 			String pdfname = devicePath+pdfpath;
 			file = new File(jpgname);
 			if(!file.exists()) {
@@ -2296,7 +2308,9 @@ public class SiteController extends BaseController {
 			String devicePath = jcrService.getDevice();
     		if(!new File(devicePath+path).exists()) devicePath = jcrService.getBackup();	
 			String jpgname = devicePath+path+"/origin-"+p+".jpg";
-
+			if(w!=null && w==1) {
+				jpgname = devicePath+path+"/origin100-"+p+".jpg";
+			}
 			String pdfpath = path+"/origin.pdf";
 			String pdfname = devicePath+ pdfpath;
 			file = new File(jpgname);
@@ -2375,9 +2389,16 @@ public class SiteController extends BaseController {
 			
 			String infile = devicePath+path+"/origin"+ext;
 			String jpgname = devicePath+path+"/x400"+".jpg";
+			if(w!=null && w==1) {
+				jpgname = devicePath+path+"/x100.jpg";
+			}			
 			file = new File(jpgname);
 			if(!file.exists()) {
-				if(ImageUtil.video2jpg(infile, "400x300", jpgname) !=0)
+				String WXH = "400x400";
+				if(w!=null && w==1) {
+					WXH = "100x100";
+				}
+				if(ImageUtil.video2jpg(infile, WXH, jpgname) !=0)
 					if(w != null && w==1)
 						response.sendRedirect("resources/images/video-icon100.png");
 					else
