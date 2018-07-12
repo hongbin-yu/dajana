@@ -1114,14 +1114,17 @@ function outputView(data) {
     	}else {
 	    	html +='<a href="javascript:openImage(\''+data.link+'\')"><img id="img'+data.uid+'" src="'+data.iconSmall+'" class="img-responsive  pull-left mrgn-rght-md" draggable="true"></img></a>';
     	}
-    	html +='<div><input type="checkbox" name="puid" value="'+data.uid+'"> '+data.title
-	  		 +'</div>';
 	  	if(data.pdf) {
 	  		 html +='<a title="打开PDF" href="viewpdf.pdf?uid='+data.uid+'" target="_BLANK"><span class="glyphicon glyphicon-open"></span> 打开PDF</a>';
 	  	}
+	  	html	+='	<a class="download pull-right" href="file'+data.ext+'?path='+data.path+'" target="_BLANK" download="'+data.title+'"><span class="glyphicon glyphicon-download pull-right">下载</span></a>';
 
-	  	html	+='	<a class="download pull-right" href="file'+data.ext+'?path='+data.path+'" target="_BLANK" download="'+data.title+'"><span class="glyphicon glyphicon-download pull-right">下载</span></a><div class="clearfix"></div></div>';
+    	html +='<div><input type="checkbox" name="puid" value="'+data.uid+'"> '+data.title+'</div>';
+	  	if(data.description) {
+	  		html +='<p>'+data.description+'</p>';
+	  	}
     	
+	  	html +='<div class="clearfix"></div></div>';
     	$("#view_insert").after(html);		
 
 }

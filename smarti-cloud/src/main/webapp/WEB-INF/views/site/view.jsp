@@ -82,21 +82,20 @@
 				<input type="hidden" id="path" name="path" value="${folder.path}"/>
 				<input type="hidden" id="type"  name="type" value="${type}"/>
 				<input type="hidden" id="input" name="input" value="${input}"/>
-				<input type="hidden" name="redirect" value="assets.html?path=${folder.path}&type=${type}&input=${input}"/>
+				<input type="hidden" name="redirect" value="view.html?path=${folder.path}&type=${type}&input=${input}"/>
 						
 				<div class="form-group" ondrop="drop(event)" ondragover="allowDrop(event)" style="border:1px solid #aaaaaa;">
-					<label for="fileUpload" class="required"><a href="#" onclick="openFiles()"><span id="openFiles" class="field-name"><spring:message code="djn.select_dragging_drop"/> </span></a></label>
-					<br/><a href="#" onclick="openFiles()"><img id="uploadImg" alt="" src="<c:url value='/resources/images/upload.png'/>"/></a>
-					<div class="panel" id="selectedFiles">
-					</div>	
+					<a href="#" onclick="openFiles()"><span id="openFiles" class="field-name"><spring:message code="djn.select_dragging_drop"/> </span>
+					<img class="pull-left mrgn-rght-md" id="uploadImg" alt="" src="<c:url value='/resources/images/upload100.png'/>"/></a>
 					<div class="checkbox">
 					<label for="override"><input type="checkbox" name="override" value="true" id="override" size="35"> 覆盖旧文件如果重名</label>
 					</div>					
 					<input class="form-control wb-inv" type="file" id="fileUpload" name="file" size="60" required="required"  multiple/>
 					<input id="submit_upload" type="button" onclick="javascript:uploadFiles()" value="<spring:message code="djn.upload"/>" class="btn btn-primary" disabled> <input type="reset" value="<spring:message code="djn.clear"/>" onclick="resetSelDiv()" class="btn btn-default">
 				</div>
+				<div class="clear-fix"></div>
 			</form>
-	
+			<div class="panel" id="selectedFiles"></div>	
 		</div>
 		<div class="wb-frmvld col-md-4 well">
 		<details>
@@ -203,12 +202,12 @@
 					</a>
 				</c:if>	
 		</c:if>
-	<div><input type="checkbox" name="puid" value="${item.uid }"> ${item.title}</div>	
 	<c:if test="${item.pdf}">
 		<a title="<spring:message code="djn.open"/>PDF" href="viewpdf.pdf?uid=${item.uid}" target="_BLANK"><span class="glyphicon glyphicon-open"></span> <spring:message code="djn.open"/>PDF</a>
 	</c:if>
 	<a class="download pull-right" href="file${item.ext}?path=${item.path}" target="_BLANK" download="${item.title }"><span class="glyphicon glyphicon-download pull-right">下载</span></a>
-
+	<div><input type="checkbox" name="puid" value="${item.uid }"> ${item.title}</div>
+	<c:if test="${item.description}"><p>${item.description}</p></c:if>
 	<div class="clearfix"></div>	
 	</div>
 	<c:if test="${(loop.index+1) % 3 ==0  }"><div class="clearfix"></div></c:if>

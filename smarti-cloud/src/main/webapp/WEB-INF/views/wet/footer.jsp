@@ -25,8 +25,11 @@
 </ul>
 </section>
  <section class="col-xs-3 col-sm-3 text-right">
-	<object type="image/svg+xml" tabindex="-1" role="img" data="<c:url value="/resources/images/hongicon.svg" />" aria-label="优鸿网络"></object>
-</section>	
+ <ul class="list-unstyled">
+<li><a href="http://home.dajana.ca" title="优鸿云"><img src="/resources/images/yuhong-icon100.png" alt="优鸿云"></a></li>
+</ul>
+<%-- 	<object type="image/svg+xml" tabindex="-1" role="img" data="<c:url value="/resources/images/hongicon.png" />" aria-label="优鸿网络"></object>
+ --%></section>	
 </nav>
 
 <div class="brand">

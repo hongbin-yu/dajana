@@ -66,7 +66,7 @@
 <div class="row">
 <div class="col-xs-4 text-right">
 <a class="btn btn-default" href='<c:url value="signup"></c:url>'>
-<img title="<spring:message code="djn.scan_qr"/><spring:message code="djn.dajana"/>" class="img-responsive" src="/content/signup.qrb.jpg?path=http://${pageContext.request.serverName }:${pageContext.request.serverPort }<c:url value='/signup'/>" alt="<spring:message code="djn.dajana"/>"/>
+<img title="<spring:message code="djn.scan_qr"/><spring:message code="djn.dajana"/>" class="img-responsive" src="/content/signup.qrb.jpg?path=http://${pageContext.request.serverName }:${pageContext.request.serverPort }<c:url value='/signup'/>" alt="<spring:message code="djn.dajana"/>" width="100" height="100"/>
 </a>
 </div>
 <div class="col-xs-4 col-md-4 text-center">
@@ -76,7 +76,7 @@
 </ul>
  </div>
 <div class="col-xs-4 pull-right">
-<a class="btn btn-default" href="http://home.dajana.ca" title="内网登入"><img class="img-responsive" src ="/resources/images/yuhong-icon.png" alt="内网登入"/></a>
+<a class="btn btn-default" href="http://home.dajana.ca" title="内网登入"><img class="img-responsive" src ="/resources/images/yuhong-icon100.png" alt="内网登入"/></a>
 </div>
 
 </div>

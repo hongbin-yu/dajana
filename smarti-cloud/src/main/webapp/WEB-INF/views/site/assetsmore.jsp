@@ -48,11 +48,12 @@
 					</a>
 				</c:if>	
 		</c:if>
-		<div><input type="checkbox"  name="puid" value="${item.uid }"> ${item.title} </div>
         <c:if test="${item.pdf}">
 		<a title="<spring:message code="djn.open"/>PDF" href="<c:url value="/site/viewpdf.pdf?uid=${item.uid}"/>" target="_BLANK"><span class="glyphicon glyphicon-open"></span> <spring:message code="djn.open"/>PDF</a>
 		</c:if>
 		<a class="download pull-right" href="file${item.ext}?path=${item.path}" target="_BLANK" download="${item.title }"><span class="glyphicon glyphicon-download pull-right">下载</span></a>
+		<div><input type="checkbox"  name="puid" value="${item.uid }"> ${item.title} </div>
+		<c:if test="${item.description}"><p>${item.description}</p></c:if>
 			
 <%-- 		<div class="form-group">
 		<input class="form-control" id="description${item.uid  }" name="jcr:description" value="${item.description}" size="42" uid="${item.uid}"  onchange="updateNode(this)"/>
