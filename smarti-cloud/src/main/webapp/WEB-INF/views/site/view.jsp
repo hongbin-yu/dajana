@@ -14,7 +14,7 @@
 				<div class="checkbox btn btn-default pull-right">
 		    		<label for="toggle"><input id="toggle" type="checkbox" onClick="toggle(this)" title="选择切换"/>全选切换</label>
 				</div>
-		        <h3>
+		        <h3 id="wb-cont">
 		        <c:if test="${folder.name!='assets' }"><a href="view.html?path=${folder.parent}&type=${type}"><span class="glyphicon glyphicon-backward"></span>${folder.parent}</a></c:if>
 		        <a href="?path=${folder.path}&type=${type}" title="刷屏"><span class="glyphicon glyphicon-refresh"></span>${folder.path}</a>
 		        </h3>

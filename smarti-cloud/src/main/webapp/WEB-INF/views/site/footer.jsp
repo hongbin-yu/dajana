@@ -4,7 +4,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" session="false" %>
 <c:set var="host"><c:url value="/"></c:url></c:set>
 <footer role="contentinfo" id="wb-info">
-<nav role="navigation" class="container wb-navcurr"  data-ajax-replace='<c:url value="/assets/templates/html/replace.html"/>'>
+<nav role="navigation" class="container wb-navcurr visible-md visible-lg">
 <h2>关于本网站</h2>
 <section class="col-sm-3">
 <h3>关于本网站</h3>

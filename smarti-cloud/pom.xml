@@ -695,7 +695,11 @@
 			<scope>system</scope>
 			<systemPath>${localpath}/xmlworker/1.2.1/xmlworker-1.2.1.jar</systemPath>				
 		</dependency> -->
-	
+    <dependency>
+        <groupId>org.tuckey</groupId>
+        <artifactId>urlrewritefilter</artifactId>
+        <version>4.0.3</version>
+    </dependency>	
 				
 	</dependencies>
 

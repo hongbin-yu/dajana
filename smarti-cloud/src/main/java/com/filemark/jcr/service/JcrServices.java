@@ -87,6 +87,7 @@ public interface JcrServices {
 	public String getDomain();
 	public String getDevice();	
 	public String getBackup();		
+	public String getCache();	
 	public void exportDocument(final String path, final OutputStream out,final Boolean binary);
 	public Asset getAssetById(String uid) throws RepositoryException;
 	public void assets2pdf(final List<Asset> assets,final OutputStream outputStream);

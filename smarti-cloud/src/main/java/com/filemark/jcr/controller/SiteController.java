@@ -15,6 +15,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -52,6 +53,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import org.tuckey.web.filters.urlrewrite.RequestProxy;
 
 import com.filemark.jcr.model.Asset;
 import com.filemark.jcr.model.Device;
@@ -61,6 +63,7 @@ import com.filemark.jcr.model.Page;
 import com.filemark.jcr.model.User;
 import com.filemark.jcr.service.AssetManager;
 import com.filemark.sso.JwtUtil;
+import com.filemark.utils.CacheFileFromResponse;
 import com.filemark.utils.ImageUtil;
 import com.filemark.utils.ScanUploadForm;
 import com.filemark.utils.WebPage;
@@ -2643,7 +2646,68 @@ public class SiteController extends BaseController {
 		
 		
 	} 
-	
+
+	@RequestMapping(value = {"/site/cacheimage"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
+	public @ResponseBody String cacheFile(String uid,String path,Integer w,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
+
+		Integer width = null;
+		if(w !=null && w <= 12) {
+			width = w*100;
+			if(width==0)
+				width = 48;
+		}
+		try {
+        	String domain = request.getServerName();
+			String devicePath = jcrService.getCache()+"/"+domain+"/"+width;
+			File outFile = new File(devicePath+"/"+path);
+			if(!outFile.exists()) {
+				outFile.getParentFile().mkdirs();
+				String url = request.getRequestURL().toString().replaceFirst("/cache", "")+"?"+request.getQueryString();
+				URL url_img = new URL(url);
+				logger.debug("get url ="+url);
+				HttpURLConnection uc = (HttpURLConnection)url_img.openConnection();
+				uc.setConnectTimeout(50000);
+				int responseCode = uc.getResponseCode();
+				if(responseCode == 200) {
+					FileOutputStream outputStream = new FileOutputStream(outFile);
+					InputStream in = uc.getInputStream();
+					IOUtils.copy(in,outputStream);
+					in.close();
+					outputStream.close();
+					
+				}
+			
+				
+				//CacheFileFromResponse cacheResponse  = new CacheFileFromResponse(response,outFile);
+				//RequestProxy.execute(url, request, cacheResponse);
+
+
+			}
+			if(outFile.exists() && outFile.isFile()) {
+		        long lastModified = outFile.lastModified();
+		        long ifModifiedSince = request.getDateHeader("If-Modified-Since");
+		        logger.debug("ifModifiedSince="+ifModifiedSince+"/"+lastModified);
+		        if (ifModifiedSince != -1 && ifModifiedSince + 1000 <= lastModified) {
+					FileInputStream in = new FileInputStream(outFile);
+					IOUtils.copy(in, response.getOutputStream());	
+					in.close();	
+					return null;
+		        }				
+				logger.debug("path is file output:"+outFile.getAbsolutePath());
+				super.serveResource(request, response, outFile, null);
+				return null;					
+			}
+
+
+		}catch(Exception e) {
+			logger.error("viewFile:"+e.getMessage()+",path="+path);
+
+			return e.getMessage();
+		}
+		
+		return null;	
+	} 
+
 	@RequestMapping(value = {"/templates/**/*.*","/assets/templates/**/*.*","/assets/templates/*.*"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public @ResponseBody String viewTempates(Integer w,HttpServletRequest request, HttpServletResponse response) throws Exception  {
 

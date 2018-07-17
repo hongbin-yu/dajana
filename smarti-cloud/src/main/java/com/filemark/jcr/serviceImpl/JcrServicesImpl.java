@@ -106,6 +106,7 @@ public class JcrServicesImpl implements JcrServices {
 	private String domain="dajana.cn";
 	private String device=null;	
 	private String backup=null;		
+	private String cache=null;
     private String asianFont;
     private String home;
     private String workingDir;
@@ -2667,6 +2668,17 @@ public class JcrServicesImpl implements JcrServices {
 		this.backup = backup;
 	}
 
+
+	@Override
+	public String getCache() {
+		if(cache == null)
+			return this.backup+"/cache";
+		return cache;
+	}
+
+	public void setCache(String cache) {
+		this.cache = cache;
+	}
 
 	public void setWorkingDir(String workingDir) {
 		this.workingDir = workingDir;
