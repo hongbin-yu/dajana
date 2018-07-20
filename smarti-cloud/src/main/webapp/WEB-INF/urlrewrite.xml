@@ -5,28 +5,20 @@
         "http://www.tuckey.org/res/dtds/urlrewrite4.0.dtd">
 
     <urlrewrite>
-        <rule>
-           <from>^localhost:8888/(.*)$</from>
-           <to type="proxy">http://127.0.0.1:8888/$1</to>
-        </rule>
-        <rule>
-           <from>^(.+)\.dajana\.ca/(.*)$</from>
-           <to type="proxy">http://$1.dajana.ca:8888/$2</to>
-        </rule>
-        
-        <rule>
-           <from>^(.+)\.home\.dajana\.ca/(.*)$</from>
-           <to type="proxy">http://$1.dajana.ca:8888/$2</to>
-        </rule>
-        
-        <rule match-type="wildcard">
-           <from>^(.+)\.dajana\.ca/resources/**</from>
-           <to type="redirect">http://localhost:8888/resources/$1</to>
+
+        <rule enabled="true">
+           <condition name="host" operator="notequal">dajana.ca</condition>
+           <condition name="host" operator="notequal">home.dajana.ca</condition>    
+           <condition name="host" operator="notequal">localhost</condition>                     
+           <from>^/resources/(.*)$</from>
+           <to type="proxy">http://localhost:8888/resources/$1</to>
         </rule>
 
-        <rule match-type="wildcard">
-           <from>^(.+)\.dajana\.ca/site/viewimage**</from>
-           <to type="proxy">http://localhost:8888/site/cache/viewimage$1</to>
+        <rule enabled="true">
+           <condition name="host" operator="notequal">dajana.ca</condition>
+           <condition name="host" operator="notequal">home.dajana.ca</condition>    
+           <condition name="host" operator="notequal">localhost</condition>                       
+           <from>/(.*)$</from>
+           <to type="proxy">http://%{remote-host}:%{port}/$1</to>
         </rule>
-        
     </urlrewrite>

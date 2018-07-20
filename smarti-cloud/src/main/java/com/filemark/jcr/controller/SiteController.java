@@ -2647,7 +2647,7 @@ public class SiteController extends BaseController {
 		
 	} 
 
-	@RequestMapping(value = {"/site/cacheimage"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
+	@RequestMapping(value = {"/site/cache/viewimage"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public @ResponseBody String cacheFile(String uid,String path,Integer w,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
 
 		Integer width = null;
@@ -2662,10 +2662,12 @@ public class SiteController extends BaseController {
 			File outFile = new File(devicePath+"/"+path);
 			if(!outFile.exists()) {
 				outFile.getParentFile().mkdirs();
+				String authorization = request.getHeader("Authorization");
 				String url = request.getRequestURL().toString().replaceFirst("/cache", "")+"?"+request.getQueryString();
 				URL url_img = new URL(url);
 				logger.debug("get url ="+url);
 				HttpURLConnection uc = (HttpURLConnection)url_img.openConnection();
+				uc.addRequestProperty("Authorization", authorization);
 				uc.setConnectTimeout(50000);
 				int responseCode = uc.getResponseCode();
 				if(responseCode == 200) {

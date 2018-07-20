@@ -1,0 +1,3 @@
+     # proxy
+     RewriteCond  %{host}  ^localhost
+     RewriteRule  /(.*)$  http://%{host}.com/$1  [P]
