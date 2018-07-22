@@ -101,7 +101,11 @@ public class SiteController extends BaseController {
 		ImageUtil.HDDOff();
 	    return modelAndView;
     }
-    
+	@RequestMapping(value = {"/proxy/**"}, method = {RequestMethod.GET,RequestMethod.POST},produces = "text/plain;charset=UTF-8")
+	public String proxy(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		//request.getRequestDispatcher(request.getRequestURI().replaceFirst("/proxy", "")+"?"+request.getQueryString()).forward(request, response);
+		return null;
+	}
 	
 	@RequestMapping(value = {"/site/browse.html","/site/image.html"}, method = {RequestMethod.GET,RequestMethod.POST},produces = "text/plain;charset=UTF-8")
 	public String browse(String path,String type, String input,String kw,Integer p,Integer m,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {

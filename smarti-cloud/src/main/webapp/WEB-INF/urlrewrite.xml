@@ -11,17 +11,15 @@
            <condition name="host" operator="notequal">home.dajana.ca</condition>    
            <condition name="host" operator="notequal">localhost</condition>                     
            <from>^/resources/(.*)$</from>
-           <to type="proxy" last="true">http://localhost/resources/$1</to>
+           <to type="proxy">http://localhost/resources/$1</to>
         </rule>
 
         <rule enabled="true">
            <condition name="host" operator="notequal">dajana.ca</condition>
            <condition name="host" operator="notequal">home.dajana.ca</condition>    
            <condition name="host" operator="notequal">localhost.net</condition>
-           <condition name="port" operator="notequal">80</condition>   
-           <condition name="remote-uri" operator="notequal">^/resources$</condition>                       
-           <from>/(.*)$</from>
-           <to type="proxy" last="true">http://%{server-name}.net:%{port}/$1</to>
+           <from>^/site/(.*)$</from>
+           <to type="redirect">/proxy/$1</to>
         </rule>
        
     </urlrewrite>
