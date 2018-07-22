@@ -106,7 +106,7 @@ public class SiteController extends BaseController {
 	public String proxy(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		//request.getRequestDispatcher(request.getRequestURI().replaceFirst("/proxy", "")+"?"+request.getQueryString()).forward(request, response);
 		String ip = InetAddress.getByName(request.getServerName()).getHostAddress();
-		String url = "http://"+ip+":"+request.getRemotePort()+request.getRequestURI().replaceFirst("/proxy", "/site")+"?"+request.getQueryString();
+		String url = "http://"+ip+":"+request.getServerPort()+request.getRequestURI().replaceFirst("/proxy", "/site")+"?"+request.getQueryString();
 		logger.debug("proxy url = "+url);
 		RequestProxy.execute(url, request, response);
 		return null;
