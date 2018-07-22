@@ -13,6 +13,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -104,6 +105,10 @@ public class SiteController extends BaseController {
 	@RequestMapping(value = {"/proxy/**"}, method = {RequestMethod.GET,RequestMethod.POST},produces = "text/plain;charset=UTF-8")
 	public String proxy(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		//request.getRequestDispatcher(request.getRequestURI().replaceFirst("/proxy", "")+"?"+request.getQueryString()).forward(request, response);
+		String ip = InetAddress.getByName(request.getServerName()).getHostAddress();
+		String url = "http://"+ip+":"+request.getRemotePort()+request.getRequestURI().replaceFirst("/proxy", "/site")+"?"+request.getQueryString();
+		logger.debug("proxy url = "+url);
+		RequestProxy.execute(url, request, response);
 		return null;
 	}
 	
