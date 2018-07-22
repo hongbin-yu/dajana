@@ -15,9 +15,9 @@
         </rule>
 
         <rule enabled="true">
-<!--            <condition name="host" operator="notequal">dajana.ca</condition>
+<!--            <condition name="host" operator="notequal">dajana.ca</condition> -->
            <condition name="host" operator="notequal">home.dajana.ca</condition>    
-           <condition name="host" operator="notequal">localhost.net</condition> -->
+           <condition name="host" operator="notequal">localhost</condition>
            <from>^/site/(.*)$</from>
            <to type="redirect">/proxy/$1</to>
         </rule>
