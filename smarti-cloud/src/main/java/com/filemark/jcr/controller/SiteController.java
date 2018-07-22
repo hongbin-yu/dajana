@@ -103,13 +103,16 @@ public class SiteController extends BaseController {
 	    return modelAndView;
     }
 	@RequestMapping(value = {"/proxy/**"}, method = {RequestMethod.GET,RequestMethod.POST},produces = "text/plain;charset=UTF-8")
-	public String proxy(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public String proxy(String action,HttpServletRequest request, HttpServletResponse response) throws Exception {
 		//request.getRequestDispatcher(request.getRequestURI().replaceFirst("/proxy", "")+"?"+request.getQueryString()).forward(request, response);
 		String ip = InetAddress.getByName(request.getServerName()).getHostAddress();
 		String url = "http://"+request.getServerName()+":"+request.getServerPort()+request.getRequestURI().replaceFirst("/proxy", "/site");
 		if(request.getQueryString() !=null) {
-			url +="?"+request.getQueryString();
+			url +="?"+request.getQueryString()+"&action=proxy";
+		}else {
+			url +="?action=proxy";
 		}
+		url = url.replaceFirst("/proxy", "");
 		logger.debug("proxy url = "+url);
 		RequestProxy.execute(url, request, response);
 
