@@ -37,6 +37,8 @@
 			</select>
 			</div>	
 			<a class="btn btn-default pull-right" href="/site/assets.html?path=${folder.path}" title="编辑"><span class="glyphicon glyphicon-edit pull-right"></span></a>
+			<a href="javascript:deleteFiles()" class="btn bnt-default btn-danger visible-xs pull-right" title="删除"><span class="glyphicon glyphicon-remove"></span></a>
+			<a href="javascript:openPdf()" class="btn btn-primary visible-xs pull-right" title="打开PDF"><span class="glyphicon glyphicon-open"></span></a>
 			</form>       
             <details id="${folder.uid }">
             <summary>${folder.title}
@@ -87,9 +89,11 @@
 				<div class="form-group" ondrop="drop(event)" ondragover="allowDrop(event)" style="border:1px solid #aaaaaa;">
 					<a href="#" onclick="openFiles()"><span id="openFiles" class="field-name"><spring:message code="djn.select_dragging_drop"/> </span>
 					<img class="pull-left mrgn-rght-md" id="uploadImg" alt="" src="<c:url value='/resources/images/upload100.png'/>"/></a>
-					<div class="checkbox">
+					<div>
+					<br/>
 					<label for="override"><input type="checkbox" name="override" value="true" id="override" size="35"> 覆盖旧文件如果重名</label>
-					</div>					
+					</div>
+					<br/>					
 					<input class="form-control wb-inv" type="file" id="fileUpload" name="file" size="60" required="required"  multiple/>
 					<input id="submit_upload" type="button" onclick="javascript:uploadFiles()" value="<spring:message code="djn.upload"/>" class="btn btn-primary" disabled> <input type="reset" value="<spring:message code="djn.clear"/>" onclick="resetSelDiv()" class="btn btn-default">
 				</div>
@@ -203,10 +207,10 @@
 				</c:if>	
 		</c:if>
 	<c:if test="${item.pdf}">
-		<a title="<spring:message code="djn.open"/>PDF" href="viewpdf.pdf?uid=${item.uid}" target="_BLANK"><span class="glyphicon glyphicon-open"></span> <spring:message code="djn.open"/>PDF</a>
+		<input type="checkbox" name="puid" value="${item.uid }"> <a title="<spring:message code="djn.open"/>PDF" href="viewpdf.pdf?uid=${item.uid}" target="_BLANK"><span class="glyphicon glyphicon-open"></span> <spring:message code="djn.open"/>PDF</a>
 	</c:if>
 	<a class="download pull-right" href="file${item.ext}?path=${item.path}" target="_BLANK" download="${item.title }"><span class="glyphicon glyphicon-download pull-right">下载</span></a>
-	<div><input type="checkbox" name="puid" value="${item.uid }"> ${item.title}</div>
+	<div>${item.title}</div>
 	<c:if test="${item.description}"><p>${item.description}</p></c:if>
 	<div class="clearfix"></div>	
 	</div>

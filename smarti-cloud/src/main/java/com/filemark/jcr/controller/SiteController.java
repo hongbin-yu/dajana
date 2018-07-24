@@ -105,14 +105,15 @@ public class SiteController extends BaseController {
 	@RequestMapping(value = {"/proxy/**"}, method = {RequestMethod.GET,RequestMethod.POST},produces = "text/plain;charset=UTF-8")
 	public String proxy(String action,HttpServletRequest request, HttpServletResponse response) throws Exception {
 		//request.getRequestDispatcher(request.getRequestURI().replaceFirst("/proxy", "")+"?"+request.getQueryString()).forward(request, response);
+		String address = request.getRemoteAddr();
 		String ip = InetAddress.getByName(request.getServerName()).getHostAddress();
-		String url = "http://"+request.getServerName()+":"+request.getServerPort()+request.getRequestURI().replaceFirst("/proxy", "/site");
+		String url = request.getRequestURL().toString();//"http://"+request.getServerName()+":"+request.getServerPort()+request.getRequestURI().replaceFirst("/proxy", "/site");
 		if(request.getQueryString() !=null) {
 			url +="?"+request.getQueryString()+"&action=proxy";
 		}else {
 			url +="?action=proxy";
 		}
-		url = url.replaceFirst("/proxy", "");
+		url = url.replaceFirst("/proxy", "/site");
 		logger.debug("proxy url = "+url);
 		RequestProxy.execute(url, request, response);
 

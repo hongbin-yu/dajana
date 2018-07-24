@@ -6,21 +6,20 @@
 
     <urlrewrite>
 
-        <rule enabled="true">
+<!--         <rule enabled="true">
            <condition name="host" operator="notequal">dajana.ca</condition>
            <condition name="host" operator="notequal">home.dajana.ca</condition>    
            <condition name="host" operator="notequal">localhost</condition>                     
            <from>^/resources/(.*)$</from>
            <to type="proxy">http://localhost/resources/$1</to>
-        </rule>
+        </rule> -->
 
         <rule enabled="true">
-           <condition name="host" operator="notequal">dajana.ca</condition>
-           <condition name="host" operator="notequal">home.dajana.ca</condition>    
-           <condition name="host" operator="notequal">localhost</condition>
-           <condition name="query-string" operator="notequal">^proxy$</condition>           
-           <from>/(.*)$</from>
-           <to type="forward">/proxy/$1</to>
+           <condition name="host" operator="notequal">^dajana.ca</condition>
+           <condition name="host" operator="notequal">^home.dajana.ca</condition>    
+           <condition name="request-uri" operator="notequal">^/resources/(.*)$</condition>
+           <from>/admin/(.*)$</from>
+           <to type="redirect">/site/$1</to>
         </rule>
        
     </urlrewrite>

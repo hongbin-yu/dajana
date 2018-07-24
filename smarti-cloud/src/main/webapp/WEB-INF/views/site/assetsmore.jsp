@@ -49,10 +49,10 @@
 				</c:if>	
 		</c:if>
         <c:if test="${item.pdf}">
-		<a title="<spring:message code="djn.open"/>PDF" href="<c:url value="/site/viewpdf.pdf?uid=${item.uid}"/>" target="_BLANK"><span class="glyphicon glyphicon-open"></span> <spring:message code="djn.open"/>PDF</a>
+		<input type="checkbox"  name="puid" value="${item.uid }"> <a title="<spring:message code="djn.open"/>PDF" href="<c:url value="/site/viewpdf.pdf?uid=${item.uid}"/>" target="_BLANK"><span class="glyphicon glyphicon-open"></span> <spring:message code="djn.open"/>PDF</a>
 		</c:if>
 		<a class="download pull-right" href="file${item.ext}?path=${item.path}" target="_BLANK" download="${item.title }"><span class="glyphicon glyphicon-download pull-right">下载</span></a>
-		<div><input type="checkbox"  name="puid" value="${item.uid }"> ${item.title} </div>
+		<div>${item.title} </div>
 		<c:if test="${item.description}"><p>${item.description}</p></c:if>
 			
 <%-- 		<div class="form-group">

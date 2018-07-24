@@ -37,6 +37,8 @@
 			</select>
 			</div>	
 			<a class="btn btn-default pull-right" href="/site/view.html?path=${folder.path}" title="快速阅览"><span class="glyphicon glyphicon-eye-open pull-right"></span></a>
+			<a href="javascript:deleteFiles()" class="btn bnt-default btn-danger visible-xs pull-right" title="删除"><span class="glyphicon glyphicon-remove"></span></a>
+			<a href="javascript:openPdf()" class="btn btn-primary visible-xs pull-right" title="打开PDF"><span class="glyphicon glyphicon-open"></span></a>
 			</form>       
             <details id="${folder.uid }">
             <summary>${folder.title}
