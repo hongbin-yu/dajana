@@ -16,3 +16,6 @@ cd /usr/local/src
 
 crontab -e 
 */5 * * * * /sbin/hdparm -y /dev/sda
+*/5 * * * * /home/device/workingDir/cron2mp4.sh
+
+copy /home/device/dajana/smarti-cloud/cron2mp4.sh /home/device/workingDir

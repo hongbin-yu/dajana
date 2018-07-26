@@ -40,7 +40,7 @@
 </a>
 </div>
 
-<section id="wb-srch" class="col-xs-6 text-right visible-md visible-lg">
+<!-- <section id="wb-srch" class="col-xs-6 text-right visible-md visible-lg"> -->
 <%-- <h2><spring:message code="djn.search"/></h2>
 <form action="#" method="post" name="cse-search-box" role="search" class="form-inline">
 <div class="form-group">

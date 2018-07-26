@@ -15,11 +15,11 @@
         </rule> -->
 
         <rule enabled="true">
-           <condition name="host" operator="notequal">^dajana.ca</condition>
+<!--            <condition name="host" operator="notequal">^dajana.ca</condition>
            <condition name="host" operator="notequal">^home.dajana.ca</condition>    
-           <condition name="request-uri" operator="notequal">^/resources/(.*)$</condition>
-           <from>/admin/(.*)$</from>
-           <to type="redirect">/site/$1</to>
+           <condition name="request-uri" operator="notequal">^/resources/(.*)$</condition> -->
+           <from>/publish/(.*)$</from>
+           <to type="forward">/content/$1</to>
         </rule>
        
     </urlrewrite>

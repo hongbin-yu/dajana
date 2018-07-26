@@ -27,6 +27,7 @@ import java.util.Date;
 
 import javax.imageio.ImageIO;
 import javax.jcr.RepositoryException;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -168,6 +169,7 @@ public class SigninController extends BaseController{
    	public String forgetpassword(String j,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
 
     	if(j!=null) {
+	        String domain = request.getServerName();
     		try {
     			String json = JwtUtil.decode(j);
     			JsonParser parser = new JsonParser();
@@ -179,16 +181,16 @@ public class SigninController extends BaseController{
     			String redirect = (jsonObject.get("redirect")==null || jsonObject.get("redirect").isJsonNull())?"":jsonObject.get("redirect").getAsString();
     			if("yes".equals(isIntranet) && !isIntranet(request)) {
     	            model.addAttribute("error", "login_intranet"); 
-    	            return "redirect:/forget?error=login_intranet"; 		    				
+    	            return "redirect:http://"+domain+"/forget?error=login_intranet"; 		    				
     			}
     			if(expired >0 && expired > new Date().getTime()) {
     	            model.addAttribute("error", "login_expired"); 
-    	            return "redirect:/forget?error=login_expired"; 				
+    	            return "redirect:http://"+domain+"/forget?error=login_expired"; 				
     			}
     			User user = (User)jcrService.getObject("/system/users/"+username);
     			if(user.getPassword()==null || !user.getPassword().equals(password)) {
     	            model.addAttribute("error", "login_error");    
-    	            return "redirect:/forget?error=bad_credentials"; 		
+    	            return "redirect:http://"+domain+"/forget?error=bad_credentials"; 		
     			}
     			Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
     			authorities.add(new SimpleGrantedAuthority(this.getRolePrefix()+user.getRole().toLowerCase()));//default role
@@ -219,21 +221,21 @@ public class SigninController extends BaseController{
     			request.setAttribute("usertitle", user.getTitle()); 
     			request.setAttribute("signingKey", user.getSigningKey());  
     	        String token = JwtUtil.generateToken(JwtUtil.signingKey, token_author);
-    	        String domain = request.getServerName();
+
 
    	        
     	        CookieUtil.create(response, JwtUtil.jwtTokenCookieName, token, false, -1, domain);
     	        if(user.getHost()!=null && !domain.equals(user.getHost()))
     	        	CookieUtil.create(response, JwtUtil.jwtTokenCookieName, token, false, -1, user.getHost());
     	        if(redirect==null || "".equals(redirect) || "signin".equals(redirect)) {
-    	    		return "redirect:/protected/youlook.html";
+    	    		return "redirect:http://"+domain+"/protected/youlook.html";
     	        }else {
     	       		return "redirect:"+ redirect+"&domain="+domain;
     	        }
     			
     		}catch( Exception e) {
     			logger.error("forget:"+e.getMessage());
-    			return "redirect:/forget?error="+e.getMessage();
+    			return "redirect:http://"+domain+"/forget?error="+e.getMessage();
     		}
     	}
     	return "forget";
@@ -259,6 +261,10 @@ public class SigninController extends BaseController{
 	    		if(url.startsWith("http")) {
 	    			response.sendRedirect(url);
 	    			return null;
+	    		}else {
+	    			RequestDispatcher dispatcher = request.getRequestDispatcher(url);
+	    		    dispatcher.forward(request, response);
+	    		    return null;
 	    		}
 
 
