@@ -63,8 +63,10 @@ public class ProtectedController extends BaseController {
     		host = request.getRemoteHost();
     		model.addAttribute("host", host);
     	}
-    	
-		return "redirect:/site/assets.html";
+    	if(request.getServerName().startsWith("home.dajana"))
+    		return "redirect:/site/assets.html";
+    	else
+    		return "redirect:/site/view.html";
 
     }         
    	@RequestMapping(value = {"/protected/chat.html","/protected/youchat.html"}, method = {RequestMethod.GET})
