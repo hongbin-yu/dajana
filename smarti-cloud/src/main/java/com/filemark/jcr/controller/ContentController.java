@@ -12,7 +12,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 import java.net.InetAddress;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.net.UnknownHostException;
@@ -501,6 +505,7 @@ public class ContentController extends BaseController {
 		ImageUtil.HDDOff();
 		return "content/page";
 	}
+	
 	@RequestMapping(value = {"/content/{site}.menu","/content/{site}/**/*.menu","/content/{site}/*.menu"}, method = RequestMethod.GET)
 	public String menu(@PathVariable String site,String path, String uid,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String menu="";
@@ -847,5 +852,41 @@ public class ContentController extends BaseController {
 		
 		return null;
 	}
-	
+
+	@RequestMapping(value = {"/cache/*.*","/cache/**/*.*"}, method = RequestMethod.GET)
+	public @ResponseBody String cache(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String paths = URLDecoder.decode(request.getRequestURI(),"UTF-8");
+		if(!request.getContextPath().equals("/"))
+			paths = paths.replaceFirst(request.getContextPath(), "");
+        long ifModifiedSince = request.getDateHeader("If-Modified-Since");
+		String serverName = request.getServerName();
+		String cachPath = jcrService.getCache()+"/"+serverName+paths;
+	    File cacheFile =new File(cachPath);
+	    if(!cacheFile.exists()) {
+	    	cacheFile.getParentFile().mkdirs();
+			URL url = new URL("http://local."+serverName+":8888"+paths);
+			HttpURLConnection uc = (HttpURLConnection)url.openConnection();
+			uc.setReadTimeout(5000);
+			long lastModified = uc.getLastModified();
+			int statusCode = uc.getResponseCode();
+			FileUtils.copyInputStreamToFile(uc.getInputStream(), cacheFile);
+			uc.disconnect();
+			
+	    }
+	    
+        long lastModified = cacheFile.lastModified();
+
+        logger.debug("ifModifiedSince="+ifModifiedSince+"/"+lastModified);
+        if (ifModifiedSince != -1 && ifModifiedSince + 1000 <= lastModified) {
+			FileInputStream in = new FileInputStream(cacheFile);
+			IOUtils.copy(in, response.getOutputStream());	
+			in.close();	
+			logger.debug(cacheFile+" modified");
+			return null;
+        }
+        cacheFile.setReadOnly();
+		super.serveResource(request, response, cacheFile, null);
+
+		return null;
+	}
 }

@@ -168,6 +168,7 @@
          <beans:property name="home" value="${smarti.home}"/>
          <beans:property name="device" value="${smarti.device}"/>         
          <beans:property name="backup" value="${smarti.backup}"/>         
+         <beans:property name="cache" value="${smarti.cache}"/>              
          <beans:property name="workingDir" value="${smarti.workingDir}"/>   
          <beans:property name="asianFont" value="/fonts/NotoSansCJKsc-Regular.otf">
          </beans:property>    
