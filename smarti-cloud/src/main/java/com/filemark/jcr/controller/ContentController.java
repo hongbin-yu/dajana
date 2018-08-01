@@ -3,9 +3,11 @@ package com.filemark.jcr.controller;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -134,7 +136,7 @@ public class ContentController extends BaseController {
   
     @RequestMapping(value = {"/myip/{uid}"}, method = RequestMethod.GET)
    	public @ResponseBody String myip(@PathVariable String uid,Model model,HttpServletRequest request, HttpServletResponse response) {
-    	String username = "unknown";
+    	String username = uid;
     	try {
     		username = JwtUtil.decode(uid);
     	}catch (Exception e){
@@ -149,6 +151,19 @@ public class ContentController extends BaseController {
 	    	if(user !=null && !myip.equals(user.getHostIp())) {
 	    		jcrService.updatePropertyByPath(userPath, "hostIp", myip);
 	    		jcrService.updatePropertyByPath(userPath, "localIp",localIp);
+	    		BufferedWriter writer;
+				try {
+					writer = new BufferedWriter(new FileWriter("/var/nsupdate.txt",true));
+		        	writer.write("update delete "+username+"."+jcrService.getDomain()+ " A");
+		        	writer.newLine();
+		        	writer.write("update add "+username+"."+jcrService.getDomain()+ " 86400 A "+myip);
+		        	writer.newLine();
+		        	writer.close();	    
+				} catch (IOException e) {
+					logger.error(e.getMessage());
+				}
+
+		
 	    	}
     	} catch (UnknownHostException e) {
     		myip ="error:UnknownHostException";
