@@ -869,7 +869,13 @@ public class ContentController extends BaseController {
 			uc.setReadTimeout(5000);
 			long lastModified = uc.getLastModified();
 			int statusCode = uc.getResponseCode();
-			FileUtils.copyInputStreamToFile(uc.getInputStream(), cacheFile);
+			if(statusCode == 200) {
+				FileUtils.copyInputStreamToFile(uc.getInputStream(), cacheFile);				
+			}else {
+				IOUtils.copy(uc.getInputStream(), response.getOutputStream());
+				return null;
+			}
+
 			uc.disconnect();
 			
 	    }
