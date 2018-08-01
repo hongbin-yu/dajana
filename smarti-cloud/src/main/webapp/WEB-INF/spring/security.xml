@@ -7,6 +7,7 @@
 	<http pattern="/publish/**" security="none" />
 	<http pattern="/resources/**" security="none" />
 	<http pattern="/content/**" security="none" />	
+	<http pattern="/cache/**" security="none" />		
 	<http pattern="/assets/templates/**" security="none" />		
 	<http pattern="/templates/**" security="none" />			
 	<http pattern="/myip/**" security="none" />		
