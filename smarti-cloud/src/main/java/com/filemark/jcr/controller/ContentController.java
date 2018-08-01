@@ -860,11 +860,11 @@ public class ContentController extends BaseController {
 			paths = paths.replaceFirst(request.getContextPath(), "");
         long ifModifiedSince = request.getDateHeader("If-Modified-Since");
 		String serverName = request.getServerName();
-		String cachPath = jcrService.getCache()+"/"+serverName+paths;
+		String cachPath = jcrService.getCache()+"/"+serverName+paths.replaceFirst("/cache", "/content");
 	    File cacheFile =new File(cachPath);
 	    if(!cacheFile.exists()) {
 	    	cacheFile.getParentFile().mkdirs();
-			URL url = new URL("http://local."+serverName+":8888"+paths);
+			URL url = new URL("http://local."+serverName+":8888"+paths.replaceFirst("/cache", "/content"));
 			HttpURLConnection uc = (HttpURLConnection)url.openConnection();
 			uc.setReadTimeout(5000);
 			long lastModified = uc.getLastModified();
