@@ -853,18 +853,18 @@ public class ContentController extends BaseController {
 		return null;
 	}
 
-	@RequestMapping(value = {"/cache/{sb}/*.*","/cache/{sb}/**/*.*"}, method = RequestMethod.GET)
-	public @ResponseBody String cache(@PathVariable String sb,HttpServletRequest request, HttpServletResponse response) throws Exception {
+	@RequestMapping(value = {"/cache/*.*","/cache/**/*.*"}, method = RequestMethod.GET)
+	public @ResponseBody String cache(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String paths = URLDecoder.decode(request.getRequestURI(),"UTF-8");
 		if(!request.getContextPath().equals("/"))
 			paths = paths.replaceFirst(request.getContextPath(), "");
         long ifModifiedSince = request.getDateHeader("If-Modified-Since");
 		String serverName = request.getServerName();
-		String cachPath = jcrService.getCache()+"/"+sb+"."+serverName+paths.replaceFirst("/cache", "/content");
+		String cachPath = jcrService.getCache()+"/"+serverName+paths.replaceFirst("/cache", "/content");
 	    File cacheFile =new File(cachPath);
 	    if(!cacheFile.exists()) {
 	    	cacheFile.getParentFile().mkdirs();
-			URL url = new URL("http://local."+sb+"."+serverName+":8888"+paths.replaceFirst("/cache/"+sb, "/content"));
+			URL url = new URL("http://local."+serverName+":8888"+paths.replaceFirst("/cache", "/content"));
 			HttpURLConnection uc = (HttpURLConnection)url.openConnection();
 			uc.setReadTimeout(5000);
 			long lastModified = uc.getLastModified();
