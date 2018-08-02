@@ -907,7 +907,7 @@ public class ContentController extends BaseController {
 			logger.debug(cacheFile+" modified");
 			return null;
         }
-        cacheFile.setReadOnly();
+        //cacheFile.setReadOnly();
 		super.serveResource(request, response, cacheFile, null);
 
 		return null;
