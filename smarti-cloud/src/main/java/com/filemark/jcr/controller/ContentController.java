@@ -24,6 +24,10 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.net.UnknownHostException;
 import java.nio.charset.Charset;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -878,6 +882,7 @@ public class ContentController extends BaseController {
 		if(!analysis.exists()) {
 			analysis.getParentFile().mkdirs();
 			analysis.createNewFile();
+			Files.setPosixFilePermissions(analysis.toPath(), PosixFilePermissions.fromString("rw-r--r--"));
 		}
 	    if(!cacheFile.exists()) {
 	    	cacheFile.getParentFile().mkdirs();
