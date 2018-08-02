@@ -869,7 +869,7 @@ public class ContentController extends BaseController {
 		if(path==null)
 			path = "";
 		String cachPath = jcrService.getCache()+"/"+serverName+path+paths.replaceFirst("/cache", "/content");
-		String analysisPath = jcrService.getHome()+"/cache/"+serverName+path+paths.replaceFirst("/cache", "/content")+".analysis.josn";
+		String analysisPath = jcrService.getHome()+"/cache/"+serverName+path+paths.replaceFirst("/cache", "/content")+".json";
     	Date now = new Date();
 		File cacheFile =new File(cachPath);
 	    File analysis = new File(analysisPath);
@@ -924,6 +924,7 @@ public class ContentController extends BaseController {
 		Writer writer = new FileWriter(analysis);
 		String json = gson.toJson(reader);
 		writer.write(json);
+		writer.flush();
 		writer.close();
         long lastModified = cacheFile.lastModified();
 
