@@ -23,7 +23,7 @@
 <li><img title="点击编辑打开窗口" alt="" src='<c:url value="/resources/images/editIcon.gif"></c:url>'><a class="wb-lbx" title="编辑页面属性" href="<c:url value="/site/editpp.html?uid=${page.uid}"/>">编辑</a></li>
 <li><img title="点击创建打开窗口" alt="" src='<c:url value="/resources/images/add.gif"></c:url>'><a class="wb-lbx" title="创建新页面" href="<c:url value="/site/createPage.html?uid=${page.uid}"/>">创建</a></li>
 <li><img title="点击删除此页" alt="" src='<c:url value="/resources/images/cut.gif"></c:url>'><a class="wb-lbx" title="删除页面" href="<c:url value="/site/delete.html?path=${page.path}&redirect=${page.parent }"/>">删除</a></li>
-<li><a href='<c:url value="/site/youchat.html"></c:url>'><img title="点击打开在线通讯" alt="" src='<c:url value="/resources/images/chat22X22.png"></c:url>'>网信<span class="badge"></span></a></li>
+<li><a href='<c:url value="/protected/youchat.html"></c:url>'><img title="点击打开在线通讯" alt="" src='<c:url value="/resources/images/chat22X22.png"></c:url>'>网信<span class="badge"></span></a></li>
 <li><a href="<c:url value="/site/editProperties"/>"><img title="点击出版" alt="" src='<c:url value="/resources/images/up.gif"></c:url>'>出版</a></li>
 <li><a href="<c:url value="/site/assets.html"/>" target='_blank'><img title="点击打开资源窗口,点击右键从下拉菜单选择打开新窗口" alt="" src='<c:url value="/resources/images/image.gif"></c:url>'>云站</a></li>
 <li><button class="btn btn-warning btn-xs" onclick="javascript:ftrClose('/site/profile.html')" title="${user.role }"><span class="glyphicon glyphicon-user"></span><authz:authentication property='name' /></button></li>
