@@ -864,7 +864,7 @@ public class ContentController extends BaseController {
 	    File cacheFile =new File(cachPath);
 	    if(!cacheFile.exists()) {
 	    	cacheFile.getParentFile().mkdirs();
-			URL url = new URL("http://local."+serverName+":8888"+paths.replaceFirst("/cache", "/content"));
+			URL url = new URL("http://local."+serverName+":8888"+paths.replaceFirst("/cache", "/content")+"?"+request.getQueryString());
 			HttpURLConnection uc = (HttpURLConnection)url.openConnection();
 			uc.setReadTimeout(5000);
 			long lastModified = uc.getLastModified();
