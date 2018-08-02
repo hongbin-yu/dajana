@@ -869,11 +869,11 @@ public class ContentController extends BaseController {
 		if(path==null)
 			path = "";
 		String cachPath = jcrService.getCache()+"/"+serverName+path+paths.replaceFirst("/cache", "/content");
-		String analysisPath = jcrService.getHome()+"/cache/"+serverName+path+paths.replaceFirst("/cache", "/content");
+		String analysisPath = jcrService.getHome()+"/cache/"+serverName+path+paths.replaceFirst("/cache", "/content")+".analysis.josn";
     	Date now = new Date();
 		File cacheFile =new File(cachPath);
 	    File analysis = new File(analysisPath);
-	    analysis = new File(analysis.getParentFile(),"analysis.josn");
+	    //analysis = new File(analysis.getParentFile(),"analysis.josn");
 		URL url = new URL("http://local."+serverName+":8888"+paths.replaceFirst("/cache", "/content")+(request.getQueryString()==null?"":"?"+request.getQueryString()));
 		if(!analysis.exists()) {
 			analysis.getParentFile().mkdirs();
@@ -922,7 +922,8 @@ public class ContentController extends BaseController {
 		reader.updateView();
 		reader.setLastView(now);
 		Writer writer = new FileWriter(analysis);
-		gson.toJson(reader, writer);
+		String json = gson.toJson(reader);
+		writer.write(json);
 		writer.close();
         long lastModified = cacheFile.lastModified();
 
