@@ -827,7 +827,7 @@ public class ContentController extends BaseController {
 	@RequestMapping(value = {"/content/*.shr","/content/**/*.shr"}, method = RequestMethod.GET)
 	public String share(String path,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-		String url = request.getRequestURL().toString().replace(".shr", ".qrb.jpg");;
+		String url = request.getRequestURI().toString().replace(".shr", ".qrb.jpg");;
 		if(path==null)
 			path = url;
 		model.addAttribute("qrpath", path);
@@ -854,30 +854,47 @@ public class ContentController extends BaseController {
 	}
 
 	@RequestMapping(value = {"/cache/*.*","/cache/**/*.*"}, method = RequestMethod.GET)
-	public @ResponseBody String cache(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public @ResponseBody String cache(String path, String uid,HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String paths = URLDecoder.decode(request.getRequestURI(),"UTF-8");
 		if(!request.getContextPath().equals("/"))
 			paths = paths.replaceFirst(request.getContextPath(), "");
         long ifModifiedSince = request.getDateHeader("If-Modified-Since");
 		String serverName = request.getServerName();
-		String cachPath = jcrService.getCache()+"/"+serverName+paths.replaceFirst("/cache", "/content");
+		if(uid!=null)
+			path = "/"+uid;
+		if(path==null)
+			path = "";
+		String cachPath = jcrService.getCache()+"/"+serverName+path+paths.replaceFirst("/cache", "/content");
 	    File cacheFile =new File(cachPath);
+		URL url = new URL("http://local."+serverName+":8888"+paths.replaceFirst("/cache", "/content")+(request.getQueryString()==null?"":"?"+request.getQueryString()));
+
 	    if(!cacheFile.exists()) {
 	    	cacheFile.getParentFile().mkdirs();
-			URL url = new URL("http://local."+serverName+":8888"+paths.replaceFirst("/cache", "/content")+"?"+request.getQueryString());
 			HttpURLConnection uc = (HttpURLConnection)url.openConnection();
 			uc.setReadTimeout(5000);
 			long lastModified = uc.getLastModified();
 			int statusCode = uc.getResponseCode();
 			if(statusCode == 200) {
-				FileUtils.copyInputStreamToFile(uc.getInputStream(), cacheFile);				
+				FileUtils.copyInputStreamToFile(uc.getInputStream(), cacheFile);
+				uc.disconnect();
 			}else {
 				IOUtils.copy(uc.getInputStream(), response.getOutputStream());
+				uc.disconnect();
 				return null;
 			}
 
-			uc.disconnect();
+
 			
+	    }else {
+	    	long lastModified = cacheFile.lastModified();
+			HttpURLConnection uc = (HttpURLConnection)url.openConnection();
+			uc.setReadTimeout(5000);
+			uc.setIfModifiedSince(lastModified);
+			int statusCode = uc.getResponseCode();
+			if(statusCode == 200) {
+				FileUtils.copyInputStreamToFile(uc.getInputStream(), cacheFile);				
+			}
+			uc.disconnect();
 	    }
 	    
         long lastModified = cacheFile.lastModified();
