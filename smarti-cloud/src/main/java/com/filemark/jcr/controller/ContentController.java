@@ -3,15 +3,18 @@ package com.filemark.jcr.controller;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
@@ -53,6 +56,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.filemark.jcr.model.Analysis;
 import com.filemark.jcr.model.Asset;
 import com.filemark.jcr.model.Chat;
 import com.filemark.jcr.model.News;
@@ -865,9 +869,16 @@ public class ContentController extends BaseController {
 		if(path==null)
 			path = "";
 		String cachPath = jcrService.getCache()+"/"+serverName+path+paths.replaceFirst("/cache", "/content");
-	    File cacheFile =new File(cachPath);
+		String analysisPath = jcrService.getHome()+"/cache/"+serverName+path+paths.replaceFirst("/cache", "/content");
+    	Date now = new Date();
+		File cacheFile =new File(cachPath);
+	    File analysis = new File(analysisPath);
+	    analysis = new File(analysis.getParentFile(),"analysis.josn");
 		URL url = new URL("http://local."+serverName+":8888"+paths.replaceFirst("/cache", "/content")+(request.getQueryString()==null?"":"?"+request.getQueryString()));
-
+		if(!analysis.exists()) {
+			analysis.getParentFile().mkdirs();
+			analysis.createNewFile();
+		}
 	    if(!cacheFile.exists()) {
 	    	cacheFile.getParentFile().mkdirs();
 			HttpURLConnection uc = (HttpURLConnection)url.openConnection();
@@ -886,17 +897,33 @@ public class ContentController extends BaseController {
 
 			
 	    }else {
+	    	long lastRead = analysis.lastModified();
 	    	long lastModified = cacheFile.lastModified();
-			HttpURLConnection uc = (HttpURLConnection)url.openConnection();
-			uc.setReadTimeout(5000);
-			uc.setIfModifiedSince(lastModified);
-			int statusCode = uc.getResponseCode();
-			if(statusCode == 200) {
-				FileUtils.copyInputStreamToFile(uc.getInputStream(), cacheFile);				
-			}
-			uc.disconnect();
+
+	    	if(now.getTime() - lastRead > 600000) {//cache 10 minutes
+				HttpURLConnection uc = (HttpURLConnection)url.openConnection();
+				uc.setReadTimeout(5000);
+				uc.setIfModifiedSince(lastModified);
+				int statusCode = uc.getResponseCode();
+				if(statusCode == 200) {
+					FileUtils.copyInputStreamToFile(uc.getInputStream(), cacheFile);				
+				}
+				uc.disconnect();	    		
+	    	}
+
 	    }
-	    
+		Gson gson = new Gson();
+		BufferedReader bufferedReader = new BufferedReader(new FileReader(analysis));
+		Analysis reader = gson.fromJson(bufferedReader, Analysis.class);
+		if(reader==null) {
+			reader = new Analysis();
+		}
+		reader.setUrl(cacheFile.getName());
+		reader.updateView();
+		reader.setLastView(now);
+		Writer writer = new FileWriter(analysis);
+		gson.toJson(reader, writer);
+		writer.close();
         long lastModified = cacheFile.lastModified();
 
         logger.debug("ifModifiedSince="+ifModifiedSince+"/"+lastModified);
