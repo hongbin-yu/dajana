@@ -122,7 +122,7 @@ tinymce.init({
 	    'noneditable searchreplace visualblocks code fullscreen',
 	    'insertdatetime media table cloud web contextmenu paste'
 	  ],
-	  convert_urls: true,
+	  convert_urls: false,
 	  relative_urls: true,
 	  remove_script_host: true,
 	  noneditable_noneditable_class:"noneditable",
