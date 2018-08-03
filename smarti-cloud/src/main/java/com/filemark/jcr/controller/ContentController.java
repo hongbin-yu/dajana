@@ -884,6 +884,12 @@ public class ContentController extends BaseController {
 			analysis.createNewFile();
 			Files.setPosixFilePermissions(analysis.toPath(), PosixFilePermissions.fromString("rw-r--r--"));
 		}
+		Gson gson = new Gson();
+		BufferedReader bufferedReader = new BufferedReader(new FileReader(analysis));
+		Analysis reader = gson.fromJson(bufferedReader, Analysis.class);
+		if(reader==null) {
+			reader = new Analysis();
+		}		
 	    if(!cacheFile.exists()) {
 	    	cacheFile.getParentFile().mkdirs();
 			HttpURLConnection uc = (HttpURLConnection)url.openConnection();
@@ -902,14 +908,16 @@ public class ContentController extends BaseController {
 
 			
 	    }else {
-	    	long lastRead = analysis.lastModified();
+	    	long lastRead = reader.getLastSync()==null?0:reader.getLastSync().getTime();//analysis.lastModified();
 	    	long lastModified = cacheFile.lastModified();
-	    	logger.info("lastRead:"+(now.getTime() - lastRead));
+	    	logger.debug("lastRead:"+(now.getTime() - lastRead));
 	    	if(now.getTime() - lastRead > 600000) {//cache 10 minutes
 				HttpURLConnection uc = (HttpURLConnection)url.openConnection();
 				uc.setReadTimeout(5000);
 				uc.setIfModifiedSince(lastModified);
 				int statusCode = uc.getResponseCode();
+				reader.setLastSync(now);
+				logger.debug("Response code:"+statusCode);
 				if(statusCode == 200) {
 					FileUtils.copyInputStreamToFile(uc.getInputStream(), cacheFile);				
 				}else if(statusCode == 404 || statusCode == 500){
@@ -922,12 +930,7 @@ public class ContentController extends BaseController {
 	    	}
 
 	    }
-		Gson gson = new Gson();
-		BufferedReader bufferedReader = new BufferedReader(new FileReader(analysis));
-		Analysis reader = gson.fromJson(bufferedReader, Analysis.class);
-		if(reader==null) {
-			reader = new Analysis();
-		}
+
 		reader.setUrl(cacheFile.getName());
 		reader.updateView();
 		reader.setLastView(now);
