@@ -92,7 +92,7 @@ public class ContentController extends BaseController {
 	  String paths[] = path.split("\\.");
       ModelAndView modelAndView = new ModelAndView("error404");
       String message = request.getRequestURI() +":"+ ex.toString();
-      modelAndView.addObject("error",message);
+      modelAndView.addObject("error","<detail><summary>此页没找到</summary><p>"+message+"</p></detail>");
       try {
   	    String simpleName = ex.getCause().getClass().getSimpleName();
   	    logger.info(simpleName);
@@ -911,7 +911,7 @@ public class ContentController extends BaseController {
 	    	long lastRead = reader.getLastSync()==null?0:reader.getLastSync().getTime();//analysis.lastModified();
 	    	long lastModified = cacheFile.lastModified();
 	    	lastRead = now.getTime() - lastRead;
-	    	logger.debug("lastRead:"+(now.getTime() - lastRead));
+	    	logger.debug("lastRead:"+lastRead);
 	    	if(lastRead > 600000 || sync!=null) {//cache 10 minutes
 				HttpURLConnection uc = (HttpURLConnection)url.openConnection();
 				uc.setReadTimeout(5000);
@@ -943,7 +943,7 @@ public class ContentController extends BaseController {
 		writer.close();
         long lastModified = cacheFile.lastModified();
 
-        logger.debug("ifModifiedSince="+ifModifiedSince+"/"+lastModified);
+        logger.debug("ifModifiedSince="+ifModifiedSince+"/"+lastModified+"/");
         if (ifModifiedSince != -1 && ifModifiedSince + 1000 <= lastModified) {
 			FileInputStream in = new FileInputStream(cacheFile);
 			IOUtils.copy(in, response.getOutputStream());	
