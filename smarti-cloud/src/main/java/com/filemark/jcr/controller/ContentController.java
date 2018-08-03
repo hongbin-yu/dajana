@@ -862,7 +862,7 @@ public class ContentController extends BaseController {
 	}
 
 	@RequestMapping(value = {"/cache/*.*","/cache/**/*.*"}, method = RequestMethod.GET)
-	public @ResponseBody String cache(String path, String uid,HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public @ResponseBody String cache(String path, String uid,String sync,HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String paths = URLDecoder.decode(request.getRequestURI(),"UTF-8");
 		if(!request.getContextPath().equals("/"))
 			paths = paths.replaceFirst(request.getContextPath(), "");
@@ -910,11 +910,13 @@ public class ContentController extends BaseController {
 	    }else {
 	    	long lastRead = reader.getLastSync()==null?0:reader.getLastSync().getTime();//analysis.lastModified();
 	    	long lastModified = cacheFile.lastModified();
+	    	lastRead = now.getTime() - lastRead;
 	    	logger.debug("lastRead:"+(now.getTime() - lastRead));
-	    	if(now.getTime() - lastRead > 600000) {//cache 10 minutes
+	    	if(lastRead > 600000 || sync!=null) {//cache 10 minutes
 				HttpURLConnection uc = (HttpURLConnection)url.openConnection();
 				uc.setReadTimeout(5000);
-				uc.setIfModifiedSince(lastModified);
+				if(sync==null || lastRead > 1800000)
+					uc.setIfModifiedSince(lastModified);
 				int statusCode = uc.getResponseCode();
 				reader.setLastSync(now);
 				logger.debug("Response code:"+statusCode);

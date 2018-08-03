@@ -33,7 +33,7 @@
 </li>
 </c:if>
 <c:if test="${page.status=='true' }">
-<li><a href="<c:url value="${page.path }.html"/>"><span class="glyphicon glyphicon-open"></span><spring:message code="djn.goback"/></a></li>
+<li><a href="<c:url value="${page.path }.html?sync=1"/>"><span class="glyphicon glyphicon-open"></span><spring:message code="djn.goback"/></a></li>
 </c:if>
 <li><a href="<c:url value="/logout"/>"><span class="glyphicon glyphicon-log-out"></span><spring:message code="djn.logout"/></a></li>
 </authz:authorize>
