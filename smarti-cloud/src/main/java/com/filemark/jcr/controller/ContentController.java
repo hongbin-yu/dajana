@@ -904,7 +904,7 @@ public class ContentController extends BaseController {
 	    }else {
 	    	long lastRead = analysis.lastModified();
 	    	long lastModified = cacheFile.lastModified();
-
+	    	logger.info("lastRead:"+(now.getTime() - lastRead));
 	    	if(now.getTime() - lastRead > 600000) {//cache 10 minutes
 				HttpURLConnection uc = (HttpURLConnection)url.openConnection();
 				uc.setReadTimeout(5000);
@@ -912,6 +912,11 @@ public class ContentController extends BaseController {
 				int statusCode = uc.getResponseCode();
 				if(statusCode == 200) {
 					FileUtils.copyInputStreamToFile(uc.getInputStream(), cacheFile);				
+				}else if(statusCode == 404 || statusCode == 500){
+					cacheFile.delete();
+					IOUtils.copy(uc.getInputStream(), response.getOutputStream());
+					uc.disconnect();
+					return null;					
 				}
 				uc.disconnect();	    		
 	    	}
