@@ -917,6 +917,13 @@ public class ContentController extends BaseController {
 				uc.setReadTimeout(5000);
 				if(sync==null || lastRead > 1800000)
 					uc.setIfModifiedSince(lastModified);
+				
+				if(sync==null) {
+					File cacheFolder =new File(cachPath.replace(".html", ""));
+					if(cacheFolder.exists() && cacheFolder.isDirectory()) {
+						FileUtils.deleteDirectory(cacheFolder);
+					}
+				}
 				int statusCode = uc.getResponseCode();
 				reader.setLastSync(now);
 				logger.debug("Response code:"+statusCode);

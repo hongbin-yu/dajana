@@ -96,7 +96,7 @@ public class SiteController extends BaseController {
 	    	return null;
 	    }
 	    request.getSession().invalidate();
-	    modelAndView.addObject("error",message);
+	    modelAndView.addObject("error","<detail><summary>此页没找到</summary><p>"+message+"</p></detail>");
 	    //modelAndView.addObject("breadcrumb", jcrService.getBreadcrumb(paths[0]));
 	    logger.debug(ex.toString());
 		ImageUtil.HDDOff();
