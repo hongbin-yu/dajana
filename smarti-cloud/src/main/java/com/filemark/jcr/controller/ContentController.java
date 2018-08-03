@@ -92,7 +92,7 @@ public class ContentController extends BaseController {
 	  String paths[] = path.split("\\.");
       ModelAndView modelAndView = new ModelAndView("error404");
       String message = request.getRequestURI() +":"+ ex.toString();
-      modelAndView.addObject("error","<detail><summary>此页没找到</summary><p>"+message+"</p></detail>");
+      modelAndView.addObject("error","<details><summary>此页没找到</summary><p>"+message+"</p></details>");
       try {
   	    String simpleName = ex.getCause().getClass().getSimpleName();
   	    logger.info(simpleName);
