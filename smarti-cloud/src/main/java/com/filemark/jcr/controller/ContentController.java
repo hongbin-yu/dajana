@@ -843,7 +843,7 @@ public class ContentController extends BaseController {
 		return "content/share";
 	}
 	
-	@RequestMapping(value = {"/content/*.qrb.jpg","/content/**/*.qrb.jpg"}, method = RequestMethod.GET)
+	@RequestMapping(value = {"/site/*.qrb.jpg","/content/*.qrb.jpg","/content/**/*.qrb.jpg"}, method = RequestMethod.GET)
 	public @ResponseBody String getQRBarcode(String path,HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String url = request.getRequestURL().toString().replace(".qrb.jpg", ".html");;
 		if(path==null)
