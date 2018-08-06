@@ -114,24 +114,26 @@ public class SigninController extends BaseController{
                 model.addAttribute("error", login_error);
                 return "signin";        		
         	}
-    		Connection con = Jsoup.connect("ns2."+jcrService.getDomain()+":8888/myip/home").timeout(5000).method(Connection.Method.GET);
+			try {
 
-    		if(con.response().statusCode() == 200) {
-    			try {
-					Document doc = con.get();
-					String myip = doc.body().text();
-		        	logger.debug("histIp="+myip+",remoteIp="+lastIp);
-					if(lastIp.equals(myip)) {
-			        	jcrService.updatePropertyByPath(user.getPath(), "hostIp", myip);
-			        	//jcrService.updatePropertyByPath(user.getPath(), "lastIp", lastIp);
-			        	domain = "local.home."+jcrService.getDomain();
-			        	redirect = "http://home."+jcrService.getDomain()+"/site/view/html";
-					}
-				} catch (IOException e) {
-					logger.error("sigin error:"+e.getMessage());
-				}
-    		}
-        	jcrService.updatePropertyByPath(user.getPath(), "lastIp", lastIp);
+	        	Connection con = Jsoup.connect("ns2."+jcrService.getDomain()+":8888/myip/home").timeout(5000).method(Connection.Method.GET);
+	
+	    		if(con.response().statusCode() == 200) {
+						Document doc = con.get();
+						String myip = doc.body().text();
+			        	logger.debug("histIp="+myip+",remoteIp="+lastIp);
+						if(lastIp.equals(myip)) {
+				        	jcrService.updatePropertyByPath(user.getPath(), "hostIp", myip);
+				        	//jcrService.updatePropertyByPath(user.getPath(), "lastIp", lastIp);
+				        	domain = "local.home."+jcrService.getDomain();
+				        	redirect = "http://home."+jcrService.getDomain()+"/site/view/html";
+						}
+	    		}
+			} catch (IOException e) {
+				logger.error("sigin error:"+e.getMessage());
+			}
+
+    		jcrService.updatePropertyByPath(user.getPath(), "lastIp", lastIp);
         }
 		Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 		authorities.add(new SimpleGrantedAuthority(this.getRolePrefix()+user.getRole().toLowerCase()));//default role
@@ -183,6 +185,7 @@ public class SigninController extends BaseController{
         if(redirect==null || "".equals(redirect) || "signin".equals(redirect)) {
     		return "redirect:/site/view.html";
         }else {
+        	logger.debug("Redirect to:"+ redirect+"&domain="+domain);
        		return "redirect:"+ redirect+"&domain="+domain;
         }
 		
