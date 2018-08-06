@@ -114,7 +114,8 @@ public class SigninController extends BaseController{
                 model.addAttribute("error", login_error);
                 return "signin";        		
         	}
-    		Connection con = Jsoup.connect("ns2."+jcrService.getDomain()+":8888/myip/home").timeout(5000);
+    		Connection con = Jsoup.connect("ns2."+jcrService.getDomain()+":8888/myip/home").timeout(5000).method(Connection.Method.GET);
+
     		if(con.response().statusCode() == 200) {
     			try {
 					Document doc = con.get();
