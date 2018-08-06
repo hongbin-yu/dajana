@@ -19,6 +19,7 @@ package com.filemark.jcr.controller;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -32,6 +33,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.jsoup.Connection;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -91,7 +95,8 @@ public class SigninController extends BaseController{
     	model.addAttribute("page", page);   
     	model.addAttribute("redirect", redirect);
     	model.addAttribute("loginCount", loginCount);  	    	
-        if (j_username == null || !jcrService.nodeExsits("/system/users/"+j_username.toLowerCase()) ){
+        String domain =request.getServerName();//.replaceAll(".*\\.(?=.*\\.)", "");
+    	if (j_username == null || !jcrService.nodeExsits("/system/users/"+j_username.toLowerCase()) ){
         	String login_error = messageSource.getMessage("login_error", null,"&#29992;&#25143;&#21517;&#25110;&#23494;&#30721;&#26080;&#25928;", localeResolver.resolveLocale(request));
         	
             model.addAttribute("error", login_error);
@@ -100,10 +105,28 @@ public class SigninController extends BaseController{
         	
         	user = (User)jcrService.getObject("/system/users/"+j_username.toLowerCase());
         	//if(user.getSigningKey() ==null || user.getSigningKey().equals("")) user.setSigningKey("dajana.cn");
-        	
+        	String serverName = request.getServerName();
+        	if(!serverName.startsWith("local.home") && !serverName.startsWith("home")) {
+        		
+        	}
         	if(!user.getSigningKey().equals(j_password)) {
             	String login_error = messageSource.getMessage("login_error", null,"&#29992;&#25143;&#21517;&#25110;&#23494;&#30721;&#26080;&#25928;", localeResolver.resolveLocale(request));
-        		
+        		Connection con = Jsoup.connect("ns2."+jcrService.getDomain()+":8888/myip/home").timeout(5000);
+        		if(con.response().statusCode() == 200) {
+        			try {
+						Document doc = con.get();
+						String myip = doc.body().text();
+			        	logger.debug("histIp="+myip+",remoteIp="+lastIp);
+						if(lastIp.equals(myip)) {
+				        	jcrService.updatePropertyByPath(user.getPath(), "hostIp", myip);
+				        	jcrService.updatePropertyByPath(user.getPath(), "lastIp", lastIp);
+				        	domain = "local.home."+jcrService.getDomain();
+				        	redirect = "http://home."+jcrService.getDomain()+"/site/view/html";
+						}
+					} catch (IOException e) {
+						logger.error("sigin error:"+e.getMessage());
+					}
+        		}
                 model.addAttribute("error", login_error);
                 return "signin";        		
         	}
@@ -111,7 +134,7 @@ public class SigninController extends BaseController{
         }
 		Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 		authorities.add(new SimpleGrantedAuthority(this.getRolePrefix()+user.getRole().toLowerCase()));//default role
-        String domain =request.getServerName();//.replaceAll(".*\\.(?=.*\\.)", "");
+
         logger.debug("domain="+domain);
         String port = request.getRemoteHost();
 		for(Role role:user.getRoles()) {
