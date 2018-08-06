@@ -12,6 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.jfree.util.Log;
+import org.jsoup.Connection;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -187,6 +190,26 @@ public class LoginController extends BaseController {
         String token = JwtUtil.generateToken(JwtUtil.signingKey, token_author);
         //String domain =(user.getHost()==null || "".equals(user.getHost()))? request.getServerName():user.getHost();
         String domain =request.getServerName();//.replaceAll(".*\\.(?=.*\\.)", "");
+		try {
+
+        	Connection con = Jsoup.connect("http://ns2."+jcrService.getDomain()+":8888/myip/home").timeout(5000);
+        	Connection.Response res = con.execute();
+    		if( res.statusCode() == 200) {
+					Document doc = con.get();
+					String myip = doc.body().text();
+		        	logger.debug("hostIp="+myip+",remoteIp="+lastIp);
+					if(lastIp.equals(myip)) {
+			        	jcrService.updatePropertyByPath(user.getPath(), "hostIp", myip);
+			        	//jcrService.updatePropertyByPath(user.getPath(), "lastIp", lastIp);
+			        	domain = "local.home."+jcrService.getDomain();
+			        	redirect = "http://home."+jcrService.getDomain()+"/site/view/html";
+					}
+    		}else {
+    			logger.debug("statusCode="+ res.statusCode());
+    		}
+		} catch (Exception e) {
+			logger.error("sigin error:"+e.getMessage());
+		}        
         logger.debug("domain:"+domain);
         CookieUtil.create(httpServletResponse, JwtUtil.jwtTokenCookieName, token, false, -1, domain);
 

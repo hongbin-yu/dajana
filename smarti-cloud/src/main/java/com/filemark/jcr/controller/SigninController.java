@@ -116,18 +116,20 @@ public class SigninController extends BaseController{
         	}
 			try {
 
-	        	Connection con = Jsoup.connect("http://ns2."+jcrService.getDomain()+":8888/myip/home").timeout(5000).method(Connection.Method.GET);
-	
-	    		if(con.response().statusCode() == 200) {
+	        	Connection con = Jsoup.connect("http://ns2."+jcrService.getDomain()+":8888/myip/home").timeout(5000);
+	        	Connection.Response res = con.execute();
+	    		if( res.statusCode() == 200) {
 						Document doc = con.get();
 						String myip = doc.body().text();
-			        	logger.debug("histIp="+myip+",remoteIp="+lastIp);
+			        	logger.debug("hostIp="+myip+",remoteIp="+lastIp);
 						if(lastIp.equals(myip)) {
 				        	jcrService.updatePropertyByPath(user.getPath(), "hostIp", myip);
 				        	//jcrService.updatePropertyByPath(user.getPath(), "lastIp", lastIp);
 				        	domain = "local.home."+jcrService.getDomain();
 				        	redirect = "http://home."+jcrService.getDomain()+"/site/view/html";
 						}
+	    		}else {
+	    			logger.debug("statusCode="+ res.statusCode());
 	    		}
 			} catch (Exception e) {
 				logger.error("sigin error:"+e.getMessage());
