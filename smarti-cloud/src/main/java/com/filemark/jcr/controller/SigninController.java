@@ -69,7 +69,7 @@ import com.google.zxing.common.HybridBinarizer;
 public class SigninController extends BaseController{
 	private static final Logger logger = LoggerFactory.getLogger(SigninController.class);
 
-	@RequestMapping(value="/signin", method=RequestMethod.GET)
+	@RequestMapping(value="/signin", method={RequestMethod.GET,RequestMethod.POST})
 	public String signin(String redirect, String username, HttpServletRequest request, HttpServletResponse response,Model model) {
 
         //String domain = request.getServerName().replaceAll(".*\\.(?=.*\\.)", "");
