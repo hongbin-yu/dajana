@@ -21,6 +21,8 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collection;
@@ -141,7 +143,15 @@ public class SigninController extends BaseController{
 		authorities.add(new SimpleGrantedAuthority(this.getRolePrefix()+user.getRole().toLowerCase()));//default role
 
         logger.debug("domain="+domain);
-        String port = request.getRemoteHost();
+        String remoreHost = request.getRemoteHost();
+		InetAddress ipAddr;
+		try {
+			ipAddr = InetAddress.getLocalHost();
+			remoreHost = ipAddr.getHostAddress();
+		} catch (UnknownHostException e) {
+			logger.error(e.getMessage());;
+		}
+
 		for(Role role:user.getRoles()) {
 			authorities.add(new SimpleGrantedAuthority(this.getRolePrefix()+role.getRoleName().toUpperCase()));
 		}
@@ -151,7 +161,7 @@ public class SigninController extends BaseController{
 		}else {
 			user.setPort(":"+user.getPort());
 		}
-        String token_author = domain+"/"+port+"/"+j_username+"/"+user.getTitle()+"/"+request.getRemoteAddr();
+        String token_author = domain+"/"+remoreHost+"/"+j_username+"/"+user.getTitle()+"/"+request.getRemoteAddr();
 		for(Role role:user.getRoles()) {
 			token_author += "/"+role.getRoleName();
 		}

@@ -131,7 +131,7 @@ public class LoginController extends BaseController {
     	String title = messageSource.getMessage("djn.login", null,"&#30331;&#20837;", localeResolver.resolveLocale(request));
 
     	page.setTitle(title);
-    	String lastIp = request.getRemoteAddr();//getClientIpAddress(request);
+    	String lastIp = getClientIpAddress(request);
     	if(loginCount==null) loginCount=0;
     	loginCount++;
     	model.addAttribute("page", page);   
