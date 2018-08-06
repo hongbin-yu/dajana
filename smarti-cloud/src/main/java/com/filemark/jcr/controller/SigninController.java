@@ -69,7 +69,7 @@ import com.google.zxing.common.HybridBinarizer;
 public class SigninController extends BaseController{
 	private static final Logger logger = LoggerFactory.getLogger(SigninController.class);
 
-	@RequestMapping(value="/signin", method={RequestMethod.GET,RequestMethod.POST})
+	@RequestMapping(value="/signin", method={RequestMethod.GET})
 	public String signin(String redirect, String username, HttpServletRequest request, HttpServletResponse response,Model model) {
 
         //String domain = request.getServerName().replaceAll(".*\\.(?=.*\\.)", "");
@@ -116,7 +116,7 @@ public class SigninController extends BaseController{
         	}
 			try {
 
-	        	Connection con = Jsoup.connect("ns2."+jcrService.getDomain()+":8888/myip/home").timeout(5000).method(Connection.Method.GET);
+	        	Connection con = Jsoup.connect("http://ns2."+jcrService.getDomain()+":8888/myip/home").timeout(5000).method(Connection.Method.GET);
 	
 	    		if(con.response().statusCode() == 200) {
 						Document doc = con.get();
@@ -129,7 +129,7 @@ public class SigninController extends BaseController{
 				        	redirect = "http://home."+jcrService.getDomain()+"/site/view/html";
 						}
 	    		}
-			} catch (IOException e) {
+			} catch (Exception e) {
 				logger.error("sigin error:"+e.getMessage());
 			}
 
