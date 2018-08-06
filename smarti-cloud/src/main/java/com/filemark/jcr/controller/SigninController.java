@@ -111,25 +111,25 @@ public class SigninController extends BaseController{
         	}
         	if(!user.getSigningKey().equals(j_password)) {
             	String login_error = messageSource.getMessage("login_error", null,"&#29992;&#25143;&#21517;&#25110;&#23494;&#30721;&#26080;&#25928;", localeResolver.resolveLocale(request));
-        		Connection con = Jsoup.connect("ns2."+jcrService.getDomain()+":8888/myip/home").timeout(5000);
-        		if(con.response().statusCode() == 200) {
-        			try {
-						Document doc = con.get();
-						String myip = doc.body().text();
-			        	logger.debug("histIp="+myip+",remoteIp="+lastIp);
-						if(lastIp.equals(myip)) {
-				        	jcrService.updatePropertyByPath(user.getPath(), "hostIp", myip);
-				        	jcrService.updatePropertyByPath(user.getPath(), "lastIp", lastIp);
-				        	domain = "local.home."+jcrService.getDomain();
-				        	redirect = "http://home."+jcrService.getDomain()+"/site/view/html";
-						}
-					} catch (IOException e) {
-						logger.error("sigin error:"+e.getMessage());
-					}
-        		}
                 model.addAttribute("error", login_error);
                 return "signin";        		
         	}
+    		Connection con = Jsoup.connect("ns2."+jcrService.getDomain()+":8888/myip/home").timeout(5000);
+    		if(con.response().statusCode() == 200) {
+    			try {
+					Document doc = con.get();
+					String myip = doc.body().text();
+		        	logger.debug("histIp="+myip+",remoteIp="+lastIp);
+					if(lastIp.equals(myip)) {
+			        	jcrService.updatePropertyByPath(user.getPath(), "hostIp", myip);
+			        	//jcrService.updatePropertyByPath(user.getPath(), "lastIp", lastIp);
+			        	domain = "local.home."+jcrService.getDomain();
+			        	redirect = "http://home."+jcrService.getDomain()+"/site/view/html";
+					}
+				} catch (IOException e) {
+					logger.error("sigin error:"+e.getMessage());
+				}
+    		}
         	jcrService.updatePropertyByPath(user.getPath(), "lastIp", lastIp);
         }
 		Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
