@@ -7,9 +7,21 @@ apt-get install hdparm -y //hdparm -Y /dev/sda --put hdd sleep. nano /etc/hdparm
 nano /usr/share/tomcat8/bin/catalina.sh --> export CATALINA_OPTS="$CATALINA_OPTS -Xms512m -Xmx1024m -XX:MaxPermSize=256m"
 nano /var/lib/tomcat8/conf/server.xml --> change 8080 to 8888
 cd /mnt
-mkdir devide
+mkdir device
+fdisk /dev/sda
+n ##add 
+p ##partition
+1 ##number
+/r ##2048
+/r ##default
+w #write and quit
+mkfs.ext4 /dev/sda1 ##format ext
+##mount device after system startup
+nano /etc/systemd/system/mnt-device.mount
+
 chown tomcat8.tomcat8 device
 mount /dev/sda /mnt/device
+
 resize2fs /dev/mmcblk0p2
 cd /usr/local/src
 ./mnt/device/dajana/smarti-cloud/mjstreamer.sh

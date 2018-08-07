@@ -76,7 +76,7 @@
 </ul>
  </div>
 <div class="col-xs-4 pull-right">
-<a class="btn btn-default" href="http://home.dajana.ca" title="内网登入"><img class="img-responsive" src ="/resources/images/yuhong-icon100.png" alt="内网登入"/></a>
+<a class="btn btn-default" href="http://home.dajana.ca" title="内网登入"><img class="img-responsive" src ="/content/resources/images/yuhong-icon100.png" alt="内网登入"/></a>
 </div>
 
 </div>
