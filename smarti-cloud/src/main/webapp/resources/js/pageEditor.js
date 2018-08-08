@@ -308,11 +308,30 @@ function createFolder() {
 	    url: '/site/createFolder.html',
 	    data: formData,
 	    type: "POST", 
-	    success: function(msg) {
-	    	if(msg.indexOf("error:")>0) {
+	    async: false,
+	    success: function(data) {
+	    	if(data.title!=null && data.title.indexOf("error:")>0) {
 	    		$("#header_message").html("<section class=\"alert alert-warning\"><h3>"+i18n("fail")+"</h3><p>"+msg+"</p></section>");
-	    	}else
-	    		window.location.reload();
+	    	}else {
+	    		var top_insert = document.getElementById(data.uid);
+	    		if(top_insert == null) {
+	    			var html = "";
+	    		    html = '<div id="'+data.uid+'" class="col-md-4 well">';  
+	                html += '<a href="assets.html?path='+data.path+'"> <img id="folder'+data.uid+'" path="'+data.path+'"  ondrop="drop(event)" ondragover="allowDrop(event)" alt="'+data.title+'" class="img-responsive" src="viewfolder?path='+data.path+'"/></a>';
+	    			html += '<p>'+data.title+' ('+data.path+')</p>';
+	    			html += '<div class="panel" id="selectFiles'+data.uid+'"></div>';
+	    			html += '</div>';
+	    			$("#top_folder").after(html);	
+	    			
+	    		}
+	    		top_insert = document.getElementById(data.uid);
+	    		top_insert.scrollIntoView();
+	    		path = data.path;
+	    		selDiv = document.getElementById("selectFiles"+data.uid);
+	    		return data;
+	    		//window.location.reload();	    		
+	    	}
+
 	    },
 	    error: function() {
 	    	$("#header_message").html("<section class=\"alert alert-warning\"><h3>"+i18n("fail")+"</h3><p></p></section>");

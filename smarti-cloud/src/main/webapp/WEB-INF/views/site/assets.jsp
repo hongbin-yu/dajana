@@ -174,14 +174,15 @@
 	</details>
 </div>	 
 </div>	   
-	    <div class="clearfix"></div>	
+	    <div class="clearfix"></div>
+	    <div id="top_folder">	
 	    <c:if test="${folders.pageCount>3 && assets.pageCount > 12}">
 	    <details>
 	    <summary>${folders.pageCount} 子目录</summary>
 	    </c:if>
         <c:forEach items="${folders.items}" var="item" varStatus="loop">
             <div id="${item.uid}" class="col-md-4">
-            <a title="<spring:message code="djn.open"/>PDF" href="viewf2p?path=${item.path}" target="_BLANK"><img title="<spring:message code="djn.open"/>PDF" src='<c:url value="/resources/images/pdf.gif"></c:url>'></a>
+<%--             <a title="<spring:message code="djn.open"/>PDF" href="viewf2p?path=${item.path}" target="_BLANK"><img title="<spring:message code="djn.open"/>PDF" src='<c:url value="/resources/images/pdf.gif"></c:url>'></a> --%>
             <a href="assets.html?path=${item.path}&type=${type}"> <img id="folder${item.uid }" path="${item.path }"  ondrop="drop(event)" ondragover="allowDrop(event)" alt="${item.title}" class="img-responsive" src='<c:url value="viewfolder?path=${item.path}"></c:url>'/></a>
 			<div class="panel" id="selectFiles${item.uid }">
 			</div>	            
@@ -210,6 +211,7 @@
 	    <c:if test="${folders.pageCount>3 && assets.pageCount > 12}">
         </details>	
         </c:if>
+        </div>	
         <div class="clearfix"></div>	    
 <div class="row">
 	<div id="top_insert">

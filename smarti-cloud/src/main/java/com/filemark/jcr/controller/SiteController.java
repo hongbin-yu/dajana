@@ -18,6 +18,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLDecoder;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -469,24 +472,34 @@ public class SiteController extends BaseController {
 		return currentPage.getPath();
 	}
 	@RequestMapping(value = {"/site/createFolder.html"}, method = RequestMethod.POST)
-	public @ResponseBody String createFolder(String path,Integer p,Folder folder,Model model,HttpServletRequest request, HttpServletResponse response) {
-		if(path==null) return "error:path is null";
+	public @ResponseBody Folder createFolder(String path,Integer p,Folder folder,Model model,HttpServletRequest request, HttpServletResponse response) {
+		if(path==null) {
+			folder.setTitle("error:path is null");
+			return folder;
+		}
 		folder.setParent(path);
 		try {
-			String folderName = folder.getName().toLowerCase().replaceAll(" ", "-");
-    		if(!folderName.matches("(\\w|\\.|\\-|\\s|_)+")) {
-    			folderName = "/"+getDateTime();
-    		}
-			folder.setPath(jcrService.getUniquePath(path, folderName));
-			folder.setLastModified(new Date());
-			folder.setCreatedBy(getUsername());
-			jcrService.addOrUpdate(folder);
+			String foldersQuery = "select * from [nt:base] AS s WHERE ISCHILDNODE(["+path+"])" +" and s.[jcr:title] like '"+folder.getTitle() +"' and s.delete not like 'true' and s.ocm_classname='com.filemark.jcr.model.Folder' order by s.path";
+			WebPage<Folder> folders = jcrService.queryFolders(foldersQuery, 1, 0);
+			if(folders.getItems().size()>0) {
+				folder = folders.getItems().get(0);
+			}else {
+				String folderName = folder.getName().toLowerCase().replaceAll(" ", "-");
+	    		if(!folderName.matches("(\\w|\\.|\\-|\\s|_)+")) {
+	    			folderName = "/"+getDateTime();
+	    		}
+				folder.setPath(jcrService.getUniquePath(path, folderName));
+				folder.setLastModified(new Date());
+				folder.setCreatedBy(getUsername());
+				jcrService.addOrUpdate(folder);				
+			}
+
 
 		} catch (RepositoryException e) {
-			return "error:"+e.getMessage();
+			folder.setTitle("error:"+e.getMessage());
 		}
 
-		return folder.getPath();
+		return folder;
 	}
 	
 	@RequestMapping(value = {"/site/editpp.html","/editpp.html/**","/editpp.html/**/*.*"}, method = {RequestMethod.GET})
@@ -1040,7 +1053,10 @@ public class SiteController extends BaseController {
 /*        		if(!assetPath.endsWith(ext)) {
         			assetPath += ext;
         		}*/
-        		String contentType = multipartFile.getContentType();
+        		
+        		String contentType = Files.probeContentType(Paths.get(assetPath));
+        		if(contentType ==null)
+        			contentType = multipartFile.getContentType();
             	String devicePath = this.getDevice().getPath();
         		if(contentType != null && contentType.startsWith("video/")) {
         			devicePath = this.getBackup().getPath();

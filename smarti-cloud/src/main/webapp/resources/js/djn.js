@@ -428,7 +428,7 @@ function openFiles() {
 }
 
 function resetSelDiv() {
-	selDiv = document.querySelector("#selectedFiles");;
+	selDiv = document.querySelector("#selectedFiles");
 	selDiv.innerHTML = "";
 	total=0;
 	document.getElementById("submit_upload").disabled=true;
@@ -657,8 +657,9 @@ function drop(ev) {
 			        selDiv.innerHTML=  "<section class=\"alert alert-info\"><h2 class=\"h3\">"+i18n("create_folder")+droppedFiles[i].name+"...</h2></section>"; // 
 			        $("#foldername").val(droppedFiles[i].name);
 			        $("#titlefolder").val(droppedFiles[i].name);
-			        createFolder();
+			        //createFolder();
 			        folderCreated = true;
+			        total++;
 			        traverseFileTree(entry,droppedFiles[i].path);
 			        continue;
 			    }
@@ -873,7 +874,7 @@ function getAsset(formData,file) {
 	    		output(data);
 	    		percentComplete ==1000;
 	    		selDiv.innerHTML = "<section class=\"alert alert-success\"><h3 class=\"5\">"+(i+1)+"/"+total+i18n("document_uploaded")+i18n("success")+"</h3></section>";
-	    		i++;
+	    		//i++;
 	    		if(i <total)
 	    			uploadFile(files[i]);		
 	    		else if(i==total -1 || total==0) {
@@ -885,6 +886,7 @@ function getAsset(formData,file) {
 
 	    		}
 	    	}else {
+	    		i++;
 	    		sendFormData(formData,file);
 	    	}
 	    },
@@ -1331,10 +1333,13 @@ function traverseFileTree(item, path) {
 	  if (item.isFile) {
 	    // Get file
 	    item.file(function(file) {
-	      alert("File:"+path + file.name);
+	    	uploadFile(file);
+	      //alert("File:"+path + file.name);
 	    });
 	  } else if (item.isDirectory) {
 	    // Get folder contents
+		createFolder(); 
+
 	    var dirReader = item.createReader();
 	    dirReader.readEntries(function(entries) {
 	      for (var i=0; i<entries.length; i++) {
