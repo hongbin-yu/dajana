@@ -37,6 +37,8 @@ public class Folder implements SmartiNode, Serializable {
 	private String createdBy;
 	@Field 
 	private Date lastModified;
+	@Field 
+	private Date modifiedDate;	
 	@Field
 	protected String passcode;	
 	@Field
@@ -262,6 +264,14 @@ public class Folder implements SmartiNode, Serializable {
 
 	public void setResolution(String resolution) {
 		this.resolution = resolution;
+	}
+
+	public Date getModifiedDate() {
+		return modifiedDate;
+	}
+
+	public void setModifiedDate(Date modifiedDate) {
+		this.modifiedDate = modifiedDate;
 	}
 	
 }

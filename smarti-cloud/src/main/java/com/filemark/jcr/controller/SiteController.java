@@ -475,7 +475,7 @@ public class SiteController extends BaseController {
 		try {
 			String folderName = folder.getName().toLowerCase().replaceAll(" ", "-");
     		if(!folderName.matches("(\\w|\\.|\\-|\\s|_)+")) {
-    			folderName = path+"/"+getDateTime();
+    			folderName = "/"+getDateTime();
     		}
 			folder.setPath(jcrService.getUniquePath(path, folderName));
 			folder.setLastModified(new Date());
@@ -1678,15 +1678,15 @@ public class SiteController extends BaseController {
 			if(uid !=null && !"".equals(uid)) {
 				logger.info("value="+value);
 				result =  jcrService.updateProperty(uid,name, value);
-
+				jcrService.updateCalendar(jcrService.getNodeById(uid),"modifiedDate");
 			}else if(path !=null && !"".equals(path)){
 				result =  jcrService.updatePropertyByPath(path, name, value);
-
+				jcrService.updateCalendar(path, "modifiedDate");
 			}else {
 				return "error:path is null = "+uid;
 			}
+
 			
-		
 		}catch (Exception e){
 			logger.error(e.getLocalizedMessage());
 			result = "error:"+e.getMessage();
@@ -1869,10 +1869,13 @@ public class SiteController extends BaseController {
 				return "error:路径没找到";
 			}
 			File file = jcrService.getFile(path);
-			if(file.isDirectory()) {
-				FileUtils.cleanDirectory(file);
+			if(file != null) {
+				if(file.isDirectory()) {
+					FileUtils.cleanDirectory(file);
+				}
+				file.delete();				
 			}
-			file.delete();
+
 
 			return jcrService.deleteNode(path);
 		} catch (RepositoryException e) {

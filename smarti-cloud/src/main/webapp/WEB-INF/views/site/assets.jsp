@@ -92,7 +92,7 @@
 						
 				<div class="form-group" ondrop="drop(event)" ondragover="allowDrop(event)" style="border:1px solid #aaaaaa;">
 					<label for="fileUpload" class="required"><a href="#" onclick="openFiles()"><span id="openFiles" class="field-name"><spring:message code="djn.select_dragging_drop"/> </span></a></label>
-					<br/><a href="#" onclick="openFiles()"><img id="uploadImg" alt="" src="<c:url value='/resources/images/upload.png'/>"/></a>
+					<br/><a href="#" onclick="openFiles()"><img id="uploadImg" path="${folder.path}" alt="" src="<c:url value='/resources/images/upload.png'/>"/></a>
 					<div class="panel" id="selectedFiles">
 					</div>	
 					<div class="checkbox">
@@ -180,13 +180,14 @@
 	    <summary>${folders.pageCount} 子目录</summary>
 	    </c:if>
         <c:forEach items="${folders.items}" var="item" varStatus="loop">
-            <div class="col-md-4">
+            <div id="${item.uid}" class="col-md-4">
             <a title="<spring:message code="djn.open"/>PDF" href="viewf2p?path=${item.path}" target="_BLANK"><img title="<spring:message code="djn.open"/>PDF" src='<c:url value="/resources/images/pdf.gif"></c:url>'></a>
             <a href="assets.html?path=${item.path}&type=${type}"> <img id="folder${item.uid }" path="${item.path }"  ondrop="drop(event)" ondragover="allowDrop(event)" alt="${item.title}" class="img-responsive" src='<c:url value="viewfolder?path=${item.path}"></c:url>'/></a>
 			<div class="panel" id="selectFiles${item.uid }">
 			</div>	            
             <details>
             <summary>${item.title} (${item.path })</summary>
+                <a class="wb-lbx btn btn-danger btn-xs" title="<spring:message code="djn.delete"/>" href="<c:url value="/site/deleteasset.html?path=${item.path }&redirect=/site/assets.html?path=${folder.path }"/>"><span class="glyphicon glyphicon-remove"></span><spring:message code="djn.delete"/></a>
 				<div class="form-group">
 				<label for="foldertitle${loop.index }"><spring:message code="djn.title"/>&nbsp;</label><input class="form-control" id="foldertitle${loop.index }" name="jcr:title" value="${item.title}" size="25" uid="${item.uid}"  onchange="updateNode(this)"/>
 				</div>            
@@ -303,7 +304,10 @@
 		<label for="originalDate${item.uid }"><spring:message code="djn.doc_date"/>&nbsp;</label>
 		<fmt:formatDate pattern="yyy-MM-dd HH:mm:ss" value="${item.originalDate }"/>
 		</div>
-
+		<div class="form-group">
+		<label for="modifiedDate${item.uid }"><spring:message code="djn.modified_date"/>&nbsp;</label>
+		<fmt:formatDate pattern="yyy-MM-dd HH:mm:ss" value="${item.modifiedDate }"/>
+		</div>
 	</details>
 	
 	</div>

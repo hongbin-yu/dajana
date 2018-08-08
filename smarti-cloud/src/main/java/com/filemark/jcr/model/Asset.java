@@ -39,6 +39,8 @@ public class Asset implements SmartiNode, Serializable {
 	private Date lastModified;
 	@Field 
 	private Date originalDate;
+	@Field 
+	private Date modifiedDate;	
 	@Field
 	private String html;
 	@Field
@@ -363,6 +365,14 @@ public class Asset implements SmartiNode, Serializable {
 
 	public static String getDevicePath() {
 		return devicePath;
+	}
+
+	public Date getModifiedDate() {
+		return modifiedDate;
+	}
+
+	public void setModifiedDate(Date modifiedDate) {
+		this.modifiedDate = modifiedDate;
 	}
 
 	public static void setDevicePath(String devicePath) {

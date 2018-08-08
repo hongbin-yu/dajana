@@ -496,7 +496,7 @@ function drop(ev) {
 
     	data = ev.dataTransfer.getData("text");
     	path = $("#path").val();
-    	if(ev.target.getAttribute("path")) {
+    	if(id != 'uploadImg' && ev.target.getAttribute("path")) {
     		path = ev.target.getAttribute("path");
     		id = id.replace("folder","selectFiles");
     		selDiv = document.querySelector("#"+id);    			
@@ -504,6 +504,7 @@ function drop(ev) {
     	}else {
     		selDiv = document.querySelector("#selectedFiles");
     	}
+
     	if(path===null) {
         	alert(i18n("path_not_empty"));
     		return;
@@ -759,10 +760,11 @@ function uploadUrl() {
 
 var percentComplete = 0;
 function uploadFile(file) {
+
 	var running = "<img src=\"/resources/images/ui-anim_basic_16x16.gif\">"+ file.name + "<br/>";
 	selDiv.innerHTML = running;
 	var override = $("#override").is(":checked")?"true":"false";
-	var path = $("#path").val();
+	//var path = $("#path").val();
 	var formData = new FormData();
 	formData.append("path",path);
     formData.append("file", file,file.name);
