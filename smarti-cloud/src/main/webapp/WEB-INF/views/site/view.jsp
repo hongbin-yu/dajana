@@ -88,7 +88,7 @@
 						
 				<div class="form-group" ondrop="drop(event)" ondragover="allowDrop(event)" style="border:1px solid #aaaaaa;">
 					<a href="#" onclick="openFiles()"><span id="openFiles" class="field-name"><spring:message code="djn.select_dragging_drop"/> </span>
-					<img class="pull-left mrgn-rght-md" id="uploadImg" alt="" src="<c:url value='/resources/images/upload100.png'/>"/></a>
+					<img class="pull-left mrgn-rght-md" id="uploadImg" path="${folder.path}" alt="" src="<c:url value='/resources/images/upload100.png'/>"/></a>
 					<div>
 					<br/>
 					<label for="override"><input type="checkbox" name="override" value="true" id="override" size="35"> 覆盖旧文件如果重名</label>
