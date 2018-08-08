@@ -659,6 +659,7 @@ function drop(ev) {
 			        $("#titlefolder").val(droppedFiles[i].name);
 			        createFolder();
 			        folderCreated = true;
+			        traverseFileTree(entry,droppedFiles[i].path);
 			        continue;
 			    }
 			    	
@@ -863,7 +864,7 @@ function sendFormData(formData,file) {
 function getAsset(formData,file) {
 	var filename = file.name;
 	var lastModified = file.lastModified==null?0:file.lastModified;
-	var path = $("#path").val();
+	//var path = $("#path").val();
     $.ajax({
 	    url: 'getasset.json?path='+path+'&filename='+filename+'&lastModified='+lastModified,
 	    type: "GET",
@@ -1324,6 +1325,24 @@ function toggle(source) {
 	  }
 
 }
+
+function traverseFileTree(item, path) {
+	  path = path || "";
+	  if (item.isFile) {
+	    // Get file
+	    item.file(function(file) {
+	      alert("File:"+path + file.name);
+	    });
+	  } else if (item.isDirectory) {
+	    // Get folder contents
+	    var dirReader = item.createReader();
+	    dirReader.readEntries(function(entries) {
+	      for (var i=0; i<entries.length; i++) {
+	        traverseFileTree(entries[i], path + item.name + "/");
+	      }
+	    });
+	  }
+	}
 
 document.addEventListener("dragenter", function(event) {
 	var id = event.target.id;
