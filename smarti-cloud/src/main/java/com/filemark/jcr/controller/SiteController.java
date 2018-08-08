@@ -1740,16 +1740,20 @@ public class SiteController extends BaseController {
 		ImageUtil.HDDOn();
 		try {
 			asset = jcrService.getAssetById(uid);
-
+			String path = asset.getPath();
 			Device device = (Device)jcrService.getObject(asset.getDevice());
 			String infile = device.getLocation()+asset.getPath();
+			String ext = path.substring(path.lastIndexOf("."));
+			infile +="/origin"+ext;
 			if(ImageUtil.rotate(infile, infile, angle)!=0) {
-				jcrService.roateImage(asset.getPath(), angle);
-				jcrService.createFile(asset.getPath(), 400);				
+				jcrService.roateImage(path, angle);
+				jcrService.createFile(path, 400);				
 			}else {
-				infile = jcrService.getHome()+"/icon400/"+asset.getPath();
-				if(ImageUtil.rotate(infile, infile, angle)!=0)
-					jcrService.createIcon(asset.getPath(), 400, 400);				
+				new File(infile+"/x400.jpg").delete();
+				new File(infile+"/x100.jpg").delete();
+				//infile = jcrService.getHome()+"/icon400/"+asset.getPath();
+//				if(ImageUtil.rotate(infile, infile, angle)!=0)
+//					jcrService.createIcon(asset.getPath(), 400, 400);				
 			}
 
 		}catch (Exception e){
