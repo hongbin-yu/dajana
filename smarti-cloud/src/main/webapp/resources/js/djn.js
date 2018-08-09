@@ -772,7 +772,7 @@ function uploadUrl() {
 var percentComplete = 0;
 function uploadFile(file) {
 	i++;
-	var running = "<img src=\"/resources/images/ui-anim_basic_16x16.gif\">"+ file.name + "<br/>";
+	var running = "<img src=\"/resources/images/ui-anim_basic_16x16.gif\">"+ file.name + " ("+i+"/"+total+")<br/>";
 	selDiv.innerHTML = running;
 	var override = $("#override").is(":checked")?"true":"false";
 	//var path = $("#path").val();
