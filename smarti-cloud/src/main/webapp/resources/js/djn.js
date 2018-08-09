@@ -1,6 +1,10 @@
 var files=[];
 var droppedFiles = [];
 var contentPath = "";
+var total = 0;
+var i = 0;
+var $element = $( ".wb-sessto" );
+var settings = $element.data( "wb-sessto" );
 if(window.location.pathname.indexOf("/smarti-cloud")>=0) {
 	contentPath = "/smarti-cloud";
 }
@@ -478,6 +482,7 @@ function drag(ev) {
 
 function drop(ev) {
 	//clear();
+	i = 0;
     ev.preventDefault();
     var id = ev.target.id;
 	ev.target.classList.remove("well");
@@ -512,9 +517,9 @@ function drop(ev) {
 
     	var items = ev.dataTransfer.items;
     	var imported=[];
-    	for(var i = 0; i<items.length; i++) {
-    		if(items[i].kind == 'string' && items[i].type=="application/x-moz-file-promise-url") {
-	    		items[i].getAsString(function (s) {
+    	for(var k = 0; k<items.length; k++) {
+    		if(items[k].kind == 'string' && items[k].type=="application/x-moz-file-promise-url") {
+	    		items[k].getAsString(function (s) {
 	    	    	if(s.indexOf("http")>=0 && imported[s]==null) {
 	    			    imported[s] = true;   
 	    	    		if(s.indexOf("viewimage?path=")>0){
@@ -574,8 +579,8 @@ function drop(ev) {
 	    			
 	    		});
 	    	}else {
-	    		if(items[i].type=="text/html") {
-	    		items[i].getAsString(function (s) {
+	    		if(items[k].type=="text/html") {
+	    		items[k].getAsString(function (s) {
 		    		 var img = $(s).find("img");
 		    		 var url = null;
 		    		 if(img.length >0) {
@@ -645,28 +650,30 @@ function drop(ev) {
 	    	}
     	}
     	//files = [];
+
     	var folderCreated = false;
 	    droppedFiles = ev.dataTransfer.files;
 		var items = ev.dataTransfer.items;
 		if(topInsert)
 			topInsert.innerHTML="";
-		for(var i = 0; i< droppedFiles.length; i++) {
+		for(var n = 0; n< droppedFiles.length; n++) {
 		    if(items !=null) {
-			    var entry = items[i].webkitGetAsEntry();
+			    var entry = items[n].webkitGetAsEntry();
 			    if(entry.isDirectory) {
-			        selDiv.innerHTML=  "<section class=\"alert alert-info\"><h2 class=\"h3\">"+i18n("create_folder")+droppedFiles[i].name+"...</h2></section>"; // 
-			        $("#foldername").val(droppedFiles[i].name);
-			        $("#titlefolder").val(droppedFiles[i].name);
+			        selDiv.innerHTML=  "<section class=\"alert alert-info\"><h2 class=\"h3\">"+i18n("create_folder")+droppedFiles[n].name+"...</h2></section>"; // 
+			        $("#foldername").val(droppedFiles[n].name);
+			        $("#titlefolder").val(droppedFiles[n].name);
 			        //createFolder();
 			        folderCreated = true;
-			        total++;
-			        traverseFileTree(entry,droppedFiles[i].path);
+			        total=0;
+			        traverseFileTree(entry,droppedFiles[n].path);
+			        //setTimeout(uploadFiles(),2000);
 			        continue;
 			    }
 			    	
 		    }
 
-		    files[i] = 	droppedFiles[i];		
+		    files[n] = 	droppedFiles[n];		
 			//uploadFile(droppedFiles[i]);
 
 		};
@@ -674,6 +681,7 @@ function drop(ev) {
 		ev.target.classList.remove("well");
 		ev.target.style.border = "1px solid #aaaaaa";
     }
+
     if(files!=null && files.length>0) {
     	i = 0;
     	uploadFiles();
@@ -702,7 +710,8 @@ function drop(ev) {
 	    	  selDiv.innerHTML=  "<section class=\"alert alert-warning\"><h2 class=\"h3\">"+i18n("no-match")+" </h2><p>"+data+"</p></section>"; 
     	
     }
-    
+    percentComplete =1000;
+    checkProgress();
 }
 
 function uploadFolder() {
@@ -762,7 +771,7 @@ function uploadUrl() {
 
 var percentComplete = 0;
 function uploadFile(file) {
-
+	i++;
 	var running = "<img src=\"/resources/images/ui-anim_basic_16x16.gif\">"+ file.name + "<br/>";
 	selDiv.innerHTML = running;
 	var override = $("#override").is(":checked")?"true":"false";
@@ -793,7 +802,7 @@ function uploadFile(file) {
 		getAsset(formData,file);
 	}else 
 		sendFormData(formData,file);
-
+	//alert(i);
 }
 
 function sendFormData(formData,file) {
@@ -843,15 +852,12 @@ function sendFormData(formData,file) {
 		    	if(data.title !=null && data.title.indexOf("error:")>=0) {
 			        selDiv.innerHTML=  "<section class=\"alert alert-warning\"><h2 class=\"h5\">"+i18n("fail")+"</h2><p>"+data.title+"</p></section>"; // 
 		    	}else {
+
 				    var speed = 0;
 				    speed = fileSize*8/(end.getTime() - start.getTime());
 	                selDiv.innerHTML ="<section id=\""+file.name+"\"><h5>"+file.name+"("+(speed/1000).toFixed(2)+" MB/s)</h5><progress class=\"full-width\" value=\""+fileSize +"\" max=\""+fileSize+"\"><span class=\"wb-inv\">"+100+"%</span></progress></section>";
-		    		selDiv.innerHTML += "<section class=\"alert alert-success\"><h3 class=\"5\">"+(i+1)+"/"+total+i18n("document_uploaded")+i18n("success")+"</h3></section>";
+		    		selDiv.innerHTML += "<section class=\"alert alert-success\"><h3 class=\"5\">"+(i)+"/"+total+i18n("document_uploaded")+i18n("success")+"</h3></section>";
 		    		output(data);
-		    		if(i+1==total) {
-		    			files=[];
-		    			total=0;
-		    		}
 
 		    	}
 		    },
@@ -872,23 +878,26 @@ function getAsset(formData,file) {
 	    success: function(data) {
 	    	if(data.uid) {
 	    		output(data);
-	    		percentComplete ==1000;
-	    		selDiv.innerHTML = "<section class=\"alert alert-success\"><h3 class=\"5\">"+(i+1)+"/"+total+i18n("document_uploaded")+i18n("success")+"</h3></section>";
+	    		percentComplete =1000;
+	    		selDiv.innerHTML = "<section class=\"alert alert-success\"><h3 class=\"5\">"+(i)+"/"+total+i18n("document_uploaded")+i18n("success")+"</h3></section>";
 	    		//i++;
-	    		if(i <total)
-	    			uploadFile(files[i]);		
-	    		else if(i==total -1 || total==0) {
-	    			setTimeout(function () {
-	    				files = [];
-	    				droppedFiles = [];
-	    				total = 0;
-	    			},1000);
 
+	    		if(i <total) {
+	    			uploadFile(files[i]);	
+	    			//setTimeout(checkProgress,200);
 	    		}
 	    	}else {
-	    		i++;
 	    		sendFormData(formData,file);
 	    	}
+	    	if(i==total || total==0) {
+    			setTimeout(function () {
+    				files = [];
+    				droppedFiles = [];
+    				total = 0;
+    				i = 0;
+    			},2000);
+
+    		}
 	    },
 	    error: function(jqXHR, exception) {
 	        selDiv.innerHTML=  "<section class=\"alert alert-warning\"><h2 class=\"h3\">"+i18n("fail")+":"+file.name+",sttus:"+jqXHR+",exception:"+exception+"</h2></section>"; // 
@@ -944,10 +953,7 @@ function uploadIcon(file) {
 		});	
 }
 
-var total = 0;
-var i = 0;
-var $element = $( ".wb-sessto" );
-var settings = $element.data( "wb-sessto" );
+
 function uploadFiles() {
 	selDiv.innerHTML = "";
 	// Trigger the event on the element
@@ -955,38 +961,38 @@ function uploadFiles() {
 	percentComplete = 0;
 	total = files.length;
 	i = 0;
-
+	
 	var submit_upload = document.getElementById("submit_upload");
 	if(submit_upload)
 		submit_upload.disabled=true;
-	
-	uploadFile(files[i]);
+	if(total > 0)
+		uploadFile(files[i]);
 	setTimeout(checkProgress,1000);
 
 }
 
 function checkProgress() {
 
-	if(percentComplete ==1000 && i <total-1) {
-		i++;
+	if(percentComplete ==1000 && i <total) {
 		uploadFile(files[i]);
 		setTimeout(checkProgress,1000);
-	}else if(i<total-1){
+	}else if(i<total){
 		setTimeout(checkProgress,1000);
-	}else if(i==total -1 || total==0){
+	}else if(i==total || total==0){
 		var override = $("#override").is(":checked")?"true":"false";
 		var path = $("#pagePath").val();
 		$element.trigger( "reset.wb-sessto", settings );
 		if(override=="true" && path.indexOf("/you")<0) {
-	    	if(percentComplete ==1000 && i==total -  1) {
+	    	if(percentComplete ==1000 && i==total) {
 	    		setTimeout(function() {window.location.reload();},2000);
 	    	}else {
 	    		setTimeout(checkProgress,1000);
 	    	}			
 		}
-
-	} 
-
+		setTimeout(checkProgress,1000);
+	}else {
+		setTimeout(checkProgress,1000);
+	}
 	
 
 }
@@ -1332,9 +1338,12 @@ function traverseFileTree(item, path) {
 	  path = path || "";
 	  if (item.isFile) {
 	    // Get file
-	    item.file(function(file) {
-	    	uploadFile(file);
-	      //alert("File:"+path + file.name);
+		  item.file(function(file) {
+			  total++;
+	      //uploadFile(file);
+	      files[files.length] = file;
+	      //checkProgress();
+	      //alert("File:"+files.length+' path' +path + file.name);
 	    });
 	  } else if (item.isDirectory) {
 	    // Get folder contents
@@ -1344,7 +1353,9 @@ function traverseFileTree(item, path) {
 	    dirReader.readEntries(function(entries) {
 	      for (var i=0; i<entries.length; i++) {
 	        traverseFileTree(entries[i], path + item.name + "/");
+	        //sleep(1000);
 	      }
+
 	    });
 	  }
 	}
@@ -1359,7 +1370,10 @@ document.addEventListener("dragenter", function(event) {
 	}
 
 });
-
+function sleep(delay) {
+    var start = new Date().getTime();
+    while (new Date().getTime() < start + delay);
+  }
 //document.addEventListener("click",function(event) {
 //	if(tinymce) {
 //		var editor = tinymce.EditorManager.activeEditor;

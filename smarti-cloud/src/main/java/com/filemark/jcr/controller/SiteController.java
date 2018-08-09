@@ -985,7 +985,7 @@ public class SiteController extends BaseController {
    		String username = getUsername();
    		Asset asset = new Asset();
    		if(filename==null) return asset;
-		String assetsQuery = "select s.* from [nt:base] AS s WHERE ISDESCENDANTNODE(["+path+"])" +" and s.[jcr:title] like '"+filename.toLowerCase()+"' and s.[delete] not like 'true' and s.ocm_classname='com.filemark.jcr.model.Asset'";
+		String assetsQuery = "select s.* from [nt:base] AS s WHERE ISCHILDNODE(["+path+"])" +" and s.[jcr:title] like '"+filename.toLowerCase()+"' and s.[delete] not like 'true' and s.ocm_classname='com.filemark.jcr.model.Asset'";
 		WebPage<Asset> assets = jcrService.searchAssets(assetsQuery, 10, 0);		
 		for(Asset a:assets.getItems()) {
 			if(lastModified==null || lastModified ==0 || a.getOriginalDate()==null || a.getOriginalDate().getTime() == lastModified) {
