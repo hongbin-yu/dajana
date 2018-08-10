@@ -806,7 +806,7 @@ function uploadFile(file) {
 }
 
 function sendFormData(formData,file) {
-	var running = "<img src=\"/resources/images/ui-anim_basic_16x16.gif\">"+ file.name + "<br/>";
+	var running = "<img src=\"/resources/images/ui-anim_basic_16x16.gif\">"+ file.name + " ("+i+"/"+total+")<br/>";
     if("size" in file)
         fileSize = file.size;
     else
@@ -859,7 +859,15 @@ function sendFormData(formData,file) {
 		    		selDiv.innerHTML += "<section class=\"alert alert-success\"><h3 class=\"5\">"+(i)+"/"+total+i18n("document_uploaded")+i18n("success")+"</h3></section>";
 		    		if(i < 24)
 		    			output(data);
+			    	if(i==total || total==0) {
+		    			setTimeout(function () {
+		    				files = [];
+		    				droppedFiles = [];
+		    				total = 0;
+		    				i = 0;
+		    			},2000);
 
+		    		}
 		    	}
 		    },
 		    error: function(jqXHR, exception) {
@@ -888,18 +896,19 @@ function getAsset(formData,file) {
 	    			uploadFile(files[i]);	
 	    			//setTimeout(checkProgress,200);
 	    		}
+		    	if(i==total || total==0) {
+	    			setTimeout(function () {
+	    				files = [];
+	    				droppedFiles = [];
+	    				total = 0;
+	    				i = 0;
+	    			},2000);
+
+	    		}
 	    	}else {
 	    		sendFormData(formData,file);
 	    	}
-	    	if(i==total || total==0) {
-    			setTimeout(function () {
-    				files = [];
-    				droppedFiles = [];
-    				total = 0;
-    				i = 0;
-    			},2000);
 
-    		}
 	    },
 	    error: function(jqXHR, exception) {
 	        selDiv.innerHTML=  "<section class=\"alert alert-warning\"><h2 class=\"h3\">"+i18n("fail")+":"+file.name+",sttus:"+jqXHR+",exception:"+exception+"</h2></section>"; // 
