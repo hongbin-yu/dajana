@@ -2503,14 +2503,14 @@ public class JcrServicesImpl implements JcrServices {
         		if(!session.nodeExists(toparent)) {
         			addNodes(toparent,"nt:unstructured",username);
         		}
-        		session.move(frompath, topath);
+        		session.move(frompath,topath);
         		Node parent = session.getNode(parent_path);
         		if(parent.getNodes().getSize()==0) {
         			parent_path = parent.getParent().getPath();
         			parent.remove();
         		}
         		session.save();
-        		return parent_path;
+        		return node.getIdentifier();
         	} 		
 		});		
 	}

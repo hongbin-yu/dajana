@@ -525,19 +525,20 @@ function drop(ev) {
 	    	    		if(s.indexOf("viewimage?path=")>0){
 	    	    			  var uid = s.split("viewimage?path=")[1];
 	    	    			  uid = uid.split("&")[0];
-	  	    	    		  selDiv.innerHTML=  "<section class=\"alert alert-info\"><h2 class=\"h3\">"+i18n("proccess")+"</h2><p><img alt='' src='"+contentPath+"/resources/images/ui-anim_basic_16x16.gif'/> "+s+"</p></section>";
+	  	    	    		  selDiv.innerHTML=  "<section class=\"alert alert-info\"><h2 class=\"h3\">"+i18n("move")+"</h2><p><img alt='' src='"+contentPath+"/resources/images/ui-anim_basic_16x16.gif'/> "+s+"</p></section>";
 	    	    			  $.ajax({
-		    					    url: '/site/importAssetMove.html?path='+path+"&uid="+uid,
+		    					    //url: '/site/importAssetMove.html?path='+path+"&uid="+uid,
+		    					    url: '/site/movenode.html?topath='+path+"&frompath="+uid,
 		    					    type: "GET", 
 		    					    contentType: false,
 		    					    processData: false,
 		    					    success: function(data) {
-		    					    	if(data.title.indexOf("error:")>=0)
-		    						        selDiv.innerHTML=  "<section class=\"alert alert-warning\"><h2 class=\"h3\">"+i18n("fail")+"</h2><p>"+data.title+"</p></section>"; // 
+		    					    	if(data.indexOf("error:")>=0)
+		    						        selDiv.innerHTML=  "<section class=\"alert alert-warning\"><h2 class=\"h3\">"+i18n("fail")+"</h2><p>"+data+"</p></section>"; // 
 		    					    	else {
-		    					    		//$("#"+uid).remove();
-		    							    selDiv.innerHTML = "<section class=\"alert alert-success\"><h2 class=\"4\">"+i18n("success")+"</h2><p>"+data.title+"</p></section>";
-		    							    output(data);
+		    					    		$("#"+data).remove();
+		    							    selDiv.innerHTML = "<section class=\"alert alert-success\"><h2 class=\"4\">"+i18n("move")+i18n("success")+"</h2><p>"+uid+"</p></section>";
+		    							    //output(data);
 
 		    					    	}
 		    					    },
@@ -596,19 +597,20 @@ function drop(ev) {
 			    	    		if(url.indexOf("viewimage?path=")>0 || url.indexOf("file/")>0){
 			    	    			  var uid = url.split("?path=")[1];
 			    	    			  uid = uid.split("&")[0];
-			    	    			  selDiv.innerHTML=  "<section class=\"alert alert-info\"><h2 class=\"h3\">"+i18n("upload")+"</h2><p><img alt='' src='"+contentPath+"/resources/images/ui-anim_basic_16x16.gif'/> "+url+"</p></section>";
+			    	    			  selDiv.innerHTML=  "<section class=\"alert alert-info\"><h2 class=\"h3\">"+i18n("move")+"</h2><p><img alt='' src='"+contentPath+"/resources/images/ui-anim_basic_16x16.gif'/> "+url+"</p></section>";
 			    			      $.ajax({
-				    					    url: '/site/importAssetMove.html?path='+path+"&uid="+uid,
+				    					    //url: '/site/importAssetMove.html?path='+path+"&uid="+uid,
+				    					    url: '/site/movenode.html?topath='+path+"&frompath="+uid,
 				    					    type: "GET", 
 				    					    contentType: false,
 				    					    processData: false,
 				    					    success: function(data) {
-				    					    	if(data.title.indexOf("error:")>=0)
-				    						        selDiv.innerHTML=  "<section class=\"alert alert-warning\"><h2 class=\"h3\">"+i18n("fail")+"</h2><p>"+data.title+"</p></section>"; // 
+				    					    	if(data.indexOf("error:")>=0)
+				    						        selDiv.innerHTML=  "<section class=\"alert alert-warning\"><h2 class=\"h3\">"+i18n("fail")+"</h2><p>"+data+"</p></section>"; // 
 				    					    	else {
-				    					    		//$("#"+uid).remove();
-				    							    selDiv.innerHTML = "<section class=\"alert alert-success\"><h2 class=\"4\">"+i18n("success")+"</h2><p>"+data.title+"</p></section>";
-				    							    output(data);
+				    					    		$("#"+data).remove();
+				    							    selDiv.innerHTML = "<section class=\"alert alert-success\"><h2 class=\"4\">"+i18n("move")+i18n("success")+"</h2><p>"+uid+"</p></section>";
+				    							    //output(data);
 				    					    	}
 				    					    },
 				    					    error: function() {

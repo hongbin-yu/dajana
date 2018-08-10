@@ -43,9 +43,9 @@
             <details id="${folder.uid }">
             <summary>${folder.title}
             </summary>
-            	<c:if test="${assets.availablePages==0}">
+<%--             	<c:if test="${assets.availablePages==0}">
     			    <a class="wb-lbx" title="<spring:message code="djn.delete"/>" href="<c:url value="/site/delete.html?uid=${folder.uid }&redirect=/site/assets.html?path=${folder.parent }"/>"><span class="glyphicon glyphicon-remove"></span><spring:message code="djn.delete"/></a>
-	      		</c:if>
+	      		</c:if> --%>
 				<div class="form-group">
 				<label for="foldertitle"><spring:message code="djn.title"/>&nbsp;</label><input class="form-control" id="foldertitle" name="jcr:title" value="${folder.title}" size="25" uid="${folder.uid}"  onchange="updateNode(this)"/>
 				</div>            

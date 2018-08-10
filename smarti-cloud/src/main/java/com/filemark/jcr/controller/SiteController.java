@@ -1436,7 +1436,31 @@ public class SiteController extends BaseController {
 		}
 		return url+"&#30446;&#24405;&#19979;&#25152;&#26377;&#25991;&#20214;&#23558;&#34987;&#19978;&#36733;&#12290;";
 	}
-	
+
+	@RequestMapping(value = {"/site/movenode.html"}, method = {RequestMethod.GET,RequestMethod.POST})
+	public @ResponseBody String movenode(String frompath,String topath,String name,HttpServletRequest request, HttpServletResponse response){
+		//Asset asset= new Asset();
+
+			String userName = getUsername();
+			if(name==null) {
+				name = frompath.substring(frompath.lastIndexOf("/")+1);
+			}
+			try {
+				File src = new File(jcrService.getDevice()+frompath);
+				File des = new File(jcrService.getDevice()+topath);
+				if(!src.exists()) {
+					src = new File(jcrService.getBackup()+frompath);
+					des = new File(jcrService.getBackup()+topath);
+				}
+				if(src.exists()) {
+					FileUtils.moveDirectoryToDirectory(src, des, true);
+					
+				}
+			} catch (IOException e) {
+				return "error:"+e.getMessage();
+			}
+			return jcrService.move(frompath, topath+"/"+name, userName);
+	}	
 	@RequestMapping(value = {"/site/updateProperty.html","/admin/updateProperty.html","/proptected/updateProperty.html"}, method = {RequestMethod.GET,RequestMethod.POST})
 	public @ResponseBody String  updateProperty(String uid,String path,String name, String value,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String result="";
@@ -1896,8 +1920,11 @@ public class SiteController extends BaseController {
 			}else if( path==null || "".equals(path)) {
 				return "error:路径没找到";
 			}
-			File file = jcrService.getFile(path);
-			if(file != null) {
+			File file =new File(jcrService.getDevice()+path);
+			if(!file.exists()) {
+				file = new File(jcrService.getBackup()+path);
+			}
+			if(file.exists()) {
 				if(file.isDirectory()) {
 					FileUtils.cleanDirectory(file);
 				}
