@@ -356,8 +356,12 @@ public class SiteController extends BaseController {
 		WebPage<Folder> folders = jcrService.queryFolders(foldersQuery, 100, 0);
 		model.addAttribute("folders", folders);
 
-		String assetsQuery = "select s.* from [nt:base] AS s INNER JOIN [nt:unstructured] AS f ON ISCHILDNODE(s, f) WHERE "+ISDESCENDANTNODE+"(s,["+path+"])" +keywords+contentType+intranetFolder+" and s.[delete] not like 'true' and s.ocm_classname='com.filemark.jcr.model.Asset' order by s."+orderby+", s.[name]";
+		String assetsQuery = "select s.* from [nt:base] AS s INNER JOIN [nt:base] AS f ON ISCHILDNODE(s, f) WHERE "+ISDESCENDANTNODE+"(s,["+path+"])" +keywords+contentType+intranetFolder+" and s.[delete] not like 'true' and s.ocm_classname='com.filemark.jcr.model.Asset' order by s."+orderby+", s.[name]";
+		if(intranetFolder.equals(""))
+			assetsQuery = "select s.* from [nt:base] AS s WHERE "+ISDESCENDANTNODE+"(s,["+path+"])" +keywords+contentType+" and s.[delete] not like 'true' and s.ocm_classname='com.filemark.jcr.model.Asset' order by s."+orderby+", s.[name]";
+
 		//logger.info(isIntranet+",ip="+getClientIpAddress(request)+",q="+assetsQuery);;
+		logger.debug("assetsQuery="+assetsQuery);
 		WebPage<Asset> assets = jcrService.searchAssets(assetsQuery, 12, p);
 		Page page = new Page();
 		page.setTitle("\u4E91\u7AD9");
@@ -487,6 +491,10 @@ public class SiteController extends BaseController {
 				String folderName = folder.getName().toLowerCase().replaceAll(" ", "-");
 	    		if(!folderName.matches("(\\w|\\.|\\-|\\s|_)+")) {
 	    			folderName = "/"+getDateTime();
+	    		}
+
+	    		if(folderName.startsWith("0")) {
+	    			folderName = "m"+folderName;
 	    		}
 				folder.setPath(jcrService.getUniquePath(path, folderName));
 				folder.setLastModified(new Date());
