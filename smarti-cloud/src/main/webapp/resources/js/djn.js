@@ -481,8 +481,8 @@ function drag(ev) {
 }
 
 function drop(ev) {
-	//clear();
-	i = 0;
+	clear();
+	//i = 0;
     ev.preventDefault();
     var id = ev.target.id;
 	ev.target.classList.remove("well");
@@ -859,7 +859,7 @@ function sendFormData(formData,file) {
 		    		selDiv.innerHTML += "<section class=\"alert alert-success\"><h3 class=\"5\">"+(i)+"/"+total+i18n("document_uploaded")+i18n("success")+"</h3></section>";
 		    		if(i < 24)
 		    			output(data);
-			    	if(i==total || total==0) {
+/*			    	if(i==total || total==0) {
 		    			setTimeout(function () {
 		    				files = [];
 		    				droppedFiles = [];
@@ -867,7 +867,7 @@ function sendFormData(formData,file) {
 		    				i = 0;
 		    			},2000);
 
-		    		}
+		    		}*/
 		    	}
 		    },
 		    error: function(jqXHR, exception) {
@@ -1161,7 +1161,8 @@ function clear() {
 	tinyMCE.activeEditor.setContent("<p></p>");
 	files = [];
 	droppedFiles = [];
-	//total = 0;
+	total = 0;
+	i=0;
 	
 }
 function deleteNode(path) {
