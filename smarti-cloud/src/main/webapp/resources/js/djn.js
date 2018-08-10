@@ -824,7 +824,7 @@ function sendFormData(formData,file) {
     				    var speed = 0;
     				    speed = evt.loaded*8/(end.getTime() - start.getTime());
     	                percentComplete = (evt.loaded / evt.total)*100;
-    	                selDiv.innerHTML="<section id=\""+file.name+"\"><h5>"+running+"</h5><progress class=\"full-width\" value=\""+evt.loaded +"\" max=\""+evt.total+"\"><span class=\"wb-inv\">"+percentComplete+"%</span></progress></section>";
+    	                selDiv.innerHTML="<section id=\""+file.name+ " ("+i+"/"+total+")\"><h5>"+running+"</h5><progress class=\"full-width\" value=\""+evt.loaded +"\" max=\""+evt.total+"\"><span class=\"wb-inv\">"+percentComplete+"%</span></progress></section>";
     		    		selDiv.innerHTML += "<p>"+(speed/1000).toFixed(2)+" MB/s</p>";
     	                
     	            }
@@ -834,7 +834,7 @@ function sendFormData(formData,file) {
     	       xhr.addEventListener("progress", function(evt){
     	           if (evt.lengthComputable) {
 	   	                percentComplete = (evt.loaded / evt.total)*100;
-    	                selDiv.innerHTML="<section id=\""+file.name+"\"><h5>"+file.name+"</h5><progress class=\"full-width\" value=\""+evt.loaded +"\" max=\""+evt.total+"\"><span class=\"wb-inv\">"+percentComplete+"%</span></progress></section>";
+    	                selDiv.innerHTML="<section id=\""+file.name+ " ("+i+"/"+total+")\"><h5>"+file.name+"</h5><progress class=\"full-width\" value=\""+evt.loaded +"\" max=\""+evt.total+"\"><span class=\"wb-inv\">"+percentComplete+"%</span></progress></section>";
     	           }
     	       }, false);
 
@@ -855,9 +855,9 @@ function sendFormData(formData,file) {
 
 				    var speed = 0;
 				    speed = fileSize*8/(end.getTime() - start.getTime());
-	                selDiv.innerHTML ="<section id=\""+file.name+"\"><h5>"+file.name+"("+(speed/1000).toFixed(2)+" MB/s)</h5><progress class=\"full-width\" value=\""+fileSize +"\" max=\""+fileSize+"\"><span class=\"wb-inv\">"+100+"%</span></progress></section>";
+	                selDiv.innerHTML ="<section id=\""+file.name+ " ("+i+"/"+total+")\"><h5>"+file.name+"("+(speed/1000).toFixed(2)+" MB/s)</h5><progress class=\"full-width\" value=\""+fileSize +"\" max=\""+fileSize+"\"><span class=\"wb-inv\">"+100+"%</span></progress></section>";
 		    		selDiv.innerHTML += "<section class=\"alert alert-success\"><h3 class=\"5\">"+(i)+"/"+total+i18n("document_uploaded")+i18n("success")+"</h3></section>";
-		    		if(i < 100)
+		    		if(i < 24)
 		    			output(data);
 
 		    	}
