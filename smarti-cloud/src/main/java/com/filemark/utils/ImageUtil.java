@@ -23,11 +23,6 @@ import static org.bytedeco.javacpp.opencv_imgproc.*;
 import static org.bytedeco.javacpp.opencv_imgcodecs.*;
 
 import org.bytedeco.javacpp.opencv_imgproc;
-/*import org.opencv.core.Core;
-import org.opencv.core.Mat;
-import org.opencv.core.Size;
-import org.opencv.imgcodecs.Imgcodecs;
-import org.opencv.imgproc.Imgproc;*/
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,7 +63,7 @@ public class ImageUtil
 	
 	public static int opencvArmResize(String src,String des,int width,int hight) {
 		int exit = 0;
-/*		IplImage image = cvLoadImage(src);
+		IplImage image = cvLoadImage(src);
 		IplImage dstImg = cvCreateImage(cvSize(width, hight), 8, 1);
 		if (image != null) {
 			cvResize(image, dstImg);
@@ -77,7 +72,7 @@ public class ImageUtil
 			cvReleaseImage(dstImg);
 		}else {
 			exit = 1;
-		}*/
+		}
 		return exit;
 	}	
 	
@@ -85,7 +80,7 @@ public class ImageUtil
 		Mat image = imread(src);
 		Mat resizeimage = new Mat();
 		Size sz = new Size(width,hight);
-		opencv_imgproc.resize( image, resizeimage, sz );
+		org.bytedeco.javacpp.opencv_imgproc.resize( image, resizeimage, sz );
 		if(imwrite(des, resizeimage))
 			return 0;
 		else 
