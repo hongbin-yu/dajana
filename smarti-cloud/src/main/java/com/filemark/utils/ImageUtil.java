@@ -17,6 +17,11 @@ import java.io.InputStreamReader;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
+import org.opencv.core.Core;
+import org.opencv.core.Mat;
+import org.opencv.core.Size;
+import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.imgproc.Imgproc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,6 +41,28 @@ public class ImageUtil
      * for details, including the comments.
      * 
      */    
+	public static int opencvResize(String src,String des,int width,int hight) {
+		Mat image = Imgcodecs.imread(src);
+
+		Mat resizeimage = new Mat();
+		Size sz = new Size(width,hight);
+		Imgproc.resize( image, resizeimage, sz );
+		if(Imgcodecs.imwrite(des, resizeimage))
+			return 0;
+		else 
+			return 1;
+	}
+	
+	public static int opencvRotate(String src,String des,int angle) {
+		Mat image = Imgcodecs.imread(src);
+		Mat rotateImage = new Mat();
+		Core.rotate(image, rotateImage, angle);
+		if(Imgcodecs.imwrite(des, rotateImage))
+			return 0;
+		else 
+			return 1;		
+	}
+	
     public static File resize(File file, int width, int height) throws Exception
     {
         Image img = Toolkit.getDefaultToolkit().getImage( file.getAbsolutePath() );
@@ -336,6 +363,8 @@ public class ImageUtil
     }
     
     public static int convert(String infile, String outfile,  int maxWidth,int maxHeight) {
+    	
+    	//if(opencvResize(infile,outfile,maxWidth,maxHeight)==0) return 0;
     	String s;
     	Process p;
     	int exit=1;

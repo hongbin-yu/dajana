@@ -44,6 +44,8 @@ import javax.jcr.version.VersionException;
 import javax.servlet.http.HttpServletResponse;
 import javax.swing.JPanel;
 
+import nu.pattern.OpenCV;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.jackrabbit.commons.JcrUtils;
@@ -52,6 +54,7 @@ import org.apache.jackrabbit.ocm.manager.ObjectContentManager;
 import org.apache.jackrabbit.ocm.manager.impl.ObjectContentManagerImpl;
 import org.apache.jackrabbit.ocm.mapper.Mapper;
 import org.apache.jackrabbit.ocm.query.Filter;
+import org.opencv.core.Core;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
@@ -1664,7 +1667,9 @@ public class JcrServicesImpl implements JcrServices {
         				out.getParentFile().mkdirs();
         			}
 
-    				int exit = ImageUtil.convert(infile, outfile, w, h);
+    				int exit = ImageUtil.opencvResize(infile, outfile, w, h);
+    				if(exit != 0)
+    					exit =  ImageUtil.convert(infile, outfile, w, h);
     				if(exit==0) {
     					updatePropertyByPath(path, "icon", outfile);
     					updatePropertyByPath(path, "updated", "true");
@@ -2687,6 +2692,17 @@ public class JcrServicesImpl implements JcrServices {
 			boolean result = (System.setProperty("user.dir", dir.getAbsolutePath()) != null);
 			log.debug("Working Dir is set:"+result);
 		}
+		String os = System.getProperty("os.name").toLowerCase();
+		
+		log.debug("loadLibrary opencv core:"+os+","+Core.NATIVE_LIBRARY_NAME);
+		try {
+			nu.pattern.OpenCV.loadShared();
+			System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+		} catch (Exception e) {
+			log.error("loadLibrary error:"+e.getMessage());
+		}
+
+		//System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 	}
 
 

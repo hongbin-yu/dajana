@@ -26,7 +26,7 @@ tinymce.init({
 	  plugins: ['save paste advlist autolink lists link imagetools autosave'],
 	  toolbar: 'save undo redo paste',
 	  autosave_ask_before_unload: false,
-	  autosave_interval: "20s",
+	  autosave_interval: "10s",
 	  menubar: false,
 	  save_onsavecallback: function() {
             // USE THIS IN YOUR AJAX CALL

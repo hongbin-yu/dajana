@@ -1442,9 +1442,7 @@ public class SiteController extends BaseController {
 		//Asset asset= new Asset();
 
 			String userName = getUsername();
-			if(name==null) {
-				name = frompath.substring(frompath.lastIndexOf("/")+1);
-			}
+
 			try {
 				File src = new File(jcrService.getDevice()+frompath);
 				File des = new File(jcrService.getDevice()+topath);
@@ -1455,6 +1453,11 @@ public class SiteController extends BaseController {
 				if(src.exists()) {
 					FileUtils.moveDirectoryToDirectory(src, des, true);
 					
+				}
+				if(name==null) {
+					name = frompath.substring(frompath.lastIndexOf("/")+1);
+				}else if(des.isDirectory()){
+					des.renameTo(new File(des.getParent()+"/"+name));
 				}
 			} catch (IOException e) {
 				return "error:"+e.getMessage();
@@ -1793,9 +1796,12 @@ public class SiteController extends BaseController {
 			String infile = device.getLocation()+asset.getPath();
 			String ext = path.substring(path.lastIndexOf("."));
 			infile +="/origin"+ext;
-			if(ImageUtil.rotate(infile, infile, angle)!=0) {
-				jcrService.roateImage(path, angle);
-				jcrService.createFile(path, 400);				
+			if(ImageUtil.opencvRotate(infile, infile, angle)!=0) {
+				if(ImageUtil.rotate(infile, infile, angle)!=0) {
+					jcrService.roateImage(path, angle);
+					jcrService.createFile(path, 400);					
+				}
+				
 			}else {
 				new File(device.getLocation()+asset.getPath()+"/x400.jpg").delete();
 				new File(device.getLocation()+asset.getPath()+"/x100.jpg").delete();

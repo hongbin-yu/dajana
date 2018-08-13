@@ -157,7 +157,7 @@
 			</details>	
 	    </div>
 
-<div class="wb-inv" id="div_uid">    
+<%-- <div class="wb-inv" id="div_uid">    
 <div id="{uid}" class="col-md-4">
 	<div class="checkbox">
 		<input type="checkbox" class="checkbox" name="puid" value="{uid}"><a title="打开PDF" href="<c:url value="viewpdf?uid={uid}"/>" target="_BLANK"><img title="点击选中" src='<c:url value="/resources/images/pdf.gif"></c:url>'></a>
@@ -173,7 +173,7 @@
 		</div>
 	</details>
 </div>	 
-</div>	   
+</div>	 --%>   
 	    <div class="clearfix"></div>
 	    <div id="top_folder">	
 	    <c:if test="${folders.pageCount>3 && assets.pageCount > 12}">
