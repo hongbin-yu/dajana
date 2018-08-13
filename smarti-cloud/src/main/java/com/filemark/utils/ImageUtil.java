@@ -13,19 +13,26 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URL;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
-import org.opencv.core.Core;
+
+
+
+import org.bytedeco.javacpp.Loader;
+/*import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
-import org.opencv.imgproc.Imgproc;
+import org.opencv.imgproc.Imgproc;*/
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.filemark.jcr.serviceImpl.JcrServicesImpl;
+import static org.bytedeco.javacpp.opencv_core.*;
+import static org.bytedeco.javacpp.opencv_imgproc.*;
+import static org.bytedeco.javacpp.opencv_imgcodecs.*;
 
 public class ImageUtil
 {
@@ -40,24 +47,56 @@ public class ImageUtil
      * https://stackoverflow.com/a/19654452/49153 
      * for details, including the comments.
      * 
-     */    
+     */
+	
+	static {
+        String osName = System.getProperty("os.name");
+        String opencvpath = System.getProperty("user.dir");
+        final String osArch = System.getProperty("os.arch");
+        int bitness = Integer.parseInt(System.getProperty("sun.arch.data.model"));
+        log.debug("OS:"+osName);
+        log.debug("arch:"+osArch);
+        log.debug("opencvpath:"+opencvpath);
+        log.debug("bitness:"+bitness);
+        if(osArch.equals("arm"))
+        	OpenCV.loadShared("libjniopencv_imgproc");
+        if(osArch.equals("x86"))
+        	OpenCV.loadShared("opencv_java320");
+        //System.loadLibrary("libjniopencv_imgproc.so");
+	}
+	
+	public static int opencvArmResize(String src,String des,int width,int hight) {
+		int exit = 0;
+		IplImage image = cvLoadImage(src);
+		IplImage dstImg = cvCreateImage(cvSize(width, hight), 8, 1);
+		if (image != null) {
+			cvResize(image, dstImg);
+			exit = cvSaveImage(des, dstImg);
+			cvReleaseImage(image);
+			cvReleaseImage(dstImg);
+		}else {
+			exit = 1;
+		}
+		return exit;
+	}	
+	
 	public static int opencvResize(String src,String des,int width,int hight) {
-		Mat image = Imgcodecs.imread(src);
+		Mat image = imread(src);
 
 		Mat resizeimage = new Mat();
 		Size sz = new Size(width,hight);
-		Imgproc.resize( image, resizeimage, sz );
-		if(Imgcodecs.imwrite(des, resizeimage))
+		org.bytedeco.javacpp.opencv_imgproc.resize( image, resizeimage, sz );
+		if(imwrite(des, resizeimage))
 			return 0;
 		else 
 			return 1;
 	}
 	
 	public static int opencvRotate(String src,String des,int angle) {
-		Mat image = Imgcodecs.imread(src);
+		Mat image = imread(src);
 		Mat rotateImage = new Mat();
-		Core.rotate(image, rotateImage, angle);
-		if(Imgcodecs.imwrite(des, rotateImage))
+		//rotate(image, rotateImage, angle);
+		if(imwrite(des, rotateImage))
 			return 0;
 		else 
 			return 1;		

@@ -122,7 +122,7 @@ public class BaseController {
 				}			
 			}			
 		}
-		if(loadOpencvDll == 0) {
+/*		if(loadOpencvDll == 0) {
 			loadOpencvDll =1;
 			try {
 				nu.pattern.OpenCV.loadShared();
@@ -131,7 +131,7 @@ public class BaseController {
 			} catch (Exception e) {
 				logger.error("loadLibrary error:"+e.getMessage());
 			}						
-		}
+		}*/
 		ImageUtil.gpioMode("out");
 		ImageUtil.HDDOn();
 /*		try {

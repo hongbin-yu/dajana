@@ -686,7 +686,39 @@
 			<scope>system</scope>
 			<systemPath>${localpath}/itext7-font-asian/7.0.2/itext7-font-asian-7.0.2.jar</systemPath>				
 		</dependency>
-		
+		<dependency>
+			<groupId>local</groupId>
+			<artifactId>javacv</artifactId>
+			<type>jar</type>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${localpath}/javacv/1.0/javacv-1.0.jar</systemPath>				
+		</dependency>
+		<dependency>
+			<groupId>local</groupId>
+			<artifactId>javacpp</artifactId>
+			<type>jar</type>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${localpath}/javacpp/1.0/javacpp-1.0.jar</systemPath>				
+		</dependency>				
+		<dependency>
+			<groupId>local</groupId>
+			<artifactId>opencv-3.0.0-linux-arm</artifactId>
+			<type>jar</type>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${localpath}/opencv-3.0.0-linux-arm/1.0/opencv-3.0.0-linux-arm-1.0.jar</systemPath>				
+		</dependency>
+		<dependency>
+			<groupId>local</groupId>
+			<artifactId>opencv-3.0.0</artifactId>
+			<type>jar</type>
+			<version>1.0</version>
+			<scope>system</scope>
+			<systemPath>${localpath}/opencv-3.0.0/1.0/opencv-3.0.0-1.0.jar</systemPath>				
+		</dependency>		
+				
 <!-- 		<dependency>
 			<groupId>local</groupId>
 			<artifactId>xmlworker</artifactId>
