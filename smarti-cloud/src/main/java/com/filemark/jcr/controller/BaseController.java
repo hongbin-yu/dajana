@@ -29,6 +29,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.opencv.core.Core;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
+
 
 
 
@@ -67,6 +69,7 @@ public class BaseController {
     private static final long DEFAULT_EXPIRE_TIME = 604800000L; // ..ms = 1 week.
     private static final String MULTIPART_BOUNDARY = "MULTIPART_BYTERANGES";
 	private static int loadDTKBarReader = 0;
+	private static int loadOpencvDll = 0;	
 	@SuppressWarnings("unused")
 	private static final Logger logger = LoggerFactory.getLogger(BaseController.class);
 	@Inject
@@ -119,7 +122,16 @@ public class BaseController {
 				}			
 			}			
 		}
-
+		if(loadOpencvDll == 0) {
+			loadOpencvDll =1;
+			try {
+				nu.pattern.OpenCV.loadShared();
+				System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+				logger.debug("loadOpencvDll:"+Core.NATIVE_LIBRARY_NAME);
+			} catch (Exception e) {
+				logger.error("loadLibrary error:"+e.getMessage());
+			}						
+		}
 		ImageUtil.gpioMode("out");
 		ImageUtil.HDDOn();
 /*		try {
