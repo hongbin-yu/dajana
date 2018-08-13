@@ -2690,9 +2690,9 @@ public class JcrServicesImpl implements JcrServices {
 		File dir = new File(workingDir);
 		if(dir.exists() || dir.mkdirs()) {
 			boolean result = (System.setProperty("user.dir", dir.getAbsolutePath()) != null);
-			log.debug("Working Dir is set:"+result);
+			log.debug("Working Dir "+workingDir+" is set:"+result);
 		}
-		String os = System.getProperty("os.name").toLowerCase();
+/*		String os = System.getProperty("os.name").toLowerCase();
 		
 		log.debug("loadLibrary opencv core:"+os+","+Core.NATIVE_LIBRARY_NAME);
 		try {
@@ -2701,7 +2701,7 @@ public class JcrServicesImpl implements JcrServices {
 		} catch (Exception e) {
 			log.error("loadLibrary error:"+e.getMessage());
 		}
-
+*/
 		//System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 	}
 
