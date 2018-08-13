@@ -58,9 +58,11 @@ public class ImageUtil
         log.debug("arch:"+osArch);
         log.debug("opencvpath:"+opencvpath);
         log.debug("bitness:"+bitness);
-        if(osArch.equals("arm"))
+        if(osArch.equals("arm")) {
+        	OpenCV.loadShared("libjniopencv_core");        	
         	OpenCV.loadShared("libjniopencv_imgproc");
-        if(osArch.equals("x86"))
+        	
+        } if(osArch.equals("x86"))
         	OpenCV.loadShared("opencv_java320");
         //System.loadLibrary("libjniopencv_imgproc.so");
 	}
