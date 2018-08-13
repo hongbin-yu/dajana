@@ -29,7 +29,6 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.opencv.core.Core;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,15 +41,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
-
-
-
-
-
-
-
-
-
 import com.filemark.jcr.model.Asset;
 import com.filemark.jcr.model.Device;
 import com.filemark.jcr.model.Folder;
@@ -59,7 +49,6 @@ import com.filemark.jcr.model.User;
 import com.filemark.jcr.service.JcrServices;
 import com.filemark.utils.ImageUtil;
 import com.filemark.utils.QueryCustomSetting;
-import com.filemark.utils.WebPage;
 
 
 
