@@ -18,11 +18,11 @@ import java.net.URL;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
-import static org.bytedeco.javacpp.opencv_core.*;
+/*import static org.bytedeco.javacpp.opencv_core.*;
 import static org.bytedeco.javacpp.opencv_imgproc.*;
 import static org.bytedeco.javacpp.opencv_imgcodecs.*;
 
-import org.bytedeco.javacpp.opencv_imgproc;
+import org.bytedeco.javacpp.opencv_imgproc;*/
 /*import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
@@ -82,23 +82,23 @@ public class ImageUtil
 	}	
 	
 	public static int opencvResize(String src,String des,int width,int hight) {
-		Mat image = imread(src);
+/*		Mat image = imread(src);
 		Mat resizeimage = new Mat();
 		Size sz = new Size(width,hight);
 		opencv_imgproc.resize( image, resizeimage, sz );
 		if(imwrite(des, resizeimage))
 			return 0;
-		else 
+		else */
 			return 1;
 	}
 	
 	public static int opencvRotate(String src,String des,int angle) {
-		Mat image = imread(src);
+/*		Mat image = imread(src);
 		Mat rotateImage = new Mat();
 		//rotate(image, rotateImage, angle);
 		if(imwrite(des, rotateImage))
 			return 0;
-		else 
+		else */
 			return 1;		
 	}
 	
