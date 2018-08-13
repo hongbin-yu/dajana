@@ -1,7 +1,5 @@
 package com.filemark.utils;
 
-import org.opencv.core.Core;
-import sun.reflect.CallerSensitive;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,7 +20,7 @@ import java.util.regex.Pattern;
 public class OpenCV {
 
   private final static Logger logger = Logger.getLogger(OpenCV.class.getName());
-
+  static String NATIVE_LIBRARY_NAME ="opencv_java300";
   static enum OS {
     OSX("^[Mm]ac OS X$"),
     LINUX("^[Ll]inux$"),
@@ -169,12 +167,12 @@ public class OpenCV {
 
     private SharedLoader() {
       try {
-        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-        logger.log(Level.FINEST, "Loaded existing OpenCV library \"{0}\" from library path.", Core.NATIVE_LIBRARY_NAME);
+        System.loadLibrary(NATIVE_LIBRARY_NAME);
+        logger.log(Level.FINEST, "Loaded existing OpenCV library \"{0}\" from library path.", NATIVE_LIBRARY_NAME);
       } catch (final UnsatisfiedLinkError ule) {
 
         /* Only update the library path and load if the original error indicates it's missing from the library path. */
-        if (!String.format("no %s in java.library.path", Core.NATIVE_LIBRARY_NAME).equals(ule.getMessage())) {
+        if (!String.format("no %s in java.library.path", NATIVE_LIBRARY_NAME).equals(ule.getMessage())) {
           logger.log(Level.FINEST, String.format("Encountered unexpected loading error."), ule);
           throw ule;
         }
@@ -183,9 +181,9 @@ public class OpenCV {
         this.libraryPath = extractNativeBinary();
 
         addLibraryPath(libraryPath.getParent());
-        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+        System.loadLibrary(NATIVE_LIBRARY_NAME);
 
-        logger.log(Level.FINEST, "OpenCV library \"{0}\" loaded from extracted copy at \"{1}\".", new Object[]{Core.NATIVE_LIBRARY_NAME, System.mapLibraryName(Core.NATIVE_LIBRARY_NAME)});
+        logger.log(Level.FINEST, "OpenCV library \"{0}\" loaded from extracted copy at \"{1}\".", new Object[]{NATIVE_LIBRARY_NAME, System.mapLibraryName(NATIVE_LIBRARY_NAME)});
       }
     }
     
@@ -297,7 +295,7 @@ public class OpenCV {
       final Path libraryPath = extractNativeBinary();
       System.load(libraryPath.normalize().toString());
 
-      logger.log(Level.FINEST, "OpenCV library \"{0}\" loaded from extracted copy at \"{1}\".", new Object[]{Core.NATIVE_LIBRARY_NAME, System.mapLibraryName(Core.NATIVE_LIBRARY_NAME)});
+      logger.log(Level.FINEST, "OpenCV library \"{0}\" loaded from extracted copy at \"{1}\".", new Object[]{NATIVE_LIBRARY_NAME, System.mapLibraryName(NATIVE_LIBRARY_NAME)});
     }
 
     private static class Holder {
@@ -312,7 +310,7 @@ public class OpenCV {
   /**
    * Selects the appropriate packaged binary, extracts it to a temporary location (which gets deleted when the JVM shuts down), and returns a {@link Path} to that file.
    */
-  @CallerSensitive
+  //@CallerSensitive
   private static Path extractNativeBinary() {
     final OS os = OS.getCurrent();
     final Arch arch = Arch.getCurrent();

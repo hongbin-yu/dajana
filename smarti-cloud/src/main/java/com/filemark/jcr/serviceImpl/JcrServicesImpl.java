@@ -44,9 +44,6 @@ import javax.jcr.version.VersionException;
 import javax.servlet.http.HttpServletResponse;
 import javax.swing.JPanel;
 
-import nu.pattern.OpenCV;
-
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.jackrabbit.commons.JcrUtils;
 import org.apache.jackrabbit.core.query.QueryImpl;
@@ -54,7 +51,6 @@ import org.apache.jackrabbit.ocm.manager.ObjectContentManager;
 import org.apache.jackrabbit.ocm.manager.impl.ObjectContentManagerImpl;
 import org.apache.jackrabbit.ocm.mapper.Mapper;
 import org.apache.jackrabbit.ocm.query.Filter;
-import org.opencv.core.Core;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
@@ -68,7 +64,6 @@ import com.drew.imaging.ImageProcessingException;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.MetadataException;
 import com.drew.metadata.exif.ExifIFD0Directory;
-import com.drew.metadata.jpeg.JpegDirectory;
 import com.filemark.jcr.model.Asset;
 import com.filemark.jcr.model.Chat;
 import com.filemark.jcr.model.Folder;
