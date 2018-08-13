@@ -21,7 +21,8 @@ import javax.swing.JPanel;
 
 
 
-import org.bytedeco.javacpp.Loader;
+
+
 /*import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
@@ -30,9 +31,7 @@ import org.opencv.imgproc.Imgproc;*/
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.bytedeco.javacpp.opencv_core.*;
-import static org.bytedeco.javacpp.opencv_imgproc.*;
-import static org.bytedeco.javacpp.opencv_imgcodecs.*;
+
 
 public class ImageUtil
 {
@@ -87,7 +86,7 @@ public class ImageUtil
 
 		Mat resizeimage = new Mat();
 		Size sz = new Size(width,hight);
-		org.bytedeco.javacpp.opencv_imgproc.resize( image, resizeimage, sz );
+		opencv_imgproc.resize( image, resizeimage, sz );
 		if(imwrite(des, resizeimage))
 			return 0;
 		else 
