@@ -686,7 +686,7 @@
 			<scope>system</scope>
 			<systemPath>${localpath}/itext7-font-asian/7.0.2/itext7-font-asian-7.0.2.jar</systemPath>				
 		</dependency>
-<!-- 		<dependency>
+		<dependency>
 			<groupId>local</groupId>
 			<artifactId>javacv</artifactId>
 			<type>jar</type>
@@ -701,15 +701,16 @@
 			<version>1.0</version>
 			<scope>system</scope>
 			<systemPath>${localpath}/javacpp/1.0/javacpp-1.0.jar</systemPath>				
-		</dependency>	 -->			
-<!-- 		<dependency>
+		</dependency>				
+ 		<dependency>
 			<groupId>local</groupId>
-			<artifactId>opencv-3.0.0-linux-arm</artifactId>
+			<artifactId>opencv-3.0.0</artifactId>
 			<type>jar</type>
 			<version>1.0</version>
 			<scope>system</scope>
-			<systemPath>${localpath}/opencv-3.0.0-linux-arm/1.0/opencv-3.0.0-linux-arm-1.0.jar</systemPath>				
+			<systemPath>${localpath}/opencv-3.0.0/1.0/opencv-3.0.0-1.0-linux-arm.jar</systemPath>				
 		</dependency>
+		
 		<dependency>
 			<groupId>local</groupId>
 			<artifactId>opencv-3.0.0</artifactId>
@@ -718,7 +719,7 @@
 			<scope>system</scope>
 			<systemPath>${localpath}/opencv-3.0.0/1.0/opencv-3.0.0-1.0.jar</systemPath>				
 		</dependency>		
-				 -->
+				
 <!-- 		<dependency>
 			<groupId>local</groupId>
 			<artifactId>xmlworker</artifactId>
@@ -737,11 +738,11 @@
 	    <artifactId>opencv</artifactId>
 	    <version>3.2.0-0</version>
 	</dependency> -->
-    <dependency>
+<!--     <dependency>
         <groupId>org.bytedeco</groupId>
         <artifactId>javacv</artifactId>
         <version>1.2</version>
-    </dependency>	
+    </dependency>	 -->
 	</dependencies>
 
     <build>
