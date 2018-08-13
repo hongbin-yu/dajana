@@ -704,7 +704,7 @@
 		</dependency>				
  		<dependency>
 			<groupId>local</groupId>
-			<artifactId>opencv-3.0.0</artifactId>
+			<artifactId>opencv-3.0.0-linux-arm</artifactId>
 			<type>jar</type>
 			<version>1.0</version>
 			<scope>system</scope>
