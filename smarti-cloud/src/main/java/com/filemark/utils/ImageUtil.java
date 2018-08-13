@@ -69,7 +69,7 @@ public class ImageUtil
 	
 	public static int opencvArmResize(String src,String des,int width,int hight) {
 		int exit = 0;
-		IplImage image = cvLoadImage(src);
+/*		IplImage image = cvLoadImage(src);
 		IplImage dstImg = cvCreateImage(cvSize(width, hight), 8, 1);
 		if (image != null) {
 			cvResize(image, dstImg);
@@ -78,7 +78,7 @@ public class ImageUtil
 			cvReleaseImage(dstImg);
 		}else {
 			exit = 1;
-		}
+		}*/
 		return exit;
 	}	
 	
