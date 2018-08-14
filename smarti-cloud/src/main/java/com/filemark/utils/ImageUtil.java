@@ -51,41 +51,48 @@ public class ImageUtil
         log.debug("arch:"+osArch);
         log.debug("opencvpath:"+opencvpath);
         log.debug("bitness:"+bitness);
-/*        if(osArch.equals("arm")) {
-        	OpenCV.loadShared("libjniopencv_core");        	
-        	OpenCV.loadShared("libjniopencv_imgproc");
-        	
-        } if(osArch.equals("x86"))
-        	OpenCV.loadShared("opencv_java320");*/
-        //System.loadLibrary("libjniopencv_imgproc.so");
-	}
-	
-	public static int opencvArmResize(String src,String des,int width,int hight) {
-		int exit = 1;
-/*		IplImage image = cvLoadImage(src);
-		IplImage dstImg = cvCreateImage(cvSize(width, hight), 8, 1);
-		if (image != null) {
-			cvResize(image, dstImg);
-			exit = cvSaveImage(des, dstImg);
-			cvReleaseImage(image);
-			cvReleaseImage(dstImg);
-		}else {
-			exit = 1;
-		}*/
-		return exit;
-	}	
-	
-	public static int opencvResize(String src,String des,int width,int hight) {
 
-/*		Mat image = imread(src);
-		Mat resizeimage = new Mat();
-		Size sz = new Size(width,hight);
-		org.bytedeco.javacpp.opencv_imgproc.resize( image, resizeimage, sz );
-		if(imwrite(des, resizeimage))
-			return 0;
-		else */
-			return 1;
 	}
+	
+
+	public static int opencvResize(String src,String des,int width,int hight) {
+    	String s;
+    	Process p;
+    	int exit=1;
+    	String shellCommand = "/opt/opencv-3.3.0/build/bin/resize_image "+src+" "+des+" "+width+" "+hight;
+    	ProcessBuilder pb = new ProcessBuilder("/opt/opencv-3.3.0/build/bin/resize_image",src,des,""+width,""+hight);
+    	pb.redirectErrorStream(true);
+	    try {	
+	        p = pb.start();//Runtime.getRuntime().exec(shellCommand);
+	        BufferedReader br = new BufferedReader(
+	            new InputStreamReader(p.getInputStream()));
+	        while ((s = br.readLine()) != null) {
+	            log.debug("line: " + s);
+	        }
+	        p.waitFor();
+	        exit = p.exitValue();
+	        if(exit !=0) {
+	        	br = new BufferedReader(
+	                    new InputStreamReader(p.getErrorStream()));
+	                while ((s = br.readLine()) != null) {
+	                    log.debug("line: " + s);
+	                }
+	        	log.error(shellCommand);
+	        	log.error("resize image exit: " + exit);
+	        	
+	        }
+	        p.destroy();
+	    } catch (IOException e) {
+			log.error("resize_image :"+e.getMessage());;
+	    } catch (InterruptedException e) {
+			log.error("resize_image :"+e.getMessage());;
+		}
+	        return exit;
+	    	
+	    }
+
+
+
 	
 	public static int opencvRotate(String src,String des,int angle) {
 /*		Mat image = imread(src);
