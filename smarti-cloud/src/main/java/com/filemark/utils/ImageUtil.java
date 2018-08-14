@@ -17,10 +17,10 @@ import java.net.URL;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
-
+/*
 import static org.bytedeco.javacpp.opencv_core.*;
 import static org.bytedeco.javacpp.opencv_imgproc.*;
-import static org.bytedeco.javacpp.opencv_imgcodecs.*;
+import static org.bytedeco.javacpp.opencv_imgcodecs.*;*/
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,8 +61,8 @@ public class ImageUtil
 	}
 	
 	public static int opencvArmResize(String src,String des,int width,int hight) {
-		int exit = 0;
-		IplImage image = cvLoadImage(src);
+		int exit = 1;
+/*		IplImage image = cvLoadImage(src);
 		IplImage dstImg = cvCreateImage(cvSize(width, hight), 8, 1);
 		if (image != null) {
 			cvResize(image, dstImg);
@@ -71,29 +71,29 @@ public class ImageUtil
 			cvReleaseImage(dstImg);
 		}else {
 			exit = 1;
-		}
+		}*/
 		return exit;
 	}	
 	
 	public static int opencvResize(String src,String des,int width,int hight) {
 
-		Mat image = imread(src);
+/*		Mat image = imread(src);
 		Mat resizeimage = new Mat();
 		Size sz = new Size(width,hight);
 		org.bytedeco.javacpp.opencv_imgproc.resize( image, resizeimage, sz );
 		if(imwrite(des, resizeimage))
 			return 0;
-		else 
+		else */
 			return 1;
 	}
 	
 	public static int opencvRotate(String src,String des,int angle) {
-		Mat image = imread(src);
+/*		Mat image = imread(src);
 		Mat rotateImage = new Mat();
 		//rotate(image, rotateImage, angle);
 		if(imwrite(des, rotateImage))
 			return 0;
-		else 
+		else */
 			return 1;		
 	}
 	
