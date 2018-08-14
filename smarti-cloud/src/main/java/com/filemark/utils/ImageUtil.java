@@ -22,7 +22,6 @@ import static org.bytedeco.javacpp.opencv_core.*;
 import static org.bytedeco.javacpp.opencv_imgproc.*;
 import static org.bytedeco.javacpp.opencv_imgcodecs.*;
 
-import org.bytedeco.javacpp.opencv_imgproc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,6 +76,7 @@ public class ImageUtil
 	}	
 	
 	public static int opencvResize(String src,String des,int width,int hight) {
+
 		Mat image = imread(src);
 		Mat resizeimage = new Mat();
 		Size sz = new Size(width,hight);
