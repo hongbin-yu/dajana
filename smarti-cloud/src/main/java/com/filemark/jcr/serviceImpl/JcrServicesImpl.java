@@ -1831,7 +1831,7 @@ public class JcrServicesImpl implements JcrServices {
 				log.debug("linux orientation="+sorientation);
 
 				if("2,3,4,5,6,7".indexOf(sorientation)>=0) {
-					if(ImageUtil.autoRotate(infile, infile)==0) {
+					if(ImageUtil.opencvRotate(infile, infile, Integer.parseInt(sorientation)) == 0 || ImageUtil.autoRotate(infile, infile)==0) {
 						String wxh=ImageUtil.getWidthxHeight(infile);
 						log.debug("linux wxh="+wxh);
 						if(wxh.indexOf("x")>0) {
