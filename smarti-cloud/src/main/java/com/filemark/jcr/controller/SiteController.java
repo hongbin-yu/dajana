@@ -1796,7 +1796,15 @@ public class SiteController extends BaseController {
 			String infile = device.getLocation()+asset.getPath();
 			String ext = path.substring(path.lastIndexOf("."));
 			infile +="/origin"+ext;
-			if(ImageUtil.opencvRotate(infile, infile, angle)!=0) {
+			int oreitation = 0;
+			if(angle == -90) {
+				oreitation = 1;
+			}else if(angle == 90) {
+				oreitation = 3;
+			}else if(angle == 180) {
+				oreitation = 2;
+			}
+			if(oreitation!=0 && ImageUtil.opencvRotate(infile, infile, oreitation)!=0) {
 				if(ImageUtil.rotate(infile, infile, angle)!=0) {
 					jcrService.roateImage(path, angle);
 					jcrService.createFile(path, 400);					
