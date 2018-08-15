@@ -1630,9 +1630,9 @@ public class JcrServicesImpl implements JcrServices {
         		}
         		BufferedImage resizedImg = scaleBufferedImage(image,x);
     			//ByteArrayOutputStream os = new ByteArrayOutputStream();
-        		File iconfile = new File(device+path+"/x"+x+".jpg");
-        		if(!iconfile.exists()) iconfile.createNewFile();
-        		OutputStream os = new FileOutputStream(iconfile);
+        		//File iconfile = new File(device+path+"/x"+x+".jpg");
+        		//if(!iconfile.exists()) iconfile.createNewFile();
+        		OutputStream os = new FileOutputStream(getFile(path)+"/x"+x+".jpg");
     			ImageIO.write(resizedImg, "jpeg", os);
     			updatePropertyByPath(path, "icon", device+path+"/x"+x+".jpg");
     			os.close();

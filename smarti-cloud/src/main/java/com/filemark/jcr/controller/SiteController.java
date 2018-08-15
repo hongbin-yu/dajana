@@ -1794,12 +1794,9 @@ public class SiteController extends BaseController {
 		try {
 			asset = jcrService.getAssetById(uid);
 			String path = asset.getPath();
-			//Device device = (Device)jcrService.getObject(asset.getDevice());
-			//String infile = device.getLocation()+asset.getPath();
-			String infile = jcrService.getHome()+asset.getPath();
-			if(!(new File(infile).exists())) {
-				infile = jcrService.getBackup()+asset.getPath();
-			}
+			Device device = (Device)jcrService.getObject(asset.getDevice());
+			String infile = device.getLocation()+asset.getPath();
+
 			String ext = path.substring(path.lastIndexOf("."));
 			infile +="/origin"+ext;
 			int oreitation = 0;
