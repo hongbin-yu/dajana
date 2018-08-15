@@ -1614,7 +1614,9 @@ public class JcrServicesImpl implements JcrServices {
                 	ext = path.substring(path.lastIndexOf("."));
 
         		File file = new File(getFile(path),"origin"+ext);
-        		
+        		if(!file.exists()) {
+        			file = new File(getBackup()+path+"/origin"+ext);
+        		}
         		
         		if(file !=null && file.exists()) {
         			image = ImageIO.read(file);
@@ -1628,7 +1630,9 @@ public class JcrServicesImpl implements JcrServices {
         		}
         		BufferedImage resizedImg = scaleBufferedImage(image,x);
     			//ByteArrayOutputStream os = new ByteArrayOutputStream();
-        		OutputStream os = new FileOutputStream(device+path+"/x"+x+".jpg");
+        		File iconfile = new File(device+path+"/x"+x+".jpg");
+        		if(!iconfile.exists()) iconfile.createNewFile();
+        		OutputStream os = new FileOutputStream(iconfile);
     			ImageIO.write(resizedImg, "jpeg", os);
     			updatePropertyByPath(path, "icon", device+path+"/x"+x+".jpg");
     			os.close();

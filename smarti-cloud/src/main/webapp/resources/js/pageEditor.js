@@ -736,6 +736,8 @@ function deleteFiles() {
 function rotate(uid) {
 	$("#rotate_running"+uid).removeClass("wb-inv");
 	var angle = $("#rotate"+uid).val();
+	var img_url = $("#img"+uid).attr("src");
+
     $.ajax({
 	    url: '/site/rotateImage.html',
 	    data: {
@@ -747,7 +749,7 @@ function rotate(uid) {
 	    	if(msg.indexOf("error:")>=0)
 		    	$("#header_message").html("<section class='alert alert-danger'><h3>"+i18n("fail")+"</h3><p>"+msg+"</p></section>");
 	    	else {
-	    		$("#img"+uid).attr("src","viewimage?uid="+uid+"&t="+(new Date().getTime()));
+	    		$("#img"+uid).attr("src",img_url+"&t="+(new Date().getTime()));
 		    	$("#header_message").html("<section class='alert alert-success'><h3>"+i18n("success")+"</h3></section>");	  
 	    	}
 	    	$("#rotate_running"+uid).addClass("wb-inv");	
