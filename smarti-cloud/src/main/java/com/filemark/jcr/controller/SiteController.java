@@ -1812,14 +1812,10 @@ public class SiteController extends BaseController {
 					jcrService.createFile(path, 400);					
 				}
 				
-			}else {
-				new File(device.getLocation()+asset.getPath()+"/x400.jpg").delete();
-				new File(device.getLocation()+asset.getPath()+"/x100.jpg").delete();
-				//infile = jcrService.getHome()+"/icon400/"+asset.getPath();
-//				if(ImageUtil.rotate(infile, infile, angle)!=0)
-//					jcrService.createIcon(asset.getPath(), 400, 400);				
 			}
-
+			new File(device.getLocation()+asset.getPath()+"/x400.jpg").delete();
+			new File(device.getLocation()+asset.getPath()+"/x100.jpg").delete();
+			new File(device.getLocation()+asset.getPath()+"/x1200.jpg").delete();			
 		}catch (Exception e){
 			logger.error(e.getLocalizedMessage());
 			ImageUtil.HDDOff();

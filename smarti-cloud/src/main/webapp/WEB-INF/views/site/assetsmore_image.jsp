@@ -6,7 +6,7 @@
 	<c:forEach items="${assets.items }" var="item" varStatus="loop">
 	<li id="${item.uid}" class="col-md-1">
 	    <a href="<c:url value='${item.link}&w=12'></c:url>">
-			<img id="img${item.uid}" src="<c:url value='${item.iconSmall }'></c:url>" class="img-responsive pull-left mrgn-rght-md" draggable="true"/>
+			<img id="img${item.uid}" src="<c:url value='${item.iconSmall }'></c:url>" class="img-responsive pull-left mrgn-rght-md img-rounded" draggable="true"/>
 		</a>
 	</li>
 	</c:forEach>
