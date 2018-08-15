@@ -95,14 +95,40 @@ public class ImageUtil
 
 	
 	public static int opencvRotate(String src,String des,int angle) {
-/*		Mat image = imread(src);
-		Mat rotateImage = new Mat();
-		//rotate(image, rotateImage, angle);
-		if(imwrite(des, rotateImage))
-			return 0;
-		else */
-			return 1;		
-	}
+    	String s;
+    	Process p;
+    	int exit=1;
+    	String shellCommand = "/opt/opencv-3.3.0/build/bin/rotate_image "+src+" "+des+" "+angle;
+    	ProcessBuilder pb = new ProcessBuilder("/opt/opencv-3.3.0/build/bin/rotate_image",src,des,""+angle);
+    	pb.redirectErrorStream(true);
+	    try {	
+	        p = pb.start();//Runtime.getRuntime().exec(shellCommand);
+	        BufferedReader br = new BufferedReader(
+	            new InputStreamReader(p.getInputStream()));
+	        while ((s = br.readLine()) != null) {
+	            log.debug("line: " + s);
+	        }
+	        p.waitFor();
+	        exit = p.exitValue();
+	        if(exit !=0) {
+	        	br = new BufferedReader(
+	                    new InputStreamReader(p.getErrorStream()));
+	                while ((s = br.readLine()) != null) {
+	                    log.debug("line: " + s);
+	                }
+	        	log.error(shellCommand);
+	        	log.error("rotate image exit: " + exit);
+	        	
+	        }
+	        p.destroy();
+	    } catch (IOException e) {
+			log.error("rotate_image :"+e.getMessage());;
+	    } catch (InterruptedException e) {
+			log.error("rotate_image :"+e.getMessage());;
+		}
+	        return exit;
+	    	
+	    }
 	
     public static File resize(File file, int width, int height) throws Exception
     {
