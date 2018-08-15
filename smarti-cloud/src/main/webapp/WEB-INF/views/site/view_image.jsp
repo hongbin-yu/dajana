@@ -79,7 +79,7 @@
             </details>
 			</section>
 	    </div>	
-		<div class="wb-frmvld col-md-4">
+<%--  		<div class="wb-frmvld col-md-4">
 			<form action="upload.html" method="POST" id="form-upload" enctype="multipart/form-data">
 				<input type="hidden" id="path" name="path" value="${folder.path}"/>
 				<input type="hidden" id="type"  name="type" value="${type}"/>
@@ -95,8 +95,8 @@
 					</div>
 					<br/>					
 					<input class="form-control wb-inv" type="file" id="fileUpload" name="file" size="60" required="required"  multiple/>
-<%-- 					<input id="submit_upload" type="button" onclick="javascript:uploadFiles()" value="<spring:message code="djn.upload"/>" class="btn btn-primary" disabled> <input type="reset" value="<spring:message code="djn.clear"/>" onclick="resetSelDiv()" class="btn btn-default">
- --%>				</div>
+					<input id="submit_upload" type="button" onclick="javascript:uploadFiles()" value="<spring:message code="djn.upload"/>" class="btn btn-primary" disabled> <input type="reset" value="<spring:message code="djn.clear"/>" onclick="resetSelDiv()" class="btn btn-default">
+				</div>
 				<div class="clear-fix"></div>
 			</form>
 			<div class="panel" id="selectedFiles"></div>	
@@ -153,7 +153,7 @@
 			</details>	
 	    </div>
 		
-	    <div class="clearfix"></div>	
+	    <div class="clearfix"></div>	 --%>
 <div class="row">
         <c:forEach items="${folders.items}" var="item" varStatus="loop">
             <div class="col-md-4 well">
@@ -166,61 +166,18 @@
         </c:forEach> 
 </div>        
         <div class="clearfix"></div>	    
-<div class="row">
-	<div id="view_insert">
-	</div>
+<div class="col-dm-12 wb-lbx lbx-gal">
+	<ul id="contentmore" class="list-inline wb-eqht">
 	<c:forEach items="${assets.items }" var="item" varStatus="loop">
-	<div id="${item.uid}" class="col-md-4 well">
-<%--         <c:if test="${item.text}">
-			<a  class="wb-lbx" title="<spring:message code="djn.edit"/>" href="<c:url value="texteditor.html?uid=${item.uid}"/>"><span class="glyphicon glyphicon-pencil"></span><spring:message code="djn.onlineEdit"/></a>
-		</c:if> --%>
-        <c:if test="${item.doc2pdf}">
-		    <a class="${item.cssClass }" href="doc2pdf.pdf?path=${item.path }&w=1" target="_BLANK">
-				<img id="img${item.uid}" src="<c:url value='${item.iconSmall }'></c:url>" class="img-responsive pull-left" draggable="true"/>
-			</a>
-		</c:if>	
-		<c:if test="${item.mp4}">
-		<figure class="pull-left"><!-- class="wb-mltmd"> -->
-				<video poster="video2jpg.jpg?path=${item.path }&w=1" width="150" height="100" controls="controls"  preload="none">
-					<source type="video/mp4" src="video.mp4?path=${item.path }"/>
-				</video>
-		</figure>
-		</c:if>
-		<c:if test="${item.audio}">
-		<figure class="wb-mltmd">
-				<audio title="${item.title }" preload="none">
-					<source type="${item.contentType }" src="file/${item.name}?path=${item.path}&w=1"/>
-				</audio>
-		</figure>
-		</c:if>		
-		<c:if test="${!item.mp4 && !item.doc2pdf && !item.audio}">
-				<c:if test="${item.contentType=='application/pdf'}">
-				    <a href="<c:url value='${item.link}'></c:url>">
-						<img id="img${item.uid}" src="<c:url value='${item.iconSmall }'></c:url>" class="img-responsive pull-left mrgn-rght-md" draggable="true"/>
-					</a>
-				</c:if>	
-				<c:if test="${item.contentType!='application/pdf'}">
-				    <a href="javascript:openImage('<c:url value='${item.link}&w=12'></c:url>')">
-						<img id="img${item.uid}" src="<c:url value='${item.iconSmall }'></c:url>" class="img-responsive pull-left mrgn-rght-md" draggable="true"/>
-					</a>
-				</c:if>	
-		</c:if>
-
-		<c:if test="${item.pdf}">
-			<input type="checkbox" name="puid" value="${item.uid }"> <a title="<spring:message code="djn.open"/>PDF" href="viewpdf.pdf?uid=${item.uid}" target="_BLANK"><span class="glyphicon glyphicon-open"></span> <spring:message code="djn.open"/>PDF</a>
-		</c:if>
-		<a class="download pull-right" href="file${item.ext}?path=${item.path}" target="_BLANK" download="${item.title }"><span class="glyphicon glyphicon-download pull-right">下载</span></a>
-
-		<p>${item.title}</p>
-		<c:if test="${item.description}"><p>${item.description}</p></c:if>
-
-	<div class="clearfix"></div>	
-	</div>
-	<c:if test="${(loop.index+1) % 3 ==0  }"><div class="clearfix"></div></c:if>
+		<li class="col-md-1">
+	    <a href="<c:url value='${item.link}&w=12'></c:url>">
+			<img id="img${item.uid}" src="<c:url value='${item.iconSmall }'></c:url>" class="img-responsive pull-left mrgn-rght-md" draggable="true"/>
+		</a>
+		</li>
 	</c:forEach>
+	</ul>
 	<div class="clearfix"></div>
 </div>
-<div class="row" id="contentmore"></div>
 		<c:if test="${assets.availablePages>1 }">
 		<c:if test="${assets.pageNumber > 6 }">
 		<c:set var="startPage">${assets.pageNumber-5}</c:set>

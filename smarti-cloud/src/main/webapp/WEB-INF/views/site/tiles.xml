@@ -29,12 +29,20 @@
 	    <put-attribute name="content" value="/WEB-INF/views/site/view.jsp"/>
   
 	</definition>	
+	<definition name="site/view_image" extends="sitepage">
+	    
+	    <put-attribute name="topmenu" value="/WEB-INF/views/site/assetsmenu.jsp"/>
+	    <put-attribute name="content" value="/WEB-INF/views/site/view_image.jsp"/>
+  
+	</definition>		
 	<definition name="site/browse" templateExpression="/WEB-INF/views/site/browse.jsp">
 	</definition>	
 	<definition name="site/browsemore" templateExpression="/WEB-INF/views/site/browsemore.jsp">
 	</definition>
 	<definition name="site/assetsmore" templateExpression="/WEB-INF/views/site/assetsmore.jsp">
 	</definition>
+	<definition name="site/assetsmore_image" templateExpression="/WEB-INF/views/site/assetsmore_image.jsp">
+	</definition>	
 	<definition name="site/media" templateExpression="/WEB-INF/views/site/media.jsp">
 	</definition>	
 	<definition name="site/folder" templateExpression="/WEB-INF/views/site/folders.jsp">

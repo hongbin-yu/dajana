@@ -452,10 +452,11 @@ function handleFileSelect(e) {
 		selDiv.innerHTML += f.name + "<br/>";
 
 	}
-	var submit_upload = document.getElementById("submit_upload");
+/*	var submit_upload = document.getElementById("submit_upload");
 	if(submit_upload)
 		submit_upload.disabled=false;
-	else 
+	else */
+	if(files.length>0)
 		uploadFiles();
 	
 }

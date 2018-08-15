@@ -196,6 +196,7 @@ public class SiteController extends BaseController {
 			max = 20;
 		}
 		if(topage==null) topage="browsemore";
+		if("image".equals(type) && "assetsmore".equals(topage)) topage = "assetsmore_image";
 		Folder currentNode = jcrService.getFolder(path);
 		String orderby = "[lastModified] desc";
 		if(currentNode.getOrderby()!=null && !"".equals(currentNode.getOrderby()) && !"rank,name".equals(currentNode.getOrderby())) {
@@ -379,6 +380,7 @@ public class SiteController extends BaseController {
 	@RequestMapping(value = {"/site/view.html","/site/view"}, method = {RequestMethod.GET,RequestMethod.POST},produces = "text/plain;charset=UTF-8")
 	public String view(String path,String type, String input,String kw,Integer p,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
 		assets(path,type,input,kw,p,model,request,response);
+		if("image".equals(type)) return "site/view_image"; 
 		return "site/view";
 	}
 	
