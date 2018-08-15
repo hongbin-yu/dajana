@@ -682,7 +682,23 @@ public class ImageUtil
 
         return orientation;
     	
-    }    
+    }  
+    public static int opencvLimit(String folder,String ext, int maxWidth) {
+
+    	int exit=1;
+    	File directory = new File(folder);
+    	if(directory.isDirectory()) {
+    		for(File file:directory.listFiles()) {
+    			if(file.getName().endsWith(ext)) {
+    				opencvResize(file.getAbsolutePath(),file.getAbsolutePath(),maxWidth,maxWidth);
+    			}
+    		}
+    		exit = 0;
+    	}
+        
+        return exit;
+    	
+    }         
     public static int limit(String folder,String ext, int maxWidth) {
     	String s;
     	Process p;
