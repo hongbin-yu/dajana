@@ -1814,9 +1814,9 @@ public class SiteController extends BaseController {
 				}
 				
 			}
-			jcrService.createIcon(path, 400,400);
-			jcrService.createIcon(path, 100,100);
-			jcrService.createIcon(path, 1200,1200);		
+			new File(device.getLocation()+asset.getPath()+"/x400.jpg").delete();
+			new File(device.getLocation()+asset.getPath()+"/x100.jpg").delete();
+			new File(device.getLocation()+asset.getPath()+"/x1200.jpg").delete();			
 		}catch (Exception e){
 			logger.error(e.getLocalizedMessage());
 			ImageUtil.HDDOff();
