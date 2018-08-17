@@ -61,7 +61,9 @@ public class Folder implements SmartiNode, Serializable {
 	//private List<Property> properties;
 	public static String root="";	
 	private String parent;
-
+	private List<Folder> subfolders;
+	private List<Asset> assets;
+	
 	
 	public Folder() {
 		super();
@@ -272,6 +274,22 @@ public class Folder implements SmartiNode, Serializable {
 
 	public void setModifiedDate(Date modifiedDate) {
 		this.modifiedDate = modifiedDate;
+	}
+
+	public List<Folder> getSubfolders() {
+		return subfolders;
+	}
+
+	public void setSubfolders(List<Folder> subfolders) {
+		this.subfolders = subfolders;
+	}
+
+	public List<Asset> getAssets() {
+		return assets;
+	}
+
+	public void setAssets(List<Asset> assets) {
+		this.assets = assets;
 	}
 	
 }

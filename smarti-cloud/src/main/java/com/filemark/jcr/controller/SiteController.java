@@ -1,5 +1,6 @@
 package com.filemark.jcr.controller;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -7,11 +8,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
@@ -72,6 +76,7 @@ import com.filemark.utils.ImageUtil;
 import com.filemark.utils.ScanUploadForm;
 import com.filemark.utils.WebPage;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 
 @Controller
@@ -990,6 +995,7 @@ public class SiteController extends BaseController {
 		model.addAttribute("asset", asset);
 		return "site/textEditor";
 	}
+	
    	@RequestMapping(value = {"/site/getasset.json"}, method = {RequestMethod.GET})
    	public @ResponseBody Asset assetJson(String path,String filename,Long lastModified,String operator,Model model,HttpServletRequest request, HttpServletResponse response) {
    		String username = getUsername();
@@ -1004,6 +1010,51 @@ public class SiteController extends BaseController {
 		}
    		return asset;
    	}
+ 
+   	@RequestMapping(value = {"/site/getfolder.json"}, method = {RequestMethod.GET})
+   	public @ResponseBody Folder folderJson(String path,String type,Model model,HttpServletRequest request, HttpServletResponse response) throws RepositoryException, IOException {
+   		String username = getUsername();
+   		File json = new File(jcrService.getDevice()+path+"/Output.json");
+   		
+   		if(json.exists() && "child".equals(type)) {
+   			org.apache.commons.io.IOUtils.copy(new FileInputStream(json), response.getWriter());
+   			return null;
+   		}
+   		
+   		Folder folder = null;
+   		if(json.exists()) {
+   			BufferedReader br = new BufferedReader(new FileReader(json));
+   			Gson gson = new Gson();
+   			folder = gson.fromJson(br, Folder.class);
+   		}else {
+   			folder = jcrService.getFolder(path);   			
+   			String assetsQuery = "select s.* from [nt:base] AS s WHERE ISCHILDNODE(["+path+"]) and s.[delete] not like 'true' and s.ocm_classname='com.filemark.jcr.model.Asset'";
+   			WebPage<Asset> assets = jcrService.searchAssets(assetsQuery, 1000, 0);		
+   			folder.setAssets(assets.getItems());
+   			String foldersQuery = "select * from [nt:base] AS s WHERE ISCHILDNODE(["+path+"]) and s.delete not like 'true' and s.ocm_classname='com.filemark.jcr.model.Folder' order by s.path";
+   			WebPage<Folder> folders = jcrService.queryFolders(foldersQuery, 1000, 0);	
+   			folder.setSubfolders(folders.getItems());
+   			File dir = new File(jcrService.getDevice()+path);
+   			if(!dir.exists()) {
+   				dir.mkdirs();
+   			}
+   			try (Writer writer = new FileWriter(dir.getAbsolutePath()+"/Output.json")) {
+   			    Gson gson = new GsonBuilder().create();
+   			    gson.toJson(folder, writer);
+   			    writer.close();
+   			}
+   		}
+
+   		if(!"child".equals(type)) {
+   			int index = 0;
+   			for(Folder f:folder.getSubfolders()) {
+   				folderJson(f.getPath(),type,model,request,response);
+   				folder.getSubfolders().set(index++, folderJson(f.getPath(),type,model,request,response));
+   			}
+   		}
+   		return folder;
+   	}
+   	
 	@RequestMapping(value = {"/site/uploadAsset.html","/protected/uploadAsset.html"}, method = {RequestMethod.GET,RequestMethod.POST})
 	public @ResponseBody Asset  assetsUpload(String path,String lastModified,String proccess,Integer total,String override,ScanUploadForm uploadForm,Model model,HttpServletRequest request, HttpServletResponse response) {
 		Asset asset= new Asset();
