@@ -83,7 +83,7 @@ function ScrollHandler(e) {
     			    },
     			    error: function() {
     	                $("#loading").html("");
-    				    alert("出错：");
+    				    //alert("出错：");
 
     			    }
     			    // ... Other options like success and etc
