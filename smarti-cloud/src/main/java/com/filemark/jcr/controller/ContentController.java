@@ -800,7 +800,7 @@ public class ContentController extends BaseController {
 
    	@RequestMapping(value = {"/content/comments.json"}, method = {RequestMethod.GET})
    	public @ResponseBody Map<String , Chat[]>  commentsJson(String path,String status,Integer p,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
-   		path += "/cocments";
+   		path += "/comments";
    		if(p==null)
    			p=0;
    		if( status == null || "0".equals(status)) {

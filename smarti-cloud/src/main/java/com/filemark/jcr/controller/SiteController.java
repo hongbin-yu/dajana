@@ -12,6 +12,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
@@ -22,9 +23,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLDecoder;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -67,6 +70,7 @@ import com.filemark.jcr.model.Asset;
 import com.filemark.jcr.model.Device;
 import com.filemark.jcr.model.Djcontainer;
 import com.filemark.jcr.model.Folder;
+import com.filemark.jcr.model.News;
 import com.filemark.jcr.model.Page;
 import com.filemark.jcr.model.User;
 import com.filemark.jcr.service.AssetManager;
@@ -1014,18 +1018,21 @@ public class SiteController extends BaseController {
    	@RequestMapping(value = {"/site/getfolder.json"}, method = {RequestMethod.GET})
    	public @ResponseBody Folder folderJson(String path,String type,Model model,HttpServletRequest request, HttpServletResponse response) throws RepositoryException, IOException {
    		String username = getUsername();
+   		Folder folder = jcrService.getFolder(path);   		
    		File json = new File(jcrService.getDevice()+path+"/Output.json");
    		
-   		if(json.exists() && "child".equals(type)) {
+   		if(json.exists() && json.lastModified() > folder.getLastModified().getTime()  && "child".equals(type)) {
    			org.apache.commons.io.IOUtils.copy(new FileInputStream(json), response.getWriter());
    			return null;
    		}
    		
-   		Folder folder = null;
-   		if(json.exists()) {
-   			BufferedReader br = new BufferedReader(new FileReader(json));
+
+   		if(json.exists() && json.lastModified() > folder.getLastModified().getTime()) {
+   			InputStreamReader jsonRead = new InputStreamReader(new FileInputStream(json),"UTF-8");
+   			BufferedReader br = new BufferedReader(jsonRead);
    			Gson gson = new Gson();
    			folder = gson.fromJson(br, Folder.class);
+   			jsonRead.close();
    		}else {
    			folder = jcrService.getFolder(path);   			
    			String assetsQuery = "select s.* from [nt:base] AS s WHERE ISCHILDNODE(["+path+"]) and s.[delete] not like 'true' and s.ocm_classname='com.filemark.jcr.model.Asset'";
@@ -1038,10 +1045,12 @@ public class SiteController extends BaseController {
    			if(!dir.exists()) {
    				dir.mkdirs();
    			}
-   			try (Writer writer = new FileWriter(dir.getAbsolutePath()+"/Output.json")) {
+   			OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(dir.getAbsolutePath()+"/Output.json"),"UTF-8");
+   			try  {
    			    Gson gson = new GsonBuilder().create();
    			    gson.toJson(folder, writer);
-   			    writer.close();
+   			}finally {
+   				writer.close();
    			}
    		}
 
@@ -1055,6 +1064,33 @@ public class SiteController extends BaseController {
    		return folder;
    	}
    	
+	@RequestMapping(value = {"/site/getassets.json"}, method = RequestMethod.GET)
+	public @ResponseBody Map<String, News[]> getAssetsJson(String path,String type,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
+		Folder folder = folderJson(path,type,model,request,response);
+		List<News> f2new = new ArrayList<News>();
+		Map<String, News[]> data = new HashMap<String, News[]>();
+		getAsset2News(folder,f2new);
+		data.put("data", f2new.toArray(new News[0]));
+		return data;
+	}
+	
+	private void getAsset2News(Folder folder,List<News>newsList) {
+		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		for(Asset asset:folder.getAssets()) {
+			News a2news = new News();
+			a2news.setTitle("<a href=\"javascript:openImage(\'file/"+asset.getLink()+"&w=12')\"> <img alt=\"\" class=\"img-responsive img-rounded pull-left mrgn-rght-md\" src=\""+asset.getIconSmall()+"\">"+asset.getTitle()+"</a>");
+			a2news.setDescription(asset.getDescription());
+			if(asset.getLastModified()!=null)
+			a2news.setLastPublished(sf.format(asset.getOriginalDate()));
+			a2news.setSubjects(folder.getTitle());
+
+			newsList.add(a2news);
+		}
+		for(Folder f:folder.getSubfolders()) {
+			getAsset2News(f,newsList);
+		}
+	}
+	
 	@RequestMapping(value = {"/site/uploadAsset.html","/protected/uploadAsset.html"}, method = {RequestMethod.GET,RequestMethod.POST})
 	public @ResponseBody Asset  assetsUpload(String path,String lastModified,String proccess,Integer total,String override,ScanUploadForm uploadForm,Model model,HttpServletRequest request, HttpServletResponse response) {
 		Asset asset= new Asset();
@@ -1782,10 +1818,12 @@ public class SiteController extends BaseController {
 			if(uid !=null && !"".equals(uid)) {
 				logger.info("value="+value);
 				result =  jcrService.updateProperty(uid,name, value);
+				jcrService.updateCalendar(jcrService.getNodeById(uid),"lastModified");
 				jcrService.updateCalendar(jcrService.getNodeById(uid),"modifiedDate");
 			}else if(path !=null && !"".equals(path)){
 				result =  jcrService.updatePropertyByPath(path, name, value);
 				jcrService.updateCalendar(path, "modifiedDate");
+				jcrService.updateCalendar(path, "lastModified");				
 			}else {
 				return "error:path is null = "+uid;
 			}

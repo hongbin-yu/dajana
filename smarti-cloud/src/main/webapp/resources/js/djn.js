@@ -1,6 +1,6 @@
 var files=[];
 var droppedFiles = [];
-var contentPath = "";
+var dataTable = [];
 var total = 0;
 var i = 0;
 var $element = $( ".wb-sessto" );
@@ -66,7 +66,7 @@ function ScrollHandler(e) {
         	if($("#topage")) topage = $("#topage").val();
         	path=$("#folderpath").val();
 
-        	if(p < avalaiblePages) {
+        	if(p < avalaiblePages && $("#topage")) {
                 p ++;
                 
                 //alert("browsemore.html?path="+path+"&type="+type+"&kw="+kw+"&p="+p+"&topage="+topage);
@@ -186,6 +186,46 @@ function deleteChat(uid,timer) {
 	      elem.innerHTML = ""+count/1000;
 	    }
 	  }
+}
+function AssetTable(folder,asset) {
+	this._asset = asset;
+	this.lastModified = asset.lastModified;
+	this.folder = folder,
+	this.location = asset.location;
+	this.description = assets.description;
+	
+	this.asset = function() {
+		return "<a href=\""+asset.icon+"\"><img alt=\"\" class=\"img-responsive img-rounded pull-left\" src=\""+asset.iconSmall+"\">"+asset.title+"</a>";
+	};
+};
+
+function pushDataTabe(folder) {
+	$.each(data.assets,function(i,a){
+		dataTable.push(new AssetTable(folder.titile,a));
+	});			
+	$.each(data.subfolders,function(i,f){
+		pushDataTable(f);
+	});	
+}
+
+function getDataTable() {
+    $.ajax({
+	    url: '/site/getfolder.json',
+	    data: {
+		    path: $("#folderpath").val(),
+		    type: $("#type").val()
+		    },
+	    type: "GET",
+	    contentType: "application/json",
+	    success: function(data) {
+	    	pushDataTable(data);
+		},
+		error: function() {
+
+		    }
+
+	});		
+	
 }
 
 /*function pw(s) {
