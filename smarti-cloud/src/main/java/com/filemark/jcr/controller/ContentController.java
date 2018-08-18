@@ -431,7 +431,7 @@ public class ContentController extends BaseController {
 							logger.debug(file+" modified");
 							return null;
 				        }
-						file.setReadOnly();
+						//file.setReadOnly();
 						super.serveResource(request, response, file, null);
 
 						return null;

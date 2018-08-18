@@ -2233,7 +2233,7 @@ public class SiteController extends BaseController {
 					response.setContentType("application/pdf");
 					IOUtils.copy(in, response.getOutputStream());
 					in.close();				*/	
-					file.setReadOnly();
+					//file.setReadOnly();
 					super.serveResource(request, response, file, "application/jpdf");
 
 				}
@@ -2294,7 +2294,7 @@ public class SiteController extends BaseController {
 				response.setContentType("image/jpeg");
 				IOUtils.copy(in, response.getOutputStream());
 				in.close();	*/
-				jpgfile.setReadOnly();
+				//jpgfile.setReadOnly();
 				super.serveResource(request, response, jpgfile, "image/jpeg");
 
 				return null;
@@ -2335,7 +2335,7 @@ public class SiteController extends BaseController {
 							response.setContentType("image/jpeg");
 							IOUtils.copy(in, response.getOutputStream());
 							in.close();	*/
-							jpgfile.setReadOnly();
+							//jpgfile.setReadOnly();
 							super.serveResource(request, response, jpgfile, "image/jpeg");
 							return null;					
 						}
@@ -2406,7 +2406,7 @@ public class SiteController extends BaseController {
 			response.setContentType("image/jpeg");
 			IOUtils.copy(in, response.getOutputStream());
 			in.close();		*/	
-			file.setReadOnly();
+			//file.setReadOnly();
 			super.serveResource(request, response, file, "image/jpeg");
 		} catch (FileNotFoundException e) {
 			logger.error("pdf2jpg:"+e.getMessage());
@@ -2467,7 +2467,7 @@ public class SiteController extends BaseController {
 			response.setContentType("image/jpeg");
 			IOUtils.copy(in, response.getOutputStream());
 			in.close();			*/
-			file.setReadOnly();
+			//file.setReadOnly();
 			super.serveResource(request, response, file, "image/jpeg");
 		} catch (FileNotFoundException e) {
 			logger.error("pdf2img:"+e.getMessage());
@@ -2546,7 +2546,7 @@ public class SiteController extends BaseController {
 			response.setContentType("image/jpeg");
 			IOUtils.copy(in, response.getOutputStream());
 			in.close();	*/	
-			file.setReadOnly();
+			//file.setReadOnly();
 			super.serveResource(request, response, file, "image/jpeg");
 		} catch (FileNotFoundException e) {
 			logger.error("doc2jpg:"+e.getMessage());
@@ -2601,7 +2601,7 @@ public class SiteController extends BaseController {
 					else
 						response.sendRedirect("/resources/images/video-icon.png");								
 			}
-			file.setReadOnly();
+			//file.setReadOnly();
 			super.serveResource(request, response, file, "image/jpeg");
 /*			FileInputStream in = new FileInputStream(file);
 			response.setContentType("image/jpeg");
@@ -2648,7 +2648,7 @@ public class SiteController extends BaseController {
 					logger.error(e1.getMessage());
 				}				
 			}
-			file.setReadOnly();
+			//file.setReadOnly();
 
 			serveResource(request,response,file,contentType);
 
@@ -2774,7 +2774,7 @@ public class SiteController extends BaseController {
 
 					}
 					if(file.exists()) {
-						file.setReadOnly();
+						//file.setReadOnly();
 						super.serveResource(request, response, file, null);
 					}else  if(jcrService.nodeExsits(path+"/original")) {
 						response.setContentType(asset.getContentType());
@@ -2818,7 +2818,7 @@ public class SiteController extends BaseController {
 					jcrService.addOrUpdate(asset);
 					
 					out.close();
-					file.setReadOnly();
+					//file.setReadOnly();
 					super.serveResource(request, response, file, null);
 					//jcrService.readAsset(path+"/original",  response.getOutputStream());
 
