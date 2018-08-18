@@ -6,7 +6,7 @@
 <c:set var="contentPath"><c:url value="/"></c:url></c:set>
 
 <div class="container">
-     <main role="main" property="mainContentOfPage" class="col-md-9 col-md-push-3">
+     <main role="main" property="mainContentOfPage" class="col-md-8 col-md-push-4">
     <h1 id="wb-cont">文件浏览，查询</h1>      
 	<div id="view_insert">
 	</div>
@@ -132,7 +132,7 @@
 		</section>
 		</c:if> --%>
 	</main>
-    <nav class="wb-sec col-md-3 col-md-pull-9" typeof="SiteNavigationElement" id="wb-sec" role="navigation">
+    <nav class="wb-sec col-md-4 col-md-pull-8" typeof="SiteNavigationElement" id="wb-sec" role="navigation">
 		<input type="hidden" id="folderpath" name="path" value="${folder.path}"/>
 	    <div class="row well" id="wb-sec">
 		    <section>
@@ -282,8 +282,8 @@
 		<div class="row">
 		        <c:forEach items="${folders.items}" var="item" varStatus="loop">
 		            <div class="well">
-			           <a href="view.html?path=${item.path}&type=${type}"> <img id="folder${item.uid }" path="${item.path }"  ondrop="drop(event)" ondragover="allowDrop(event)" alt="${item.title}" class="img-responsive pull-left mrgn-rght-md" src='<c:url value="/resources/images/folder100X100.png"></c:url>'/></a>
-		            	${item.title} (${item.path })
+			           <a href="view.html?path=${item.path}&type=${type}"> <img id="folder${item.uid }" path="${item.path }"  ondrop="drop(event)" ondragover="allowDrop(event)" alt="${item.title}" class="img-responsive pull-left mrgn-rght-md" src='<c:url value="/resources/images/folder32X32.png"></c:url>'/>
+		            	${item.title} (${item.path })</a>
 		            	<div class="clearfix"></div>
 		            <div id="selectFiles${item.uid }"></div>	
 		            </div>  

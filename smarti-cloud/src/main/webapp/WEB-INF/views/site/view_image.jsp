@@ -78,7 +78,7 @@
             </details>
 			</section>
 	    </div>	
-		<div class="wb-frmvld col-md-4">
+<%-- 		<div class="wb-frmvld col-md-4">
 			<form action="upload.html" method="POST" id="form-upload" enctype="multipart/form-data">
 				<input type="hidden" id="path" name="path" value="${folder.path}"/>
 				<input type="hidden" id="type"  name="type" value="${type}"/>
@@ -94,12 +94,12 @@
 					</div>
 					<br/>					
 					<input class="form-control wb-inv" type="file" id="fileUpload" name="file" size="60" required="required"  multiple/>
-<%-- 					<input id="submit_upload" type="button" onclick="javascript:uploadFiles()" value="<spring:message code="djn.upload"/>" class="btn btn-primary" disabled> <input type="reset" value="<spring:message code="djn.clear"/>" onclick="resetSelDiv()" class="btn btn-default">
- --%>				</div>
+					<input id="submit_upload" type="button" onclick="javascript:uploadFiles()" value="<spring:message code="djn.upload"/>" class="btn btn-primary" disabled> <input type="reset" value="<spring:message code="djn.clear"/>" onclick="resetSelDiv()" class="btn btn-default">
+				</div>
 				<div class="clear-fix"></div>
 			</form>
 			<div class="panel" id="selectedFiles"></div>	
-		</div>
+		</div> --%>
 <%-- 		<div class="wb-frmvld row well">
 		<details>
 			<summary>
@@ -151,12 +151,11 @@
 				</div>	
 			</details>	
 	    </div> --%>
-		<div class="clearfix"></div>		
 		<div class="col-md-4">
 		        <c:forEach items="${folders.items}" var="item" varStatus="loop">
 		            <div class="well">
-			           <a href="view.html?path=${item.path}&type=${type}"> <img id="folder${item.uid }" path="${item.path }"  ondrop="drop(event)" ondragover="allowDrop(event)" alt="${item.title}" class="img-responsive pull-left mrgn-rght-md" src='<c:url value="/resources/images/folder100X100.png"></c:url>'/></a>
-		            	${item.title} (${item.path })
+			           <a href="view.html?path=${item.path}&type=${type}"> <img id="folder${item.uid }" path="${item.path }"  ondrop="drop(event)" ondragover="allowDrop(event)" alt="${item.title}" class="img-responsive pull-left mrgn-rght-md" src='<c:url value="/resources/images/folder32X32.png"></c:url>'/>
+		            	${item.title} (${item.path })</a>
 		            	<div class="clearfix"></div>
 		            <div id="selectFiles${item.uid }"></div>	
 		            </div>  
@@ -167,7 +166,7 @@
 <div class="col-dm-12 wb-lbx lbx-gal">
 	<ul id="contentmore" class="list-inline wb-eqht">
 	<c:forEach items="${assets.items }" var="item" varStatus="loop">
-		<li class="col-md-2">
+		<li class="col-md-1">
 	    <a href="<c:url value='${item.link}&w=12'></c:url>">
 			<img id="img${item.uid}" src="<c:url value='${item.iconSmall }'></c:url>" class="img-responsive pull-left mrgn-rght-md img-rounded" draggable="true"/>
 		</a>

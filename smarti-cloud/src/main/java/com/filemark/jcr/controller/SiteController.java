@@ -1089,10 +1089,11 @@ public class SiteController extends BaseController {
 		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		for(Asset asset:folder.getAssets()) {
 			News a2news = new News();
-			String title ="<a href=\"javascript:openImage(\'file/"+asset.getLink()+"&w=12')\"> <img alt=\"\" class=\"img-responsive img-rounded pull-left mrgn-rght-md\" src=\""+asset.getIcon()+"\">"+asset.getTitle()+"</a>";
+			String title ="<a href=\"javascript:openImage(\'file/"+asset.getLink()+"&w=12')\"> <img alt=\"\" class=\"img-responsive img-rounded pull-left mrgn-rght-md\" src=\""+asset.getIconSmall()+"\">"+asset.getTitle()+"</a>"
+						+(asset.getPdf()?"<a class=\"btn-default btn-xs pull-right\" href=\"viewpdf.pdf?uid="+asset.getUid()+"\" title=\"PDF\" target=\"_blank\">打开 PDF</a>":"");
 			if(asset.getMp4()) {
 				title ="<figure class=\"pull-left\">"
-						+"<video poster=\"video2jpg.jpg?path="+asset.getPath()+"&w=4\" width=\"400\" height=\"300\" controls=\"controls\"  preload=\"none\">"
+						+"<video poster=\"video2jpg.jpg?path="+asset.getPath()+"&w=1\" width=\"100\" height=\"100\" controls=\"controls\"  preload=\"none\">"
 						+"<source type=\"video/mp4\" src=\"video.mp4?path="+asset.getPath()+"\"/></video></figture>";
 			}
 			a2news.setTitle(title);
@@ -1102,9 +1103,11 @@ public class SiteController extends BaseController {
 			a2news.setSubjects(folder.getTitle());
 
 			newsList.add(a2news);
+			
 		}
 		for(Folder f:folder.getSubfolders()) {
 			getAsset2News(f,newsList);
+			if(newsList.size() > 10000) break;
 		}
 	}
 	
