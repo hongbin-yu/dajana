@@ -22,7 +22,7 @@
 	                { &#34;data&#34;: &#34;lastPublished&#34;, &#34;className&#34;: &#34;nws-tbl-date&#34; },
 	                { &#34;data&#34;: &#34;subjects&#34;, &#34;className&#34;: &#34;nws-tbl-dept&#34;},
 	                { &#34;data&#34;: &#34;url&#34;, &#34;className&#34;: &#34;nws-tbl-type&#34; },
-	                { &#34;data&#34;: &#34;description&#34;,  &#34;className&#34;: &#34;nws-tbl-desc&#34; },
+	                { &#34;data&#34;: &#34;description&#34;, &#34;className&#34;: &#34;nws-tbl-desc&#34; },
 	                { &#34;data&#34;: &#34;url&#34;,  &#34;visible&#34;: false },
 	                { &#34;data&#34;: &#34;url&#34;,  &#34;visible&#34;: false },
 	                { &#34;data&#34;: &#34;subjects&#34;, &#34;visible&#34;: false },

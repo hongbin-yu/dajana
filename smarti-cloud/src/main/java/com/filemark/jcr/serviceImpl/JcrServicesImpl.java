@@ -768,6 +768,7 @@ public class JcrServicesImpl implements JcrServices {
     		if(session.nodeExists(path)) {
                 Node node = session.getNode(path);
                 parentPath = node.getParent().getPath(); 
+                updateCalendar(parentPath,"lastModified");
                 node.remove();
                 session.save();
                 node = session.getNode(parentPath);

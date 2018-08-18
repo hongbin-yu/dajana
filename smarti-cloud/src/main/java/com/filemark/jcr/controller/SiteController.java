@@ -1016,51 +1016,62 @@ public class SiteController extends BaseController {
    	}
  
    	@RequestMapping(value = {"/site/getfolder.json"}, method = {RequestMethod.GET})
-   	public @ResponseBody Folder folderJson(String path,String type,Model model,HttpServletRequest request, HttpServletResponse response) throws RepositoryException, IOException {
+   	public @ResponseBody Folder folderJson(String path,String type,Model model,HttpServletRequest request, HttpServletResponse response)  {
    		String username = getUsername();
-   		Folder folder = jcrService.getFolder(path);   		
    		File json = new File(jcrService.getDevice()+path+"/Output.json");
-   		
-   		if(json.exists() && json.lastModified() > folder.getLastModified().getTime()  && "child".equals(type)) {
-   			org.apache.commons.io.IOUtils.copy(new FileInputStream(json), response.getWriter());
-   			return null;
-   		}
+   		Folder folder = new Folder();;
+		try {
+			folder = jcrService.getFolder(path);
+	   		if(json.exists() && json.lastModified() > folder.getLastModified().getTime()  && "child".equals(type)) {
+	   			org.apache.commons.io.IOUtils.copy(new FileInputStream(json), response.getWriter());
+	   			return null;
+	   		}
+	   		
+
+	   		if(json.exists() && json.lastModified() > folder.getLastModified().getTime()) {
+	   			InputStreamReader jsonRead = new InputStreamReader(new FileInputStream(json),"UTF-8");
+	   			BufferedReader br = new BufferedReader(jsonRead);
+	   			Gson gson = new Gson();
+	   			folder = gson.fromJson(br, Folder.class);
+	   			jsonRead.close();
+	   		}else {
+	   			folder = jcrService.getFolder(path);   			
+	   			String assetsQuery = "select s.* from [nt:base] AS s WHERE ISCHILDNODE(["+path+"]) and s.[delete] not like 'true' and s.ocm_classname='com.filemark.jcr.model.Asset'";
+	   			WebPage<Asset> assets = jcrService.searchAssets(assetsQuery, 1000, 0);		
+	   			folder.setAssets(assets.getItems());
+	   			String foldersQuery = "select * from [nt:base] AS s WHERE ISCHILDNODE(["+path+"]) and s.delete not like 'true' and s.ocm_classname='com.filemark.jcr.model.Folder' order by s.path";
+	   			WebPage<Folder> folders = jcrService.queryFolders(foldersQuery, 1000, 0);	
+	   			folder.setSubfolders(folders.getItems());
+	   			File dir = new File(jcrService.getDevice()+path);
+	   			if(!dir.exists()) {
+	   				dir.mkdirs();
+	   			}
+	   			OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(dir.getAbsolutePath()+"/Output.json"),"UTF-8");
+	   			try  {
+	   			    Gson gson = new GsonBuilder().create();
+	   			    gson.toJson(folder, writer);
+	   			}finally {
+	   				writer.close();
+	   			}
+	   		}
+	   		if(!"child".equals(type)) {
+	   			int index = 0;
+	   			for(Folder f:folder.getSubfolders()) {
+	   				folderJson(f.getPath(),type,model,request,response);
+	   				folder.getSubfolders().set(index++, folderJson(f.getPath(),type,model,request,response));
+	   			}
+	   		}
+		} catch (IOException e) {
+			json.delete();
+			logger.error(e.getMessage());;		
+		} catch (RepositoryException e) {
+			json.delete();
+			logger.error(e.getMessage());;
+		}   		
+
    		
 
-   		if(json.exists() && json.lastModified() > folder.getLastModified().getTime()) {
-   			InputStreamReader jsonRead = new InputStreamReader(new FileInputStream(json),"UTF-8");
-   			BufferedReader br = new BufferedReader(jsonRead);
-   			Gson gson = new Gson();
-   			folder = gson.fromJson(br, Folder.class);
-   			jsonRead.close();
-   		}else {
-   			folder = jcrService.getFolder(path);   			
-   			String assetsQuery = "select s.* from [nt:base] AS s WHERE ISCHILDNODE(["+path+"]) and s.[delete] not like 'true' and s.ocm_classname='com.filemark.jcr.model.Asset'";
-   			WebPage<Asset> assets = jcrService.searchAssets(assetsQuery, 1000, 0);		
-   			folder.setAssets(assets.getItems());
-   			String foldersQuery = "select * from [nt:base] AS s WHERE ISCHILDNODE(["+path+"]) and s.delete not like 'true' and s.ocm_classname='com.filemark.jcr.model.Folder' order by s.path";
-   			WebPage<Folder> folders = jcrService.queryFolders(foldersQuery, 1000, 0);	
-   			folder.setSubfolders(folders.getItems());
-   			File dir = new File(jcrService.getDevice()+path);
-   			if(!dir.exists()) {
-   				dir.mkdirs();
-   			}
-   			OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(dir.getAbsolutePath()+"/Output.json"),"UTF-8");
-   			try  {
-   			    Gson gson = new GsonBuilder().create();
-   			    gson.toJson(folder, writer);
-   			}finally {
-   				writer.close();
-   			}
-   		}
 
-   		if(!"child".equals(type)) {
-   			int index = 0;
-   			for(Folder f:folder.getSubfolders()) {
-   				folderJson(f.getPath(),type,model,request,response);
-   				folder.getSubfolders().set(index++, folderJson(f.getPath(),type,model,request,response));
-   			}
-   		}
    		return folder;
    	}
    	
@@ -1078,7 +1089,13 @@ public class SiteController extends BaseController {
 		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		for(Asset asset:folder.getAssets()) {
 			News a2news = new News();
-			a2news.setTitle("<a href=\"javascript:openImage(\'file/"+asset.getLink()+"&w=12')\"> <img alt=\"\" class=\"img-responsive img-rounded pull-left mrgn-rght-md\" src=\""+asset.getIconSmall()+"\">"+asset.getTitle()+"</a>");
+			String title ="<a href=\"javascript:openImage(\'file/"+asset.getLink()+"&w=12')\"> <img alt=\"\" class=\"img-responsive img-rounded pull-left mrgn-rght-md\" src=\""+asset.getIcon()+"\">"+asset.getTitle()+"</a>";
+			if(asset.getMp4()) {
+				title ="<figure class=\"pull-left\">"
+						+"<video poster=\"video2jpg.jpg?path="+asset.getPath()+"&w=4\" width=\"400\" height=\"300\" controls=\"controls\"  preload=\"none\">"
+						+"<source type=\"video/mp4\" src=\"video.mp4?path="+asset.getPath()+"\"/></video></figture>";
+			}
+			a2news.setTitle(title);
 			a2news.setDescription(asset.getDescription());
 			if(asset.getLastModified()!=null)
 			a2news.setLastPublished(sf.format(asset.getOriginalDate()));
@@ -1876,7 +1893,7 @@ public class SiteController extends BaseController {
 		return result;
 	}
 	@RequestMapping(value = {"/site/rotateImage.html","/protected/rotateImage.html"}, method = {RequestMethod.GET,RequestMethod.POST})
-	public @ResponseBody String  rotateImage(String uid,Integer angle, Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public @ResponseBody Asset  rotateImage(String uid,Integer angle, Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String result="";
 		Asset asset = null;
 		ImageUtil.HDDOn();
@@ -1910,10 +1927,10 @@ public class SiteController extends BaseController {
 			logger.error(e.getLocalizedMessage());
 			ImageUtil.HDDOff();
 			result = "error:"+e.getMessage();
-			
+			asset.setTitle(result);
 		}
 		ImageUtil.HDDOff();
-		return result;
+		return asset;
 	}	
 	
 	@RequestMapping(value = {"/site/delete.html","/protected/delete.html"}, method = RequestMethod.GET)

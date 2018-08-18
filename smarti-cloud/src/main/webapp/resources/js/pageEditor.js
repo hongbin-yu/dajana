@@ -745,12 +745,13 @@ function rotate(uid) {
 		    angle: angle
 		    },
 	    type: "POST", 
-	    success: function(msg) {
-	    	if(msg.indexOf("error:")>=0)
-		    	$("#header_message").html("<section class='alert alert-danger'><h3>"+i18n("fail")+"</h3><p>"+msg+"</p></section>");
+	    success: function(data) {
+	    	if(data.title.indexOf("error:")>=0)
+		    	$("#header_message").html("<section class='alert alert-danger'><h3>"+i18n("fail")+"</h3><p>"+data.title+"</p></section>");
 	    	else {
 	    		$("#img"+uid).attr("src",img_url+"&t="+(new Date().getTime()));
-		    	$("#header_message").html("<section class='alert alert-success'><h3>"+i18n("success")+"</h3></section>");	  
+	    		openImage('file/'+data.link);
+		    	//$("#header_message").html("<section class='alert alert-success'><h3>"+i18n("success")+"</h3></section>");	  
 	    	}
 	    	$("#rotate_running"+uid).addClass("wb-inv");	
 	    },
