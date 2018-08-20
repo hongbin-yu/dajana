@@ -188,7 +188,7 @@
 			</div>	            
             <details>
             <summary>${item.title} (${item.path })</summary>
-                <a class="wb-lbx btn btn-danger btn-xs" title="<spring:message code="djn.delete"/>" href="<c:url value="/site/deleteasset.html?path=${item.path }&redirect=/site/assets.html?path=${folder.path }"/>"><span class="glyphicon glyphicon-remove"></span><spring:message code="djn.delete"/><img class="wb-inv" id="delete${item.path }" src='<c:url value="/resources/images/ui-anim_basic_16x16.gif"></c:url>' alt="<spring:message code="djn.delete"/>"/></a>
+                <a class="wb-lbx btn btn-danger btn-xs" title="<spring:message code="djn.delete"/>" href="<c:url value="/site/deleteasset.html?path=${item.path }"/>"><span class="glyphicon glyphicon-remove"></span><spring:message code="djn.delete"/></a>
 				<div class="form-group">
 				<label for="foldertitle${loop.index }"><spring:message code="djn.title"/>&nbsp;</label><input class="form-control" id="foldertitle${loop.index }" name="jcr:title" value="${item.title}" size="25" uid="${item.uid}"  onchange="updateNode(this)"/>
 				</div>            

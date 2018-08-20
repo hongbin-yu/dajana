@@ -61,6 +61,7 @@ public class Folder implements SmartiNode, Serializable {
 	//private List<Property> properties;
 	public static String root="";	
 	private String parent;
+	private String parentTitle;	
 	private List<Folder> subfolders;
 	private List<Asset> assets;
 	
@@ -133,6 +134,16 @@ public class Folder implements SmartiNode, Serializable {
 	public void setParent(String parent) {
 		this.parent = parent;
 	}
+	
+	
+	public String getParentTitle() {
+		return parentTitle;
+	}
+
+	public void setParentTitle(String parentTitle) {
+		this.parentTitle = parentTitle;
+	}
+
 	public long getRank() {
 		return rank;
 	}

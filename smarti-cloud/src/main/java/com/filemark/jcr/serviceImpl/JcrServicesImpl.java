@@ -608,7 +608,12 @@ public class JcrServicesImpl implements JcrServices {
             	 folder.setOcm_classname(classname[classname.length-1]);
              }
              folder.setHasNodes(node.hasNodes());
-             folder.setParent(node.getParent().getPath());
+             Node parent = node.getParent();
+             folder.setParent(parent.getPath());
+             if(parent.hasProperty("jcr:title")) {
+                 folder.setParentTitle(parent.getProperty("jcr:title").getString());
+            	 
+             }
 
              return folder;
     	} 
