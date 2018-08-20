@@ -67,6 +67,7 @@ import com.drew.metadata.exif.ExifIFD0Directory;
 import com.filemark.jcr.model.Asset;
 import com.filemark.jcr.model.Chat;
 import com.filemark.jcr.model.Folder;
+import com.filemark.jcr.model.JcrNode;
 import com.filemark.jcr.model.Log;
 import com.filemark.jcr.model.Page;
 import com.filemark.jcr.model.SmartiNode;
@@ -600,8 +601,11 @@ public class JcrServicesImpl implements JcrServices {
             	 folder.setSharing(node.getProperty("sharing").getString());   
              if(node.hasProperty("readonly"))
             	 folder.setReadonly(node.getProperty("readonly").getString());   
+             if(node.hasProperty("description"))
+            	 folder.setDescription(node.getProperty("description").getString());   
              if(node.hasProperty("resolution"))
             	 folder.setResolution(node.getProperty("resolution").getString());   
+
              if(node.hasProperty("ocm_classname")) {
             	 String[] classname = node.getProperty("ocm_classname").getString().split("\\.");
             	 
@@ -804,6 +808,30 @@ public class JcrServicesImpl implements JcrServices {
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<JcrNode> getBreadcrumbNodes(final String path) {
+
+		return (List<JcrNode>)jcrTemplate.execute(new JcrCallback() { 
+        	public Object doInJcr(Session session) throws RepositoryException, IOException { 
+        	   List<JcrNode> nodes = new ArrayList<JcrNode>();
+               Node node = session.getNode(path);
+               while(node.getDepth() > 2) {
+            	    node = node.getParent();
+            	    JcrNode f = new JcrNode();
+            	    f.setPath(node.getPath());
+            	    if(node.hasProperty("jcr:title")) {
+                       f.setTitle(node.getProperty("jcr:title").getString());
+                    }else {
+                    	f.setTitle(node.getName());    
+                    }
+            	    nodes.add(0,f);
+               }
+               return  nodes;
+        	} 		
+		});
+
+	}
+	
 
 	public String getBreadcrumb(final String path) {
 
@@ -2407,6 +2435,7 @@ public class JcrServicesImpl implements JcrServices {
             		}
         		}
         		node.setProperty("lastModified", Calendar.getInstance());
+        		node.getParent().setProperty("lastModified", Calendar.getInstance());        		
         		if(name.equals("status") && value.equals("true")) {
         			node.setProperty("lastPublished", Calendar.getInstance());
         			node.setProperty("breadcrumb", getBreadcrumb(node.getPath()));
@@ -2427,6 +2456,7 @@ public class JcrServicesImpl implements JcrServices {
         		Node node = session.getNode(path);
         		node.setProperty(name, value);
         		node.setProperty("lastModified", Calendar.getInstance());
+        		node.getParent().setProperty("lastModified", Calendar.getInstance()); 
         		if(name.equals("status") && value.equals("true")) {
         			node.setProperty("lastPublished", Calendar.getInstance());
         			node.setProperty("breadcrumb", getBreadcrumb(node.getPath()));

@@ -30,6 +30,8 @@ public class Folder implements SmartiNode, Serializable {
 	@Field 
 	private String location;
 	@Field 
+	private String description;	
+	@Field 
 	private String groups;
 	@Field 
 	private String orderby;
@@ -64,6 +66,7 @@ public class Folder implements SmartiNode, Serializable {
 	private String parentTitle;	
 	private List<Folder> subfolders;
 	private List<Asset> assets;
+	private List<JcrNode> breadcrum;
 	
 	
 	public Folder() {
@@ -301,6 +304,22 @@ public class Folder implements SmartiNode, Serializable {
 
 	public void setAssets(List<Asset> assets) {
 		this.assets = assets;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public List<JcrNode> getBreadcrum() {
+		return breadcrum;
+	}
+
+	public void setBreadcrum(List<JcrNode> breadcrum) {
+		this.breadcrum = breadcrum;
 	}
 	
 }

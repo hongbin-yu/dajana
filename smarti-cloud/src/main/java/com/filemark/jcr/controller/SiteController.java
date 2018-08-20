@@ -382,6 +382,7 @@ public class SiteController extends BaseController {
 		model.addAttribute("type", type);
 		model.addAttribute("input", input);		
 		model.addAttribute("kw", kw);	
+		model.addAttribute("breadcrumb", jcrService.getBreadcrumbNodes(path));
 		ImageUtil.HDDOff();
 		return "site/asset";
 	}
@@ -389,6 +390,8 @@ public class SiteController extends BaseController {
 	@RequestMapping(value = {"/site/view.html","/site/view"}, method = {RequestMethod.GET,RequestMethod.POST},produces = "text/plain;charset=UTF-8")
 	public String view(String path,String type, String input,String kw,Integer p,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
 		assets(path,type,input,kw,p,model,request,response);
+
+		model.addAttribute("leftmenu", getLeftmenuJson(path,type,model,request,response));
 		if("image".equals(type)) return "site/view_image"; 
 		return "site/view";
 	}
@@ -1022,11 +1025,7 @@ public class SiteController extends BaseController {
    		Folder folder = new Folder();;
 		try {
 			folder = jcrService.getFolder(path);
-	   		//if(json.exists() && json.lastModified() > folder.getLastModified().getTime()  && "child".equals(type)) {
-	   			//org.apache.commons.io.IOUtils.copy(new FileInputStream(json), response.getWriter());
-	   			//return null;
-	   		//}
-	   		
+			
 
 	   		if(json.exists() && json.lastModified() > folder.getLastModified().getTime()) {
 	   			InputStreamReader jsonRead = new InputStreamReader(new FileInputStream(json),"UTF-8");
@@ -1042,6 +1041,7 @@ public class SiteController extends BaseController {
 	   			String foldersQuery = "select * from [nt:base] AS s WHERE ISCHILDNODE(["+path+"]) and s.delete not like 'true' and s.ocm_classname='com.filemark.jcr.model.Folder' order by s.path";
 	   			WebPage<Folder> folders = jcrService.queryFolders(foldersQuery, 1000, 0);	
 	   			folder.setSubfolders(folders.getItems());
+	   			folder.setBreadcrum(jcrService.getBreadcrumbNodes(path));
 	   			File dir = new File(jcrService.getDevice()+path);
 	   			if(!dir.exists()) {
 	   				dir.mkdirs();
@@ -1076,6 +1076,15 @@ public class SiteController extends BaseController {
    	}
 	@RequestMapping(value = {"/site/getleftmenu.json"}, method = RequestMethod.GET)
 	public @ResponseBody Folder getLeftmenuJson(String path,String type,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String assetFolder = "/assets"+"/"+getUsername();
+		String oldFolder = "/"+getUsername()+"/assets";
+		if(!jcrService.nodeExsits(assetFolder)) {
+			jcrService.addNodes(assetFolder, "nt:unstructured",getUsername());		
+		}		
+		if(path == null || (!path.startsWith(assetFolder) && !path.startsWith(oldFolder))) path=assetFolder;
+	
+		
+		
 		Folder folder = folderJson(path,"child",model,request,response);
 		Folder parent = new Folder();
 		if(folder.getParent().equals("/assets")) {

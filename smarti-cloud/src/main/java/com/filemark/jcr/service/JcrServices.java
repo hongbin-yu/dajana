@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.filemark.jcr.model.Asset;
 import com.filemark.jcr.model.Chat;
 import com.filemark.jcr.model.Folder;
+import com.filemark.jcr.model.JcrNode;
 import com.filemark.jcr.model.Log;
 import com.filemark.jcr.model.Page;
 import com.filemark.jcr.model.SmartiNode;
@@ -47,6 +48,7 @@ public interface JcrServices {
 	public String getBreadcrumb(final String path,String permission,int depth);
 	public String getBreadcrumb(final String path);
 	public String getBreadcrumb(final Page page);
+	public List<JcrNode> getBreadcrumbNodes(final String path);
 	public WebPage<Folder> queryFolders(final String queryString, final long limit, final long offset);
 	public WebPage<Page> queryPages(final String queryString, final long limit, final long offset);
 	public WebPage<Chat> queryChats(final String queryString, final long limit, final long offset);

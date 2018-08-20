@@ -841,7 +841,7 @@ function uploadFile(file) {
     }
 
 	var online_chat_editor = document.getElementById("online_chat_editor");
-	if(online_chat_editor || override == 'false') {
+	if((online_chat_editor || override == 'false' ) && file.name !='Image.jpg') {
 		getAsset(formData,file);
 	}else 
 		sendFormData(formData,file);
