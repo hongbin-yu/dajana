@@ -27,7 +27,10 @@ public class News implements Serializable, SmartiNode {
 	protected String subjects="";		
 	@Field 
 	private String lastPublished="";	
-	
+	@Field
+	protected String location="";	
+	@Field
+	protected String contentType="";		
 	@Override
 	public String getPath() {
 		return path;
@@ -105,6 +108,22 @@ public class News implements Serializable, SmartiNode {
 
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
+	public String getContentType() {
+		return contentType;
+	}
+
+	public void setContentType(String contentType) {
+		this.contentType = contentType;
 	}
 
 }
