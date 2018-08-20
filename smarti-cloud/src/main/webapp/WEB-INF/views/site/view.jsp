@@ -17,7 +17,7 @@
 </div>
 </nav>  
 <div class="container">
-     <main role="main" property="mainContentOfPage" class="col-md-8 col-md-push-4">
+     <main role="main" property="mainContentOfPage" class="col-md-9 col-md-push-3">
         <h1 id="wb-cont">
         <spring:message code="djn.browse"/> - ${folder.title} <a href="view.html?path=${folder.path}&type=${type}" title="刷屏"><span class="glyphicon glyphicon-refresh"></span></a></h1>
         ${folder.description }         
@@ -61,7 +61,7 @@
 	</section>	
 
 	</main>
-    <nav class="wb-sec col-md-4 col-md-pull-8" typeof="SiteNavigationElement" id="wb-sec" role="navigation">
+    <nav class="wb-sec col-md-3 col-md-pull-9" typeof="SiteNavigationElement" id="wb-sec" role="navigation">
 		<input type="hidden" id="folderpath" name="path" value="${folder.path}"/>
 <%-- 		<div class="wb-frmvld row well">
 			<form action="upload.html" method="POST" id="form-upload" enctype="multipart/form-data">

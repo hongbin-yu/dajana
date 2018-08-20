@@ -356,7 +356,7 @@
 				</div>   
             </details>
             </div>  
-            	<c:if test="${(loop.index+1) % 2 ==0  }"><div class="clearfix"></div></c:if>         
+            	<c:if test="${(loop.index+1) % 3 ==0  }"><div class="clearfix"></div></c:if>         
         </c:forEach> 
 <%-- 	    <c:if test="${folders.pageCount>3 && assets.pageCount > 12}">
         </details>	
