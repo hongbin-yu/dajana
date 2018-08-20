@@ -1034,8 +1034,12 @@ public class SiteController extends BaseController {
 	   			folder = gson.fromJson(br, Folder.class);
 	   			jsonRead.close();
 	   		}else {
-	   			folder = jcrService.getFolder(path);   			
-	   			String assetsQuery = "select s.* from [nt:base] AS s WHERE ISCHILDNODE(["+path+"]) and s.[delete] not like 'true' and s.ocm_classname='com.filemark.jcr.model.Asset'";
+	   			folder = jcrService.getFolder(path);   	
+	   			String orderby = "[lastModified] desc";
+	   			if(folder.getOrderby()!=null && !"".equals(folder.getOrderby()) && !"rank,name".equals(folder.getOrderby())) {
+	   				orderby = folder.getOrderby();
+	   			}		   			
+	   			String assetsQuery = "select s.* from [nt:base] AS s WHERE ISCHILDNODE(["+path+"]) and s.[delete] not like 'true' and s.ocm_classname='com.filemark.jcr.model.Asset' order by s."+orderby+", s.[name]";
 	   			WebPage<Asset> assets = jcrService.searchAssets(assetsQuery, 1000, 0);		
 	   			folder.setAssets(assets.getItems());
 	   			String foldersQuery = "select * from [nt:base] AS s WHERE ISCHILDNODE(["+path+"]) and s.delete not like 'true' and s.ocm_classname='com.filemark.jcr.model.Folder' order by s.path";
