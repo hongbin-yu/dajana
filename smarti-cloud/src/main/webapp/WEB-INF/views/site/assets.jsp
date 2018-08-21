@@ -24,6 +24,8 @@
         <spring:message code="djn.cloud"/><spring:message code="djn.edit"/> - ${folder.title} <a href="?path=${folder.path}&type=${type}" title="刷屏"><span class="glyphicon glyphicon-refresh"></span></a></h1>
         ${folder.description }
 <div class="row">
+	<div id="top_folder">	
+	</div>
 	<div id="top_insert">
 	</div>
 	<c:forEach items="${assets.items }" var="item" varStatus="loop">
@@ -351,7 +353,7 @@
 </div>	 
 </div>	 --%>   
 	    <div class="clearfix"></div>
-	    <div id="top_folder">	
+<!-- 	    <div id="top_folder">	 -->
 <%-- 	    <c:if test="${folders.pageCount>3 && assets.pageCount > 12}">
 	    <details>
 	    <summary>${folders.pageCount} 子目录</summary>
@@ -387,7 +389,7 @@
 <%-- 	    <c:if test="${folders.pageCount>3 && assets.pageCount > 12}">
         </details>	
         </c:if> --%>
-        </div>	
+ <!--        </div>	 -->
         <div class="clearfix"></div>	    
 
 </nav>
