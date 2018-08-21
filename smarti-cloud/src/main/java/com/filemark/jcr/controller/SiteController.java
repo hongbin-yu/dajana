@@ -1092,6 +1092,7 @@ public class SiteController extends BaseController {
 		
 		
 		Folder folder = folderJson(path,"child",model,request,response);
+		folder.setAssets(null);
 		Folder parent = new Folder();
 		if(folder.getParent().equals("/assets")) {
 			parent.setPath(folder.getParent());
@@ -1099,6 +1100,7 @@ public class SiteController extends BaseController {
 			ArrayList<Folder> subfolders = new ArrayList<Folder>();
 			subfolders.add(folder);
 			parent.setSubfolders(subfolders);
+			parent.setAssets(null);
 		}else {
 			parent = folderJson(folder.getParent(),"child",model,request,response);
 			int index = 0;
