@@ -1140,7 +1140,7 @@ public class SiteController extends BaseController {
 			a2news.setLastPublished(sf.format(asset.getOriginalDate()));
 			a2news.setSubjects(folder.getTitle());
 			if(asset.getPosition()!=null && !"".equals(asset.getPosition()))
-				a2news.setLocation("<a class=\"wb-lbx\" href=\"https://www.google.com/map?q="+asset.getPosition()+"\">Map</a>");
+				a2news.setLocation("<a class=\"wb-lbx\" href=\"https://www.google.com/maps?q="+asset.getPosition()+"\" target=\"_blank\">Map</a>");
 			a2news.setContentType(asset.getContentType());
 			newsList.add(a2news);
 			
