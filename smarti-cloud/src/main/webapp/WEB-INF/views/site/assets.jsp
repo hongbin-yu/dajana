@@ -166,24 +166,6 @@
 <nav class="wb-sec col-md-3 col-md-pull-9" typeof="SiteNavigationElement" id="wb-sec" role="navigation">
 		<input type="hidden" id="folderpath" name="path" value="${folder.path}"/>
 		<div class="wb-frmvld row well">
-			<form action="upload.html" method="POST" id="form-upload" enctype="multipart/form-data">
-				<input type="hidden" id="path" name="path" value="${folder.path}"/>
-				<input type="hidden" id="type"  name="type" value="${type}"/>
-				<input type="hidden" id="input" name="input" value="${input}"/>
-				<input type="hidden" name="redirect" value="assets.html?path=${folder.path}&type=${type}&input=${input}"/>
-						
-				<div class="form-group" ondrop="drop(event)" ondragover="allowDrop(event)" style="border:1px solid #aaaaaa;">
-					<label for="fileUpload" class="required"><a href="#" onclick="openFiles()"><span id="openFiles" class="field-name"><spring:message code="djn.select_dragging_drop"/> </span></a></label>
-					<br/><a href="#" onclick="openFiles()"><img id="uploadImg" path="${folder.path}" alt="" src="<c:url value='/resources/images/upload.png'/>"/></a>
-					<div class="panel" id="selectedFiles">
-					</div>	
-					<div class="checkbox">
-					<label for="override"><input type="checkbox" name="override" value="true" id="override" size="35"> 覆盖旧文件如果重名</label>
-					</div>
-					<input class="form-control wb-inv" type="file" id="fileUpload" name="file" size="60" required="required"  multiple/>
-<%-- 				<input id="submit_upload" type="button" onclick="javascript:uploadFiles()" value="<spring:message code="djn.upload"/>" class="btn btn-primary" disabled> <input type="reset" value="<spring:message code="djn.clear"/>" onclick="resetSelDiv()" class="btn btn-default"> --%>
-				</div>
-			</form>
 		    <form action='<c:url value="assets.html"></c:url>' method="get" name="cse-search-box" role="search" class="form-inline" accept-charset="UTF-8">
 			<input type="hidden" id="path" name="path" value="${folder.path}"/>
 			<input type="hidden" id= "input" name="input" value="${input}"/>
@@ -206,6 +188,25 @@
 					</select>
 					</div>
 			</form>
+			<hr/>
+			<form action="upload.html" method="POST" id="form-upload" enctype="multipart/form-data">
+				<input type="hidden" id="path" name="path" value="${folder.path}"/>
+				<input type="hidden" id="type"  name="type" value="${type}"/>
+				<input type="hidden" id="input" name="input" value="${input}"/>
+				<input type="hidden" name="redirect" value="assets.html?path=${folder.path}&type=${type}&input=${input}"/>
+						
+				<div class="form-group" ondrop="drop(event)" ondragover="allowDrop(event)" style="border:1px solid #aaaaaa;">
+					<label for="fileUpload" class="required"><a href="#" onclick="openFiles()"><span id="openFiles" class="field-name"><spring:message code="djn.select_dragging_drop"/> </span></a></label>
+					<br/><a href="#" onclick="openFiles()"><img id="uploadImg" path="${folder.path}" alt="" src="<c:url value='/resources/images/upload.png'/>"/></a>
+					<div class="panel" id="selectedFiles">
+					</div>	
+					<div class="checkbox">
+					<label for="override"><input type="checkbox" name="override" value="true" id="override" size="35"> 覆盖旧文件如果重名</label>
+					</div>
+					<input class="form-control wb-inv" type="file" id="fileUpload" name="file" size="60" required="required"  multiple/>
+<%-- 				<input id="submit_upload" type="button" onclick="javascript:uploadFiles()" value="<spring:message code="djn.upload"/>" class="btn btn-primary" disabled> <input type="reset" value="<spring:message code="djn.clear"/>" onclick="resetSelDiv()" class="btn btn-default"> --%>
+				</div>
+			</form>			
 					<div class="checkbox form-group">
 			    		<label for="toggle"><input id="toggle" type="checkbox" onClick="toggle(this)" title="选择切换"/>全选切换</label>
 					</div>				 			
