@@ -19,7 +19,7 @@
 <div class="container">
 <div class="row">
      <main role="main" property="mainContentOfPage" class="col-md-9 col-md-push-3">
-        <h1 id="wb-cont">		        <c:if test="${folder.name!='assets' }"><a href="assets.html?path=${folder.parent}&type=${type}"><span class="glyphicon glyphicon-backward"></span></a></c:if>
+        <h1 id="wb-cont">		        <c:if test="${folder.parent!='/assets' }"><a href="assets.html?path=${folder.parent}&type=${type}"><span class="glyphicon glyphicon-backward"></span></a></c:if>
         <spring:message code="djn.cloud"/><spring:message code="djn.edit"/> - ${folder.title} <a href="?path=${folder.path}&type=${type}" title="刷屏"><span class="glyphicon glyphicon-refresh"></span></a></h1>
         ${folder.description }
 <div class="row">
@@ -190,7 +190,7 @@
 			<input type="hidden" id="pageNumber" name="pageNumber" value="${assets.pageNumber}"/>	
 			<input type="hidden" id="availablePages" name="availablePages" value="${assets.availablePages}"/>				
 			<input type="hidden" id="topage" name="topage" value="assetsmore"/>			    
-			<a class="btn btn-default pull-right" href="/site/view.html?path=${folder.path}" title="快速阅览"><span class="glyphicon glyphicon-eye-open pull-right"></span></a>
+			<a class="btn btn-default pull-right" href="/site/view.html?path=${folder.path}&type=${type}" title="快速阅览"><span class="glyphicon glyphicon-eye-open pull-right"></span></a>
 			<a href="javascript:deleteFiles()" class="btn bnt-default btn-danger visible-xs pull-right" title="删除"><span class="glyphicon glyphicon-remove"></span></a>
 			<a href="javascript:openPdf()" class="btn btn-primary visible-xs pull-right" title="打开PDF"><span class="glyphicon glyphicon-open"></span></a>
 					<div class="form-group">
@@ -305,7 +305,31 @@
 				</form>
 				</div>	
 			</details>	
-	    </div>
+    <h2 id="wb-sec-h" class="wb-inv">左菜单</h2>
+    <details>
+		<summary>
+        <c:if test="${folder.parent!='/assets' }">
+        <a href='<c:url value="assets.html?path=${folder.parent}&type=${type }"></c:url>'>${folder.parentTitle}<span class="glyphicon glyphicon-backward"></span>
+        </a>
+        </c:if> 
+        <c:if test="${folder.parent=='/assets' }">
+        <spring:message code="djn.cloud"/>
+        </c:if>               
+        </summary>    	       
+        <ul class="list-group menu list-unstyled">
+        <c:forEach items="${leftmenu.subfolders}" var="item" varStatus="loop">
+            <li>
+            <a  class="list-group-item" href='<c:url value="assets.html?path=${item.path }&type=${type }"></c:url>'>${item.title}</a>     
+                <ul class="list-group menu list-unstyled">
+                    <c:forEach items="${item.subfolders}" var="child" varStatus="loop">
+                    	<li><a class="list-group-item" href='<c:url value="assets.html?path=${child.path}&type=${type }"></c:url>'>${child.title}</a></li>
+                    </c:forEach>
+                </ul>
+            </li>           
+        </c:forEach>    
+        </ul>
+      </details>  
+    </div>
 
 <%-- <div class="wb-inv" id="div_uid">    
 <div id="{uid}" class="col-md-4">

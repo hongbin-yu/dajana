@@ -213,11 +213,11 @@
 		</div>  --%>
     <h2 id="wb-sec-h" class="wb-inv">左菜单</h2>
     <section class="list-group menu list-unstyled">	
-			<a class="btn btn-default pull-right" href="/site/assets.html?path=${folder.path}" title="<spring:message code="djn.cloud"/><spring:message code="djn.edit"/>"><span class="glyphicon glyphicon-edit pull-right"></span></a>
+			<a class="btn btn-default pull-right" href="/site/assets.html?path=${folder.path}&type=${type }" title="<spring:message code="djn.cloud"/><spring:message code="djn.edit"/>"><span class="glyphicon glyphicon-edit pull-right"></span></a>
     
         <h3>
         <c:if test="${folder.parent!='/assets' }">
-        <a href='<c:url value="view.html?path=${folder.parent}"></c:url>'>${folder.parentTitle}<span class="glyphicon glyphicon-backward"></span>
+        <a href='<c:url value="view.html?path=${folder.parent}&type=${type }"></c:url>'>${folder.parentTitle}<span class="glyphicon glyphicon-backward"></span>
         </a>
         </c:if> 
         <c:if test="${folder.parent=='/assets' }">
@@ -227,10 +227,10 @@
         <ul class="list-group menu list-unstyled">
         <c:forEach items="${leftmenu.subfolders}" var="item" varStatus="loop">
             <li>
-            <a  class="list-group-item" href='<c:url value="view.html?path=${item.path }"></c:url>'>${item.title}</a>     
+            <a  class="list-group-item" href='<c:url value="view.html?path=${item.path }&type=${type }"></c:url>'>${item.title}</a>     
                 <ul class="list-group menu list-unstyled">
                     <c:forEach items="${item.subfolders}" var="child" varStatus="loop">
-                    	<li><a class="list-group-item" href='<c:url value="view.html?path=${child.path}"></c:url>'>${child.title}</a></li>
+                    	<li><a class="list-group-item" href='<c:url value="view.html?path=${child.path}&type=${type }"></c:url>'>${child.title}</a></li>
                     </c:forEach>
                 </ul>
             </li>           

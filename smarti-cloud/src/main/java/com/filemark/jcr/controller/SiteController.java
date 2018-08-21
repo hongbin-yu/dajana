@@ -383,6 +383,7 @@ public class SiteController extends BaseController {
 		model.addAttribute("input", input);		
 		model.addAttribute("kw", kw);	
 		model.addAttribute("breadcrumb", jcrService.getBreadcrumbNodes(path));
+		model.addAttribute("leftmenu", getLeftmenuJson(path,type,model,request,response));
 		ImageUtil.HDDOff();
 		return "site/asset";
 	}
@@ -390,9 +391,9 @@ public class SiteController extends BaseController {
 	@RequestMapping(value = {"/site/view.html","/site/view"}, method = {RequestMethod.GET,RequestMethod.POST},produces = "text/plain;charset=UTF-8")
 	public String view(String path,String type, String input,String kw,Integer p,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
 		assets(path,type,input,kw,p,model,request,response);
-
+		model.addAttribute("type", type);
 		model.addAttribute("leftmenu", getLeftmenuJson(path,type,model,request,response));
-		if("image".equals(type)) return "site/view_image"; 
+		//if("image".equals(type)) return "site/view_image"; 
 		return "site/view";
 	}
 	
