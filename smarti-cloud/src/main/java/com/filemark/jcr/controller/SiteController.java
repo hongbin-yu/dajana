@@ -1131,7 +1131,7 @@ public class SiteController extends BaseController {
 						+(asset.getPdf()?"<a class=\"btn-default btn-xs pull-right\" href=\"viewpdf.pdf?uid="+asset.getUid()+"\" title=\"PDF\" target=\"_blank\">打开 PDF</a>":"");
 			if(asset.getMp4()) {
 				title ="<figure class=\"pull-left\">"
-						+"<video poster=\"video2jpg.jpg?path="+asset.getPath()+"\" width=\"150\" height=\"100\" controls=\"controls\"  preload=\"none\">"
+						+"<video poster=\"video2jpg.jpg?path="+asset.getPath()+"\" width=\"400\" height=\"300\" controls=\"controls\"  preload=\"none\">"
 						+"<source type=\"video/mp4\" src=\"video.mp4?path="+asset.getPath()+"\"/></video></figture>";
 			}
 			a2news.setTitle(title);
