@@ -689,7 +689,7 @@ public class ImageUtil
     	Process p;
     	int exit=0;
     	String position="";
-    	ProcessBuilder pb = new ProcessBuilder("exiftool","-gpsposition",infile);
+    	ProcessBuilder pb = new ProcessBuilder("exiftool","-c","%.6f","-gpsposition",infile);
     	pb.redirectErrorStream(true);
     	
         try {
@@ -716,9 +716,9 @@ public class ImageUtil
 		}catch (InterruptedException e) {
 			log.error("get height :"+e.getMessage());
 		}
-        int pos =position.indexOf(":");
-        if(pos>0)
-        	position=position.substring(pos+1);
+        String pos[] = position.split(":");
+        if(pos.length>1)
+        	position=pos[1];
         return position;
     	
     }    
