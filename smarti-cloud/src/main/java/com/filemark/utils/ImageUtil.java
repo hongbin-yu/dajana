@@ -689,7 +689,7 @@ public class ImageUtil
     	Process p;
     	int exit=0;
     	String position="";
-    	ProcessBuilder pb = new ProcessBuilder("exiftool","-c","%.6f",infile, "| grep GPS | grep Position");
+    	ProcessBuilder pb = new ProcessBuilder("exiftool","-c","\"%.6f\"",infile, "|","grep GPS","|","grep Position");
     	pb.redirectErrorStream(true);
     	
         try {
