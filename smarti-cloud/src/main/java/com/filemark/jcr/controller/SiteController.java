@@ -1102,8 +1102,9 @@ public class SiteController extends BaseController {
 			int index = 0;
 			for(Folder f:parent.getSubfolders()) {
 				if(f.getUid().equals(folder.getUid())) {
-					parent.getSubfolders().set(index++, folder);
+					parent.getSubfolders().set(index, folder);
 				}
+				index++;
 			}			
 		}
 
