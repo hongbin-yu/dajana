@@ -1866,8 +1866,9 @@ public class JcrServicesImpl implements JcrServices {
 	        Metadata metadata = null;
 			try {
 				String sorientation=ImageUtil.oreintation(infile);
-				log.debug("linux orientation="+sorientation);
-
+				String position = ImageUtil.getPosition(infile);
+				node.setProperty("position", position);
+				log.debug("linux orientation="+sorientation+",position="+position);
 				if("2,3,4,5,6,7".indexOf(sorientation)>=0) {
 					if(!"".equals(sorientation) && (ImageUtil.opencvRotate(infile, infile, Integer.parseInt(sorientation) - 1) == 0 || ImageUtil.autoRotate(infile, infile)==0)) {
 						String wxh=ImageUtil.getWidthxHeight(infile);

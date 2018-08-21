@@ -55,6 +55,8 @@ public class Asset implements SmartiNode, Serializable {
 	private Long total;	
 	@Field
 	private String icon;
+	@Field
+	private String position;
 	
 	private String ocm_classname;
 	private String nodeName;
@@ -377,6 +379,14 @@ public class Asset implements SmartiNode, Serializable {
 
 	public static void setDevicePath(String devicePath) {
 		Asset.devicePath = devicePath;
+	}
+
+	public String getPosition() {
+		return position;
+	}
+
+	public void setPosition(String position) {
+		this.position = position;
 	}
 
 

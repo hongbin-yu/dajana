@@ -52,6 +52,7 @@ import org.apache.tika.mime.MimeTypes;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamResource;
@@ -3207,6 +3208,7 @@ public class SiteController extends BaseController {
 		}
 		return "site/suggestions";
 	}
+
 /*	
 	private String getAssetContent(String path) throws RepositoryException, IOException {
 		String content = null;

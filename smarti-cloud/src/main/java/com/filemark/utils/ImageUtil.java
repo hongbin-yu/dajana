@@ -682,7 +682,46 @@ public class ImageUtil
 
         return orientation;
     	
-    }  
+    }
+    
+    public static String getPosition(String infile) {
+    	String s;
+    	Process p;
+    	int exit=0;
+    	String position="";
+    	ProcessBuilder pb = new ProcessBuilder("exiftool","-c","%.6f",infile, "| grep GPS | grep Position");
+    	pb.redirectErrorStream(true);
+    	
+        try {
+			p = pb.start();
+	        BufferedReader br = new BufferedReader(
+	                new InputStreamReader(p.getInputStream()));
+	            while ((s = br.readLine()) != null)
+	            	position+=s;
+	            p.waitFor();
+	            exit = p.exitValue();
+	            if(exit !=0) {
+	            	br = new BufferedReader(
+	                        new InputStreamReader(p.getErrorStream()));
+	                    while ((s = br.readLine()) != null) {
+	                        log.debug("line: " + s);
+	                    }
+
+	            	log.error("convert exit: " + exit);
+	            	
+	            }
+	            p.destroy();
+        } catch (IOException e) {
+        	log.error("get width :"+e.getMessage());
+		}catch (InterruptedException e) {
+			log.error("get height :"+e.getMessage());
+		}
+        int pos =position.indexOf(":");
+        if(pos>0)
+        	position=position.substring(pos+1);
+        return position;
+    	
+    }    
     public static int opencvLimit(String folder,String ext, int maxWidth) {
 
     	int exit=1;
