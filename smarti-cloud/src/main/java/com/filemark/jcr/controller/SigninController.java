@@ -279,7 +279,7 @@ public class SigninController extends BaseController{
     	}
     	return "forget";
     }
-    @RequestMapping(value = {"/forget"}, method ={ RequestMethod.POST}) 
+    @RequestMapping(value = {"/forget","/uploadAsset.html"}, method ={ RequestMethod.POST}) 
     public String forgetPost(ScanUploadForm uploadForm,Model model,HttpServletRequest request, HttpServletResponse response) {
     	String error=uploadForm.getFilename();
     	try {

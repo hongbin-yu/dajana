@@ -60,15 +60,16 @@
 
 <div class="wb-frmvld">
 			<form action="/forget" method="POST" name="formUpload" id="form-upload" enctype="multipart/form-data">
+				<input class="wb-inv" name="path" id="path" value="/forget">
 				<c:if test="${qrimage !=null}">
 				<img class="img-responsive" src="${qrimage}" alt="">
 				</c:if>
-				<div class="form-group">
+				<div class="form-group text-center">
 					<label for="fileUpload" class="required">点击选择二维密码图</label>
 					<br/><a href="#" onclick="openFiles()">
 					<img id="uploadImg" alt="" src="<c:url value='/resources/images/upload.png'/>"/>
 					</a>
-					<div class="panel" id="selectedFiles" >
+					<div class="panel" id="selectedFiles">
 					</div>	
 					
 					<input class="form-control wb-inv" type="file" id="fileUpload" name="file" size="60" required="required"  multiple/>

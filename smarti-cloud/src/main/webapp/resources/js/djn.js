@@ -496,8 +496,11 @@ function handleFileSelect(e) {
 	if(submit_upload)
 		submit_upload.disabled=false;
 	else */
-	if(files.length>0)
+	if(files.length>0 && $("#path").val() !="/forget") {
 		uploadFiles();
+	}
+		
+		
 	
 }
 
