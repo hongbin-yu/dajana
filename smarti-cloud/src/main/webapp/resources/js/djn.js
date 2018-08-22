@@ -819,7 +819,11 @@ var percentComplete = 0;
 function uploadFile(file) {
 	i++;
 	var running = "<img src=\"/resources/images/ui-anim_basic_16x16.gif\">"+ file.name + " ("+i+"/"+total+")<br/>";
-	selDiv.innerHTML = running;
+	//selDiv.innerHTML = running;
+    var id = "uploading_"+i;
+    var html = '<div id="'+id+'" class="col-md-4 well">'+running+'</div>';
+
+	$("#top_insert").after(html);	
 	var override = $("#override").is(":checked")?"true":"false";
 	//var path = $("#path").val();
 	var formData = new FormData();
@@ -860,8 +864,7 @@ function sendFormData(formData,file) {
     var start = new Date();
     var end = new Date();
     var id = "uploading_"+i;
-    var html = '<div id="'+id+'" class="col-md-4 well">'+running+'</div>';
-	$("#top_insert").after(html);	
+
       $.ajax({
     	    xhr: function() {
     	        var xhr = new window.XMLHttpRequest();
@@ -875,9 +878,7 @@ function sendFormData(formData,file) {
     	                percentComplete = (evt.loaded / evt.total)*100;
     	                var progress = "<h5>"+running+"</h5><progress class=\"full-width\" value=\""+evt.loaded +"\" max=\""+evt.total+"\"><span class=\"wb-inv\">"+percentComplete+"%</span></progress><p>"+(speed/1000).toFixed(2)+" MB/s</p>";
     	                $("#"+id).html(progress);
-    	                //selDiv.innerHTML="<section id=\""+file.name+ " ("+i+"/"+total+")\"><h5>"+running+"</h5><progress class=\"full-width\" value=\""+evt.loaded +"\" max=\""+evt.total+"\"><span class=\"wb-inv\">"+percentComplete+"%</span></progress></section>";
-    		    		//selDiv.innerHTML += "<p>"+(speed/1000).toFixed(2)+" MB/s</p>";
-    	                
+
     	            }
     	       }, false);
 
@@ -916,6 +917,7 @@ function sendFormData(formData,file) {
 		    		if(i % 100 ==0) {
 		    			$("#top_insert").html("");
 		    		}
+
 		    		output(data);
 /*			    	if(i==total || total==0) {
 		    			setTimeout(function () {
