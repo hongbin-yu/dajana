@@ -939,8 +939,8 @@ function getAsset(formData,file) {
 	    		//i++;
 
 	    		if(i <total) {
-	    			uploadFile(files[i]);	
-	    			//setTimeout(checkProgress,200);
+	    			//uploadFile(files[i]);	
+	    			setTimeout(checkProgress,1000);
 	    		}
 		    	if(i==total || total==0) {
 	    			setTimeout(function () {
@@ -1032,9 +1032,9 @@ function checkProgress() {
 
 	if(percentComplete ==1000 && i <total) {
 		uploadFile(files[i]);
-		setTimeout(checkProgress,1000);
+		setTimeout(checkProgress,2000);
 	}else if(i<total){
-		setTimeout(checkProgress,1000);
+		setTimeout(checkProgress,2000);
 	}else if(i==total || total==0){
 		var override = $("#override").is(":checked")?"true":"false";
 		var path = $("#pagePath").val();
@@ -1043,12 +1043,12 @@ function checkProgress() {
 	    	if(percentComplete ==1000 && i==total) {
 	    		setTimeout(function() {window.location.reload();},2000);
 	    	}else {
-	    		setTimeout(checkProgress,1000);
+	    		setTimeout(checkProgress,2000);
 	    	}			
 		}
-		setTimeout(checkProgress,1000);
+		setTimeout(checkProgress,2000);
 	}else {
-		setTimeout(checkProgress,1000);
+		setTimeout(checkProgress,2000);
 	}
 	
 
