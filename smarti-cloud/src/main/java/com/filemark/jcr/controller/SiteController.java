@@ -2088,17 +2088,23 @@ public class SiteController extends BaseController {
 			}else if( path==null || "".equals(path)) {
 				return "error:路径没找到";
 			}
-			File file =new File(jcrService.getDevice()+path);
-			if(!file.exists()) {
-				file = new File(jcrService.getBackup()+path);
-			}
-			if(file.exists()) {
-				if(file.isDirectory()) {
-					FileUtils.cleanDirectory(file);
+			File deivce =new File(jcrService.getDevice()+path);
+
+			File backup = new File(jcrService.getBackup()+path);
+
+			if(deivce.exists()) {
+				if(deivce.isDirectory()) {
+					FileUtils.cleanDirectory(deivce);
 				}
-				file.delete();				
+				deivce.delete();				
 			}
 
+			if(backup.exists()) {
+				if(backup.isDirectory()) {
+					FileUtils.cleanDirectory(backup);
+				}
+				backup.delete();				
+			}
 
 			return jcrService.deleteNode(path);
 		} catch (RepositoryException e) {
