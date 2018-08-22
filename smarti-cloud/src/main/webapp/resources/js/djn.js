@@ -706,7 +706,7 @@ function drop(ev) {
 		    if(items !=null) {
 			    var entry = items[n].webkitGetAsEntry();
 			    if(entry.isDirectory) {
-			        selDiv.innerHTML=  "<section class=\"alert alert-info\"><h2 class=\"h3\">"+i18n("create_folder")+droppedFiles[n].name+"...</h2></section>"; // 
+			        selDiv.innerHTML=  "<section class=\"alert alert-info\"><h3>"+i18n("create_folder")+droppedFiles[n].name+"...</h3></section>"; // 
 			        $("#foldername").val(droppedFiles[n].name);
 			        $("#titlefolder").val(droppedFiles[n].name);
 			        //createFolder();
