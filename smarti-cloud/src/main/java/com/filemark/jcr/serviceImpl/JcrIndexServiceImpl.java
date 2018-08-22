@@ -49,7 +49,7 @@ public class JcrIndexServiceImpl implements JcrIndexService {
 		} catch (RepositoryException e1) {
 			log.error("Device2Backup"+e1.getMessage());;
 		}
-		Date start = new Date();
+/*		Date start = new Date();
 		String assetsQuery = "select * from [nt:base] AS s WHERE ISDESCENDANTNODE([/]) and s.delete not like 'true' and s.ocm_classname='com.filemark.jcr.model.Asset' and s.contentType like 'image%' and s.updated not like 'true'  order by s.path";
 		WebPage<Asset> assets = jcrService.searchAssets(assetsQuery, 500, 0);
 		for(Asset asset:assets.getItems()) {
@@ -110,7 +110,7 @@ public class JcrIndexServiceImpl implements JcrIndexService {
 			} catch (IOException e) {
 				log.error(e.getMessage());
 			}
-		}
+		}*/
 /*		
 		try {
 			ImageUtil.HDDSleep();

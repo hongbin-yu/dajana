@@ -1657,7 +1657,7 @@ public class JcrServicesImpl implements JcrServices {
         		}else {
             		image = ImageIO.read(JcrUtils.readFile(getNode(path+"/original")));        			
         		}
-        		updatePropertyByPath(path, "updated", "true");
+        		//updatePropertyByPath(path, "updated", "true");
 
         		if(image.getWidth() < x) {
         			return null;
@@ -1668,7 +1668,7 @@ public class JcrServicesImpl implements JcrServices {
         		//if(!iconfile.exists()) iconfile.createNewFile();
         		OutputStream os = new FileOutputStream(getFile(path)+"/x"+x+".jpg");
     			ImageIO.write(resizedImg, "jpeg", os);
-    			updatePropertyByPath(path, "icon", device+path+"/x"+x+".jpg");
+    			//updatePropertyByPath(path, "icon", device+path+"/x"+x+".jpg");
     			os.close();
     			
        			//InputStream is = new ByteArrayInputStream(os.toByteArray());
@@ -1704,8 +1704,8 @@ public class JcrServicesImpl implements JcrServices {
     				if(exit != 0)
     					exit =  ImageUtil.convert(infile, outfile, w, h);
     				if(exit==0) {
-    					updatePropertyByPath(path, "icon", outfile);
-    					updatePropertyByPath(path, "updated", "true");
+    					//updatePropertyByPath(path, "icon", outfile);
+    					//updatePropertyByPath(path, "updated", "true");
     				} else {
 						createFile(path,w);							
 					}

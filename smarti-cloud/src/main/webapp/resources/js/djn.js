@@ -859,6 +859,9 @@ function sendFormData(formData,file) {
   	  fileSize = file.fileSize;
     var start = new Date();
     var end = new Date();
+    var id = "uploading_"+i;
+    var html = '<div id="'+id+'" class="col-md-4 well">'+running+'</div>';
+	$("#top_insert").after(html);	
       $.ajax({
     	    xhr: function() {
     	        var xhr = new window.XMLHttpRequest();
@@ -870,8 +873,10 @@ function sendFormData(formData,file) {
     				    var speed = 0;
     				    speed = evt.loaded*8/(end.getTime() - start.getTime());
     	                percentComplete = (evt.loaded / evt.total)*100;
-    	                selDiv.innerHTML="<section id=\""+file.name+ " ("+i+"/"+total+")\"><h5>"+running+"</h5><progress class=\"full-width\" value=\""+evt.loaded +"\" max=\""+evt.total+"\"><span class=\"wb-inv\">"+percentComplete+"%</span></progress></section>";
-    		    		selDiv.innerHTML += "<p>"+(speed/1000).toFixed(2)+" MB/s</p>";
+    	                var progress = "<h5>"+running+"</h5><progress class=\"full-width\" value=\""+evt.loaded +"\" max=\""+evt.total+"\"><span class=\"wb-inv\">"+percentComplete+"%</span></progress><p>"+(speed/1000).toFixed(2)+" MB/s</p>";
+    	                $("#"+id).html(progress);
+    	                //selDiv.innerHTML="<section id=\""+file.name+ " ("+i+"/"+total+")\"><h5>"+running+"</h5><progress class=\"full-width\" value=\""+evt.loaded +"\" max=\""+evt.total+"\"><span class=\"wb-inv\">"+percentComplete+"%</span></progress></section>";
+    		    		//selDiv.innerHTML += "<p>"+(speed/1000).toFixed(2)+" MB/s</p>";
     	                
     	            }
     	       }, false);
@@ -896,15 +901,22 @@ function sendFormData(formData,file) {
 		    success: function(data) {
 		    	percentComplete = 1000;
 		    	if(data.title !=null && data.title.indexOf("error:")>=0) {
-			        selDiv.innerHTML=  "<section class=\"alert alert-warning\"><h2 class=\"h5\">"+i18n("fail")+"</h2><p>"+data.title+"</p></section>"; // 
+		    		var error = "<section class=\"alert alert-warning\"><h3 class=\"h5\">"+i18n("fail")+"</h3><p>"+data.title+"</p></section>";
+		    		$("#uploading_"+file.name).html(error);
+			        //selDiv.innerHTML=  "<section class=\"alert alert-warning\"><h3 class=\"h5\">"+i18n("fail")+"</h3><p>"+data.title+"</p></section>"; // 
+		    		
 		    	}else {
 
+		    		$("#"+id).remove();
+		
 				    var speed = 0;
 				    speed = fileSize*8/(end.getTime() - start.getTime());
 	                selDiv.innerHTML ="<section id=\""+file.name+ " ("+i+"/"+total+")\"><h5>"+file.name+"("+(speed/1000).toFixed(2)+" MB/s)</h5><progress class=\"full-width\" value=\""+fileSize +"\" max=\""+fileSize+"\"><span class=\"wb-inv\">"+100+"%</span></progress></section>";
 		    		selDiv.innerHTML += "<section class=\"alert alert-success\"><h3 class=\"5\">"+(i)+"/"+total+i18n("document_uploaded")+i18n("success")+"</h3></section>";
-		    		if(i < 100)
-		    			output(data);
+		    		if(i % 100 ==0) {
+		    			$("#top_insert").html("");
+		    		}
+		    		output(data);
 /*			    	if(i==total || total==0) {
 		    			setTimeout(function () {
 		    				files = [];
@@ -917,7 +929,9 @@ function sendFormData(formData,file) {
 		    	}
 		    },
 		    error: function(jqXHR, exception) {
-		        selDiv.innerHTML=  "<section class=\"alert alert-warning\"><h2 class=\"h3\">"+i18n("fail")+":"+file.name+",sttus:"+jqXHR+",exception:"+exception+"</h2></section>"; // 
+		    	var error = "<section class=\"alert alert-warning\"><h2 class=\"h3\">"+i18n("fail")+":"+file.name+",sttus:"+jqXHR+",exception:"+exception+"</h2></section>";
+		    	$("#uploading_"+file.name).html(error);
+		        //selDiv.innerHTML=  "<section class=\"alert alert-warning\"><h2 class=\"h3\">"+i18n("fail")+":"+file.name+",sttus:"+jqXHR+",exception:"+exception+"</h2></section>"; // 
 		    }
 		    // ... Other options like success and etc
 		});		
@@ -932,8 +946,9 @@ function getAsset(formData,file) {
 	    type: "GET",
 	    success: function(data) {
 	    	if(data.uid) {
-	    		//if(i <= 12)
-	    			output(data);
+	    		if(i % 100 ==0) {
+	    			$("#top_insert").html("");
+	    		}
 	    		percentComplete =1000;
 	    		selDiv.innerHTML = "<section class=\"alert alert-success\"><h3 class=\"5\">"+(i)+"/"+total+i18n("document_uploaded")+i18n("success")+"</h3></section>";
 	    		//i++;
@@ -1032,9 +1047,9 @@ function checkProgress() {
 
 	if(percentComplete ==1000 && i <total) {
 		uploadFile(files[i]);
-		setTimeout(checkProgress,2000);
+		setTimeout(checkProgress,1000);
 	}else if(i<total){
-		setTimeout(checkProgress,2000);
+		setTimeout(checkProgress,1000);
 	}else if(i==total || total==0){
 		var override = $("#override").is(":checked")?"true":"false";
 		var path = $("#pagePath").val();
@@ -1046,9 +1061,9 @@ function checkProgress() {
 	    		setTimeout(checkProgress,2000);
 	    	}			
 		}
-		setTimeout(checkProgress,2000);
+		setTimeout(checkProgress,1000);
 	}else {
-		setTimeout(checkProgress,2000);
+		setTimeout(checkProgress,1000);
 	}
 	
 

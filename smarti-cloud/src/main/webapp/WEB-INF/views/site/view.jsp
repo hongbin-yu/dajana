@@ -20,7 +20,7 @@
 <div class="container">
      <main role="main" property="mainContentOfPage" class="col-md-9 col-md-push-3">
         <h1 id="wb-cont">
-        <spring:message code="djn.browse"/> - ${folder.title} <a href="view.html?path=${folder.path}&type=${type}" title="刷屏"><span class="glyphicon glyphicon-refresh"></span></a></h1>
+        <spring:message code="djn.browse"/> - ${folder.title} <a href="view.html?path=${folder.path}&type=${type}" title="刷屏"><span class="glyphicon glyphicon-refresh"></span></a>			<a class="btn btn-default pull-right" href="/site/assets.html?path=${folder.path}&type=${type }" title="<spring:message code="djn.cloud"/><spring:message code="djn.edit"/>"><span class="glyphicon glyphicon-edit pull-right"></span></a></h1>
         ${folder.description }         
 	<div id="view_insert">
 	</div>
@@ -214,8 +214,6 @@
 		</div>  --%>
     <h2 id="wb-sec-h" class="wb-inv">左菜单</h2>
     <section class="list-group menu list-unstyled">	
-			<a class="btn btn-default pull-right" href="/site/assets.html?path=${folder.path}&type=${type }" title="<spring:message code="djn.cloud"/><spring:message code="djn.edit"/>"><span class="glyphicon glyphicon-edit pull-right"></span></a>
-    
         <h3>
         <c:if test="${folder.parent!='/assets' }">
         <a href='<c:url value="view.html?path=${folder.parent}&type=${type }"></c:url>'>${folder.parentTitle}<span class="glyphicon glyphicon-backward"></span>

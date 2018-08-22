@@ -21,7 +21,8 @@
 <div class="row">
      <main role="main" property="mainContentOfPage" class="col-md-9 col-md-push-3">
         <h1 id="wb-cont">		        <c:if test="${folder.parent!='/assets' }"><a href="assets.html?path=${folder.parent}&type=${type}"><span class="glyphicon glyphicon-backward"></span></a></c:if>
-        <spring:message code="djn.cloud"/><spring:message code="djn.edit"/> - ${folder.title} <a href="?path=${folder.path}&type=${type}" title="刷屏"><span class="glyphicon glyphicon-refresh"></span></a></h1>
+        <spring:message code="djn.cloud"/><spring:message code="djn.edit"/> - ${folder.title} <a href="?path=${folder.path}&type=${type}" title="刷屏"><span class="glyphicon glyphicon-refresh"></span></a>			<a class="btn btn-default pull-right" href="/site/view.html?path=${folder.path}&type=${type}" title="快速阅览"><span class="glyphicon glyphicon-eye-open pull-right"></span></a>
+        </h1>
         ${folder.description }
 <div class="row">
 	<div id="top_folder">	
@@ -175,7 +176,6 @@
 			<input type="hidden" id="pageNumber" name="pageNumber" value="${assets.pageNumber}"/>	
 			<input type="hidden" id="availablePages" name="availablePages" value="${assets.availablePages}"/>				
 			<input type="hidden" id="topage" name="topage" value="assetsmore"/>			    
-			<a class="btn btn-default pull-right" href="/site/view.html?path=${folder.path}&type=${type}" title="快速阅览"><span class="glyphicon glyphicon-eye-open pull-right"></span></a>
 			<a href="javascript:deleteFiles()" class="btn bnt-default btn-danger visible-xs pull-right" title="删除"><span class="glyphicon glyphicon-remove"></span></a>
 			<a href="javascript:openPdf()" class="btn btn-primary visible-xs pull-right" title="打开PDF"><span class="glyphicon glyphicon-open"></span></a>
 					<div class="form-group">
@@ -190,28 +190,27 @@
 					</select>
 					</div>
 			</form>
-			<hr/>
+					<div class="checkbox form-group">
+			    		<label for="toggle"><input id="toggle" type="checkbox" onClick="toggle(this)" title="选择切换"/>全选切换</label>
+					</div>				
 			<form action="upload.html" method="POST" id="form-upload" enctype="multipart/form-data">
 				<input type="hidden" id="path" name="path" value="${folder.path}"/>
 				<input type="hidden" id="type"  name="type" value="${type}"/>
 				<input type="hidden" id="input" name="input" value="${input}"/>
 				<input type="hidden" name="redirect" value="assets.html?path=${folder.path}&type=${type}&input=${input}"/>
-						
+					<div class="checkbox">
+					<label for="override"><input type="checkbox" name="override" value="true" id="override" size="35"> 覆盖旧文件如果重名</label>
+					</div>						
 				<div class="form-group" ondrop="drop(event)" ondragover="allowDrop(event)" style="border:1px solid #aaaaaa;">
 					<label for="fileUpload" class="required"><a href="#" onclick="openFiles()"><span id="openFiles" class="field-name"><spring:message code="djn.select_dragging_drop"/> </span></a></label>
 					<br/><a href="#" onclick="openFiles()"><img id="uploadImg" path="${folder.path}" alt="" src="<c:url value='/resources/images/upload.png'/>"/></a>
 					<div class="panel" id="selectedFiles">
 					</div>	
-					<div class="checkbox">
-					<label for="override"><input type="checkbox" name="override" value="true" id="override" size="35"> 覆盖旧文件如果重名</label>
-					</div>
 					<input class="form-control wb-inv" type="file" id="fileUpload" name="file" size="60" required="required"  multiple/>
 <%-- 				<input id="submit_upload" type="button" onclick="javascript:uploadFiles()" value="<spring:message code="djn.upload"/>" class="btn btn-primary" disabled> <input type="reset" value="<spring:message code="djn.clear"/>" onclick="resetSelDiv()" class="btn btn-default"> --%>
 				</div>
 			</form>			
-					<div class="checkbox form-group">
-			    		<label for="toggle"><input id="toggle" type="checkbox" onClick="toggle(this)" title="选择切换"/>全选切换</label>
-					</div>				 			
+			 			
             <details id="${folder.uid }">
             <summary>${folder.title}
             </summary>
@@ -366,7 +365,7 @@
 			</div>	            
             <details>
             <summary>${item.title}</summary>
-                <a class="wb-lbx btn btn-danger btn-xs" title="<spring:message code="djn.delete"/>" href="<c:url value="/site/deleteasset.html?path=${item.path }"/>"><span class="glyphicon glyphicon-remove"></span><spring:message code="djn.delete"/></a>
+                <a class="wb-lbx btn btn-danger btn-xs" title="<spring:message code="djn.delete"/>" href="<c:url value="/site/deleteasset.html?path=${item.path }"/>"><span class="glyphicon glyphicon-remove"></span><spring:message code="djn.delete"/></a>(${item.path })
 				<div class="form-group">
 				<label for="foldertitle${loop.index }"><spring:message code="djn.title"/>&nbsp;</label><input class="form-control" id="foldertitle${loop.index }" name="jcr:title" value="${item.title}" size="25" uid="${item.uid}"  onchange="updateNode(this)"/>
 				</div>            
