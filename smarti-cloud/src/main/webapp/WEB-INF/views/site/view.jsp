@@ -4,19 +4,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" session="false" %>
 <c:set var="contentPath"><c:url value="/"></c:url></c:set>
-<nav role="navigation" id="wb-bc" property="breadcrumb">
-<h2>你在这里:</h2>
-<div class="container">
-<div class="row">
-        <ol class="breadcrumb">
-        <li><spring:message code="djn.cloud"/></li>
-        <c:forEach items="${breadcrumb}" var="item" varStatus="loop">
-        	<li><a href="view.htmp?path=${item.path }">${item.title}</a>
-        </c:forEach>
-        </ol>
-</div>
-</div>
-</nav>  
+ 
 <div class="container">
      <main role="main" property="mainContentOfPage" class="col-md-9 col-md-push-3">
         <h1 id="wb-cont">

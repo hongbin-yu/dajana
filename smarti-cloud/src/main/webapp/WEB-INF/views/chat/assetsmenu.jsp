@@ -20,10 +20,10 @@
 <div class="col-md-12">
 <ul class="list-inline margin-bottom-none">
 <authz:authorize ifAnyGranted="ROLE_USER,ROLE_ADMINISTRATOR,ROLE_OWNER">
-<li><a title="<spring:message code="djn.goto_cloud"></spring:message>" href="<c:url value="/site/assets.html"/>"><span class="glyphicon glyphicon-cloud"></span><spring:message code="djn.cloud"></spring:message></a></li>
+<%-- <li><a title="<spring:message code="djn.goto_cloud"></spring:message>" href="<c:url value="/site/assets.html"/>"><span class="glyphicon glyphicon-cloud"></span><spring:message code="djn.cloud"></spring:message></a></li>
 <li><a title="<spring:message code="djn.website"></spring:message>" href="<c:url value="/site/editor.html"/>"><span class="glyphicon glyphicon-edit"></span> <spring:message code="djn.website"></spring:message></a></li>
 <li><a href='<c:url value="/protected/youchat.html"></c:url>'><span class="glyphicon glyphicon-envelope"></span> <spring:message code="djn.chat"></spring:message><span class="badge"></span></a></li>
-<li><a href="javascript:openPdf()" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-open"></span><spring:message code="djn.open"></spring:message>PDF</a>
+ --%><li><a href="javascript:openPdf()" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-open"></span><spring:message code="djn.open"></spring:message>PDF</a>
 <li><a href="<c:url value="/logout"/>"><span class="glyphicon glyphicon-log-out"></span><spring:message code="djn.logout"/></a></li>
 </authz:authorize>
 <li><a class="wb-lbx lbx-modal" href="#" title="${user.name }"><span class="glyphicon glyphicon-user"></span>${user.title }</a></li>
@@ -85,15 +85,19 @@
 </div>
 </div>
 
-<nav role="navigation" id="wb-sm" data-trgt="mb-pnl" class="wb-menu visible-md visible-lg" typeof="SiteNavigationElement">
-<div class="pnl-strt container visible-md visible-lg nvbar">
-<h2><spring:message code="djn.main_menu"/></h2>
-<div class="row">
-<ul class="list-inline menu" role="menubar">
-${navigation }
-</ul>
-</div>
-</div>
+<nav role="navigation" id="wb-sm" data-trgt="mb-pnl" class="wb-menu visible-md visible-lg" style="border-top:8px solid #335075" typeof="SiteNavigationElement">
+	<h2><spring:message code="djn.you_are_here"/>:</h2>
+	<div class="container">
+	<div class="row">
+		<ul class="list-inline menu" role="menubar">
+			<li><a title="<spring:message code="djn.goto_cloud"></spring:message>" href="<c:url value="/site/view.html"/>"><span class="glyphicon glyphicon-cloud"></span><spring:message code="djn.cloud"></spring:message></a></li>
+			<li><a class="item" title="<spring:message code="djn.website"></spring:message>" href="<c:url value="editor.html"/>"><span class="glyphicon glyphicon-globe"></span><spring:message code="djn.website"></spring:message></a></li>
+			<li><a class="item" href='<c:url value="/protected/youchat.html"></c:url>' title="<spring:message code="djn.online_chat"></spring:message>"><span class="glyphicon glyphicon-envelope"></span><spring:message code="djn.chat"></spring:message><span class="badge"></span></a></li>
+			<li><a class="item" href='<c:url value="/protected/youlook.html"></c:url>' title="<spring:message code="djn.online_chat"></spring:message>"><span class="glyphicon glyphicon-facetime-video"></span><spring:message code="djn.youlook"></spring:message><span class="badge"></span></a></li>
+		
+		</ul>
+	</div>
+	</div>
 </nav>
 <nav role="navigation" id="wb-bc" property="breadcrumb">
 	<h2><spring:message code="djn.you_are_here"/>:</h2>

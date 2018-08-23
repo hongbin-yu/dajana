@@ -4,24 +4,14 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" session="false" %>
 <c:set var="contentPath"><c:url value="/"></c:url></c:set>
-<nav role="navigation" id="wb-bc" property="breadcrumb">
-<h2>你在这里:</h2>
-<div class="container">
-<div class="row">
-        <ol class="breadcrumb">
-        <li><spring:message code="djn.cloud"/></li>
-        <c:forEach items="${breadcrumb}" var="item" varStatus="loop">
-        	<li><a href="assets.htmp?path=${item.path }">${item.title}</a>
-        </c:forEach>
-        </ol>
-</div>
-</div>
-</nav>        
+      
 <div class="container">
 <div class="row">
      <main role="main" property="mainContentOfPage" class="col-md-9 col-md-push-3">
-        <h1 id="wb-cont">		        <c:if test="${folder.parent!='/assets' }"><a href="assets.html?path=${folder.parent}&type=${type}"><span class="glyphicon glyphicon-backward"></span></a></c:if>
+        <h1 id="wb-cont"><c:if test="${folder.parent!='/assets' }"><a href="assets.html?path=${folder.parent}&type=${type}"><span class="glyphicon glyphicon-backward"></span></a></c:if>
         <spring:message code="djn.cloud"/><spring:message code="djn.edit"/> - ${folder.title} <a href="?path=${folder.path}&type=${type}" title="刷屏"><span class="glyphicon glyphicon-refresh"></span></a>			<a class="btn btn-default pull-right" href="/site/view.html?path=${folder.path}&type=${type}" title="快速阅览"><span class="glyphicon glyphicon-eye-open pull-right"></span></a>
+        <a href="javascript:deleteFiles()" class="btn bnt-default btn-danger pull-right" title="删除"><span class="glyphicon glyphicon-remove"></span></a>
+		<a href="javascript:openPdf()" class="btn btn-primary pull-right" title="打开PDF"><span class="glyphicon glyphicon-open"></span></a>
         </h1>
         ${folder.description }
 <div class="row">
@@ -176,8 +166,6 @@
 			<input type="hidden" id="pageNumber" name="pageNumber" value="${assets.pageNumber}"/>	
 			<input type="hidden" id="availablePages" name="availablePages" value="${assets.availablePages}"/>				
 			<input type="hidden" id="topage" name="topage" value="assetsmore"/>			    
-			<a href="javascript:deleteFiles()" class="btn bnt-default btn-danger visible-xs pull-right" title="删除"><span class="glyphicon glyphicon-remove"></span></a>
-			<a href="javascript:openPdf()" class="btn btn-primary visible-xs pull-right" title="打开PDF"><span class="glyphicon glyphicon-open"></span></a>
 					<div class="form-group">
 					<label for="type"><spring:message code="djn.display"/></label>
 					<select id="type" name="type" onchange="this.form.submit()">
@@ -333,63 +321,6 @@
         </ul>
       </details>  
     </div>
-
-<%-- <div class="wb-inv" id="div_uid">    
-<div id="{uid}" class="col-md-4">
-	<div class="checkbox">
-		<input type="checkbox" class="checkbox" name="puid" value="{uid}"><a title="打开PDF" href="<c:url value="viewpdf?uid={uid}"/>" target="_BLANK"><img title="点击选中" src='<c:url value="/resources/images/pdf.gif"></c:url>'></a>
-		<a class="wb-lbx-edit" href="<c:url value='{link}'></c:url>" target="_BLANK"><imgreplace id="img{uid}" src="<c:url value='{icon}'></c:url>" class="img-responsive" draggable="true"></imgreplace></a>
-	</div>
-	<details>
-		<summary><span class="glyphicon glyphicon-edit"></span> {title}</summary>
- 		<div class="form-group">
-		<label for="title{uid}"><spring:message code="djn.title"/>&nbsp;</label><input class="form-control" id="title{uid}" name="jcr:title" value="" size="25" uid="{uid}"  onchange="updateNode(this)"/>
-		</div>
-		<div class="form-group">
-		<label for="url{uid}"><spring:message code="djn.link"/>&nbsp;</label><input class="form-control" id="url{uid}" name="url" value="" size="25" uid="{uid}"  onchange="updateNode(this)"/>
-		</div>
-	</details>
-</div>	 
-</div>	 --%>   
-	    <div class="clearfix"></div>
-<!-- 	    <div id="top_folder">	 -->
-<%-- 	    <c:if test="${folders.pageCount>3 && assets.pageCount > 12}">
-	    <details>
-	    <summary>${folders.pageCount} 子目录</summary>
-	    </c:if> --%>
-        <c:forEach items="${folders.items}" var="item" varStatus="loop">
-            <div id="${item.uid}" class="row well">
-<%--             <a title="<spring:message code="djn.open"/>PDF" href="viewf2p?path=${item.path}" target="_BLANK"><img title="<spring:message code="djn.open"/>PDF" src='<c:url value="/resources/images/pdf.gif"></c:url>'></a> --%>
-            <a href="assets.html?path=${item.path}&type=${type}"> <img id="folder${item.uid }" path="${item.path }"  ondrop="drop(event)" ondragover="allowDrop(event)" alt="${item.title}" class="img-responsive" src='<c:url value="viewfolder?path=${item.path}"></c:url>'/></a>
-			<div class="panel" id="selectFiles${item.uid }">
-			</div>	            
-            <details>
-            <summary>${item.title}</summary>
-                <a class="wb-lbx btn btn-danger btn-xs" title="<spring:message code="djn.delete"/>" href="<c:url value="/site/deleteasset.html?path=${item.path }"/>"><span class="glyphicon glyphicon-remove"></span><spring:message code="djn.delete"/></a>(${item.path })
-				<div class="form-group">
-				<label for="foldertitle${loop.index }"><spring:message code="djn.title"/>&nbsp;</label><input class="form-control" id="foldertitle${loop.index }" name="jcr:title" value="${item.title}" size="25" uid="${item.uid}"  onchange="updateNode(this)"/>
-				</div>            
-				<div class="form-group">
-				<label for="folderorderby${loop.index }"><spring:message code="djn.order"/>&nbsp;</label>
-				<select class="form-control" id="folderorderby${loop.index }" name="orderby" value="${item.orderby}" uid="${item.uid}"  onchange="updateNode(this)">
-					<option value="lastModified desc"><spring:message code="djn.lastModified_desc"/></option>
-					<option value="lastModified asc" <c:if test="${item.orderby=='lastModified asc'}">selected</c:if>><spring:message code="djn.lastModified_asc"/></option>
-					<option value="originalDate desc" <c:if test="${item.orderby=='originalDate desc'}">selected</c:if>><spring:message code="djn.docDate_desc"/></option>
-					<option value="originalDate asc" <c:if test="${item.orderby=='originalDate asc'}">selected</c:if>><spring:message code="djn.docDate_asc"/></option>
-				</select>
-				<div class="checkbox">
-				<label for="intranet"><input type="checkbox" name="intranet" value="true" id="intranet" <c:if test="${item.intranet=='true' }">checked</c:if> size="35"  uid="${item.uid }" onchange="updateNode(this)"> 内部网（外网不能访问目录下文件）</label>
-				</div>					
-				</div>   
-            </details>
-            </div>  
-            	<c:if test="${(loop.index+1) % 3 ==0  }"><div class="clearfix"></div></c:if>         
-        </c:forEach> 
-<%-- 	    <c:if test="${folders.pageCount>3 && assets.pageCount > 12}">
-        </details>	
-        </c:if> --%>
- <!--        </div>	 -->
-        <div class="clearfix"></div>	    
 
 </nav>
 </div>

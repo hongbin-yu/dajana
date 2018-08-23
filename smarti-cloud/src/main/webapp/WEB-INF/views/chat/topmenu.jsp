@@ -20,10 +20,10 @@
 <div class="col-md-12">
 <ul class="list-inline margin-bottom-none">
 <authz:authorize ifAnyGranted="ROLE_USER,ROLE_ADMINISTRATOR,ROLE_OWNER">
-<li><a href='<c:url value="/site/assets.html"></c:url>'><span class="glyphicon glyphicon-cloud"></span><spring:message code="djn.cloud"/></a></li>
+<%-- <li><a href='<c:url value="/site/assets.html"></c:url>'><span class="glyphicon glyphicon-cloud"></span><spring:message code="djn.cloud"/></a></li>
 <li><a title="编辑首页" href="<c:url value="/site/editor.html"/>"><span class="glyphicon glyphicon-edit"></span><spring:message code="djn.website"/></a></li>
 <li><a href='<c:url value="/protected/youlook.html"></c:url>' title="<spring:message code="djn.online_chat"></spring:message>"><span class="glyphicon glyphicon-facetime-video"></span><spring:message code="djn.youlook"></spring:message><span class="badge"></span></a></li>
-<li><a href="/protected/profile.html"><button class="btn btn-warning btn-xs" title="${user.role }"><span class="glyphicon glyphicon-user"></span><authz:authentication property='name' /></button></a></li>
+ --%><li><a href="/protected/profile.html"><button class="btn btn-warning btn-xs" title="${user.role }"><span class="glyphicon glyphicon-user"></span><authz:authentication property='name' /></button></a></li>
 <li><a href="<c:url value="/logout"/>"><span class="glyphicon glyphicon-log-out"></span><spring:message code="djn.logout"/></a></li>
 <%-- <li><a href="/mycart.html" title="<authz:authentication property="name" />"><authz:authentication property="name" /><img title="点击进入购物车" src='<c:url value="/resources/images/mycart.png"></c:url>'><span class="badge">0</span></a></li>
  --%></authz:authorize>
@@ -68,14 +68,31 @@
 </div>
 </div>
 <nav role="navigation" id="wb-sm" data-trgt="mb-pnl" class="wb-menu visible-md visible-lg" style="border-top:8px solid #335075" typeof="SiteNavigationElement">
-</nav>
-<nav role="navigation" id="wb-bc" property="breadcrumb">
-	<h2>你在这里:</h2>
+	<h2><spring:message code="djn.you_are_here"/>:</h2>
 	<div class="container">
 	<div class="row">
-	${page.breadcrumb}
+		<ul class="list-inline menu" role="menubar">
+			<li><a class="item" title="<spring:message code="djn.goto_cloud"></spring:message>" href="<c:url value="/site/view.html"/>?path=${folder.path}"><span class="glyphicon glyphicon-eye-open"></span><spring:message code="djn.cloud"></spring:message></a></li>
+			<li><a class="item" title="<spring:message code="djn.website"></spring:message>" href="<c:url value="/site/editor.html"/>"><span class="glyphicon glyphicon-globe"></span><spring:message code="djn.website"></spring:message></a></li>
+			<li><a class="item" href='<c:url value="/protected/youchat.html"></c:url>' title="<spring:message code="djn.online_chat"></spring:message>"><span class="glyphicon glyphicon-envelope"></span><spring:message code="djn.chat"></spring:message><span class="badge"></span></a></li>
+			<li><a class="item" href='<c:url value="/protected/youlook.html"></c:url>' title="<spring:message code="djn.online_chat"></spring:message>"><span class="glyphicon glyphicon-facetime-video"></span><spring:message code="djn.youlook"></spring:message><span class="badge"></span></a></li>
+		
+		</ul>
 	</div>
 	</div>
+</nav>
+<nav role="navigation" id="wb-bc" property="breadcrumb">
+<h2>你在这里:</h2>
+<div class="container">
+<div class="row">
+        <ol class="breadcrumb">
+        <li><a class="item" href='<c:url value="/protected/youchat.html"></c:url>' title="<spring:message code="djn.online_chat"></spring:message>"><spring:message code="djn.chat"></spring:message></a></li>
+        <c:forEach items="${breadcrumb}" var="item" varStatus="loop">
+        	<li><a href="assets.htmp?path=${item.path }">${item.title}</a>
+        </c:forEach>
+        </ol>
+</div>
+</div>
 </nav>
 <div class="container" id="header_message">
 </div>
