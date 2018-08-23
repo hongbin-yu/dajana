@@ -818,12 +818,8 @@ function uploadUrl() {
 var percentComplete = 0;
 function uploadFile(file) {
 	i++;
-	var running = "<img src=\"/resources/images/ui-anim_basic_16x16.gif\">"+ file.name + " ("+i+"/"+total+")<br/>";
+	//var running = "<img src=\"/resources/images/ui-anim_basic_16x16.gif\">"+ file.name + " ("+i+"/"+total+")<br/>";
 	//selDiv.innerHTML = running;
-    var id = "uploading_"+i;
-    var html = '<div id="'+id+'" class="col-md-4 well">'+running+'</div>';
-
-	$("#top_insert").after(html);	
 	var override = $("#override").is(":checked")?"true":"false";
 	//var path = $("#path").val();
 	var formData = new FormData();
@@ -903,7 +899,7 @@ function sendFormData(formData,file) {
 		    	percentComplete = 1000;
 		    	if(data.title !=null && data.title.indexOf("error:")>=0) {
 		    		var error = "<section class=\"alert alert-warning\"><h3 class=\"h5\">"+i18n("fail")+"</h3><p>"+data.title+"</p></section>";
-		    		$("#uploading_"+file.name).html(error);
+		    		$("#"+id).html(error);
 			        //selDiv.innerHTML=  "<section class=\"alert alert-warning\"><h3 class=\"h5\">"+i18n("fail")+"</h3><p>"+data.title+"</p></section>"; // 
 		    		
 		    	}else {
@@ -940,26 +936,31 @@ function sendFormData(formData,file) {
 }
 
 function getAsset(formData,file) {
+	var running = "<img src=\"/resources/images/ui-anim_basic_16x16.gif\">"+ file.name + " ("+i+"/"+total+")<br/>";
+
 	var filename = file.name;
 	var lastModified = file.lastModified==null?0:file.lastModified;
 	//var path = $("#path").val();
     var id = "uploading_"+i;
+    var html = '<div id="'+id+'" class="col-md-4 well">'+running+'</div>';
+	$("#top_insert").after(html);	
     $.ajax({
 	    url: 'getasset.json?path='+path+'&filename='+filename+'&lastModified='+lastModified,
 	    type: "GET",
 	    success: function(data) {
+    		$("#"+id).remove();
 	    	if(data.uid) {
-	    		$("#"+id).remove();
 	    		if(i % 100 ==0) {
 	    			$("#top_insert").html("");
 	    		}
+	    		$("#"+data.uid).remove();
 	    		percentComplete =1000;
 	    		selDiv.innerHTML = "<section class=\"alert alert-success\"><h3 class=\"5\">"+(i)+"/"+total+i18n("document_uploaded")+i18n("success")+"</h3></section>";
 	    		//i++;
-
+	    		output(data);
 	    		if(i <total) {
-	    			//uploadFile(files[i]);	
-	    			setTimeout(checkProgress,1000);
+	    			uploadFile(files[i]);	
+	    			//setTimeout(checkProgress,1000);
 	    		}
 		    	if(i==total || total==0) {
 	    			setTimeout(function () {
