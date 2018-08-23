@@ -76,7 +76,7 @@
         </section>
 </div>
 </div>
-<nav role="navigation" id="wb-sm" data-trgt="mb-pnl" class="wb-menu visible-md visible-lg" style="border-top:8px solid #335075" typeof="SiteNavigationElement">
+<nav role="navigation" id="wb-sm" data-trgt="mb-pnl" class="wb-menu visible-md visible-lg">
 	<h2><spring:message code="djn.you_are_here"/>:</h2>
 	<div class="container">
 	<div class="row">

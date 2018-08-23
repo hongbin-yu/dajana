@@ -67,8 +67,9 @@
 </section>
 </div>
 </div>
-<nav role="navigation" id="wb-sm" data-trgt="mb-pnl" class="wb-menu visible-md visible-lg" style="border-top:8px solid #335075" typeof="SiteNavigationElement">
-	<h2><spring:message code="djn.you_are_here"/>:</h2>
+<nav role="navigation" id="wb-sm" data-trgt="mb-pnl" class="wb-menu visible-md visible-lg">
+	<div class="pnl-strt container nvbar">
+	<h2 class="wb-inv"><spring:message code="djn.you_are_here"/>:</h2>
 	<div class="container">
 	<div class="row">
 		<ul class="list-inline menu" role="menubar">
@@ -78,6 +79,7 @@
 			<li><a class="item" href='<c:url value="/protected/youlook.html"></c:url>' title="<spring:message code="djn.online_chat"></spring:message>"><span class="glyphicon glyphicon-facetime-video"></span><spring:message code="djn.youlook"></spring:message><span class="badge"></span></a></li>
 		
 		</ul>
+	</div>
 	</div>
 	</div>
 </nav>
