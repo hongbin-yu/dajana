@@ -195,7 +195,7 @@ public class SigninController extends BaseController{
         //if(user.getHost()!=null && !domain.equals(user.getHost()))
         	//CookieUtil.create(httpServletResponse, JwtUtil.jwtTokenCookieName, token, false, -1, user.getHost());
         if(redirect==null || "".equals(redirect) || "signin".equals(redirect)) {
-    		return "redirect:/site/view.html";
+    		return "redirect:/site/view.html?type=child";
         }else {
         	logger.debug("Redirect to:"+ redirect+"&domain="+domain);
        		return "redirect:"+ redirect+"&domain="+domain;
