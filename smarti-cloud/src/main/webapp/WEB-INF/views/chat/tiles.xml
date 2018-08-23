@@ -30,6 +30,7 @@
 	<definition name="chat/browse" templateExpression="/WEB-INF/views/chat/browse.jsp">
 	</definition>	
 	<definition name="chat/profile" extends="sitepage">
+	    <put-attribute name="topmenu" value="/WEB-INF/views/site/viewmenu.jsp"/>	    
 	    <put-attribute name="content" value="/WEB-INF/views/chat/profile.jsp"/>
 	</definition>		
 

@@ -1129,7 +1129,7 @@ public class SiteController extends BaseController {
 		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		for(Asset asset:folder.getAssets()) {
 			News a2news = new News();
-			String title ="<input type=\"checkbox\" name=\"puid\" value=\""+asset.getUid()+"\"><a href=\"javascript:openImage(\'file/"+asset.getLink()+"&w=12')\"> <img alt=\"\" class=\"img-responsive img-rounded pull-left mrgn-rght-md\" src=\""+asset.getIcon()+"\"> "+asset.getTitle()+"</a>"
+			String title ="<input type=\"checkbox\" name=\"puid\" value=\""+asset.getUid()+"\"> <a href=\"javascript:openImage(\'file/"+asset.getLink()+"&w=12')\"><img alt=\"\" class=\"img-responsive img-rounded pull-left mrgn-rght-md\" src=\""+asset.getIcon()+"\"><a href=\"file/"+asset.getLink()+"\" target=\"_blank\" title=\"打开原图\">"+asset.getTitle()+"</a>"
 						+(asset.getPdf()?"<a class=\"btn-default btn-xs pull-right\" href=\"viewpdf.pdf?uid="+asset.getUid()+"\" title=\"PDF\" target=\"_blank\">打开 PDF</a>":"");
 			if(asset.getMp4()) {
 				title ="<figure class=\"pull-left\">"
@@ -1138,8 +1138,8 @@ public class SiteController extends BaseController {
 			}
 			a2news.setTitle(title);
 			a2news.setDescription(asset.getDescription());
-			if(asset.getLastModified()!=null)
-			a2news.setLastPublished(sf.format(asset.getOriginalDate()));
+			if(asset.getOriginalDate()!=null)
+				a2news.setLastPublished(sf.format(asset.getOriginalDate()));
 			a2news.setSubjects(folder.getTitle());
 			if(asset.getPosition()!=null && !"".equals(asset.getPosition()))
 				a2news.setLocation("<a class=\"wb-lbx\" href=\"https://www.google.com/maps?q="+asset.getPosition()+"\" target=\"_blank\">拍摄地址</a>");
