@@ -366,6 +366,7 @@ function deleteAsset(path,uid) {
 	});	 	
 }
 
+
 function removeAsset(path,id) {
 
 	if(new Date().getTime() - 30000 <  confirmDate) {

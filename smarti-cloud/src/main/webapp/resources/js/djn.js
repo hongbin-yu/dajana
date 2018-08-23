@@ -943,11 +943,13 @@ function getAsset(formData,file) {
 	var filename = file.name;
 	var lastModified = file.lastModified==null?0:file.lastModified;
 	//var path = $("#path").val();
+    var id = "uploading_"+i;
     $.ajax({
 	    url: 'getasset.json?path='+path+'&filename='+filename+'&lastModified='+lastModified,
 	    type: "GET",
 	    success: function(data) {
 	    	if(data.uid) {
+	    		$("#"+id).remove();
 	    		if(i % 100 ==0) {
 	    			$("#top_insert").html("");
 	    		}
