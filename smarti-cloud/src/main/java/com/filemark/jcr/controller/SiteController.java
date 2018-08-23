@@ -1120,15 +1120,18 @@ public class SiteController extends BaseController {
 		Folder folder = folderJson(path,type,model,request,response);
 		List<News> f2new = new ArrayList<News>();
 		Map<String, News[]> data = new HashMap<String, News[]>();
-		getAsset2News(folder,f2new);
+		if(folder != null && folder.getAssets()!=null)
+			getAsset2News(folder,f2new);
 		data.put("data", f2new.toArray(new News[0]));
 		return data;
 	}
 	
 	private void getAsset2News(Folder folder,List<News>newsList) {
 		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		
 		for(Asset asset:folder.getAssets()) {
 			News a2news = new News();
+			logger.info("Asset:"+asset.getPath());
 			String title ="<input type=\"checkbox\" name=\"puid\" value=\""+asset.getUid()+"\"> <a href=\"javascript:openImage(\'file/"+asset.getLink()+"&w=12')\"><img alt=\"\" class=\"img-responsive img-rounded pull-left mrgn-rght-md\" src=\""+asset.getIcon()+"\"><a href=\"file/"+asset.getLink()+"\" target=\"_blank\" title=\"打开原图\">"+asset.getTitle()+"</a>"
 						+(asset.getPdf()?"<a class=\"btn-default btn-xs pull-right\" href=\"viewpdf.pdf?uid="+asset.getUid()+"\" title=\"PDF\" target=\"_blank\">打开 PDF</a>":"");
 			if(asset.getMp4()) {

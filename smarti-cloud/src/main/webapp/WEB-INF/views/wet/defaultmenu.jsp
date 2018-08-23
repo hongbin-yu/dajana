@@ -19,8 +19,6 @@
 <div class="col-md-12">
 <ul class="list-inline margin-bottom-none">
 <authz:authorize ifAnyGranted="ROLE_USER,ROLE_ADMINISTRATOR,ROLE_OWNER">
-<li><img title="点击编辑打开模式" lat="" src='<c:url value="/resources/images/editIcon.gif"></c:url>'><a title="编辑此页" href="<c:url value="/editor.html?path=${page.path }"/>">编辑</a></li>
-<li><a href='<c:url value="/protected/chat.html"></c:url>'><img title="点击打开在线通讯" alt="" src='<c:url value="/resources/images/chat16X16.png"></c:url>'>网信<span class="badge"></span></a></li>
 <li><a href="<c:url value="/logout"/>"><img title="点击退出" alt="" src='<c:url value="/resources/images/unlock.png"></c:url>'>退出</a></li>
 <li><a href="/mycart.html" title="<authz:authentication property="name" />"><authz:authentication property="name" /><img title="点击进入购物车" alt="" src='<c:url value="/resources/images/mycart.png"></c:url>'><span class="badge">0</span></a></li>
 </authz:authorize>
@@ -64,21 +62,21 @@
 </section>
 </div>
 </div>
-<nav role="navigation" id="wb-sm" data-trgt="mb-pnl" class="wb-menu visible-md visible-lg" typeof="SiteNavigationElement">
-<div class="container nvbar">
-<h2>主题菜单</h2>
-<div class="row">
-<ul class="list-inline menu">
-<li><a href="http://www.dajana.ca/content/templates/xinwen.html">新闻</a></li>
-<li><a href="http://www.dajana.ca/content/templates/b2c.html">网店</a></li>
-<li><a href="http://www.dajana.ca/content/templates/blog.html">博客</a></li>
-<li><a href="http://www.dajana.ca/content/templates/d2c.html">求医</a></li>
-<li><a href="http://www.dajana.ca/content/templates/m2c.html">问药</a></li>
-<li><a href="http://www.dajana.ca/content/templates/gongxian.html">共享</a></li>
-<li><a href="http://www.dajana.ca/content/templates/qita.html">其他</a></li>
-</ul>
-</div>
-</div>
+<nav role="navigation" id="wb-sm" data-trgt="mb-pnl" class="wb-menu visible-md visible-lg">
+	<div class="pnl-strt container nvbar">
+	<h2 class="wb-inv"><spring:message code="djn.you_are_here"/>:</h2>
+	<div class="container">
+	<div class="row">
+		<ul class="list-inline menu" role="menubar">
+			<li><a title="<spring:message code="djn.goto_cloud"></spring:message>" href="<c:url value="/site/view.html"/>?path=${folder.path}&type=${type}"><span class="glyphicon glyphicon-cloud"></span><spring:message code="djn.cloud"></spring:message></a></li>
+			<li><a title="<spring:message code="djn.website"></spring:message>" href="<c:url value="editor.html"/>"><span class="glyphicon glyphicon-globe"></span><spring:message code="djn.website"></spring:message></a></li>
+			<li><a href='<c:url value="/protected/youchat.html"></c:url>' title="<spring:message code="djn.online_chat"></spring:message>"><span class="glyphicon glyphicon-envelope"></span><spring:message code="djn.chat"></spring:message><span class="badge"></span></a></li>
+			<li><a href='<c:url value="/protected/youlook.html"></c:url>' title="<spring:message code="djn.online_chat"></spring:message>"><span class="glyphicon glyphicon-facetime-video"></span><spring:message code="djn.youlook"></spring:message><span class="badge"></span></a></li>
+		
+		</ul>
+	</div>
+	</div>
+	</div>
 </nav>
 <nav role="navigation" id="wb-bc" property="breadcrumb">
 	<h2>你在这里:</h2>
