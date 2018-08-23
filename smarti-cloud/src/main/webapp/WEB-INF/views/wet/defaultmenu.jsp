@@ -68,8 +68,8 @@
 	<div class="container">
 	<div class="row">
 		<ul class="list-inline menu" role="menubar">
-			<li><a title="<spring:message code="djn.goto_cloud"></spring:message>" href="<c:url value="/site/view.html"/>?path=${folder.path}&type=${type}"><span class="glyphicon glyphicon-cloud"></span><spring:message code="djn.cloud"></spring:message></a></li>
-			<li><a title="<spring:message code="djn.website"></spring:message>" href="<c:url value="editor.html"/>"><span class="glyphicon glyphicon-globe"></span><spring:message code="djn.website"></spring:message></a></li>
+			<li><a title="<spring:message code="djn.goto_cloud"></spring:message>" href="<c:url value="/site/view.html"/>"><span class="glyphicon glyphicon-cloud"></span><spring:message code="djn.cloud"></spring:message></a></li>
+			<li><a title="<spring:message code="djn.website"></spring:message>" href="<c:url value="/site/editor.html"/>"><span class="glyphicon glyphicon-globe"></span><spring:message code="djn.website"></spring:message></a></li>
 			<li><a href='<c:url value="/protected/youchat.html"></c:url>' title="<spring:message code="djn.online_chat"></spring:message>"><span class="glyphicon glyphicon-envelope"></span><spring:message code="djn.chat"></spring:message><span class="badge"></span></a></li>
 			<li><a href='<c:url value="/protected/youlook.html"></c:url>' title="<spring:message code="djn.online_chat"></spring:message>"><span class="glyphicon glyphicon-facetime-video"></span><spring:message code="djn.youlook"></spring:message><span class="badge"></span></a></li>
 		
