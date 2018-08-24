@@ -1443,7 +1443,7 @@ document.addEventListener("dragenter", function(event) {
 	var id = event.target.id;
 	if(id)
 	if(id=="uploadBox" || id=="uploadImg" ||  id=="uploadIcon" || (id.indexOf("folder")>=0)) {
-		event.target.classList.add("well");
+		//event.target.classList.add("well");
         event.target.style.border = "3px dotted blue";
         
 	}

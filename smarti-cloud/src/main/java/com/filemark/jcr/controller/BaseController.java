@@ -361,8 +361,8 @@ public class BaseController {
     	if (response == null || request == null) {
             return;
         }
-    	if(file.getAbsolutePath().indexOf("/mnt/devide/")>0)
-    		ImageUtil.HDDOn();
+    	//if(file.getAbsolutePath().indexOf("/mnt/devide/")>0)
+    	//	ImageUtil.HDDOn();
         if (!file.exists()) {
             logger.error("File doesn't exist at URI : {}", file.getAbsolutePath());
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
@@ -554,7 +554,7 @@ public class BaseController {
         }finally{
         	input.close();
         	output.close();
-    		ImageUtil.HDDOff();
+    		//ImageUtil.HDDOff();
         }
 
     }

@@ -8,7 +8,14 @@
 <div class="container">
      <main role="main" property="mainContentOfPage" class="col-md-9 col-md-push-3">
         <h1 id="wb-cont">
-        ${folder.title} <a href="view.html?path=${folder.path}&type=${type}" title="刷屏"><span class="glyphicon glyphicon-refresh"></span></a>			<a class="btn btn-default pull-right" href="/site/assets.html?path=${folder.path}&type=${type }" title="<spring:message code="djn.cloud"/><spring:message code="djn.edit"/>"><span class="glyphicon glyphicon-edit pull-right"></span></a></h1>
+        ${folder.title} <a href="view.html?path=${folder.path}&type=${type}" title="刷屏"><span class="glyphicon glyphicon-refresh"></span></a>	
+        <c:if test="${param.w eq '1'}">
+        <a class="btn btn-default pull-right" href="/site/view.html?path=${folder.path}&type=${type }&w=4" title="<spring:message code="djn.cloud"/><spring:message code="djn.edit"/>"><span class="glyphicon glyphicon-th-large pull-right"></span></a>
+        </c:if>		
+        <c:if test="${param.w ne '1' }">
+        <a class="btn btn-default pull-right" href="/site/view.html?path=${folder.path}&type=${type }&w=1" title="<spring:message code="djn.cloud"/><spring:message code="djn.edit"/>"><span class="glyphicon glyphicon-th-list pull-right"></span></a>
+        </c:if>	
+        </h1>
         ${folder.description }         
 	<div id="view_insert">
 	</div>
@@ -17,7 +24,7 @@
 	        <div class="mrgn-tp-xl"></div>
 	        <table class="wb-tables table table-striped table-hover nws-tbl" id="dataset-filter" aria-live="polite" data-wb-tables="{
 	            &#34;bDeferRender&#34;: true,
-	            &#34;ajaxSource&#34;: &#34;getassets.json?path=${folder.path}&#34;,
+	            &#34;ajaxSource&#34;: &#34;getassets.json?path=${folder.path}&w=${param.w}&#34;,
 	            &#34;order&#34;: [1, &#34;desc&#34;],
 	             &#34;columns&#34;: [
 	                { &#34;data&#34;: &#34;title&#34;, &#34;className&#34;: &#34;nws-tbl-ttl h4&#34; },
@@ -201,6 +208,7 @@
 		        </c:forEach> 
 		</div>  --%>
     <h2 id="wb-sec-h" class="wb-inv">左菜单</h2>
+
     <section class="list-group menu list-unstyled">	
 <%--          	<form action='<c:url value="view.html"></c:url>' method="get" name="cse-search-box" role="search" class="form-inline" accept-charset="UTF-8">
 			<input type="hidden" id="path" name="path" value="${folder.path}"/>
@@ -242,7 +250,7 @@
             </li>           
         </c:forEach>    
         </ul>
-   </section>     
+   </section>
 
 
 </nav>

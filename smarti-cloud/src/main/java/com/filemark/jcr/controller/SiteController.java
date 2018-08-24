@@ -1116,25 +1116,32 @@ public class SiteController extends BaseController {
 	}
     	
 	@RequestMapping(value = {"/site/getassets.json"}, method = RequestMethod.GET)
-	public @ResponseBody Map<String, News[]> getAssetsJson(String path,String type,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public @ResponseBody Map<String, News[]> getAssetsJson(String path,String type,Integer w,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
 		Folder folder = folderJson(path,type,model,request,response);
 		List<News> f2new = new ArrayList<News>();
 		Map<String, News[]> data = new HashMap<String, News[]>();
 		if(folder != null && folder.getAssets()!=null)
-			getAsset2News(folder,f2new);
+			getAsset2News(folder,f2new,w);
 		data.put("data", f2new.toArray(new News[0]));
 		return data;
 	}
 	
-	private void getAsset2News(Folder folder,List<News>newsList) {
+	private void getAsset2News(Folder folder,List<News>newsList,Integer w) {
 		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
 		for(Asset asset:folder.getAssets()) {
 			News a2news = new News();
 			//logger.warn("Asset:"+asset.getPath());
-			String title ="<input type=\"checkbox\" name=\"puid\" value=\""+asset.getUid()+"\"> <a href=\"javascript:openImage(\'file/"+asset.getLink()+"&w=12')\"><img alt=\"\" class=\"img-responsive img-rounded pull-left mrgn-rght-md\" src=\""+asset.getIcon()+"\"><a href=\"file/"+asset.getLink()+"\" target=\"_blank\" title=\"打开原图\">"+asset.getTitle()+"</a>"
+			String icon = w!=null && w==1?asset.getIconSmall():asset.getIcon();
+			String title ="<input type=\"checkbox\" name=\"puid\" value=\""+asset.getUid()+"\"> <a href=\"javascript:openImage(\'file/"+asset.getLink()+"&w=12')\"><img alt=\"\" class=\"img-responsive img-rounded pull-left mrgn-rght-md\" src=\""+icon+"\"><a href=\"file/"+asset.getLink()+"\" target=\"_blank\" title=\"打开原图\">"+asset.getTitle()+"</a>"
 						+(asset.getPdf()?"<a class=\"btn-default btn-xs pull-right\" href=\"viewpdf.pdf?uid="+asset.getUid()+"\" title=\"PDF\" target=\"_blank\">打开 PDF</a>":"");
 			if(asset.getMp4()) {
+				if(w!=null && w==1) {
+					title ="<figure class=\"pull-left\">"
+							+"<video poster=\"video2jpg.jpg?path="+asset.getPath()+"\" width=\"150\" height=\"100\" controls=\"controls\"  preload=\"none\">"
+							+"<source type=\"video/mp4\" src=\"video.mp4?path="+asset.getPath()+"\"/></video></figture>";
+					
+				} else 
 				title ="<figure class=\"pull-left\">"
 						+"<video poster=\"video2jpg.jpg?path="+asset.getPath()+"\" width=\"400\" height=\"300\" controls=\"controls\"  preload=\"none\">"
 						+"<source type=\"video/mp4\" src=\"video.mp4?path="+asset.getPath()+"\"/></video></figture>";
@@ -1152,7 +1159,7 @@ public class SiteController extends BaseController {
 		}
 		if(folder.getSubfolders()!=null)
 		for(Folder f:folder.getSubfolders()) {
-			getAsset2News(f,newsList);
+			getAsset2News(f,newsList,w);
 			if(newsList.size() > 10000) break;
 		}
 	}
@@ -2625,7 +2632,7 @@ public class SiteController extends BaseController {
 	}	
 	@RequestMapping(value = {"/site/video2jpg.jpg","/protected/video2jpg.jpg"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public @ResponseBody String video2jpg(String path,Integer w,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
-		ImageUtil.HDDOn();	
+		//ImageUtil.HDDOn();	
 		try {
 			if(path==null) {
 				if(w != null && w==1)
@@ -2668,24 +2675,24 @@ public class SiteController extends BaseController {
 			in.close();		*/				
 		} catch (FileNotFoundException e) {
 			logger.error("doc2jpg:"+e.getMessage());
-			ImageUtil.HDDOff();
+			//ImageUtil.HDDOff();
 			return e.getMessage();
 		} catch (IOException e) {
 			logger.error("doc2jpg:"+e.getMessage());
-			ImageUtil.HDDOff();
+			//ImageUtil.HDDOff();
 			return e.getMessage();
 		} catch (Exception e) {
 			logger.error("doc2jpg:"+e.getMessage());
-			ImageUtil.HDDOff();
+			//ImageUtil.HDDOff();
 			return e.getMessage();
 		}
 
-		ImageUtil.HDDOff();
+		//ImageUtil.HDDOff();
 		return null;
 	}	
 	@RequestMapping(value = {"/site/video.mp4","/protected/video.mp4","/protected/**/video.mp4"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public ResponseEntity<InputStreamResource> video2mp4(String path,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
-		ImageUtil.HDDOn();	
+		//ImageUtil.HDDOn();	
 		try {
     		String ext = "";
     		if(path.lastIndexOf(".")>0) {
@@ -2725,14 +2732,14 @@ public class SiteController extends BaseController {
 			logger.error("video2mp4:"+e.getMessage());
 		}
 		
-		ImageUtil.HDDOff();
+		//ImageUtil.HDDOff();
 
 		return null;
 	}
 
 	@RequestMapping(value = {"/site/video.webm"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public @ResponseBody String video2webm(String path,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
-		ImageUtil.HDDOn();	
+		//ImageUtil.HDDOn();	
 		try {
 			String devicePath = jcrService.getDevice();
     		File file = new File(devicePath+path);
@@ -2754,17 +2761,17 @@ public class SiteController extends BaseController {
 					
 		} catch (FileNotFoundException e) {
 			logger.error("videowebm:"+e.getMessage());
-			ImageUtil.HDDOff();
+			//ImageUtil.HDDOff();
 			return e.getMessage();
 		} catch (IOException e) {
 			logger.error("video2webm:"+e.getMessage());
-			ImageUtil.HDDOff();
+			//ImageUtil.HDDOff();
 			return e.getMessage();
 		} catch (Exception e) {
 			logger.error("video2webm:"+e.getMessage());
 		}
 
-		ImageUtil.HDDOff();
+		//ImageUtil.HDDOff();
 		return null;
 	}
 	@RequestMapping(value = {"/protected/file/*.*","/site/file/*.*","/protected/file/**","/site/file/**","/site/viewimage","/content/viewimage","/content/**/viewimage","/protected/viewimage","/protected/**/viewimage","/protected/file","/site/file","/site/file*.*","/content/file","/content/file*.*","/content/**/file","/content/**/file*.*"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
@@ -3117,7 +3124,7 @@ public class SiteController extends BaseController {
 	}	*/
 	@RequestMapping(value = {"/site/viewf2p","/site/viewf2p.pdf","/content/viewf2p","/content/**/viewf2p"}, method = {RequestMethod.GET})
 	public @ResponseBody String viewf2p(String path,HttpServletRequest request, HttpServletResponse response) throws IOException, RepositoryException {
-		ImageUtil.HDDOn();
+		//ImageUtil.HDDOn();
 		try {
 			String assetsQuery = "select * from [nt:base] AS s WHERE ISCHILDNODE(["+path+"]) and s.delete not like 'true' and s.ocm_classname='com.filemark.jcr.model.Asset' order by s.lastModified desc, s.name";
 			WebPage<Asset> result = jcrService.searchAssets(assetsQuery, 100, 0);
@@ -3125,16 +3132,16 @@ public class SiteController extends BaseController {
 			jcrService.assets2pdf(result.getItems(), response.getOutputStream());			
 		}catch(Exception e) {
 			logger.error("viewf2p:"+e.getMessage());
-			ImageUtil.HDDOff();
+			//ImageUtil.HDDOff();
 			return "Error:"+e.getMessage();
 		}
-		ImageUtil.HDDOff();
+		//ImageUtil.HDDOff();
 		return null;
 	}
 	
 	@RequestMapping(value = {"/site/viewfolder"}, method = {RequestMethod.GET})
 	public @ResponseBody String viewFolder(String uid,String path,Integer w,HttpServletRequest request, HttpServletResponse response) throws IOException, RepositoryException {
-		ImageUtil.HDDOn();	
+		//ImageUtil.HDDOn();	
 		Integer width = null;
 		if(w !=null && w <= 12) {
 			width = w*100;
@@ -3172,12 +3179,12 @@ public class SiteController extends BaseController {
 				return null;
 	
 			}else {
-				ImageUtil.HDDOff();
+				//ImageUtil.HDDOff();
 				return path +" file not found";
 			}
 		}catch(Exception e) {
 			logger.error("viewFolder:"+e.getMessage());
-			ImageUtil.HDDOff();
+			//ImageUtil.HDDOff();
 			return e.getMessage();
 		}
 		
