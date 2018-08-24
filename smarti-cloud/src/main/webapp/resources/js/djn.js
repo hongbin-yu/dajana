@@ -948,7 +948,7 @@ function getAsset(formData,file) {
 	    url: 'getasset.json?path='+path+'&filename='+filename+'&lastModified='+lastModified,
 	    type: "GET",
 	    success: function(data) {
-    		$("#"+id).remove();
+
 	    	if(data.uid) {
 	    		if(i % 100 ==0) {
 	    			$("#top_insert").html("");
