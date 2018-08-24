@@ -8,7 +8,7 @@
 <div class="container">
      <main role="main" property="mainContentOfPage" class="col-md-9 col-md-push-3">
         <h1 id="wb-cont">
-        <spring:message code="djn.browse"/> - ${folder.title} <a href="view.html?path=${folder.path}&type=${type}" title="刷屏"><span class="glyphicon glyphicon-refresh"></span></a>			<a class="btn btn-default pull-right" href="/site/assets.html?path=${folder.path}&type=${type }" title="<spring:message code="djn.cloud"/><spring:message code="djn.edit"/>"><span class="glyphicon glyphicon-edit pull-right"></span></a></h1>
+        ${folder.title} <a href="view.html?path=${folder.path}&type=${type}" title="刷屏"><span class="glyphicon glyphicon-refresh"></span></a>			<a class="btn btn-default pull-right" href="/site/assets.html?path=${folder.path}&type=${type }" title="<spring:message code="djn.cloud"/><spring:message code="djn.edit"/>"><span class="glyphicon glyphicon-edit pull-right"></span></a></h1>
         ${folder.description }         
 	<div id="view_insert">
 	</div>
@@ -202,6 +202,25 @@
 		</div>  --%>
     <h2 id="wb-sec-h" class="wb-inv">左菜单</h2>
     <section class="list-group menu list-unstyled">	
+<%--          	<form action='<c:url value="view.html"></c:url>' method="get" name="cse-search-box" role="search" class="form-inline" accept-charset="UTF-8">
+			<input type="hidden" id="path" name="path" value="${folder.path}"/>
+			<input type="hidden" id= "input" name="input" value="${input}"/>
+			<input type="hidden" id="kw" name="kw" value="${kw}"/>		
+			<input type="hidden" id="pageNumber" name="pageNumber" value="${assets.pageNumber}"/>	
+			<input type="hidden" id="availablePages" name="availablePages" value="${assets.availablePages}"/>				
+			<input type="hidden" id="topage" name="topage" value="assetsmore"/>			    
+					<div class="form-group pull-right">
+					<label for="type"><spring:message code="djn.display"/></label>
+					<select id="type" name="type" onchange="this.form.submit()">
+					<option value="" <c:if test="${type=='' }">selected</c:if> ><spring:message code="djn.all"/></option>
+					<option value="child" <c:if test="${type=='child' }">selected</c:if> ><spring:message code="djn.child"/></option>
+					<option value="image" <c:if test="${type=='image' }">selected</c:if> ><spring:message code="djn.image"/></option>
+					<option value="video" <c:if test="${type=='video' }">selected</c:if> ><spring:message code="djn.video"/></option>
+					<option value="audio" <c:if test="${type=='audio' }">selected</c:if> ><spring:message code="djn.audeo"/></option>
+					<option value="application" <c:if test="${type=='application' }">selected</c:if> ><spring:message code="djn.file"/></option>
+					</select>
+					</div>
+			</form>  --%>     
         <h3>
         <c:if test="${folder.parent!='/assets' }">
         <a href='<c:url value="view.html?path=${folder.parent}&type=${type }"></c:url>'>${folder.parentTitle}<span class="glyphicon glyphicon-backward"></span>

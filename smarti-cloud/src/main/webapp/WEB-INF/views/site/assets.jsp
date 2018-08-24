@@ -9,9 +9,12 @@
 <div class="row">
      <main role="main" property="mainContentOfPage" class="col-md-9 col-md-push-3">
         <h1 id="wb-cont"><c:if test="${folder.parent!='/assets' }"><a href="assets.html?path=${folder.parent}&type=${type}"><span class="glyphicon glyphicon-backward"></span></a></c:if>
-        <spring:message code="djn.cloud"/><spring:message code="djn.edit"/> - ${folder.title} <a href="?path=${folder.path}&type=${type}" title="刷屏"><span class="glyphicon glyphicon-refresh"></span></a>			<a class="btn btn-default pull-right" href="/site/view.html?path=${folder.path}&type=${type}" title="快速阅览"><span class="glyphicon glyphicon-eye-open pull-right"></span></a>
+        ${folder.title} <a href="?path=${folder.path}&type=${type}" title="刷屏"><span class="glyphicon glyphicon-refresh"></span></a>			<a class="btn btn-default pull-right" href="/site/view.html?path=${folder.path}&type=${type}" title="快速阅览"><span class="glyphicon glyphicon-eye-open pull-right"></span></a>
         <a href="javascript:deleteFiles()" class="btn bnt-default btn-danger pull-right" title="删除"><span class="glyphicon glyphicon-remove"></span></a>
 		<a href="javascript:openPdf()" class="btn btn-primary pull-right" title="打开PDF"><span class="glyphicon glyphicon-open"></span></a>
+					<div class="checkbox form-group pull-right">
+			    		<label for="toggle"><input id="toggle" type="checkbox" onClick="toggle(this)" title="选择切换"/><span class="h5">全选切换</span></label>
+					</div>	
         </h1>
         ${folder.description }
 <div class="row">
@@ -158,17 +161,39 @@
 </main>
 <nav class="wb-sec col-md-3 col-md-pull-9" typeof="SiteNavigationElement" id="wb-sec" role="navigation">
 		<input type="hidden" id="folderpath" name="path" value="${folder.path}"/>
-    <div class="wb-frmvld row well">
     <h2 id="wb-sec-h" class="wb-inv">左菜单</h2>
+    <section class="list-group menu list-unstyled">	
+         	<form action='<c:url value="assets.html"></c:url>' method="get" name="cse-search-box" role="search" class="form-inline" accept-charset="UTF-8">
+			<input type="hidden" id="path" name="path" value="${folder.path}"/>
+			<input type="hidden" id= "input" name="input" value="${input}"/>
+			<input type="hidden" id="kw" name="kw" value="${kw}"/>		
+			<input type="hidden" id="pageNumber" name="pageNumber" value="${assets.pageNumber}"/>	
+			<input type="hidden" id="availablePages" name="availablePages" value="${assets.availablePages}"/>				
+			<input type="hidden" id="topage" name="topage" value="assetsmore"/>			    
+					<div class="form-group pull-right">
+					<label for="type"><spring:message code="djn.display"/></label>
+					<select id="type" name="type" onchange="this.form.submit()">
+					<option value="" <c:if test="${type=='' }">selected</c:if> ><spring:message code="djn.all"/></option>
+					<option value="child" <c:if test="${type=='child' }">selected</c:if> ><spring:message code="djn.child"/></option>
+					<option value="image" <c:if test="${type=='image' }">selected</c:if> ><spring:message code="djn.image"/></option>
+					<option value="video" <c:if test="${type=='video' }">selected</c:if> ><spring:message code="djn.video"/></option>
+					<option value="audio" <c:if test="${type=='audio' }">selected</c:if> ><spring:message code="djn.audeo"/></option>
+					<option value="application" <c:if test="${type=='application' }">selected</c:if> ><spring:message code="djn.file"/></option>
+					</select>
+					</div>
+			</form>  
 <!--     <details>
 		<summary> -->
+		<h3>
         <c:if test="${folder.parent!='/assets' }">
         <a href='<c:url value="assets.html?path=${folder.parent}&type=${type }"></c:url>'>${folder.parentTitle}<span class="glyphicon glyphicon-backward"></span>
         </a>
+     
         </c:if> 
         <c:if test="${folder.parent=='/assets' }">
-        <h3><spring:message code="djn.cloud"/></h3>
-        </c:if>               
+        <spring:message code="djn.cloud"/>
+        </c:if>    
+        </h3>           
 <!--         </summary>    --> 	       
         <ul class="list-group menu list-unstyled">
         <c:forEach items="${leftmenu.subfolders}" var="item" varStatus="loop">
@@ -183,30 +208,9 @@
             </li>           
         </c:forEach>     
         </ul>
-        </div>   
+        </section>
+ 
 		<div class="wb-frmvld row well">
-		    <form action='<c:url value="assets.html"></c:url>' method="get" name="cse-search-box" role="search" class="form-inline" accept-charset="UTF-8">
-			<input type="hidden" id="path" name="path" value="${folder.path}"/>
-			<input type="hidden" id= "input" name="input" value="${input}"/>
-			<input type="hidden" id="kw" name="kw" value="${kw}"/>		
-			<input type="hidden" id="pageNumber" name="pageNumber" value="${assets.pageNumber}"/>	
-			<input type="hidden" id="availablePages" name="availablePages" value="${assets.availablePages}"/>				
-			<input type="hidden" id="topage" name="topage" value="assetsmore"/>			    
-					<div class="form-group">
-					<label for="type"><spring:message code="djn.display"/></label>
-					<select id="type" name="type" onchange="this.form.submit()">
-					<option value="" <c:if test="${type=='' }">selected</c:if> ><spring:message code="djn.all"/></option>
-					<option value="child" <c:if test="${type=='child' }">selected</c:if> ><spring:message code="djn.child"/></option>
-					<option value="image" <c:if test="${type=='image' }">selected</c:if> ><spring:message code="djn.image"/></option>
-					<option value="video" <c:if test="${type=='video' }">selected</c:if> ><spring:message code="djn.video"/></option>
-					<option value="audio" <c:if test="${type=='audio' }">selected</c:if> ><spring:message code="djn.audeo"/></option>
-					<option value="application" <c:if test="${type=='application' }">selected</c:if> ><spring:message code="djn.file"/></option>
-					</select>
-					</div>
-			</form>
-					<div class="checkbox form-group">
-			    		<label for="toggle"><input id="toggle" type="checkbox" onClick="toggle(this)" title="选择切换"/>全选切换</label>
-					</div>				
 			<form action="upload.html" method="POST" id="form-upload" enctype="multipart/form-data">
 				<input type="hidden" id="path" name="path" value="${folder.path}"/>
 				<input type="hidden" id="type"  name="type" value="${type}"/>
