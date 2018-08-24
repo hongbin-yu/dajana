@@ -158,6 +158,32 @@
 </main>
 <nav class="wb-sec col-md-3 col-md-pull-9" typeof="SiteNavigationElement" id="wb-sec" role="navigation">
 		<input type="hidden" id="folderpath" name="path" value="${folder.path}"/>
+    <div class="wb-frmvld row well">
+    <h2 id="wb-sec-h" class="wb-inv">左菜单</h2>
+<!--     <details>
+		<summary> -->
+        <c:if test="${folder.parent!='/assets' }">
+        <a href='<c:url value="assets.html?path=${folder.parent}&type=${type }"></c:url>'>${folder.parentTitle}<span class="glyphicon glyphicon-backward"></span>
+        </a>
+        </c:if> 
+        <c:if test="${folder.parent=='/assets' }">
+        <h3><spring:message code="djn.cloud"/></h3>
+        </c:if>               
+<!--         </summary>    --> 	       
+        <ul class="list-group menu list-unstyled">
+        <c:forEach items="${leftmenu.subfolders}" var="item" varStatus="loop">
+            <li id="${item.uid}" >
+            <a class="list-group-item" href='<c:url value="assets.html?path=${item.path }&type=${type }"></c:url>'><img id="folder${item.uid }" path="${item.path }" ondrop="drop(event)" ondragover="allowDrop(event)" src="/resources/images/folder32X32.png" alt=""> ${item.title} <span id="selectFiles${item.uid }"></span></a>     
+                <ul class="list-group menu list-unstyled">
+                    <c:forEach items="${item.subfolders}" var="child" varStatus="loop">
+                    	<li id="${child.uid}"><a class="list-group-item" href='<c:url value="assets.html?path=${child.path}&type=${type }"></c:url>'><img id="folder${child.uid }" path="${child.path }" ondrop="drop(event)" ondragover="allowDrop(event)" src="/resources/images/folder32X32.png" alt=""> ${child.title}</a> <span id="selectFiles${child.uid }"></span>
+                    	</li>
+                    </c:forEach>
+                </ul>
+            </li>           
+        </c:forEach>     
+        </ul>
+        </div>   
 		<div class="wb-frmvld row well">
 		    <form action='<c:url value="assets.html"></c:url>' method="get" name="cse-search-box" role="search" class="form-inline" accept-charset="UTF-8">
 			<input type="hidden" id="path" name="path" value="${folder.path}"/>
@@ -205,6 +231,7 @@
 <%--             	<c:if test="${assets.availablePages==0}">
     			    <a class="wb-lbx" title="<spring:message code="djn.delete"/>" href="<c:url value="/site/delete.html?uid=${folder.uid }&redirect=/site/assets.html?path=${folder.parent }"/>"><span class="glyphicon glyphicon-remove"></span><spring:message code="djn.delete"/></a>
 	      		</c:if> --%>
+   			    <a class="wb-lbx" title="<spring:message code="djn.delete"/>" href="<c:url value="/site/delete.html?uid=${folder.uid }&redirect=/site/assets.html?path=${folder.parent }"/>"><span class="btn-danger btn-sm glyphicon glyphicon-remove"><spring:message code="djn.delete"/></span>(${folder.path})</a>
 				<div class="form-group">
 				<label for="foldertitle"><spring:message code="djn.title"/>&nbsp;</label><input class="form-control" id="foldertitle" name="jcr:title" value="${folder.title}" size="25" uid="${folder.uid}"  onchange="updateNode(this)"/>
 				</div>
@@ -296,32 +323,21 @@
 				</form>
 				</div>	
 			</details>	
-    <h2 id="wb-sec-h" class="wb-inv">左菜单</h2>
-    <details>
-		<summary>
-        <c:if test="${folder.parent!='/assets' }">
-        <a href='<c:url value="assets.html?path=${folder.parent}&type=${type }"></c:url>'>${folder.parentTitle}<span class="glyphicon glyphicon-backward"></span>
-        </a>
-        </c:if> 
-        <c:if test="${folder.parent=='/assets' }">
-        <spring:message code="djn.cloud"/>
-        </c:if>               
-        </summary>    	       
-        <ul class="list-group menu list-unstyled">
-        <c:forEach items="${leftmenu.subfolders}" var="item" varStatus="loop">
-            <li>
-            <a  class="list-group-item" href='<c:url value="assets.html?path=${item.path }&type=${type }"></c:url>'>${item.title}</a>     
-                <ul class="list-group menu list-unstyled">
-                    <c:forEach items="${item.subfolders}" var="child" varStatus="loop">
-                    	<li><a class="list-group-item" href='<c:url value="assets.html?path=${child.path}&type=${type }"></c:url>'>${child.title}</a></li>
-                    </c:forEach>
-                </ul>
-            </li>           
-        </c:forEach>    
-        </ul>
-      </details>  
-    </div>
 
+<!--       </details>   -->
+    </div>
+ 
+<%-- 		<div class="row">
+		        <c:forEach items="${folders.items}" var="item" varStatus="loop">
+		            <div class="well">
+			           <a href="view.html?path=${item.path}&type=${type}"> <img id="folder${item.uid }" path="${item.path }"  ondrop="drop(event)" ondragover="allowDrop(event)" alt="${item.title}" class="img-responsive pull-left mrgn-rght-md" src='<c:url value="/resources/images/folder32X32.png"></c:url>'/>
+		            	${item.title}</a>
+		            	<div class="clearfix"></div>
+		            <div id="selectFiles${item.uid }"></div>	
+		            </div>  
+		            	<c:if test="${(loop.index+1) % 3 ==0  }"><div class="clearfix"></div></c:if>         
+		        </c:forEach> 
+		</div> --%>
 </nav>
 </div>
 </div>

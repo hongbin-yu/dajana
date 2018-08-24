@@ -1131,7 +1131,7 @@ public class SiteController extends BaseController {
 		
 		for(Asset asset:folder.getAssets()) {
 			News a2news = new News();
-			logger.warn("Asset:"+asset.getPath());
+			//logger.warn("Asset:"+asset.getPath());
 			String title ="<input type=\"checkbox\" name=\"puid\" value=\""+asset.getUid()+"\"> <a href=\"javascript:openImage(\'file/"+asset.getLink()+"&w=12')\"><img alt=\"\" class=\"img-responsive img-rounded pull-left mrgn-rght-md\" src=\""+asset.getIcon()+"\"><a href=\"file/"+asset.getLink()+"\" target=\"_blank\" title=\"打开原图\">"+asset.getTitle()+"</a>"
 						+(asset.getPdf()?"<a class=\"btn-default btn-xs pull-right\" href=\"viewpdf.pdf?uid="+asset.getUid()+"\" title=\"PDF\" target=\"_blank\">打开 PDF</a>":"");
 			if(asset.getMp4()) {
