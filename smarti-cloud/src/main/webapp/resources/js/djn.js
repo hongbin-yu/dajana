@@ -955,7 +955,7 @@ function getAsset(formData,file) {
 	    		}
 	    		$("#"+data.uid).remove();
 	    		$("#"+id).remove();
-	    		percentComplete =1000;
+	    		//percentComplete =1000;
 	    		selDiv.innerHTML = "<section class=\"alert alert-success\"><h3 class=\"5\">"+(i)+"/"+total+i18n("document_uploaded")+i18n("success")+"</h3></section>";
 	    		//i++;
 	    		output(data);
