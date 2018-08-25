@@ -882,7 +882,7 @@ function sendFormData(formData,file,id) {
     	                percentComplete = (evt.loaded / evt.total)*100;
     	                var progress = "<h5>"+running+"</h5><progress class=\"full-width\" value=\""+evt.loaded +"\" max=\""+evt.total+"\"><span class=\"wb-inv\">"+percentComplete+"%</span></progress><p>"+(speed/1000).toFixed(2)+" MB/s</p>";
     	                $("#"+id).html(progress);
-
+    	                selDiv.innerHTML = progress;
     	            }
     	       }, false);
 
