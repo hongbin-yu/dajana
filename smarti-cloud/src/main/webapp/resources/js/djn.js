@@ -822,10 +822,19 @@ function uploadFile(file) {
 	//selDiv.innerHTML = running;
 	var override = $("#override").is(":checked")?"true":"false";
 	//var path = $("#path").val();
+	var isoName ="image_" +new Date().toISOString().slice(0,19)+".jpg";
+
+	if(file.name == 'image.jpg' || Image.jpg) {
+	    formData.append("file", file,isdoName);
+	    formData.append("filename",isoName);		
+	}else {
+	    formData.append("file", file,file.name);
+	    formData.append("filename",file.name);		
+	}
+	
 	var formData = new FormData();
 	formData.append("path",path);
-    formData.append("file", file,file.name);
-    formData.append("filename",file.name);
+
     formData.append("lastModified",file.lastModified);
     formData.append("total",files.length);  
     formData.append("override",override);    
@@ -844,7 +853,7 @@ function uploadFile(file) {
     }
 
 	var online_chat_editor = document.getElementById("online_chat_editor");
-	if((online_chat_editor || override == 'false' ) && file.name !='Image.jpg') {
+	if((online_chat_editor || override == 'false' ) && file.name !='Image.jpg' && file.name !='image.jpg') {
 		getAsset(formData,file);
 	}else 
 		sendFormData(formData,file);
@@ -989,6 +998,7 @@ function uploadIcon(file) {
 	$("#uploadIcon").attr("src","/resources/images/ui-anim_basic_16x16.gif");
 	var formData = new FormData();
 	formData.append("path",path);
+	
     formData.append("file", file,file.name);
     formData.append("filename",file.name);
     var messageDiv = document.getElementById("messageDiv");
