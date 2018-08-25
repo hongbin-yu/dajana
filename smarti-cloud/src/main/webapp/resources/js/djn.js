@@ -949,7 +949,7 @@ function getAsset(formData,file,id) {
 	var filename = file.name;
 	var lastModified = file.lastModified==null?0:file.lastModified;
 	//var path = $("#path").val();
-    var id = "uploading_"+file.name.replace(/[\s()\.]+/g,"_");
+    //var id = "uploading_"+file.name.replace(/[\s()\.]+/g,"_");
     var html = '<div id="'+id+'" class="col-md-4 well">'+running+'</div>';
 	$("#top_insert").after(html);	
     $.ajax({
