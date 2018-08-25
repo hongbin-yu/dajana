@@ -928,7 +928,7 @@ function sendFormData(formData,file) {
 		    },
 		    error: function(jqXHR, exception) {
 		    	var error = "<section class=\"alert alert-warning\"><h2 class=\"h3\">"+i18n("fail")+":"+file.name+",sttus:"+jqXHR+",exception:"+exception+"</h2></section>";
-		    	$("#uploading_"+file.name).html(error);
+		    	$("#"+id).html(error);
 		        //selDiv.innerHTML=  "<section class=\"alert alert-warning\"><h2 class=\"h3\">"+i18n("fail")+":"+file.name+",sttus:"+jqXHR+",exception:"+exception+"</h2></section>"; // 
 		    }
 		    // ... Other options like success and etc
@@ -978,8 +978,8 @@ function getAsset(formData,file) {
 
 	    },
 	    error: function(jqXHR, exception) {
-	        selDiv.innerHTML=  "<section class=\"alert alert-warning\"><h2 class=\"h3\">"+i18n("fail")+":"+file.name+",sttus:"+jqXHR+",exception:"+exception+"</h2></section>"; // 
-
+	        var error =  "<section class=\"alert alert-warning\"><h2 class=\"h3\">"+i18n("fail")+":"+file.name+",sttus:"+jqXHR+",exception:"+exception+"</h2></section>"; // 
+	        $("#"+id).html(error);
 	    }
     });
 	
