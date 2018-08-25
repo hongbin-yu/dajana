@@ -277,60 +277,9 @@
 		</section>
 		</c:if>
 </main>
+
 <nav class="wb-sec col-md-3 col-md-pull-9" typeof="SiteNavigationElement" id="wb-sec" role="navigation">
 		<input type="hidden" id="folderpath" name="path" value="${folder.path}"/>
-    <div class="wb-frmvld row well">
-    <h2 id="wb-sec-h" class="wb-inv">左菜单</h2>
-    <section class="wb-inview bar-demo show-none" data-inview="left-bar">    
-    <section class="list-group menu list-unstyled">	
-         	<form action='<c:url value="assets.html"></c:url>' method="get" name="cse-search-box" role="search" class="form-inline" accept-charset="UTF-8">
-			<input type="hidden" id="path" name="path" value="${folder.path}"/>
-			<input type="hidden" id= "input" name="input" value="${input}"/>
-			<input type="hidden" id="kw" name="kw" value="${kw}"/>		
-			<input type="hidden" id="pageNumber" name="pageNumber" value="${assets.pageNumber}"/>	
-			<input type="hidden" id="availablePages" name="availablePages" value="${assets.availablePages}"/>				
-			<input type="hidden" id="topage" name="topage" value="assetsmore"/>			    
-					<div class="form-group pull-right">
-					<label for="type"><spring:message code="djn.display"/></label>
-					<select id="type" name="type" onchange="this.form.submit()">
-					<option value="" <c:if test="${type=='' }">selected</c:if> ><spring:message code="djn.all"/></option>
-					<option value="child" <c:if test="${type=='child' }">selected</c:if> ><spring:message code="djn.child"/></option>
-					<option value="image" <c:if test="${type=='image' }">selected</c:if> ><spring:message code="djn.image"/></option>
-					<option value="video" <c:if test="${type=='video' }">selected</c:if> ><spring:message code="djn.video"/></option>
-					<option value="audio" <c:if test="${type=='audio' }">selected</c:if> ><spring:message code="djn.audeo"/></option>
-					<option value="application" <c:if test="${type=='application' }">selected</c:if> ><spring:message code="djn.file"/></option>
-					</select>
-					</div>
-			</form>  
-<!--     <details>
-		<summary> -->
-		<h3>
-        <c:if test="${folder.parent!='/assets' }">
-        <a href='<c:url value="assets.html?path=${folder.parent}&type=${type }"></c:url>'>${folder.parentTitle}<span class="glyphicon glyphicon-backward"></span>
-        </a>
-     
-        </c:if> 
-        <c:if test="${folder.parent=='/assets' }">
-        <spring:message code="djn.cloud"/>
-        </c:if>    
-        </h3>           
-<!--         </summary>    --> 	       
-        <ul class="list-group menu list-unstyled">
-        <c:forEach items="${leftmenu.subfolders}" var="item" varStatus="loop">
-            <li id="${item.uid}" >
-            <a id="folder${item.uid }" path="${item.path }" ondrop="drop(event)" ondragover="allowDrop(event)" class="list-group-item" href='<c:url value="assets.html?path=${item.path }&type=${type }"></c:url>'>${item.title} <span id="selectFiles${item.uid }"></span></a>     
-                <ul class="list-group menu list-unstyled">
-                    <c:forEach items="${item.subfolders}" var="child" varStatus="loop">
-                    	<li id="${child.uid}"><a id="folder${child.uid }" path="${child.path }" ondrop="drop(event)" ondragover="allowDrop(event)" class="list-group-item" href='<c:url value="assets.html?path=${child.path}&type=${type }"></c:url>'>${child.title}</a> <span id="selectFiles${child.uid }"></span>
-                    	</li>
-                    </c:forEach>
-                </ul>
-            </li>           
-        </c:forEach>     
-        </ul>
-        </section>
-		</section>
-        </div>   
 <div class="visible-lg">
  <section id="left-bar" class="wb-overlay modal-content overlay-def wb-panel-l col-md-3">
      <section class="list-group menu list-unstyled">	
@@ -360,7 +309,56 @@
         </ul>
         </section>
  </section>
+ 
  </div>
+    <h2 id="wb-sec-h" class="wb-inv">左菜单</h2>
+    <section class="wb-inview bar-demo show-none" data-inview="left-bar"> 
+    <section class="list-group menu list-unstyled">	
+            <form action='<c:url value="assets.html"></c:url>' method="get" name="cse-search-box" role="search" class="form-inline" accept-charset="UTF-8">
+			<input type="hidden" id="path" name="path" value="${folder.path}"/>
+			<input type="hidden" id= "input" name="input" value="${input}"/>
+			<input type="hidden" id="kw" name="kw" value="${kw}"/>		
+			<input type="hidden" id="pageNumber" name="pageNumber" value="${assets.pageNumber}"/>	
+			<input type="hidden" id="availablePages" name="availablePages" value="${assets.availablePages}"/>				
+			<input type="hidden" id="topage" name="topage" value="assetsmore"/>			    
+					<div class="form-group pull-right">
+					<label for="type"><spring:message code="djn.display"/></label>
+					<select id="type" name="type" onchange="this.form.submit()">
+					<option value="" <c:if test="${type=='' }">selected</c:if> ><spring:message code="djn.all"/></option>
+					<option value="child" <c:if test="${type=='child' }">selected</c:if> ><spring:message code="djn.child"/></option>
+					<option value="image" <c:if test="${type=='image' }">selected</c:if> ><spring:message code="djn.image"/></option>
+					<option value="video" <c:if test="${type=='video' }">selected</c:if> ><spring:message code="djn.video"/></option>
+					<option value="audio" <c:if test="${type=='audio' }">selected</c:if> ><spring:message code="djn.audeo"/></option>
+					<option value="application" <c:if test="${type=='application' }">selected</c:if> ><spring:message code="djn.file"/></option>
+					</select>
+					</div>
+			</form>      
+		<h3>
+        <c:if test="${folder.parent!='/assets' }">
+        <a href='<c:url value="assets.html?path=${folder.parent}&type=${type }"></c:url>'>${folder.parentTitle}<span class="glyphicon glyphicon-backward"></span>
+        </a>
+     
+        </c:if> 
+        <c:if test="${folder.parent=='/assets' }">
+        <spring:message code="djn.cloud"/>
+        </c:if>    
+        </h3>           
+    
+        <ul class="list-group menu list-unstyled">
+        <c:forEach items="${leftmenu.subfolders}" var="item" varStatus="loop">
+            <li id="${item.uid}" >
+            <a id="folder${item.uid }" path="${item.path }" ondrop="drop(event)" ondragover="allowDrop(event)" class="list-group-item" href='<c:url value="assets.html?path=${item.path }&type=${type }"></c:url>'>${item.title} <span id="selectFiles${item.uid }"></span></a>     
+                <ul class="list-group menu list-unstyled">
+                    <c:forEach items="${item.subfolders}" var="child" varStatus="loop">
+                    	<li id="${child.uid}"><a id="folder${child.uid }" path="${child.path }" ondrop="drop(event)" ondragover="allowDrop(event)" class="list-group-item" href='<c:url value="assets.html?path=${child.path}&type=${type }"></c:url>'>${child.title}</a> <span id="selectFiles${child.uid }"></span>
+                    	</li>
+                    </c:forEach>
+                </ul>
+            </li>           
+        </c:forEach>     
+        </ul>
+        </section>         
+	</section>
 <%-- 		<div class="row">
 		        <c:forEach items="${folders.items}" var="item" varStatus="loop">
 		            <div class="well">

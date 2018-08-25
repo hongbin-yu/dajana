@@ -578,16 +578,16 @@ function drop(ev) {
 		    					    processData: false,
 		    					    success: function(data) {
 		    					    	if(data.indexOf("error:")>=0)
-		    						        selDiv.innerHTML=  "<section class=\"alert alert-warning\"><h2 class=\"h3\">"+i18n("fail")+"</h2><p>"+data+"</p></section>"; // 
+		    						        selDiv.innerHTML=  "<section class=\"alert alert-warning\"><details><summary>"+i18n("fail")+"</summary><p>"+data+"</p></details></section>"; // 
 		    					    	else {
 		    					    		$("#"+data).remove();
-		    							    selDiv.innerHTML = "<section class=\"alert alert-success\"><h2 class=\"4\">"+i18n("move")+i18n("success")+"</h2><p>"+uid+"</p></section>";
+		    							    selDiv.innerHTML = "<section class=\"alert alert-success\"><h2 class=\"h5\">"+i18n("move")+i18n("success")+"</h2><p>"+uid+"</p></section>";
 		    							    //output(data);
 
 		    					    	}
 		    					    },
 		    					    error: function() {
-		    					        selDiv.innerHTML=  "<section class=\"alert alert-warning\"><h2 class=\"h3\">"+i18n("fail")+"</h2></section>"; // 
+		    					        selDiv.innerHTML=  "<section class=\"alert alert-warning\"><h3 class=\"h5\">"+i18n("fail")+"</h5></section>"; // 
 		    					    }
 		    					    // ... Other options like success and etc
 		    					}); 
@@ -650,7 +650,7 @@ function drop(ev) {
 				    					    processData: false,
 				    					    success: function(data) {
 				    					    	if(data.indexOf("error:")>=0)
-				    						        selDiv.innerHTML=  "<section class=\"alert alert-warning\"><h2 class=\"h3\">"+i18n("fail")+"</h2><p>"+data+"</p></section>"; // 
+				    						        selDiv.innerHTML=  "<section class=\"alert alert-warning\"><details><summary>"+i18n("fail")+"</summary><p>"+data+"</p></details></section>"; // 
 				    					    	else {
 				    					    		$("#"+data).remove();
 				    							    selDiv.innerHTML = "<section class=\"alert alert-success\"><h2 class=\"4\">"+i18n("move")+i18n("success")+"</h2><p>"+uid+"</p></section>";
@@ -658,7 +658,7 @@ function drop(ev) {
 				    					    	}
 				    					    },
 				    					    error: function() {
-				    					        selDiv.innerHTML=  "<section class=\"alert alert-warning\"><h2 class=\"h3\">"+i18n("fail")+"</h2></section>"; // 
+				    					        selDiv.innerHTML=  "<section class=\"alert alert-warning\"><h3 class=\"h5\">"+i18n("fail")+"</h3></section>"; // 
 				    					    }
 				    					    // ... Other options like success and etc
 				    					}); 
