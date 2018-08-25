@@ -859,7 +859,7 @@ function sendFormData(formData,file) {
   	  fileSize = file.fileSize;
     var start = new Date();
     var end = new Date();
-    var id = "uploading_"+file.name.replace("\.","_");
+    var id = "uploading_"+file.name.replace(/[\s()\.]+/g,"_");//.replace(/\s/g, '');
 
       $.ajax({
     	    xhr: function() {
@@ -941,7 +941,7 @@ function getAsset(formData,file) {
 	var filename = file.name;
 	var lastModified = file.lastModified==null?0:file.lastModified;
 	//var path = $("#path").val();
-    var id = "uploading_"+file.name.replace("\.","_");
+    var id = "uploading_"+file.name.replace(/[\s()\.]+/g,"_");
     var html = '<div id="'+id+'" class="col-md-4 well">'+running+'</div>';
 	$("#top_insert").after(html);	
     $.ajax({
