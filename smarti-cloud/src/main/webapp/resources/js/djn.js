@@ -822,18 +822,18 @@ function uploadFile(file) {
 	//selDiv.innerHTML = running;
 	var override = $("#override").is(":checked")?"true":"false";
 	//var path = $("#path").val();
-	var isoName ="image_" +new Date().toISOString().slice(0,19)+".jpg";
-
+	//var isoName ="image_" +new Date().toISOString().slice(0,19)+".jpg";
+    var id ="uploading_"+ new Date().getTime();
 
 	var formData = new FormData();
 	formData.append("path",path);
-	if(file.name == 'image.jpg' || Image.jpg) {
-	    formData.append("file", file,isdoName);
-	    formData.append("filename",isoName);		
-	}else {
-	    formData.append("file", file,file.name);
-	    formData.append("filename",file.name);		
-	}
+	//if(file.name == 'image.jpg' || Image.jpg) {
+	//    formData.append("file", file,isdoName);
+	//    formData.append("filename",isoName);		
+	//}else {
+	formData.append("file", file,file.name);
+	formData.append("filename",file.name);		
+	//}
     formData.append("lastModified",file.lastModified);
     formData.append("total",files.length);  
     formData.append("override",override);    
@@ -859,7 +859,7 @@ function uploadFile(file) {
 	//alert(i);
 }
 
-function sendFormData(formData,file) {
+function sendFormData(formData,file,id) {
 	var running = "<img src=\"/resources/images/ui-anim_basic_16x16.gif\">"+ file.name + " ("+i+"/"+total+")<br/>";
     if("size" in file)
         fileSize = file.size;
@@ -867,7 +867,7 @@ function sendFormData(formData,file) {
   	  fileSize = file.fileSize;
     var start = new Date();
     var end = new Date();
-    var id = "uploading_"+file.name.replace(/[\s()\.]+/g,"_");//.replace(/\s/g, '');
+    //var id = "uploading_"+file.name.replace(/[\s()\.]+/g,"_");//.replace(/\s/g, '');
 
       $.ajax({
     	    xhr: function() {
@@ -943,7 +943,7 @@ function sendFormData(formData,file) {
 		});		
 }
 
-function getAsset(formData,file) {
+function getAsset(formData,file,id) {
 	var running = "<img src=\"/resources/images/ui-anim_basic_16x16.gif\">"+ file.name + " ("+i+"/"+total+")<br/>";
 
 	var filename = file.name;
@@ -995,6 +995,7 @@ function getAsset(formData,file) {
 
 function uploadIcon(file) {
 	$("#uploadIcon").attr("src","/resources/images/ui-anim_basic_16x16.gif");
+	
 	var formData = new FormData();
 	formData.append("path",path);
 	

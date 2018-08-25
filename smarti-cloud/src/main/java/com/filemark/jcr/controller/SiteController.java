@@ -1187,6 +1187,9 @@ public class SiteController extends BaseController {
         			fileName = uploadForm.getFilename();
         		}
         		fileName = fileName.toLowerCase().replaceAll(" ", "-");
+        		if(fileName.equals("image.jpg")) {
+        			fileName = "image_"+getDateTime()+".jpg";
+        		}
         		String ext = "";
         		if(fileName.lastIndexOf(".")>0) {
         			ext = fileName.substring(fileName.lastIndexOf("."), fileName.length());
