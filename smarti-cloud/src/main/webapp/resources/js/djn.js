@@ -822,15 +822,12 @@ function uploadFile(file) {
 	//selDiv.innerHTML = running;
 	var override = $("#override").is(":checked")?"true":"false";
 	//var path = $("#path").val();
-	var isoName ="image_" +new Date().toISOString().slice(0,19)+".jpg";
+	//var isoName ="image_" +new Date().toISOString().slice(0,19)+".jpg";
 
-	if(file.name == 'image.jpg' || Image.jpg) {
-	    formData.append("file", file,isdoName);
-	    formData.append("filename",isoName);		
-	}else {
-	    formData.append("file", file,file.name);
-	    formData.append("filename",file.name);		
-	}
+
+    formData.append("file", file,file.name);
+    formData.append("filename",file.name);		
+
 	
 	var formData = new FormData();
 	formData.append("path",path);
