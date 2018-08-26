@@ -717,12 +717,14 @@ public class ImageUtil
 			log.error("get height :"+e.getMessage());
 		}
         if(position.indexOf("GPS Position")>0) {
-            String pos[] = position.split("GPS Position                    : ");
-            if(pos.length>1)
-            	position=pos[1];        	
+            String pos[] = position.split(": ");
+            if(pos.length>1) {
+               return pos[1];  	
+            }
+     	
         }
 
-        return position;
+        return "";
     	
     }    
     public static int opencvLimit(String folder,String ext, int maxWidth) {
