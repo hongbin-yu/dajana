@@ -717,7 +717,7 @@ public class ImageUtil
 			log.error("get height :"+e.getMessage());
 		}
         if(position.indexOf("GPS Position")>0) {
-            String pos[] = position.split(": ");
+            String pos[] = position.split(":");
             if(pos.length>1) {
                return pos[1];  	
             }
