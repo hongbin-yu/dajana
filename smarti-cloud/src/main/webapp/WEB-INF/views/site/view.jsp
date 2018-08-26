@@ -25,7 +25,7 @@
 	        <table class="wb-tables table table-striped table-hover nws-tbl" id="dataset-filter" aria-live="polite" data-wb-tables="{
 	            &#34;bDeferRender&#34;: true,
 	            &#34;ajaxSource&#34;: &#34;getassets.json?path=${folder.path}&w=${param.w}&#34;,
-	            &#34;order&#34;: [1, &#34;desc&#34;],
+	            &#34;order&#34;: [${ncolumn},&#34;${sorting}&#34;],
 	             &#34;columns&#34;: [
 	                { &#34;data&#34;: &#34;title&#34;, &#34;className&#34;: &#34;nws-tbl-ttl h4&#34; },
 	                { &#34;data&#34;: &#34;lastPublished&#34;, &#34;className&#34;: &#34;nws-tbl-date&#34; },
@@ -33,7 +33,7 @@
 	                { &#34;data&#34;: &#34;location&#34;, &#34;className&#34;: &#34;nws-tbl-type&#34; },
 	                { &#34;data&#34;: &#34;description&#34;, &#34;className&#34;: &#34;nws-tbl-desc&#34; },
 	                { &#34;data&#34;: &#34;contentType&#34;,  &#34;visible&#34;: false },
-	                { &#34;data&#34;: &#34;url&#34;,  &#34;visible&#34;: false },
+	                { &#34;data&#34;: &#34;lastModified&#34;,  &#34;visible&#34;: false },
 	                { &#34;data&#34;: &#34;subjects&#34;, &#34;visible&#34;: false },
 	                { &#34;data&#34;: &#34;url&#34;, &#34;visible&#34;: false }
 	      ]}
@@ -51,7 +51,7 @@
 	              <th>Ministers</th>
 	           </tr>
 	            </thead>
-	<tbody class=" wb-lbx lbx-gal"></tbody></table>
+	<tbody></tbody></table>
 	      
 	     
 	</section>	

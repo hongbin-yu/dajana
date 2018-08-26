@@ -27,6 +27,8 @@ public class News implements Serializable, SmartiNode {
 	protected String subjects="";		
 	@Field 
 	private String lastPublished="";	
+	@Field 
+	private String lastModified="";		
 	@Field
 	protected String location="";	
 	@Field
@@ -99,6 +101,16 @@ public class News implements Serializable, SmartiNode {
 
 	public void setLastPublished(String lastPublished) {
 		this.lastPublished = lastPublished;
+	}
+
+	public String getLastModified() {
+		if(lastModified == null) return "";
+		return lastModified;
+	}
+
+	public void setLastModified(String lastModified) {
+		
+		this.lastModified = lastModified;
 	}
 
 	public void setPath(String path) {

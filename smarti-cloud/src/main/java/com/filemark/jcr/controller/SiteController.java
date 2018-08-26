@@ -392,7 +392,21 @@ public class SiteController extends BaseController {
 	@RequestMapping(value = {"/site/view.html","/site/view"}, method = {RequestMethod.GET,RequestMethod.POST},produces = "text/plain;charset=UTF-8")
 	public String view(String path,String type, String input,String kw,Integer p,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
 		assets(path,type,input,kw,p,model,request,response);
+		Folder folder = jcrService.getFolder(path);
+		String ncolumn = "2";
+		String sort = "desc";
+		String orderby = folder.getOrderby();
+		if(orderby !=null && orderby.endsWith("asc")) {
+			sort = "asc";
+		}
+		
+		if(orderby ==null || orderby.startsWith("lastModified")) {
+			ncolumn ="7";
+		}
+		
 		model.addAttribute("type", type);
+		model.addAttribute("ncolumn", ncolumn);
+		model.addAttribute("sorting", sort);
 		model.addAttribute("leftmenu", getLeftmenuJson(path,type,model,request,response));
 		//if("image".equals(type)) return "site/view_image"; 
 		return "site/view";
@@ -1137,13 +1151,14 @@ public class SiteController extends BaseController {
 	}
     	
 	@RequestMapping(value = {"/site/getassets.json"}, method = RequestMethod.GET)
-	public @ResponseBody Map<String, News[]> getAssetsJson(String path,String type,Integer w,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public @ResponseBody Map<String, News[]> getAssetsJson(String path,String type,Integer w,Model model,HttpServletRequest request, HttpServletResponse response){
 		Folder folder = folderJson(path,type,model,request,response);
 		List<News> f2new = new ArrayList<News>();
 		Map<String, News[]> data = new HashMap<String, News[]>();
 		if(folder != null && folder.getAssets()!=null)
 			getAsset2News(folder,f2new,w);
 		data.put("data", f2new.toArray(new News[0]));
+
 		return data;
 	}
 	
@@ -1171,6 +1186,8 @@ public class SiteController extends BaseController {
 			a2news.setDescription(asset.getDescription());
 			if(asset.getOriginalDate()!=null)
 				a2news.setLastPublished(sf.format(asset.getOriginalDate()));
+			if(asset.getLastModified()!=null)
+				a2news.setLastModified(sf.format(asset.getLastModified()));			
 			a2news.setSubjects(folder.getTitle());
 			if(asset.getPosition()!=null && !"".equals(asset.getPosition()))
 				a2news.setLocation("<a class=\"wb-lbx\" href=\"https://www.google.com/maps?q="+asset.getPosition()+"\" target=\"_blank\">拍摄地址</a>");
