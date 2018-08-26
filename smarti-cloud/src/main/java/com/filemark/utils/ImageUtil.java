@@ -724,7 +724,7 @@ public class ImageUtil
      	
         }
 
-        return "";
+        return position;
     	
     }    
     public static int opencvLimit(String folder,String ext, int maxWidth) {
