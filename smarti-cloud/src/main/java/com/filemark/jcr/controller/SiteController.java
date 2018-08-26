@@ -391,6 +391,14 @@ public class SiteController extends BaseController {
 
 	@RequestMapping(value = {"/site/view.html","/site/view"}, method = {RequestMethod.GET,RequestMethod.POST},produces = "text/plain;charset=UTF-8")
 	public String view(String path,String type, String input,String kw,Integer p,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
+		
+		String assetFolder = "/assets"+"/"+getUsername();
+		String oldFolder = "/"+getUsername()+"/assets";
+		if(!jcrService.nodeExsits(assetFolder)) {
+			jcrService.addNodes(assetFolder, "nt:unstructured",getUsername());		
+		}		
+		if(path == null || (!path.startsWith(assetFolder) && !path.startsWith(oldFolder))) path=assetFolder;
+		
 		assets(path,type,input,kw,p,model,request,response);
 		Folder folder = jcrService.getFolder(path);
 		String ncolumn = "2";
