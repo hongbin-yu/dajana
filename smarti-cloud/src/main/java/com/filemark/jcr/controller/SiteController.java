@@ -1014,12 +1014,33 @@ public class SiteController extends BaseController {
 		WebPage<Asset> assets = jcrService.searchAssets(assetsQuery, 10, 0);		
 		for(Asset a:assets.getItems()) {
 			if(lastModified==null || lastModified ==0 || a.getOriginalDate()==null || a.getOriginalDate().getTime() == lastModified) {
+
 				return a;
 			}
 		}
    		return asset;
    	}
- 
+
+   	@RequestMapping(value = {"/site/getposition.json"}, method = {RequestMethod.GET})
+   	public @ResponseBody Asset positionJson(String path,Model model,HttpServletRequest request, HttpServletResponse response) {
+
+   		Asset asset;
+		try {
+			asset = (Asset)jcrService.getObject(path);
+			String ext = asset.getExt();
+			if(asset.getDevice()!=null) {
+				Device device = (Device)jcrService.getObject(asset.getDevice());
+				String infile = device.getLocation()+asset.getPath()+"/origin"+ext;
+				String position = ImageUtil.getPosition(infile);
+				asset.setPosition(position);
+			}
+		} catch (RepositoryException e) {
+			return new Asset();
+		}
+
+   		return asset;
+   	}
+   	
    	@RequestMapping(value = {"/site/getfolder.json"}, method = {RequestMethod.GET})
    	public @ResponseBody Folder folderJson(String path,String type,Model model,HttpServletRequest request, HttpServletResponse response)  {
    		String username = getUsername();

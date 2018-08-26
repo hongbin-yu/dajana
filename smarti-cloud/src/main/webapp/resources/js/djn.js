@@ -547,8 +547,8 @@ function drop(ev) {
     	path = $("#path").val();
     	if(id != 'uploadImg' && ev.target.getAttribute("path")) {
     		path = ev.target.getAttribute("path");
-    		id = id.replace("folder","selectFiles");
-    		selDiv = document.querySelector("#"+id);    			
+    		var sel_id = id.replace("folder","selectFiles");
+    		selDiv = document.querySelector("#"+sel_id);    			
 
     	}else {
     		selDiv = document.querySelector("#selectedFiles");

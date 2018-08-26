@@ -716,9 +716,12 @@ public class ImageUtil
 		}catch (InterruptedException e) {
 			log.error("get height :"+e.getMessage());
 		}
-        String pos[] = position.split(":");
-        if(pos.length>1)
-        	position=pos[1];
+        if(position.indexOf("GPS Position")>0) {
+            String pos[] = position.split("GPS Position                    : ");
+            if(pos.length>1)
+            	position=pos[1];        	
+        }
+
         return position;
     	
     }    
