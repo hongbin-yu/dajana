@@ -923,6 +923,10 @@ function sendFormData(formData,file,id) {
 		    		}
 
 		    		output(data);
+		    		if(i <total) {
+		    			uploadFile(files[i]);	
+		    			//setTimeout(checkProgress,1000);
+		    		}
 /*			    	if(i==total || total==0) {
 		    			setTimeout(function () {
 		    				files = [];
@@ -1055,7 +1059,7 @@ function uploadFiles() {
 		submit_upload.disabled=true;
 	if(total > 0)
 		uploadFile(files[i]);
-	setTimeout(checkProgress,1000);
+	//setTimeout(checkProgress,1000);
 
 }
 
