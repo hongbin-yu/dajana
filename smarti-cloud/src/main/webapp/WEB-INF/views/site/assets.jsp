@@ -14,8 +14,8 @@
 		<a href="javascript:openPdf()" class="btn btn-primary pull-right" title="打开PDF"><span class="glyphicon glyphicon-open"></span></a>
 		<span class="btn btn-default pull-right" title="选择切换"><input id="toggle" type="checkbox" onClick="toggle(this)"/></span>
         </h1>
-        ${folder.description }
-<div class="row">
+		<div class="panel panel-default description form-control" id="description${folder.uid }" property="description"  uid="${folder.uid}" placeholder="description">${folder.description}</div>
+<div class="row" style="FONT-FAMILY: 'Bahnschrift';">
 		<div class="wb-frmvld col-md-4 well">
 			<form action="upload.html" method="POST" id="form-upload" enctype="multipart/form-data">
 				<input type="hidden" id="path" name="path" value="${folder.path}"/>
@@ -44,9 +44,6 @@
    			    <a class="wb-lbx" title="<spring:message code="djn.delete"/>" href="<c:url value="/site/delete.html?uid=${folder.uid }&redirect=/site/assets.html?path=${folder.parent }"/>"><span class="btn-danger btn-sm glyphicon glyphicon-remove"><spring:message code="djn.delete"/></span>(${folder.path})</a>
 				<div class="form-group">
 				<label for="foldertitle"><spring:message code="djn.title"/>&nbsp;</label><input class="form-control" id="foldertitle" name="jcr:title" value="${folder.title}" size="25" uid="${folder.uid}"  onchange="updateNode(this)"/>
-				</div>
-				<div class="form-group">   
-				<label for="foldertitle"><spring:message code="djn.description"/>&nbsp;</label><div class="panel panel-default description form-control" id="description${folder.uid }" property="description"  uid="${folder.uid}" placeholder="description">${folder.description}</div>
 				</div>
 				<div class="form-group">
 				<label for="folderorderby"><spring:message code="djn.order"/>&nbsp;</label>
@@ -195,7 +192,7 @@
 	<div class="panel panel-default description" id="description${item.uid }" property="description"  uid="${item.uid}" placeholder="description">${item.description}</div>
 	
 	<details>
-		<summary><span class="glyphicon glyphicon-edit"></span> ${item.title}</summary>
+		<summary>${item.title}</summary>
 		<span class="glyphicon glyphicon-remove"></span>
 		<a class="wb-lbx" title="<spring:message code="djn.delete"/>" href="<c:url value='deleteasset.html?path=${item.path}&redirect=/site/assets.html?path=${folder.path }'/>"><spring:message code="djn.delete"/>(${item.path })</a>
 		<div class="form-group">
@@ -220,7 +217,7 @@
 			<label for="size${item.uid}"><spring:message code="djn.length"/>&nbsp;</label><input class="form-control" id="size${item.uid}" name="size" value="${item.size}(${item.width}x${item.height})" size="24" uid="${item.uid}" disabled/>
 		</div>	
 		<div class="form-group">
-			<label for="device${item.uid}"><spring:message code="djn.location"/>&nbsp;</label><input class="form-control" id="device${item.uid}" name="size" value="${item.device}" size="60" uid="${item.uid}" disabled/>
+			<label for="device${item.uid}"><spring:message code="djn.location"/>&nbsp;${item.position }</label><input class="form-control" id="device${item.uid}" name="size" value="${item.device}" size="60" uid="${item.uid}" disabled/>
 		</div>	
 		<div class="form-group">
 		<label for="lastModified${item.uid }"><spring:message code="djn.upload_date"/>&nbsp;</label>
