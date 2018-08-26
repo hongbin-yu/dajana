@@ -407,7 +407,13 @@ public class SiteController extends BaseController {
 		model.addAttribute("type", type);
 		model.addAttribute("ncolumn", ncolumn);
 		model.addAttribute("sorting", sort);
-		model.addAttribute("leftmenu", getLeftmenuJson(path,type,model,request,response));
+		try {
+			model.addAttribute("leftmenu", getLeftmenuJson(path,type,model,request,response));
+			
+		}catch(Exception e) {
+	   		File json = new File(jcrService.getDevice()+path+"/Output.json");
+	   		json.delete();
+		}
 		//if("image".equals(type)) return "site/view_image"; 
 		return "site/view";
 	}
@@ -1116,12 +1122,12 @@ public class SiteController extends BaseController {
    		return folder;
    	}
 	@RequestMapping(value = {"/site/getleftmenu.json"}, method = RequestMethod.GET)
-	public @ResponseBody Folder getLeftmenuJson(String path,String type,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public @ResponseBody Folder getLeftmenuJson(String path,String type,Model model,HttpServletRequest request, HttpServletResponse response) {
 		String assetFolder = "/assets"+"/"+getUsername();
 		String oldFolder = "/"+getUsername()+"/assets";
-		if(!jcrService.nodeExsits(assetFolder)) {
-			jcrService.addNodes(assetFolder, "nt:unstructured",getUsername());		
-		}		
+		//if(!jcrService.nodeExsits(assetFolder)) {
+			//jcrService.addNodes(assetFolder, "nt:unstructured",getUsername());		
+		//}		
 		if(path == null || (!path.startsWith(assetFolder) && !path.startsWith(oldFolder))) path=assetFolder;
 	
 		
