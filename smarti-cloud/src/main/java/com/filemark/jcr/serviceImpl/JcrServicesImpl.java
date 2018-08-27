@@ -1460,7 +1460,7 @@ public class JcrServicesImpl implements JcrServices {
 		Font font = FontFactory.getFont(resource.getFile().getAbsolutePath(), BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
 		inputStream.read(data);
 			  img = com.itextpdf.text.Image.getInstance(data);
-			  if(description !=null) {
+			  if(description !=null && !"".equals(description)) {
 				  com.itextpdf.text.Rectangle pagesize = new com.itextpdf.text.Rectangle(PageSize.LETTER.getWidth()+20, PageSize.LETTER.getHeight()+20);
 				  pdfDoc = new com.itextpdf.text.Document();
 				  pdfDoc.setPageSize(pagesize);

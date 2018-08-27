@@ -70,10 +70,10 @@
 </a>
 </div>
 <div class="col-xs-4 col-md-4 text-center">
-<ul class="list-unstyled lst-spcd">
+<%-- <ul class="list-unstyled lst-spcd">
 <li><a class="btn btn-success" href='<c:url value="/protected/youchat.html"></c:url>' title="<spring:message code="djn.online_chat"></spring:message>"><spring:message code="djn.chat"></spring:message></a></li>
 <li><a class="btn btn-warning" href='<c:url value="/protected/youlook.html"></c:url>' title="<spring:message code="djn.youlook"></spring:message>"><spring:message code="djn.youlook"></spring:message></a></li>
-</ul>
+</ul> --%>
  </div>
 <div class="col-xs-4 pull-right">
 <a class="btn btn-default" href="http://home.dajana.ca" title="内网登入"><img class="img-responsive" src ="/resources/images/yuhong-icon100.png" alt="内网登入"/></a>
