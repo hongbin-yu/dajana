@@ -27,7 +27,7 @@
 					</div>						
 				<div class="form-group" ondrop="drop(event)" ondragover="allowDrop(event)" style="border:1px solid #aaaaaa;">
 					<label for="fileUpload" class="required"><a href="#" onclick="openFiles()"><span id="openFiles" class="field-name"><spring:message code="djn.select_dragging_drop"/> </span></a></label>
-					<br/><a href="#" onclick="openFiles()"><img id="uploadImg" path="${folder.path}" alt="" src="<c:url value='/resources/images/upload.png'/>"/></a>
+					<br/><a href="#" onclick="openFiles()"><img id="uploadImg" class="img-responsive" path="${folder.path}" alt="" src="<c:url value='/resources/images/folder360X360.png'/>"/></a>
 					<div class="panel" id="selectedFiles">
 					</div>	
 					<input class="form-control wb-inv" type="file" id="fileUpload" name="file" size="60" required="required"  multiple/>
