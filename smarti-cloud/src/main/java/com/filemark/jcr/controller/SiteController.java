@@ -1183,7 +1183,7 @@ public class SiteController extends BaseController {
 			News a2news = new News();
 			//logger.warn("Asset:"+asset.getPath());
 			String icon = w!=null && w==1?asset.getIconSmall():asset.getIcon();
-			String title ="<input type=\"checkbox\" name=\"puid\" value=\""+asset.getUid()+"\"> <a href=\"javascript:openImage(\'file/"+asset.getLink()+"&w=12')\"><img alt=\"\" class=\"img-responsive img-rounded pull-left mrgn-rght-md\" src=\""+icon+"\"><a href=\"file/"+asset.getLink()+"\" target=\"_blank\" title=\"打开原图\">"+asset.getTitle()+"</a>"
+			String title ="<input type=\"checkbox\" name=\"puid\" value=\""+asset.getUid()+"\"> <a href=\"javascript:openImage(\'"+asset.getLink()+"&w=12')\"><img alt=\"\" class=\"img-responsive img-rounded pull-left mrgn-rght-md\" src=\""+icon+"\"><a href=\"file/"+asset.getLink()+"\" target=\"_blank\" title=\"打开原图\">"+asset.getTitle()+"</a>"
 						+(asset.getPdf()?"<a class=\"btn-default btn-xs pull-right\" href=\"viewpdf.pdf?uid="+asset.getUid()+"\" title=\"PDF\" target=\"_blank\">打开 PDF</a>":"");
 			if(asset.getMp4()) {
 				if(w!=null && w==1) {
@@ -1227,7 +1227,7 @@ public class SiteController extends BaseController {
 		if(total == null) total = 1;
 		logger.debug("Uploading..");
 		Date start = new Date();
-		ImageUtil.HDDOn();
+		//ImageUtil.HDDOn();
 		try {
 			if(!jcrService.nodeExsits(path)) {
 				jcrService.addNodes(path, "nt:unstructured",getUsername());		
@@ -1363,6 +1363,7 @@ public class SiteController extends BaseController {
             			jcrService.addFile(assetPath,"original",multipartFile.getInputStream(),contentType);
         			}
         			//logger.debug("Done");
+        			asset = (Asset)jcrService.getObject(asset.getPath());
         			asset.setTitle(asset.getTitle() +" - "+(new Date().getTime() - start.getTime()));
 
 
@@ -1378,7 +1379,7 @@ public class SiteController extends BaseController {
 			asset.setTitle("error:"+e.getMessage());
 			
 		}
-		ImageUtil.HDDOff();
+		//ImageUtil.HDDOff();
 		return asset;
 	}	
 
