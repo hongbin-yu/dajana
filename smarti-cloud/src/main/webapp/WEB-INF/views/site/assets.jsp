@@ -217,7 +217,7 @@
 			<label for="size${item.uid}"><spring:message code="djn.length"/>&nbsp;</label><input class="form-control" id="size${item.uid}" name="size" value="${item.size}(${item.width}x${item.height})" size="24" uid="${item.uid}" disabled/>
 		</div>	
 		<div class="form-group">
-			<label for="device${item.uid}"><spring:message code="djn.location"/>&nbsp;${item.position }</label><input class="form-control" id="device${item.uid}" name="size" value="${item.device}" size="60" uid="${item.uid}" disabled/>
+			<label for="device${item.uid}"><spring:message code="djn.location"/>&nbsp;<c:if test="${item.position !=''}"><a href="https://google.com/maps?q=${item.position }" target="_blank">${item.position }</a></c:if></label><input class="form-control" id="device${item.uid}" name="size" value="${item.device}" size="60" uid="${item.uid}" disabled/>
 		</div>	
 		<div class="form-group">
 		<label for="lastModified${item.uid }"><spring:message code="djn.upload_date"/>&nbsp;</label>
