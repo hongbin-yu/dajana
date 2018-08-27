@@ -24,7 +24,7 @@
 	        <div class="mrgn-tp-xl"></div>
 	        <table class="wb-tables table table-striped table-hover nws-tbl" id="dataset-filter" aria-live="polite" data-wb-tables="{
 	            &#34;bDeferRender&#34;: true,
-	            &#34;ajaxSource&#34;: &#34;getassets.json?path=${folder.path}&w=${param.w}&#34;,
+	            &#34;ajaxSource&#34;: &#34;getassets.json?path=${folder.path}&type=${type}&w=${param.w}&#34;,
 	            &#34;order&#34;: [${ncolumn},&#34;${sorting}&#34;],
 	             &#34;columns&#34;: [
 	                { &#34;data&#34;: &#34;title&#34;, &#34;className&#34;: &#34;nws-tbl-ttl h4&#34; },

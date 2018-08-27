@@ -1078,7 +1078,7 @@ public class SiteController extends BaseController {
 			folder = jcrService.getFolder(path);
 			
 
-	   		if(json.exists() && json.lastModified() > folder.getLastModified().getTime()) {
+	   		if(json.exists() && folder.getLastModified() !=null && json.lastModified() > folder.getLastModified().getTime()) {
 	   			InputStreamReader jsonRead = new InputStreamReader(new FileInputStream(json),"UTF-8");
 	   			BufferedReader br = new BufferedReader(jsonRead);
 	   			Gson gson = new Gson();
@@ -1170,13 +1170,13 @@ public class SiteController extends BaseController {
 		List<News> f2new = new ArrayList<News>();
 		Map<String, News[]> data = new HashMap<String, News[]>();
 		if(folder != null && folder.getAssets()!=null)
-			getAsset2News(folder,f2new,w);
+			getAsset2News(folder,f2new,w,type);
 		data.put("data", f2new.toArray(new News[0]));
 
 		return data;
 	}
 	
-	private void getAsset2News(Folder folder,List<News>newsList,Integer w) {
+	private void getAsset2News(Folder folder,List<News>newsList,Integer w,String type) {
 		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
 		for(Asset asset:folder.getAssets()) {
@@ -1209,9 +1209,9 @@ public class SiteController extends BaseController {
 			newsList.add(a2news);
 			
 		}
-		if(folder.getSubfolders()!=null)
+		if(folder.getSubfolders()!=null && !"child".equals(type))
 		for(Folder f:folder.getSubfolders()) {
-			getAsset2News(f,newsList,w);
+			getAsset2News(f,newsList,w,type);
 			if(newsList.size() > 10000) break;
 		}
 	}
