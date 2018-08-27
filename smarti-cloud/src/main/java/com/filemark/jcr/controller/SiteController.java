@@ -1677,15 +1677,20 @@ public class SiteController extends BaseController {
 					src = new File(jcrService.getBackup()+frompath);
 					des = new File(jcrService.getBackup()+topath);
 				}
+				if(new File(des,src.getName()).exists()) {
+					name = getDateTime();
+					src.renameTo(new File(src.getParent()+"/"+name));
+					src = new File(src.getParent()+"/"+name);
+				}
 				if(src.exists()) {
 					FileUtils.moveDirectoryToDirectory(src, des, true);
 					
 				}
 				if(name==null) {
 					name = frompath.substring(frompath.lastIndexOf("/")+1);
-				}else if(des.isDirectory()){
+				}/*else if(des.isDirectory()){
 					des.renameTo(new File(des.getParent()+"/"+name));
-				}
+				}*/
 			} catch (IOException e) {
 				return "error:"+e.getMessage();
 			}
