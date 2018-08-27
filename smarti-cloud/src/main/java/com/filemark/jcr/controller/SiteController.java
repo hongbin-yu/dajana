@@ -1684,6 +1684,8 @@ public class SiteController extends BaseController {
 			} catch (IOException e) {
 				return "error:"+e.getMessage();
 			}
+			jcrService.updateCalendar(frompath, "lastModified");
+			jcrService.updateCalendar(topath, "lastModified");
 			return jcrService.move(frompath, topath+"/"+name, userName);
 	}	
 	@RequestMapping(value = {"/site/updateProperty.html","/admin/updateProperty.html","/proptected/updateProperty.html"}, method = {RequestMethod.GET,RequestMethod.POST})
