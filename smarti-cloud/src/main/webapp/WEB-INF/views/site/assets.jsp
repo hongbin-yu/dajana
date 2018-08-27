@@ -15,7 +15,7 @@
 		<span class="btn btn-default pull-right" title="选择切换"><input id="toggle" type="checkbox" onClick="toggle(this)"/></span>
         </h1>
 		<div class="panel panel-default description form-control" id="description${folder.uid }" property="description"  uid="${folder.uid}" placeholder="description">${folder.description}</div>
-<div class="row" style="FONT-FAMILY: 'Bahnschrift';">
+<div class="row">
 		<div class="wb-frmvld col-md-4 well">
 			<form action="upload.html" method="POST" id="form-upload" enctype="multipart/form-data">
 				<input type="hidden" id="path" name="path" value="${folder.path}"/>
@@ -282,7 +282,7 @@
      <section class="list-group menu list-unstyled">	
 		<h3>
         <c:if test="${folder.parent!='/assets' }">
-        <a href='<c:url value="assets.html?path=${folder.parent}&type=${type }"></c:url>'>${folder.parentTitle}<span class="glyphicon glyphicon-backward"></span>
+        <a href='<c:url value="assets.html?path=${folder.parent}&type=${type }"></c:url>'><span class="glyphicon glyphicon-folder-close"></span> ${folder.parentTitle}<span class="glyphicon glyphicon-backward"></span>
         </a>
      
         </c:if> 
@@ -294,10 +294,10 @@
         <ul class="list-group menu list-unstyled">
         <c:forEach items="${leftmenu.subfolders}" var="item" varStatus="loop">
             <li id="${item.uid}" >
-            <a id="folder${item.uid }" path="${item.path }" ondrop="drop(event)" ondragover="allowDrop(event)" class="list-group-item" href='<c:url value="assets.html?path=${item.path }&type=${type }"></c:url>'>${item.title} <span id="selectFiles${item.uid }"></span></a>     
+            <a id="folder${item.uid }" path="${item.path }" ondrop="drop(event)" ondragover="allowDrop(event)" class="list-group-item" href='<c:url value="assets.html?path=${item.path }&type=${type }"></c:url>'><c:if test="${item.path==folder.path }"><span class="glyphicon glyphicon-folder-open"></span></c:if><c:if test="${item.path!=folder.path }"><span class="glyphicon glyphicon-folder-close"></span></c:if> ${item.title}<span id="selectFiles${item.uid }"></span></a>     
                 <ul class="list-group menu list-unstyled">
                     <c:forEach items="${item.subfolders}" var="child" varStatus="loop">
-                    	<li id="${child.uid}"><a id="folder${child.uid }" path="${child.path }" ondrop="drop(event)" ondragover="allowDrop(event)" class="list-group-item" href='<c:url value="assets.html?path=${child.path}&type=${type }"></c:url>'>${child.title}</a> <span id="selectFiles${child.uid }"></span>
+                    	<li id="${child.uid}"><a id="folder${child.uid }" path="${child.path }" ondrop="drop(event)" ondragover="allowDrop(event)" class="list-group-item" href='<c:url value="assets.html?path=${child.path}&type=${type }"></c:url>'><span class="glyphicon glyphicon-folder-close"></span> ${child.title}</a> <span id="selectFiles${child.uid }"></span>
                     	</li>
                     </c:forEach>
                 </ul>
@@ -332,7 +332,7 @@
 			</form>      
 		<h3>
         <c:if test="${folder.parent!='/assets' }">
-        <a href='<c:url value="assets.html?path=${folder.parent}&type=${type }"></c:url>'>${folder.parentTitle}<span class="glyphicon glyphicon-backward"></span>
+        <a href='<c:url value="assets.html?path=${folder.parent}&type=${type }"></c:url>'><span class="glyphicon glyphicon-folder-close"></span> ${folder.parentTitle}<span class="glyphicon glyphicon-backward"></span>
         </a>
      
         </c:if> 
@@ -344,10 +344,10 @@
         <ul class="list-group menu list-unstyled">
         <c:forEach items="${leftmenu.subfolders}" var="item" varStatus="loop">
             <li id="${item.uid}" >
-            <a id="folder${item.uid }" path="${item.path }" ondrop="drop(event)" ondragover="allowDrop(event)" class="list-group-item" href='<c:url value="assets.html?path=${item.path }&type=${type }"></c:url>'>${item.title} <span id="selectFiles${item.uid }"></span></a>     
+            <a id="folder${item.uid }" path="${item.path }" ondrop="drop(event)" ondragover="allowDrop(event)" class="list-group-item" href='<c:url value="assets.html?path=${item.path }&type=${type }"></c:url>'><c:if test="${item.path==folder.path }"><span class="glyphicon glyphicon-folder-open"></span></c:if><c:if test="${item.path!=folder.path }"><span class="glyphicon glyphicon-folder-close"></span></c:if> ${item.title}<span id="selectFiles${item.uid }"></span></a>     
                 <ul class="list-group menu list-unstyled">
                     <c:forEach items="${item.subfolders}" var="child" varStatus="loop">
-                    	<li id="${child.uid}"><a id="folder${child.uid }" path="${child.path }" ondrop="drop(event)" ondragover="allowDrop(event)" class="list-group-item" href='<c:url value="assets.html?path=${child.path}&type=${type }"></c:url>'>${child.title}</a> <span id="selectFiles${child.uid }"></span>
+                    	<li id="${child.uid}"><a id="folder${child.uid }" path="${child.path }" ondrop="drop(event)" ondragover="allowDrop(event)" class="list-group-item" href='<c:url value="assets.html?path=${child.path}&type=${type }"></c:url>'><span class="glyphicon glyphicon-folder-close"></span> ${child.title}</a> <span id="selectFiles${child.uid }"></span>
                     	</li>
                     </c:forEach>
                 </ul>

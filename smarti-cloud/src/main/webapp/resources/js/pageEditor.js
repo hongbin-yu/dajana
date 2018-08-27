@@ -23,14 +23,28 @@ tinymce.init({
 	  selector: 'div.description',
 	  inline: true,
 	  language: 'zh_CN.GB2312',
-	  plugins: ['save paste advlist autolink lists link imagetools autosave'],
-	  toolbar: 'save undo redo paste',
+	  plugins: ['save paste advlist autolink lists link image imagetools autosave'],
+      image_class_list:  [{title: 'Image Responsive', value: 'img-responsive'},
+					      {title: 'Image Thumbnail', value: 'thumbnail'},
+					      {title: 'Image Circle', value: 'img-circle'},
+					      {title: 'Image Rounded', value: 'img-rounded'},					      
+					      {title: 'Image Thumbnail Responsive', value: 'img-responsive thumbnail'},
+					      {title: 'Pull left', value: 'pull-left img-responsive'},
+					      {title: 'Pull right', value: 'pull-right img-responsive'},
+					      {title: 'None', value: ''}],
+      image_default_attributes: {
+          class: 'img-responsive'
+      },	  
+      file_browser_callback : function(field_name, url, type, win) {
+    	  fileBrowserCallBack(field_name, url, type, win);
+    	  //win.document.getElementById(field_name).value = 'my browser value';
+      },
+      file_browser_callback_types: 'file image media',	  
+	  toolbar: 'save undo redo image paste',
 	  autosave_ask_before_unload: false,
 	  autosave_interval: "10s",
 	  menubar: false,
 	  save_onsavecallback: function() {
-            // USE THIS IN YOUR AJAX CALL
-
 	    var id = tinyMCE.activeEditor.id;
 	    var uid = id.replace("description","");
 	    var div_id = document.getElementById(id);
@@ -38,10 +52,7 @@ tinymce.init({
 	    //var uid = div_id.getAttribute("uid");
 	    if(uid ) {
 	        var content = tinyMCE.activeEditor.getContent();
-/*	        var fd = new FormData();
-	        fd.append('name', name);
-	        fd.append('uid', uid);
-	        fd.append('value', content);*/
+
 	        $.ajax({
 	    	    url: 'updateNodeProperty.html',
 	    	    data: {
