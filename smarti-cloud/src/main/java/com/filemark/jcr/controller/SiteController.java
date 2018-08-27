@@ -1353,10 +1353,10 @@ public class SiteController extends BaseController {
 	           				if(!"1080x720".equals(resolution) && !contentType.equals("video/mp4"))
 	           					ImageUtil.video2mp4(file.getAbsolutePath(),resolution);
 	        			} 
-           				if(asset.getContentType().startsWith("image/")) {
-           					jcrService.autoRoateImage(path);
+           				//if(asset.getContentType().startsWith("image/")) {
+           					//jcrService.autoRoateImage(path);
            					//jcrService.createIcon(path, 400, 400);
-           				}
+           				//}
 
         			}else {
         				//logger.debug("Writing jcr");
