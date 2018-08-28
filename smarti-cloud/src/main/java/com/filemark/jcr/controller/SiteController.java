@@ -1230,7 +1230,7 @@ public class SiteController extends BaseController {
 			}
 	        if(asset.getDoc2pdf()) {
 	        	title = "<a class=\"download pull-right\" href=\"file/"+asset.getName()+"?path=\""+asset.getPath()+" target=\"_BLANK\" download><span class=\"glyphicon glyphicon-download\">下载</span></a>"
-			    		+"<a class=\""+asset.getCssClass()+"\" href=\"doc2pdf.pdf?path="+asset.getPath()+" target=\"_BLANK\">"
+			    		+"<a class=\""+asset.getCssClass()+"\" href=\"doc2pdf.pdf?path="+asset.getPath()+"\" target=\"_BLANK\">"
 					    +"<img id=\"img"+asset.getUid()+"\" src=\""+icon+"\" class=\"img-responsive img-rounded pull-left mrgn-rght-md\" draggable=\"true\"/>"
 					    +asset.getTitle()+"</a>";
 	        }			
