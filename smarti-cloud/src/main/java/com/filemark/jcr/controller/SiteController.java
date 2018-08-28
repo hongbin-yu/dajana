@@ -82,6 +82,7 @@ import com.filemark.utils.ScanUploadForm;
 import com.filemark.utils.WebPage;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 
 
 @Controller
@@ -1170,12 +1171,35 @@ public class SiteController extends BaseController {
 	@RequestMapping(value = {"/site/getassets.json"}, method = RequestMethod.GET)
 	public @ResponseBody Map<String, News[]> getAssetsJson(String path,String type,Integer w,Model model,HttpServletRequest request, HttpServletResponse response){
 		Folder folder = folderJson(path,type,model,request,response);
-		List<News> f2new = new ArrayList<News>();
-		Map<String, News[]> data = new HashMap<String, News[]>();
-		if(folder != null && folder.getAssets()!=null)
-			getAsset2News(folder,f2new,w,type);
-		data.put("data", f2new.toArray(new News[0]));
+		if(w ==null) w = 4; 
+		Map<String, News[]> data = new HashMap<String, News[]>();	
+		File json = new File(jcrService.getDevice()+path+"/Assets_"+type+"_"+w+".json");
+		try {	
+			if(json.exists() && folder.getLastModified() !=null && json.lastModified() > folder.getLastModified().getTime()) {
+				response.setContentType("application/json");
+				FileUtils.copyFile(json, response.getOutputStream());
+				return null;
+	   		}else {
+   			
+				List<News> f2new = new ArrayList<News>();
+				if(folder != null && folder.getAssets()!=null)
+					getAsset2News(folder,f2new,w,type);
+				data.put("data", f2new.toArray(new News[0]));
+	   			OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(json),"UTF-8");
+				try {
+					new Gson().toJson(data, writer);
+				}finally {
+	   				writer.close();
+	   			}
+	   		}
 
+		} catch (IOException e) {
+			json.delete();
+			logger.error(e.getMessage());		
+		} catch (NullPointerException e) {
+			json.delete();
+			logger.error("folder:"+folder.getPath()+","+e.getMessage());		
+		}
 		return data;
 	}
 	
@@ -1205,7 +1229,7 @@ public class SiteController extends BaseController {
 						+"<source type=\"video/mp4\" src=\"video.mp4?path="+asset.getPath()+"\"/></video></figture>";
 			}
 			a2news.setTitle(title);
-			a2news.setDescription(asset.getDescription());
+			a2news.setDescription(asset.getDescription()==null?"":asset.getDescription());
 			if(asset.getOriginalDate()!=null)
 				a2news.setLastPublished(sf.format(asset.getOriginalDate()));
 			if(asset.getLastModified()!=null)
