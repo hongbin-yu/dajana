@@ -1175,7 +1175,7 @@ public class SiteController extends BaseController {
 		Map<String, News[]> data = new HashMap<String, News[]>();	
 		File json = new File(jcrService.getDevice()+path+"/Assets_"+type+"_"+w+".json");
 		try {	
-			if(r==null && json.exists() && folder.getLastModified() !=null && json.lastModified() > folder.getLastModified().getTime()) {
+			if((r==null || "".equals(r)) && json.exists() && folder.getLastModified() !=null && json.lastModified() > folder.getLastModified().getTime()) {
 				response.setContentType("application/json");
 				FileUtils.copyFile(json, response.getOutputStream());
 				return null;
@@ -1229,7 +1229,7 @@ public class SiteController extends BaseController {
 						+"<source type=\"video/mp4\" src=\"video.mp4?path="+asset.getPath()+"\"/></video></figture>";
 			}
 	        if(asset.getDoc2pdf()) {
-	        	title = "<a class=\"download pull-right\" href=\"file/"+asset.getName()+"?path=\""+asset.getPath()+" target=\"_BLANK\" download><span class=\"glyphicon glyphicon-download\">下载</span></a>"
+	        	title = "<a class=\"download pull-right\" href=\"file/"+asset.getName()+"?path="+asset.getPath()+" target=\"_BLANK\" download><span class=\"glyphicon glyphicon-download\">下载</span></a>"
 			    		+"<a class=\""+asset.getCssClass()+"\" href=\"doc2pdf.pdf?path="+asset.getPath()+"\" target=\"_BLANK\">"
 					    +"<img id=\"img"+asset.getUid()+"\" src=\""+icon+"\" class=\"img-responsive img-rounded pull-left mrgn-rght-md\" draggable=\"true\"/>"
 					    +asset.getTitle()+"</a>";
