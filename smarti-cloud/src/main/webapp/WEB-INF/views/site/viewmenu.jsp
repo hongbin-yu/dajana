@@ -97,7 +97,7 @@
         <ol class="breadcrumb">
         <li><spring:message code="djn.cloud"/></li>
         <c:forEach items="${breadcrumb}" var="item" varStatus="loop">
-        	<li><a href="assets.htmp?path=${item.path }">${item.title}</a>
+        	<li><a href="view.htmp?path=${item.path }">${item.title}</a>
         </c:forEach>
         </ol>
 </div>
