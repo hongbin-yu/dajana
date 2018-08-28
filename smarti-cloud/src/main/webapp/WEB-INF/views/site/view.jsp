@@ -8,7 +8,7 @@
 <div class="container">
      <main role="main" property="mainContentOfPage" class="col-md-9 col-md-push-3">
         <h1 id="wb-cont">
-        ${folder.title} <a href="view.html?path=${folder.path}&type=${type}" title="刷屏"><span class="glyphicon glyphicon-refresh"></span></a>	
+        ${folder.title} <a href="view.html?path=${folder.path}&type=${type}&r=1" title="刷屏"><span class="glyphicon glyphicon-refresh"></span></a>	
         <c:if test="${param.w eq '1'}">
         <a class="btn btn-default pull-right" href="/site/view.html?path=${folder.path}&type=${type }&w=4" title="<spring:message code="djn.cloud"/><spring:message code="djn.edit"/>"><span class="glyphicon glyphicon-th-large pull-right"></span></a>
         </c:if>		
