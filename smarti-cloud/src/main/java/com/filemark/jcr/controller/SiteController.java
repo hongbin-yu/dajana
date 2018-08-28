@@ -1109,7 +1109,7 @@ public class SiteController extends BaseController {
 	   				writer.close();
 	   			}
 	   		}
-	   		if(!"child".equals(type)) {
+	   		if(!"child".equals(type) && folder.getSubfolders()!=null) {
 	   			int index = 0;
 	   			for(Folder f:folder.getSubfolders()) {
 	   				Folder s = folderJson(f.getPath(),type,model,request,response);
@@ -1118,11 +1118,14 @@ public class SiteController extends BaseController {
 	   		}
 		} catch (IOException e) {
 			json.delete();
-			logger.error(e.getMessage());;		
+			logger.error(e.getMessage());		
 		} catch (RepositoryException e) {
 			json.delete();
-			logger.error(e.getMessage());;
-		}   		
+			logger.error(e.getMessage());
+		} catch (NullPointerException e) {
+			json.delete();
+			logger.error("folder:"+folder.getPath()+","+e.getMessage());		
+		}
 
    		
 
