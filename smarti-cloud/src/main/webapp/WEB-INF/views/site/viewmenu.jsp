@@ -21,9 +21,9 @@
 <ul class="list-inline margin-bottom-none">
 <authz:authorize ifAnyGranted="ROLE_USER,ROLE_ADMINISTRATOR,ROLE_OWNER">
 <li><a href="javascript:openPdf()" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-open"></span>PDF</a></li>
-<li><a href="javascript:deleteFiles()" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-remove"></span><spring:message code="djn.delete"></spring:message></a></li>
+<%-- <li><a href="javascript:deleteFiles()" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-remove"></span><spring:message code="djn.delete"></spring:message></a></li>
 <li><a href="/site/profile.html"><button class="btn btn-danger btn-xs" title="${user.role }"><span class="glyphicon glyphicon-user"></span><authz:authentication property='name' /></button></a></li>
-<li><a href="<c:url value="/logout"/>"><span class="glyphicon glyphicon-log-out"></span><spring:message code="djn.logout"/></a></li>
+ --%><li><a href="<c:url value="/logout"/>"><span class="glyphicon glyphicon-log-out"></span><spring:message code="djn.logout"/></a></li>
 </authz:authorize>
 <%-- <li><a class="wb-lbx lbx-modal" href="#" title="${user.name }">${user.title }</a></li>
  --%></ul>
@@ -97,7 +97,7 @@
         <ol class="breadcrumb">
         <li><spring:message code="djn.cloud"/></li>
         <c:forEach items="${breadcrumb}" var="item" varStatus="loop">
-        	<li><a href="view.htmp?path=${item.path }">${item.title}</a>
+        	<li><a href="view.htmp?path=${item.path }&type=${type}">${item.title}</a>
         </c:forEach>
         </ol>
 </div>

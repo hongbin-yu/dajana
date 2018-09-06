@@ -16,9 +16,7 @@
         <a class="btn btn-default pull-right" href="/site/view.html?path=${folder.path}&type=${type }&w=1" title="<spring:message code="djn.cloud"/><spring:message code="djn.edit"/>"><span class="glyphicon glyphicon-th-list pull-right"></span></a>
         </c:if>	
         </h1>
-        ${folder.description }         
-	<div id="view_insert">
-	</div>
+	${folder.description }         
 	<section class="cn-search-dataTable"> 
 	        <h2 class="wb-inv">查询结果</h2>
 	        <div class="mrgn-tp-xl"></div>
