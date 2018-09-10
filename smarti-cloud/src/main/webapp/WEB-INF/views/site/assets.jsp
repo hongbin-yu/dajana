@@ -36,15 +36,14 @@
 			</form>			
 			 			
             <details id="${folder.uid }">
-            <summary>${folder.title}
-            </summary>
+            	<summary><input class="form-control" id="foldertitle" name="jcr:title" value="${folder.title}" size="20" uid="${folder.uid}"  onchange="updateNode(this)"/></summary>
 <%--             	<c:if test="${assets.availablePages==0}">
     			    <a class="wb-lbx" title="<spring:message code="djn.delete"/>" href="<c:url value="/site/delete.html?uid=${folder.uid }&redirect=/site/assets.html?path=${folder.parent }"/>"><span class="glyphicon glyphicon-remove"></span><spring:message code="djn.delete"/></a>
 	      		</c:if> --%>
    			    <a class="wb-lbx" title="<spring:message code="djn.delete"/>" href="<c:url value="/site/delete.html?uid=${folder.uid }&redirect=/site/assets.html?path=${folder.parent }"/>"><span class="btn-danger btn-sm glyphicon glyphicon-remove"><spring:message code="djn.delete"/></span>(${folder.path})</a>
-				<div class="form-group">
+<%-- 				<div class="form-group">
 				<label for="foldertitle"><spring:message code="djn.title"/>&nbsp;</label><input class="form-control" id="foldertitle" name="jcr:title" value="${folder.title}" size="25" uid="${folder.uid}"  onchange="updateNode(this)"/>
-				</div>
+				</div> --%>
 				<div class="form-group">
 				<label for="folderorderby"><spring:message code="djn.order"/>&nbsp;</label>
 				<select class="form-control" id="folderorderby" name="orderby" value="${folder.orderby}" uid="${folder.uid}"  onchange="updateNode(this)">
@@ -192,12 +191,12 @@
 	<div class="panel panel-default description" id="description${item.uid }" property="description"  uid="${item.uid}" placeholder="description">${item.description}</div>
 	
 	<details>
-		<summary>${item.title}</summary>
+		<summary><input class="form-control" id="title${item.uid  }" name="jcr:title" value="${item.title}" size="20" uid="${item.uid}"  onchange="updateNode(this)"/></summary>
 		<span class="glyphicon glyphicon-remove"></span>
 		<a class="wb-lbx" title="<spring:message code="djn.delete"/>" href="<c:url value='deleteasset.html?path=${item.path}&redirect=/site/assets.html?path=${folder.path }'/>"><spring:message code="djn.delete"/>(${item.path })</a>
-		<div class="form-group">
+<%-- 		<div class="form-group">
 		<label for="title${item.uid  }"><spring:message code="djn.title"/>&nbsp;</label><input class="form-control" id="title${item.uid  }" name="jcr:title" value="${item.title}" size="25" uid="${item.uid}"  onchange="updateNode(this)"/>
-		</div>
+		</div> --%>
 		<div class="form-group">
 		<label for="url${item.uid  }"><spring:message code="djn.link"/>&nbsp;</label><input class="form-control" id="url${item.uid  }" name="url" value="${item.url}" size="25" uid="${item.uid}"  onchange="updateNode(this)"/>
 		</div>
