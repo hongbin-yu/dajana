@@ -5,7 +5,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" session="false" %>
 	<div class="clearfix"></div>
 	<c:forEach items="${assets.items }" var="item" varStatus="loop">
-	<div id="${item.uid}" class="col-md-4 well">
+	<div id="${item.uid}" class="col-md-6 col-lg-4 well">
 <%-- 	<div class="checkbox"><input type="checkbox" class="checkbox" name="puid" value="${item.uid }">
 	<a class="download pull-right" href="file${item.ext}?path=${item.path}" target="_BLANK" download="${item.title }"><span class="glyphicon glyphicon-download pull-right">下载</span></a>
 	</div>	 --%>
@@ -99,5 +99,5 @@
 	</details> --%>
 	<div class="clearfix"></div>
 	</div>
-	<c:if test="${(loop.index+1) % 3 ==0  }"><div class="clearfix"></div></c:if>
+<%-- 	<c:if test="${(loop.index+1) % 3 ==0  }"><div class="clearfix"></div></c:if> --%>
 	</c:forEach>

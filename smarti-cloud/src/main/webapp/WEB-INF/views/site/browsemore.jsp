@@ -4,7 +4,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" session="false" %>
 
 <c:forEach items="${assets.items }" var="item" varStatus="loop">
-<div id="${item.uid}" class="col-md-4 well">
+<div id="${item.uid}" class="col-md-6 collg-4 well">
 		<c:if test="${item.mp4}">
 			<video poster="video2jpg.jpg?path=${item.path }" controls="controls" width="300" height="200" preload="metadata">
 			<source type="video/mp4" src="video.mp4?path=${item.path }"/>
@@ -85,5 +85,5 @@
 	</div>
 </details> --%>
 </div>
-<c:if test="${(loop.index + 2) % 3 ==1  }"><div class="clearfix"></div></c:if>
+<%-- <c:if test="${(loop.index + 2) % 3 ==1  }"><div class="clearfix"></div></c:if> --%>
 </c:forEach>

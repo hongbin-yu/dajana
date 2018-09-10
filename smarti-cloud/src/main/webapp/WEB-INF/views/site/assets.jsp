@@ -16,7 +16,7 @@
         </h1>
 		<div class="panel panel-default description form-control" id="description${folder.uid }" property="description"  uid="${folder.uid}" placeholder="description">${folder.description}</div>
 <div class="row">
-		<div class="wb-frmvld col-md-4 well">
+		<div class="wb-frmvld col-md-6 col-lg-4 well">
 			<form action="upload.html" method="POST" id="form-upload" enctype="multipart/form-data">
 				<input type="hidden" id="path" name="path" value="${folder.path}"/>
 				<input type="hidden" id="type"  name="type" value="${type}"/>
@@ -78,7 +78,7 @@
 												  
             </details>	
 		</div>
-		<div class="wb-frmvld col-md-4 well">
+		<div class="wb-frmvld col-md-6 col-lg-4 well">
 		<details>
 			<summary>
 				<label for="path"><span class="glyphicon glyphicon-folder-close"></span> <spring:message code="djn.create_folder"/></label>
@@ -137,7 +137,7 @@
 	</div>
 	<div class="clearfix"></div>
 	<c:forEach items="${assets.items }" var="item" varStatus="loop">
-	<div id="${item.uid}" class="col-md-4 well">
+	<div id="${item.uid}" class="col-md-6 col-lg-4  well">
 	<div class="checkbox"><input type="checkbox" class="checkbox" name="puid" value="${item.uid }">
 	<a class="download pull-right" href="file${item.ext}?path=${item.path}" target="_BLANK" download="${item.title }"><span class="glyphicon glyphicon-download pull-right">下载</span></a>
 	</div>	
@@ -233,7 +233,7 @@
 	</details>
 	
 	</div>
-	<c:if test="${(loop.index+1) % 3 ==0  }"><div class="clearfix"></div></c:if>
+<%-- 	<c:if test="${(loop.index+1) % 3 ==0  }"><div class="clearfix"></div></c:if> --%>
 	</c:forEach>
 	<div class="clearfix"></div>
 </div>
