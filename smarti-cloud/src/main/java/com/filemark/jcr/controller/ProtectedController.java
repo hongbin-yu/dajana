@@ -500,7 +500,7 @@ public class ProtectedController extends BaseController {
    		return "chat/comments";
    	}
 
-   	@RequestMapping(value = {"/protected/groupedit.html","/protected/groupedit.html"}, method = {RequestMethod.GET})
+   	@RequestMapping(value = {"/protected/groupedit.html","/site/groupedit.html"}, method = {RequestMethod.GET})
    	public String  groupedit(String path,Integer p,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
    		if(p==null) p=0;
    		String userQuery = "select * from [nt:base] AS s WHERE ISCHILDNODE([/system/users]) and s.ocm_classname='com.filemark.jcr.model.User'";
