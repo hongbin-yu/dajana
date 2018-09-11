@@ -1125,10 +1125,11 @@ function output(data) {
     	
     	if(topInsert != null) 	{
 	    	html +='<details>'
-	    		  +'<summary><span class="glyphicon glyphicon-edit"></span>'+data.title+'</summary>'
-	    		  +'<div class="form-group">'
-	    		  +'<label for="title'+data.uid+'">标题&nbsp;</label><input class="form-control" id="title'+data.uid+'" name="jcr:title" value="'+data.title+'" size="25" uid="'+data.uid+'"  onchange="updateNode(this)"/>'
-	    		  +'</div>'
+	    		  +'<summary>'+'<input class="form-control" id="title'+data.uid+'" name="jcr:title" value="'+data.title+'" size="20" uid="'+data.uid+'"  onchange="updateNode(this)"/>'+'</summary>'
+	    		  +'<span class="glyphicon glyphicon-remove"></span>'
+/*	    		  +'<div class="form-group">'
+	    		  +'<label for="title'+data.uid+'">标题&nbsp;</label><input class="form-control" id="title'+data.uid+'" name="jcr:title" value="'+data.title+'" size="22" uid="'+data.uid+'"  onchange="updateNode(this)"/>'
+	    		  +'</div>'*/
 	    		  +'<div class="form-group">'
 	    		  +'<label for="url'+data.uid+'">链接&nbsp;</label><input class="form-control" id="url'+data.uid+'" name="url" value="'+(data.url?data.url:'')+'" size="25" uid="'+data.uid+'"  onchange="updateNode(this)"/>'
 				  +'</div>'

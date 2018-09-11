@@ -15,7 +15,7 @@
 		<span class="btn btn-default pull-right" title="选择切换"><input id="toggle" type="checkbox" onClick="toggle(this)"/></span>
         </h1>
 		<div class="panel panel-default description form-control" id="description${folder.uid }" property="description"  uid="${folder.uid}" placeholder="description">${folder.description}</div>
-<div class="row">
+<div class="row wb-eqht">
 		<div class="wb-frmvld col-md-6 col-lg-4 well">
 			<form action="upload.html" method="POST" id="form-upload" enctype="multipart/form-data">
 				<input type="hidden" id="path" name="path" value="${folder.path}"/>
@@ -33,50 +33,7 @@
 					<input class="form-control wb-inv" type="file" id="fileUpload" name="file" size="60" required="required"  multiple/>
 <%-- 				<input id="submit_upload" type="button" onclick="javascript:uploadFiles()" value="<spring:message code="djn.upload"/>" class="btn btn-primary" disabled> <input type="reset" value="<spring:message code="djn.clear"/>" onclick="resetSelDiv()" class="btn btn-default"> --%>
 				</div>
-			</form>			
-			 			
-            <details id="${folder.uid }">
-            	<summary><input class="form-control" id="foldertitle" name="jcr:title" value="${folder.title}" size="20" uid="${folder.uid}"  onchange="updateNode(this)"/></summary>
-<%--             	<c:if test="${assets.availablePages==0}">
-    			    <a class="wb-lbx" title="<spring:message code="djn.delete"/>" href="<c:url value="/site/delete.html?uid=${folder.uid }&redirect=/site/assets.html?path=${folder.parent }"/>"><span class="glyphicon glyphicon-remove"></span><spring:message code="djn.delete"/></a>
-	      		</c:if> --%>
-   			    <a class="wb-lbx" title="<spring:message code="djn.delete"/>" href="<c:url value="/site/delete.html?uid=${folder.uid }&redirect=/site/assets.html?path=${folder.parent }"/>"><span class="btn-danger btn-sm glyphicon glyphicon-remove"><spring:message code="djn.delete"/></span>(${folder.path})</a>
-<%-- 				<div class="form-group">
-				<label for="foldertitle"><spring:message code="djn.title"/>&nbsp;</label><input class="form-control" id="foldertitle" name="jcr:title" value="${folder.title}" size="25" uid="${folder.uid}"  onchange="updateNode(this)"/>
-				</div> --%>
-				<div class="form-group">
-				<label for="folderorderby"><spring:message code="djn.order"/>&nbsp;</label>
-				<select class="form-control" id="folderorderby" name="orderby" value="${folder.orderby}" uid="${folder.uid}"  onchange="updateNode(this)">
-					<option value="lastModified desc"><spring:message code="djn.lastModified_desc"/></option>
-					<option value="lastModified asc" <c:if test="${folder.orderby=='lastModified asc'}">selected</c:if>><spring:message code="djn.lastModified_asc"/></option>
-					<option value="originalDate desc" <c:if test="${folder.orderby=='originalDate desc'}">selected</c:if>><spring:message code="djn.docDate_desc"/></option>
-					<option value="originalDate asc" <c:if test="${folder.orderby=='originalDate asc'}">selected</c:if>><spring:message code="djn.docDate_asc"/></option>
-				</select>
-				</div>
-				<div class="form-group">
-				<label for="folderresolution"><spring:message code="djn.resolution"/>&nbsp;</label>
-				<select class="form-control" id="folderresolution" name="resolution" value="${folder.resolution}" uid="${folder.uid}"  onchange="updateNode(this)">
-					<option value="540x360"><spring:message code="djn.540x360"/></option>
-					<option value="720x540" <c:if test="${folder.resolution=='720x540'}">selected</c:if>><spring:message code="djn.720x540"/></option>
-					<option value="360x280" <c:if test="${folder.resolution=='360x360'}">selected</c:if>><spring:message code="djn.360x360"/></option>
-					<option value="1080x720" <c:if test="${folder.resolution=='720x540'}">selected</c:if>><spring:message code="djn.1080x720"/></option>
-				</select>
-				</div>			
-				<div class="form-group">
-				<label for="sharing">共享用户</label><a class="wb-lbx" href="groupedit.html?path=${folder.path }"><button class="btn btn-primary btn-xs pull-right"><span class="glyphicon glyphicon-cog"></span></button></a>
-<%-- 				<input class="form-control" id="sharing" name="sharing" value="${folder.sharing }" size="35"  uid="${folder.uid }" onchange="updateNode(this)" placeholder="输入’用户名@‘"/>
- --%>			</div>	
-				<div class="checkbox">
-				<label for="readonly"><input type="checkbox" name="readonly" value="true" id="readonly" <c:if test="${folder.readonly=='true' }">checked</c:if>  size="35"  uid="${folder.uid }" onchange="updateNode(this)"> 共享只读（共享用户名不能修改目录下文件）</label>
-				</div>								 
-<%-- 				<div class="form-group">
-				<label for="order">口令</label><input class="form-control" id="passcode" name="passcode" value="${folder.passcode }" size="35"  uid="${folder.uid }" onchange="updateNode(this)"/>
-				</div>	 --%>
-				<div class="checkbox">
-				<label for="intranet"><input type="checkbox" name="intranet" value="true" id="intranetfolder" <c:if test="${folder.intranet=='true' }">checked</c:if> size="35"  uid="${folder.uid }" onchange="updateProperty(this)"> 内部网（外网不能访问目录下文件）</label>
-				</div>	
-												  
-            </details>	
+			</form>						 			
 		</div>
 		<div class="wb-frmvld col-md-6 col-lg-4 well">
 		<details>
@@ -130,12 +87,55 @@
 			</details>	
 
 <!--       </details>   -->
+            <details id="${folder.uid }">
+            	<summary><input class="form-control" id="foldertitle" name="jcr:title" value="${folder.title}" size="20" uid="${folder.uid}"  onchange="updateNode(this)"/></summary>
+<%--             	<c:if test="${assets.availablePages==0}">
+    			    <a class="wb-lbx" title="<spring:message code="djn.delete"/>" href="<c:url value="/site/delete.html?uid=${folder.uid }&redirect=/site/assets.html?path=${folder.parent }"/>"><span class="glyphicon glyphicon-remove"></span><spring:message code="djn.delete"/></a>
+	      		</c:if> --%>
+   			    <a class="wb-lbx" title="<spring:message code="djn.delete"/>" href="<c:url value="/site/delete.html?uid=${folder.uid }&redirect=/site/assets.html?path=${folder.parent }"/>"><span class="btn-danger btn-sm glyphicon glyphicon-remove"><spring:message code="djn.delete"/></span>(${folder.path})</a>
+<%-- 				<div class="form-group">
+				<label for="foldertitle"><spring:message code="djn.title"/>&nbsp;</label><input class="form-control" id="foldertitle" name="jcr:title" value="${folder.title}" size="25" uid="${folder.uid}"  onchange="updateNode(this)"/>
+				</div> --%>
+				<div class="form-group">
+				<label for="folderorderby"><spring:message code="djn.order"/>&nbsp;</label>
+				<select class="form-control" id="folderorderby" name="orderby" value="${folder.orderby}" uid="${folder.uid}"  onchange="updateNode(this)">
+					<option value="lastModified desc"><spring:message code="djn.lastModified_desc"/></option>
+					<option value="lastModified asc" <c:if test="${folder.orderby=='lastModified asc'}">selected</c:if>><spring:message code="djn.lastModified_asc"/></option>
+					<option value="originalDate desc" <c:if test="${folder.orderby=='originalDate desc'}">selected</c:if>><spring:message code="djn.docDate_desc"/></option>
+					<option value="originalDate asc" <c:if test="${folder.orderby=='originalDate asc'}">selected</c:if>><spring:message code="djn.docDate_asc"/></option>
+				</select>
+				</div>
+				<div class="form-group">
+				<label for="folderresolution"><spring:message code="djn.resolution"/>&nbsp;</label>
+				<select class="form-control" id="folderresolution" name="resolution" value="${folder.resolution}" uid="${folder.uid}"  onchange="updateNode(this)">
+					<option value="540x360"><spring:message code="djn.540x360"/></option>
+					<option value="720x540" <c:if test="${folder.resolution=='720x540'}">selected</c:if>><spring:message code="djn.720x540"/></option>
+					<option value="360x280" <c:if test="${folder.resolution=='360x360'}">selected</c:if>><spring:message code="djn.360x360"/></option>
+					<option value="1080x720" <c:if test="${folder.resolution=='720x540'}">selected</c:if>><spring:message code="djn.1080x720"/></option>
+				</select>
+				</div>			
+				<div class="form-group">
+				<label for="sharing">共享用户</label><a class="wb-lbx" href="groupedit.html?path=${folder.path }"><button class="btn btn-primary btn-xs pull-right"><span class="glyphicon glyphicon-cog"></span></button></a>
+<%-- 				<input class="form-control" id="sharing" name="sharing" value="${folder.sharing }" size="35"  uid="${folder.uid }" onchange="updateNode(this)" placeholder="输入’用户名@‘"/>
+ --%>			</div>	
+				<div class="checkbox">
+				<label for="readonly"><input type="checkbox" name="readonly" value="true" id="readonly" <c:if test="${folder.readonly=='true' }">checked</c:if>  size="35"  uid="${folder.uid }" onchange="updateNode(this)"> 共享只读（共享用户名不能修改目录下文件）</label>
+				</div>								 
+<%-- 				<div class="form-group">
+				<label for="order">口令</label><input class="form-control" id="passcode" name="passcode" value="${folder.passcode }" size="35"  uid="${folder.uid }" onchange="updateNode(this)"/>
+				</div>	 --%>
+				<div class="checkbox">
+				<label for="intranet"><input type="checkbox" name="intranet" value="true" id="intranetfolder" <c:if test="${folder.intranet=='true' }">checked</c:if> size="35"  uid="${folder.uid }" onchange="updateProperty(this)"> 内部网（外网不能访问目录下文件）</label>
+				</div>	
+												  
+            </details>	
     </div>
-	<div id="top_folder">	
-	</div>
-	<div id="top_insert">
-	</div>
-	<div class="clearfix"></div>
+	<span id="top_folder">	
+	</span>
+	<div class="clearfix"></div>	
+	<span id="top_insert">
+	</span>
+
 	<c:forEach items="${assets.items }" var="item" varStatus="loop">
 	<div id="${item.uid}" class="col-md-6 col-lg-4  well">
 	<div class="checkbox"><input type="checkbox" class="checkbox" name="puid" value="${item.uid }">
