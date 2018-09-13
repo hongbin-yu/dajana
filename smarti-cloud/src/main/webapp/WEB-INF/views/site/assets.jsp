@@ -26,8 +26,8 @@
 					<label for="override"><input type="checkbox" name="override" value="true" id="override" size="35"> 覆盖旧文件如果重名</label>
 					</div>						
 				<div class="form-group" ondrop="drop(event)" ondragover="allowDrop(event)" style="border:1px solid #aaaaaa;">
-					<label for="fileUpload" class="required"><a href="#" onclick="openFiles()"><span id="openFiles" class="field-name"><spring:message code="djn.select_dragging_drop"/> </span></a></label>
-					<br/><a href="#" onclick="openFiles()"><img id="uploadImg" class="img-responsive" path="${folder.path}" alt="" src="<c:url value='/resources/images/folder360X360.png'/>"/></a>
+<%-- 					<label for="fileUpload" class="required"><a href="#" onclick="openFiles()"><span id="openFiles" class="field-name"><spring:message code="djn.select_dragging_drop"/> </span></a></label><br/> --%>
+					<a href="#" onclick="openFiles()"><img id="uploadImg" class="img-responsive" path="${folder.path}" alt="" src="<c:url value='/resources/images/folder360X360.png'/>" title="<spring:message code="djn.select_dragging_drop"/> "/></a>
 					<div class="panel" id="selectedFiles">
 					</div>	
 					<input class="form-control wb-inv" type="file" id="fileUpload" name="file" size="60" required="required"  multiple/>
@@ -92,7 +92,7 @@
 <%--             	<c:if test="${assets.availablePages==0}">
     			    <a class="wb-lbx" title="<spring:message code="djn.delete"/>" href="<c:url value="/site/delete.html?uid=${folder.uid }&redirect=/site/assets.html?path=${folder.parent }"/>"><span class="glyphicon glyphicon-remove"></span><spring:message code="djn.delete"/></a>
 	      		</c:if> --%>
-   			    <a class="wb-lbx" title="<spring:message code="djn.delete"/>" href="<c:url value="/site/delete.html?uid=${folder.uid }&redirect=/site/assets.html?path=${folder.parent }"/>"><span class="btn-danger btn-sm glyphicon glyphicon-remove"><spring:message code="djn.delete"/></span>(${folder.path})</a>
+   			    <a class="wb-lbx" title="<spring:message code="djn.delete"/>" href="<c:url value="/site/deletefolder.html?uid=${folder.uid }&redirect=/site/assets.html?path=${folder.parent }"/>"><span class="btn-danger btn-sm glyphicon glyphicon-remove"><spring:message code="djn.delete"/></span>(${folder.path})</a>
 <%-- 				<div class="form-group">
 				<label for="foldertitle"><spring:message code="djn.title"/>&nbsp;</label><input class="form-control" id="foldertitle" name="jcr:title" value="${folder.title}" size="25" uid="${folder.uid}"  onchange="updateNode(this)"/>
 				</div> --%>

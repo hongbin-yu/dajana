@@ -57,6 +57,8 @@
 		</definition>	
 	<definition name="site/deleteNode" templateExpression="/WEB-INF/views/site/deleteNode.jsp">
 		</definition>		
+	<definition name="site/deleteFolder" templateExpression="/WEB-INF/views/site/deleteFolder.jsp">
+		</definition>		
 	<definition name="site/deleteAsset" templateExpression="/WEB-INF/views/site/deleteAsset.jsp">
 		</definition>		
 	<definition name="site/deletePage" templateExpression="/WEB-INF/views/site/deletePage.jsp">

@@ -860,7 +860,7 @@ function uploadFile(file) {
 }
 
 function sendFormData(formData,file,id) {
-	var running = "<img src=\"/resources/images/ui-anim_basic_16x16.gif\">"+ file.name + " ("+i+"/"+total+")<br/>";
+	var running = "<img src=\"/resources/images/ui-anim_basic_16x16.gif\" alt=\"\" onclick=\"javascript:clear()\" title=\"中断上载\">"+ file.name + " ("+i+"/"+total+")<br/>";
     if("size" in file)
         fileSize = file.size;
     else
@@ -1289,6 +1289,27 @@ function deleteNode(path,uid) {
 		confirmDate = new Date().getTime();
 		removeNode(path,uid);
 	}
+}
+
+function deleteFolder(path,redirect) {
+    $.ajax({
+	    url: '/site/delete.html',
+	    data: {
+	    	path:path
+	    },
+	    type: "POST", 
+	    success: function(msg) {
+	    	if(!msg.indexOf("error:")>=0)
+	    		window.location.href=redirect;
+	    	else
+	    		alert(msg);
+	    },
+	    error: function() {
+	    	alert(i18n("fail"));
+	    }
+	    // ... Other options like success and etc
+	});	 
+	
 }
 
 function removeNode(path,uid) {

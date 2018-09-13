@@ -2113,6 +2113,24 @@ public class SiteController extends BaseController {
 		return "site/deleteNode";
 	}
 
+	@RequestMapping(value = {"/site/deletefolder.html","/protected/deletefolder.html"}, method = RequestMethod.GET)
+	public String deleteFolderConfirm(String uid,String path,String redirect,Model model,HttpServletRequest request, HttpServletResponse response) {
+		ImageUtil.HDDOn();
+			try {
+				if(uid!=null && !uid.equals("")) {
+					path = jcrService.getNodeById(uid);
+				}else if( path==null || "".equals(path)) {
+					model.addAttribute("error", "路径必须输入");
+				}
+				model.addAttribute("redirect", redirect);
+				model.addAttribute("smartiNode", jcrService.getObject(path));
+			} catch (RepositoryException e) {
+				ImageUtil.HDDOff();
+				model.addAttribute("error", "路径没找到"+path);
+			}
+		ImageUtil.HDDOff();
+		return "site/deleteFolder";
+	}	
 
 	@RequestMapping(value = {"/site/deleteasset.html","/protected/deleteasset.html"}, method = RequestMethod.GET)
 	public String deleteAssetConfirm(String uid,String path,String redirect,Model model,HttpServletRequest request, HttpServletResponse response) {
