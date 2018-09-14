@@ -274,7 +274,7 @@
 		</c:if>
 </main>
 
-<nav class="wb-sec col-md-3 col-md-pull-9" typeof="SiteNavigationElement" id="wb-sec" role="navigation">
+<nav class="wb-sec col-lg-3 col-md-pull-9" typeof="SiteNavigationElement" id="wb-sec" role="navigation">
 		<input type="hidden" id="folderpath" name="path" value="${folder.path}"/>
 <div class="visible-lg">
  <section id="left-bar" class="wb-overlay modal-content overlay-def wb-panel-l col-md-3">

@@ -1215,7 +1215,7 @@ public class SiteController extends BaseController {
 				}
 			}
 			String icon = w!=null && w==1?asset.getIconSmall():asset.getIcon();
-			String title ="<input type=\"checkbox\" name=\"puid\" value=\""+asset.getUid()+"\"> <a href=\"javascript:openImage(\'"+asset.getLink()+(asset.getWidth() != null && asset.getWidth() >1200?"&w=12":"")+"')\"><img alt=\"\" class=\"img-responsive img-rounded pull-left mrgn-rght-md\" src=\""+icon+"\"><a href=\"file/"+asset.getLink()+"\" target=\"_blank\" title=\"打开原图\">"+asset.getTitle()+"</a>"
+			String title ="<input type=\"checkbox\" name=\"puid\" value=\""+asset.getUid()+"\"> <a href=\"javascript:openImage(\'"+asset.getLink()+(asset.getWidth() != null && asset.getWidth() >1200?"&w=12":"")+"')\"><img alt=\"\" class=\"img-responsive img-rounded pull-left mrgn-rght-md col-md-6\" src=\""+icon+"\"><a href=\"file/"+asset.getLink()+"\" target=\"_blank\" title=\"打开原图\">"+asset.getTitle()+"</a>"
 						+(asset.getPdf()?"<a class=\"btn-default btn-xs pull-right\" href=\"viewpdf.pdf?uid="+asset.getUid()+"\" title=\"PDF\" target=\"_blank\">打开 PDF</a>":"");
 			if(asset.getMp4()) {
 				if(w!=null && w==1) {
@@ -1231,7 +1231,7 @@ public class SiteController extends BaseController {
 	        if(asset.getDoc2pdf()) {
 	        	title = "<a class=\"download pull-right\" href=\"file/"+asset.getName()+"?path="+asset.getPath()+" target=\"_BLANK\" download><span class=\"glyphicon glyphicon-download\">下载</span></a>"
 			    		+"<a class=\""+asset.getCssClass()+"\" href=\"doc2pdf.pdf?path="+asset.getPath()+"\" target=\"_BLANK\">"
-					    +"<img id=\"img"+asset.getUid()+"\" src=\""+icon+"\" class=\"img-responsive img-rounded pull-left mrgn-rght-md\" draggable=\"true\"/>"
+					    +"<img id=\"img"+asset.getUid()+"\" src=\""+icon+"\" class=\"img-responsive img-rounded pull-left mrgn-rght-md col-md-6\" draggable=\"true\"/>"
 					    +asset.getTitle()+"</a>";
 	        }			
 			a2news.setTitle(title);
