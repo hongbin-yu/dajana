@@ -16,7 +16,7 @@
         <a class="btn btn-default pull-right" href="/site/view.html?path=${folder.path}&type=${type }&w=1" title="<spring:message code="djn.cloud"/><spring:message code="djn.edit"/>"><span class="glyphicon glyphicon-th-list pull-right"></span></a>
         </c:if>	
         </h1>
-	${folder.description }         
+	<span id="pagetag">${folder.description }</span>         
 	<section class="cn-search-dataTable"> 
 	        <h2 class="wb-inv">查询结果</h2>
 	        <div class="mrgn-tp-xl"></div>
@@ -223,25 +223,26 @@
 					</select>
 					</div>
 			</form>
-        <h3>
+        <h3 id="leftmenu_h3">
         <c:if test="${folder.parent!='/assets' }">
-        <a href='<c:url value="view.html?path=${folder.parent}&type=${type }"></c:url>'><span class="glyphicon glyphicon-folder-close"></span> ${folder.parentTitle}<span class="glyphicon glyphicon-backward"></span>
+        <a href='<c:url value="view.html?path=${folder.parent}&type=${type }"></c:url>'>${folder.parentTitle}<span class="glyphicon glyphicon-backward"></span>
         </a>
         </c:if> 
         <c:if test="${folder.parent=='/assets' }">
         <spring:message code="djn.cloud"/>
         </c:if>               
         </h3>    	       
-        <ul class="list-group menu list-unstyled">
+        <ul id="leftmenu_ul" class="list-group menu list-unstyled">
         <c:forEach items="${leftmenu.subfolders}" var="item" varStatus="loop">
             <li>
-            <a  class="list-group-item" href='<c:url value="view.html?path=${item.path }&type=${type }"></c:url>'><c:if test="${item.path==folder.path }"><span class="glyphicon glyphicon-folder-open"></span></c:if><c:if test="${item.path!=folder.path }"><span class="glyphicon glyphicon-folder-close"></span></c:if> ${item.title}</a>     
+<%--             <a  class="list-group-item" href='<c:url value="view.html?path=${item.path }&type=${type }"></c:url>'><c:if test="${item.path==folder.path }"><span class="glyphicon glyphicon-folder-open"></span></c:if><c:if test="${item.path!=folder.path }"><span class="glyphicon glyphicon-folder-close"></span></c:if> ${item.title}</a>      --%>
+   	    	    <a class="list-group-item" href='javascript:view("${item.path}","${type }")'><c:if test="${item.path == path }"><span class="glyphicon glyphicon-folder-open"></span></c:if><c:if test="${item.path != path }"><span class="glyphicon glyphicon-folder-close"></span></c:if> ${item.title}</a>
                 <ul class="list-group menu list-unstyled">
                     <c:forEach items="${item.subfolders}" var="child" varStatus="loop">
                     	<li>
                     	<a class="list-group-item" href='<c:url value="view.html?path=${child.path}&type=${type }"></c:url>'><span class="glyphicon glyphicon-folder-close"></span> ${child.title}</a>
-<%--                   	    <c:if test="${!child.subfolders}"><a class="list-group-item" href='javascript:view("${child.path}&type=${type }","${child.title }")'><span class="glyphicon glyphicon-folder-close"></span> ${child.title}</a></c:if>
- --%>						</li>
+<%--                   	    	<a class="list-group-item" href='javascript:view("${child.path}","${child.title }","${type }")'><span class="glyphicon glyphicon-folder-close"></span> ${child.title}</a> --%>
+						</li>
                     </c:forEach>
                 </ul>
             </li>           

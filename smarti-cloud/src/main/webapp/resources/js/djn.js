@@ -1331,11 +1331,47 @@ function removeNode(path,uid) {
 	    // ... Other options like success and etc
 	});	 
 }
-function view(path,title) {
-	$("h1").html(title+'<a href="view.html?path='+path+'&r=1" title="刷屏"><span class="glyphicon glyphicon-refresh"></span></a>	');
+function view(path,type) {
 	var table = $('#dataset-filter').DataTable();
-	table.ajax.url( "getassets.json?path="+path ).load();
+	table.ajax.url( "getassets.json?path="+path+"&type="+type ).load();
 
+	 $.ajax({
+		    url: 'getleftmenu.json?path='+path+"&type="+type,
+		    type: "GET", 
+		    success: function(json) {
+		    	if(json.path !='/assets') 
+		    	$("#leftmenu_h3").html("<a href='view.html?path="+json.path+"&type="+type+"'>"+json.title+"<span class=\"glyphicon glyphicon-backward\"></span></a>");
+		    	var html = "";
+		    	$.each(json.subfolders,function(i,f){
+		    			if(f.path == path) {
+		    				$("h1").html(f.title+'<a href="view.html?path='+path+"&type="+type+'&r=1" title="刷屏"><span class="glyphicon glyphicon-refresh"></span></a>	');
+		    				$("#pagetag").html(f.description);
+		    			}
+			    		if(f.subfolders) {
+				    		html +="<li><a class=\"list-group-item\" href='javascript:view(\""+f.path+"\",\""+type+"\")'><span class=\"glyphicon glyphicon-folder-open\"></span> "+f.title+"</a>";
+				    		html +="<ul class=\"list-group menu list-unstyled\">";
+
+				    		$.each(f.subfolders,function(j,s){
+				    			if(s.path == path) {
+				    				$("h1").html(s.title+'<a href="view.html?path='+path+"&type="+type+'&r=1" title="刷屏"><span class="glyphicon glyphicon-refresh"></span></a>	');
+				    				$("#pagetag").html(s.description);
+				    			}
+					    		html +="<li><a class=\"list-group-item\" href='view.html?path="+s.path+"&type="+type+"'><span class=\"glyphicon glyphicon-folder-close\"></span> "+s.title+"</a>";
+					    	});
+			    		}else {
+				    		html +="<li><a class=\"list-group-item\" href='javascript:view(\""+f.path+"\",\""+type+"\")'><span class=\"glyphicon glyphicon-folder-close\"></span> "+f.title+"</a>";
+				    		html +="<ul class=\"list-group menu list-unstyled\">";
+			    			
+			    		}
+			    		html +="</ul>";
+		    		
+		    	});
+		    	$("#leftmenu_ul").html(html);
+		    },
+		    error: function() {
+		    	alert(i18n("fail"));
+		    }
+		});	 
 
 }
 function deleteUser(path) {

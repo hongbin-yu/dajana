@@ -1160,6 +1160,7 @@ public class SiteController extends BaseController {
 			for(Folder f:parent.getSubfolders()) {
 				if(f.getUid().equals(folder.getUid())) {
 					parent.getSubfolders().set(index, folder);
+					f.setAssets(null);
 				}
 				index++;
 			}			
