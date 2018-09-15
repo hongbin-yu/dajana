@@ -8,7 +8,7 @@
 <div class="container">
      <main role="main" property="mainContentOfPage" class="col-md-9 col-md-push-3">
         <h1 id="wb-cont">
-        ${folder.title} <a href="view.html?path=${folder.path}&type=${type}&r=1" title="刷屏"><span class="glyphicon glyphicon-refresh"></span></a>	
+        ${folder.title} <a href="view.html?path=${folder.path}&type=${type}&r=1&w=${param.w}" title="刷屏"><span class="glyphicon glyphicon-refresh"></span></a>	
         <c:if test="${param.w eq '1'}">
         <a class="btn btn-default pull-right" href="/site/view.html?path=${folder.path}&type=${type }&w=4" title="<spring:message code="djn.cloud"/><spring:message code="djn.edit"/>"><span class="glyphicon glyphicon-th-large pull-right"></span></a>
         </c:if>		
@@ -30,10 +30,8 @@
 	                { &#34;data&#34;: &#34;subjects&#34;, &#34;className&#34;: &#34;nws-tbl-dept&#34;},
 	                { &#34;data&#34;: &#34;location&#34;, &#34;className&#34;: &#34;nws-tbl-type&#34; },
 	                { &#34;data&#34;: &#34;description&#34;, &#34;className&#34;: &#34;nws-tbl-desc&#34; },
-	                { &#34;data&#34;: &#34;contentType&#34;,  &#34;visible&#34;: false },
-	                { &#34;data&#34;: &#34;lastModified&#34;,  &#34;visible&#34;: false },
-	                { &#34;data&#34;: &#34;subjects&#34;, &#34;visible&#34;: false },
-	                { &#34;data&#34;: &#34;url&#34;, &#34;visible&#34;: false }
+ 	                { &#34;data&#34;: &#34;contentType&#34;,  &#34;visible&#34;: false },
+	                { &#34;data&#34;: &#34;lastModified&#34;,  &#34;visible&#34;: false }
 	      ]}
 	">
 	            <thead class="wb-inv">
@@ -45,8 +43,6 @@
 	              <th>描述</th>
 	              <th>Location</th>
 	              <th>Audience</th>
-	              <th>Subject</th>
-	              <th>Ministers</th>
 	           </tr>
 	            </thead>
 	<tbody></tbody></table>
@@ -242,7 +238,10 @@
             <a  class="list-group-item" href='<c:url value="view.html?path=${item.path }&type=${type }"></c:url>'><c:if test="${item.path==folder.path }"><span class="glyphicon glyphicon-folder-open"></span></c:if><c:if test="${item.path!=folder.path }"><span class="glyphicon glyphicon-folder-close"></span></c:if> ${item.title}</a>     
                 <ul class="list-group menu list-unstyled">
                     <c:forEach items="${item.subfolders}" var="child" varStatus="loop">
-                    	<li><a class="list-group-item" href='<c:url value="view.html?path=${child.path}&type=${type }"></c:url>'><span class="glyphicon glyphicon-folder-close"></span> ${child.title}</a></li>
+                    	<li>
+                    	<a class="list-group-item" href='<c:url value="view.html?path=${child.path}&type=${type }"></c:url>'><span class="glyphicon glyphicon-folder-close"></span> ${child.title}</a>
+<%--                   	    <c:if test="${!child.subfolders}"><a class="list-group-item" href='javascript:view("${child.path}&type=${type }","${child.title }")'><span class="glyphicon glyphicon-folder-close"></span> ${child.title}</a></c:if>
+ --%>						</li>
                     </c:forEach>
                 </ul>
             </li>           

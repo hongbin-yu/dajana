@@ -1331,7 +1331,13 @@ function removeNode(path,uid) {
 	    // ... Other options like success and etc
 	});	 
 }
+function view(path,title) {
+	$("h1").html(title+'<a href="view.html?path='+path+'&r=1" title="刷屏"><span class="glyphicon glyphicon-refresh"></span></a>	');
+	var table = $('#dataset-filter').DataTable();
+	table.ajax.url( "getassets.json?path="+path ).load();
 
+
+}
 function deleteUser(path) {
 
 	if(confirm(i18n("are_you_sure_delete")+path+"?")) {
