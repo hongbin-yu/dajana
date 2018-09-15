@@ -219,7 +219,7 @@ public class Asset implements SmartiNode, Serializable {
 		}else if(contentType.startsWith("audio/")) {
 			return "/resources/images/audio-icon.png";	
 		}else if("application/pdf".equals(contentType)){
-			return "pdf2img.jpg?p=0&path="+path;//"resources/images/pdf-icon.png";
+			return "pdf2img.jpg?p=0&path="+path+"&w=4";//"resources/images/pdf-icon.png";
 		}else if(path.endsWith(".doc") || path.endsWith(".docx") || path.endsWith(".ppt")) {	
 			return "doc2jpg.jpg?p=0&path="+path;
 		}else if(path.toLowerCase().endsWith(".xls") || path.toLowerCase().endsWith(".xlsx") ||  path.toLowerCase().endsWith(".csv")  || path.toLowerCase().endsWith(".rtf")) {
