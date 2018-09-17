@@ -1705,12 +1705,12 @@ public class SiteController extends BaseController {
 			String userName = getUsername();
 
 			try {
-				File src = new File(jcrService.getDevice()+frompath);
-				File des = new File(jcrService.getDevice()+topath);
-				if(!src.exists()) {
-					src = new File(jcrService.getBackup()+frompath);
-					des = new File(jcrService.getBackup()+topath);
-				}
+				//File src= jcrService.getFile(frompath);
+				Asset asset = (Asset)jcrService.getObject(frompath);
+				Device device = (Device)jcrService.getObject(asset.getDevice());
+				File src = new File(device.getLocation()+frompath);
+				File des = new File(device.getLocation()+topath);
+
 				if(new File(des,src.getName()).exists()) {
 					name = getDateTime();
 					src.renameTo(new File(src.getParent()+"/"+name));
@@ -1725,7 +1725,7 @@ public class SiteController extends BaseController {
 				}/*else if(des.isDirectory()){
 					des.renameTo(new File(des.getParent()+"/"+name));
 				}*/
-			} catch (IOException e) {
+			} catch (IOException | RepositoryException | NullPointerException e ) {
 				return "error:"+e.getMessage();
 			}
 			jcrService.updateCalendar(frompath, "lastModified");

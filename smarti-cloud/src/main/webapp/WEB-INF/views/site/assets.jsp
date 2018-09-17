@@ -15,7 +15,8 @@
 		<span class="btn btn-default pull-right" title="选择切换"><input id="toggle" type="checkbox" onClick="toggle(this)"/></span>
         </h1>
 		<div class="panel panel-default description form-control" id="description${folder.uid }" property="description"  uid="${folder.uid}" placeholder="description">${folder.description}</div>
-<div class="row wb-eqht">
+<c:if test="${type!='video' }"><div class="row wb-eqht"></c:if>
+<c:if test="${type=='video' }"><div class="row"></c:if>
 		<div class="wb-frmvld col-md-6 col-lg-4 well">
 			<form action="upload.html" method="POST" id="form-upload" enctype="multipart/form-data">
 				<input type="hidden" id="path" name="path" value="${folder.path}"/>
@@ -151,14 +152,14 @@
         <p>&nbsp;</p>
 <%--         	<a class="download" href="file/${item.name}?path=${item.path}" target="_BLANK" download><span class="glyphicon glyphicon-download">下载</span></a> --%>
 		    <a class="${item.cssClass }" href="doc2pdf.pdf?path=${item.path }" target="_BLANK">
-				<img id="img${item.uid}" src="<c:url value='${item.icon }'></c:url>" class="img-responsive" draggable="true"/>
+				<img id="img${item.uid}" src="<c:url value='${item.icon }'></c:url>" class="img-responsive"/>
 			</a>
 		</c:if>	
 		<c:if test="${item.mp4}">
 		<p>&nbsp;</p>
 <%-- 		<a class="download" href="file/${item.name}?path=${item.path}" target="_BLANK" download><span class="glyphicon glyphicon-download">下载</span></a> --%>
 		<figure id="img${item.uid}" class="wb-mltmd">
-				<video poster="video2jpg.jpg?path=${item.path }" title="${item.title }" controls="controls" preload="none" draggable="true">
+				<video poster="video2jpg.jpg?path=${item.path }" title="${item.title }" controls="controls" preload="none">
 					<source type="video/mp4" src="video.mp4?path=${item.path }"/>
 				</video>
 				<figcaption>
