@@ -320,8 +320,11 @@ public class SiteController extends BaseController {
 			jcrService.addNodes(assetFolder, "nt:unstructured",getUsername());		
 		}		
 		if(path == null || (!path.startsWith(assetFolder) && !path.startsWith(oldFolder))) path=assetFolder;
-	
+		boolean isIntranet = isIntranet(request);		
 		Folder currentNode = jcrService.getFolder(path);
+		if("true".equals(currentNode.getIntranet()) && !isIntranet) {
+			throw new Exception("内网目录，外网登入不能访问！");
+		}
 		String page_passcode = currentNode.getPasscode();
 
 		if(page_passcode !=null && !"".equals(page_passcode) && !this.isRole("ROLE_ADMINISTRATOR") ) {
@@ -335,7 +338,7 @@ public class SiteController extends BaseController {
 				return "site/passcode";
 			}
 		}		
-		
+	
 		String orderby = "[lastModified] desc";
 		if(currentNode.getOrderby()!=null && !"".equals(currentNode.getOrderby()) && !"rank,name".equals(currentNode.getOrderby())) {
 			orderby = currentNode.getOrderby();
@@ -355,7 +358,7 @@ public class SiteController extends BaseController {
 			if(type.equals("media")) type="video";
 			contentType = " and s.contentType like '"+type+"%'";
 		}
-		boolean isIntranet = isIntranet(request);
+
 		String intranet = (isIntranet?"":" and (s.intranet is null or s.intranet not like 'true')");
 		String intranetFolder = (isIntranet?"":" and (f.intranet is null or f.intranet not like 'true')");
 		String ISDESCENDANTNODE = "ISDESCENDANTNODE";
@@ -1073,7 +1076,9 @@ public class SiteController extends BaseController {
    	@RequestMapping(value = {"/site/getfolder.json"}, method = {RequestMethod.GET})
    	public @ResponseBody Folder folderJson(String path,String type,Model model,HttpServletRequest request, HttpServletResponse response)  {
    		String username = getUsername();
-   		File json = new File(jcrService.getDevice()+path+"/Output.json");
+		boolean isIntranet = isIntranet(request);
+		String jsonName = (isIntranet?"Internet_":"")+"Output.json";
+   		File json = new File(jcrService.getDevice()+path+"/"+jsonName);
    		Folder folder = new Folder();;
 		try {
 			folder = jcrService.getFolder(path);
@@ -1094,7 +1099,7 @@ public class SiteController extends BaseController {
 	   			String assetsQuery = "select s.* from [nt:base] AS s WHERE ISCHILDNODE(["+path+"]) and s.[delete] not like 'true' and s.ocm_classname='com.filemark.jcr.model.Asset' order by s."+orderby+", s.[name]";
 	   			WebPage<Asset> assets = jcrService.searchAssets(assetsQuery, 1000, 0);		
 	   			folder.setAssets(assets.getItems());
-	   			String foldersQuery = "select * from [nt:base] AS s WHERE ISCHILDNODE(["+path+"]) and s.delete not like 'true' and s.ocm_classname='com.filemark.jcr.model.Folder' order by s.path";
+	   			String foldersQuery = "select * from [nt:base] AS s WHERE ISCHILDNODE(["+path+"]) and s.delete not like 'true' and "+(isIntranet?"":" s.intranet not like 'true' and")+" s.ocm_classname='com.filemark.jcr.model.Folder' order by s.path";
 	   			WebPage<Folder> folders = jcrService.queryFolders(foldersQuery, 1000, 0);	
 	   			folder.setSubfolders(folders.getItems());
 	   			folder.setBreadcrum(jcrService.getBreadcrumbNodes(path));
