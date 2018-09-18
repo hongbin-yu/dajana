@@ -1331,35 +1331,42 @@ function removeNode(path,uid) {
 	    // ... Other options like success and etc
 	});	 
 }
-function view(path,type) {
+function view(path,type,w) {
 	var table = $('#dataset-filter').DataTable();
-	table.ajax.url( "getassets.json?path="+path+"&type="+type ).load();
+	table.ajax.url( "getassets.json?path="+path+"&type="+type+"&w="+w ).load();
 
+	$("#goto_cloud_edit").html("<a class=\"item\" title=\"云编辑\" href=\"/site/assets.html?path="+path+"&type="+type+"\"><span class=\"glyphicon glyphicon-edit\"></span>云站编辑</a>");//.attr({"href":"assets.html?path="+path+"&type="+type});
 	 $.ajax({
-		    url: 'getleftmenu.json?path='+path+"&type="+type,
+		    url: 'getleftmenu.json?path='+path+"&type="+type+"&w="+w,
 		    type: "GET", 
 		    success: function(json) {
-		    	if(json.path !='/assets') 
-		    	$("#leftmenu_h3").html("<a href='view.html?path="+json.path+"&type="+type+"'>"+json.title+"<span class=\"glyphicon glyphicon-backward\"></span></a>");
+		    	var title = "<a href='view.html?path="+json.path+"&type="+type+"'>"+json.title+"<span class=\"glyphicon glyphicon-backward\"></span></a>";
+		    	$("#leftmenu_h3").html(title);
 		    	var html = "";
 		    	$.each(json.subfolders,function(i,f){
 		    			if(f.path == path) {
-		    				$("h1").html(f.title+'<a href="view.html?path='+path+"&type="+type+'&r=1" title="刷屏"><span class="glyphicon glyphicon-refresh"></span></a>	');
+		    				title = f.title+'<a href="view.html?path='+path+"&type="+type+"&w="+w+'&r=1" title="刷屏"><span class="glyphicon glyphicon-refresh"></span></a>'; 
+		    		    	if(w=='1') {
+		    		    		title += "<a class=\"btn btn-default pull-right\" href=\"/site/view.html?path="+path+"&type="+type+"&w=4\" title=\"大图标\"><span class=\"glyphicon glyphicon-th-large pull-right\"></span></a>";
+		    		    	}else {
+		    		    		title += "<a class=\"btn btn-default pull-right\" href=\"/site/view.html?path="+path+"&type="+type+"&w=1\" title=\"小图标\"><span class=\"glyphicon glyphicon-th-list pull-right\"></span></a>";
+		    		    	}		    				
+		    				$("h1").html(title);
 		    				$("#pagetag").html(f.description);
 		    			}
 			    		if(f.subfolders) {
-				    		html +="<li><a class=\"list-group-item\" href='javascript:view(\""+f.path+"\",\""+type+"\")'><span class=\"glyphicon glyphicon-folder-open\"></span> "+f.title+"</a>";
+				    		html +="<li><a class=\"list-group-item\" href='javascript:view(\""+f.path+"\",\""+type+"\",\""+w+"\")'><span class=\"glyphicon glyphicon-folder-open\"></span> "+f.title+"</a>";
 				    		html +="<ul class=\"list-group menu list-unstyled\">";
 
 				    		$.each(f.subfolders,function(j,s){
 				    			if(s.path == path) {
-				    				$("h1").html(s.title+'<a href="view.html?path='+path+"&type="+type+'&r=1" title="刷屏"><span class="glyphicon glyphicon-refresh"></span></a>	');
+				    				$("h1").html(s.title+'<a href="view.html?path='+path+"&type="+type+"&w="+w+'&r=1" title="刷屏"><span class="glyphicon glyphicon-refresh"></span></a>	');
 				    				$("#pagetag").html(s.description);
 				    			}
-					    		html +="<li><a class=\"list-group-item\" href='view.html?path="+s.path+"&type="+type+"'><span class=\"glyphicon glyphicon-folder-close\"></span> "+s.title+"</a>";
+					    		html +="<li><a class=\"list-group-item\" href='view.html?path="+s.path+"&type="+type+"&w="+w+"'><span class=\"glyphicon glyphicon-folder-close\"></span> "+s.title+"</a>";
 					    	});
 			    		}else {
-				    		html +="<li><a class=\"list-group-item\" href='javascript:view(\""+f.path+"\",\""+type+"\")'><span class=\"glyphicon glyphicon-folder-close\"></span> "+f.title+"</a>";
+				    		html +="<li><a class=\"list-group-item\" href='javascript:view(\""+f.path+"\",\""+type+"\",\""+w+"\")'><span class=\"glyphicon glyphicon-folder-close\"></span> "+f.title+"</a>";
 				    		html +="<ul class=\"list-group menu list-unstyled\">";
 			    			
 			    		}

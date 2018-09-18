@@ -10,10 +10,10 @@
         <h1 id="wb-cont">
         ${folder.title} <a href="view.html?path=${folder.path}&type=${type}&r=1&w=${param.w}" title="刷屏"><span class="glyphicon glyphicon-refresh"></span></a>	
         <c:if test="${param.w eq '1'}">
-        <a class="btn btn-default pull-right" href="/site/view.html?path=${folder.path}&type=${type }&w=4" title="<spring:message code="djn.cloud"/><spring:message code="djn.edit"/>"><span class="glyphicon glyphicon-th-large pull-right"></span></a>
+        <a class="btn btn-default pull-right" href="/site/view.html?path=${folder.path}&type=${type }&w=4" title="<spring:message code="djn.bigicon"/>"><span class="glyphicon glyphicon-th-large pull-right"></span></a>
         </c:if>		
         <c:if test="${param.w ne '1' }">
-        <a class="btn btn-default pull-right" href="/site/view.html?path=${folder.path}&type=${type }&w=1" title="<spring:message code="djn.cloud"/><spring:message code="djn.edit"/>"><span class="glyphicon glyphicon-th-list pull-right"></span></a>
+        <a class="btn btn-default pull-right" href="/site/view.html?path=${folder.path}&type=${type }&w=1" title="<spring:message code="djn.smallicon"/>"><span class="glyphicon glyphicon-th-list pull-right"></span></a>
         </c:if>	
         </h1>
 	<span id="pagetag">${folder.description }</span>         
@@ -53,154 +53,6 @@
 	</main>
     <nav class="wb-sec col-md-3 col-md-pull-9" typeof="SiteNavigationElement" id="wb-sec" role="navigation">
 		<input type="hidden" id="folderpath" name="path" value="${folder.path}"/>
-<%-- 		<div class="wb-frmvld row well">
-			<form action="upload.html" method="POST" id="form-upload" enctype="multipart/form-data">
-				<input type="hidden" id="path" name="path" value="${folder.path}"/>
-				<input type="hidden" id="type"  name="type" value="${type}"/>
-				<input type="hidden" id="input" name="input" value="${input}"/>
-				<input type="hidden" name="redirect" value="view.html?path=${folder.path}&type=${type}&input=${input}"/>
-						
-				<div class="form-group" ondrop="drop(event)" ondragover="allowDrop(event)" style="border:1px solid #aaaaaa;">
-					<a href="#" onclick="openFiles()"><span id="openFiles" class="field-name"><spring:message code="djn.select_dragging_drop"/> </span>
-					<img class="pull-left mrgn-rght-md" id="uploadImg" path="${folder.path}" alt="" src="<c:url value='/resources/images/upload100.png'/>"/></a>
-					<div>
-					<br/>
-					<label for="override"><input type="checkbox" name="override" value="true" id="override" size="35"> 覆盖旧文件如果重名</label>
-					</div>
-					<br/>					
-					<input class="form-control wb-inv" type="file" id="fileUpload" name="file" size="60" required="required"  multiple/>
-				</div>
-				<div class="clear-fix"></div>
-			</form>
-			<div class="panel" id="selectedFiles"></div>
-		    <form action='<c:url value="assets.html"></c:url>' method="get" name="cse-search-box" role="search" class="form-inline" accept-charset="UTF-8">
-			<input type="hidden" id="path" name="path" value="${folder.path}"/>
-			<input type="hidden" id= "input" name="input" value="${input}"/>
-			<input type="hidden" id="kw" name="kw" value="${kw}"/>		
-			<input type="hidden" id="pageNumber" name="pageNumber" value="${assets.pageNumber}"/>	
-			<input type="hidden" id="availablePages" name="availablePages" value="${assets.availablePages}"/>				
-			<input type="hidden" id="topage" name="topage" value="assetsmore"/>			    
-			<a class="btn btn-default pull-right" href="/site/assets.html?path=${folder.path}" title="快速阅览"><span class="glyphicon glyphicon-edit pull-right"></span></a>
-			<a href="javascript:deleteFiles()" class="btn bnt-default btn-danger visible-xs pull-right" title="删除"><span class="glyphicon glyphicon-remove"></span></a>
-			<a href="javascript:openPdf()" class="btn btn-primary visible-xs pull-right" title="打开PDF"><span class="glyphicon glyphicon-open"></span></a>
-					<div class="form-group">
-					<label for="type"><spring:message code="djn.display"/></label>
-					<select id="type" name="type" onchange="this.form.submit()">
-					<option value="" <c:if test="${type=='' }">selected</c:if> ><spring:message code="djn.all"/></option>
-					<option value="child" <c:if test="${type=='child' }">selected</c:if> ><spring:message code="djn.child"/></option>
-					<option value="image" <c:if test="${type=='image' }">selected</c:if> ><spring:message code="djn.image"/></option>
-					<option value="video" <c:if test="${type=='video' }">selected</c:if> ><spring:message code="djn.video"/></option>
-					<option value="audio" <c:if test="${type=='audio' }">selected</c:if> ><spring:message code="djn.audeo"/></option>
-					<option value="application" <c:if test="${type=='application' }">selected</c:if> ><spring:message code="djn.file"/></option>
-					</select>
-					</div>
-			</form>
-		 			
-            <details id="${folder.uid }">
-            <summary>${folder.title}
-            </summary>
-
-				<div class="form-group">
-				<label for="foldertitle"><spring:message code="djn.title"/>&nbsp;</label><input class="form-control" id="foldertitle" name="jcr:title" value="${folder.title}" size="25" uid="${folder.uid}"  onchange="updateNode(this)"/>
-				</div>
-				<div class="form-group">   
-				<label for="foldertitle"><spring:message code="djn.description"/>&nbsp;</label><div class="panel panel-default description form-control" id="description${folder.uid }" property="description"  uid="${folder.uid}" placeholder="description">${folder.description}</div>
-				</div>
-				<div class="form-group">
-				<label for="folderorderby"><spring:message code="djn.order"/>&nbsp;</label>
-				<select class="form-control" id="folderorderby" name="orderby" value="${folder.orderby}" uid="${folder.uid}"  onchange="updateNode(this)">
-					<option value="lastModified desc"><spring:message code="djn.lastModified_desc"/></option>
-					<option value="lastModified asc" <c:if test="${folder.orderby=='lastModified asc'}">selected</c:if>><spring:message code="djn.lastModified_asc"/></option>
-					<option value="originalDate desc" <c:if test="${folder.orderby=='originalDate desc'}">selected</c:if>><spring:message code="djn.docDate_desc"/></option>
-					<option value="originalDate asc" <c:if test="${folder.orderby=='originalDate asc'}">selected</c:if>><spring:message code="djn.docDate_asc"/></option>
-				</select>
-				</div>
-				<div class="form-group">
-				<label for="folderresolution"><spring:message code="djn.resolution"/>&nbsp;</label>
-				<select class="form-control" id="folderresolution" name="resolution" value="${folder.resolution}" uid="${folder.uid}"  onchange="updateNode(this)">
-					<option value="540x360"><spring:message code="djn.540x360"/></option>
-					<option value="720x540" <c:if test="${folder.resolution=='720x540'}">selected</c:if>><spring:message code="djn.720x540"/></option>
-					<option value="360x280" <c:if test="${folder.resolution=='360x360'}">selected</c:if>><spring:message code="djn.360x360"/></option>
-					<option value="1080x720" <c:if test="${folder.resolution=='720x540'}">selected</c:if>><spring:message code="djn.1080x720"/></option>
-				</select>
-				</div>			
-				<div class="form-group">
-				<label for="sharing">共享用户</label><a class="wb-lbx" href="groupedit.html?path=${folder.path }"><button class="btn btn-primary btn-xs pull-right"><span class="glyphicon glyphicon-cog"></span></button></a>
-			</div>	
-				<div class="checkbox">
-				<label for="readonly"><input type="checkbox" name="readonly" value="true" id="readonly" <c:if test="${folder.readonly=='true' }">checked</c:if>  size="35"  uid="${folder.uid }" onchange="updateNode(this)"> 共享只读（共享用户名不能修改目录下文件）</label>
-				</div>								 
-				<div class="checkbox">
-				<label for="intranet"><input type="checkbox" name="intranet" value="true" id="intranetfolder" <c:if test="${folder.intranet=='true' }">checked</c:if> size="35"  uid="${folder.uid }" onchange="updateProperty(this)"> 内部网（外网不能访问目录下文件）</label>
-				</div>	
-												  
-            </details>	
-				
-		</div>
-		<div class="wb-frmvld row well">
-		<details>
-			<summary>
-				<label for="path"><span class="glyphicon glyphicon-folder-close"></span> <spring:message code="djn.create_folder"/></label>
-				<input type="hidden" id="folder-path1" name="path" value="${folder.path }" >
-			</summary>
-			<div class="wb-frmvld">
-			<form action="javascript:createFolder()" id="createFolder" method="POST">
-			<input type="hidden" id="folderPath" name="path" value="${folder.path }"/>	
-			<div class="form-group">
-			<label for="foldername"><spring:message code="djn.path"/><strong class="required">(<spring:message code="djn.required"/>)</strong></label>
-			
-			<input class="form-control" id="foldername" required="required" name="name" pattern="[A-Za-z0-9\-]{2,}" value="" size="80" placeholder="<spring:message code="djn.alpha_number_only"/>"/>
-			</div>
-			<div class="form-group">
-			<label for="titlefolder"><spring:message code="djn.title"/><strong class="required">(<spring:message code="djn.required"/>)</strong></label><input class="form-control" id="titlefolder" required="required"  name="title" value="" size="25"/>
-			</div>
-				<input id="submit" type="submit"  value="<spring:message code="djn.submit"/> " class="btn btn-default">
-			</form>
-			</div>	
-		</details>	
-		<c:if test="${shares.availablePages>0 }">
-			<details>
-				<summary>
-					<label for="path"><span class="glyphicon glyphicon-folder-open"></span> <spring:message code="djn.sharing_folder"/> </label>
-				</summary>
-				<ul class="list-group menu list-unstyled">
-			        <c:forEach items="${shares.items}" var="item" varStatus="loop">
-			            <li id="${item.uid }" class="list-group-item"><a href='<c:url value="/protected/sharing.html?path=${item.path}"></c:url>'>${item.title} (${item.path})</a></li>           
-			        </c:forEach> 
-		        </ul> 
-
-			</details>
-		</c:if>	
-			<details>
-		        <summary>
-					<label for="path"><span class="glyphicon glyphicon-upload"></span> <spring:message code="djn.upload_url"/> </label>
-					<input type="hidden" id="folder-path" name="path" value="${folder.path }" >
-				</summary>
-				<div class="wb-frmvld">
-				<form action="javascript:uploadUrl()" id="uploadLInk">
-				<input type="hidden" name="path" value="${folder.path }"/>	
-				<div class="form-group">
-				<label for="uploadLink"><spring:message code="djn.url"/> <strong class="required">(<spring:message code="djn.required"/> )</strong></label>
-				<input class="form-control" id="uploadLink" required="required" name="uploadLink" data-rule-minlength="4" size="40" value="" size="25"/>
-				</div>
-					<input id="submit_upload_url" type="submit" value="<spring:message code="djn.submit"/>" class="btn btn-primary"> <input type="reset" value="<spring:message code="djn.reset"/>" class="btn btn-default">
-				</form>
-				</div>	
-			</details>	
-	    </div> --%>
-		
-<%-- 	    <div class="clearfix"></div>	
-		<div class="row">
-		        <c:forEach items="${folders.items}" var="item" varStatus="loop">
-		            <div class="well">
-			           <a href="view.html?path=${item.path}&type=${type}"> <img id="folder${item.uid }" path="${item.path }"  ondrop="drop(event)" ondragover="allowDrop(event)" alt="${item.title}" class="img-responsive pull-left mrgn-rght-md" src='<c:url value="/resources/images/folder32X32.png"></c:url>'/>
-		            	${item.title}</a>
-		            	<div class="clearfix"></div>
-		            <div id="selectFiles${item.uid }"></div>	
-		            </div>  
-		            	<c:if test="${(loop.index+1) % 3 ==0  }"><div class="clearfix"></div></c:if>         
-		        </c:forEach> 
-		</div>  --%>
     <h2 id="wb-sec-h" class="wb-inv">左菜单</h2>
 
     <section class="list-group menu list-unstyled">	
@@ -236,12 +88,12 @@
         <c:forEach items="${leftmenu.subfolders}" var="item" varStatus="loop">
             <li>
 <%--             <a  class="list-group-item" href='<c:url value="view.html?path=${item.path }&type=${type }"></c:url>'><c:if test="${item.path==folder.path }"><span class="glyphicon glyphicon-folder-open"></span></c:if><c:if test="${item.path!=folder.path }"><span class="glyphicon glyphicon-folder-close"></span></c:if> ${item.title}</a>      --%>
-   	    	    <a class="list-group-item" href='javascript:view("${item.path}","${type }")'><c:if test="${item.path == path }"><span class="glyphicon glyphicon-folder-open"></span></c:if><c:if test="${item.path != path }"><span class="glyphicon glyphicon-folder-close"></span></c:if> ${item.title}</a>
+   	    	    <a class="list-group-item" href='javascript:view("${item.path}","${type }","${param.w}")'><c:if test="${item.path == path }"><span class="glyphicon glyphicon-folder-open"></span></c:if><c:if test="${item.path != path }"><span class="glyphicon glyphicon-folder-close"></span></c:if> ${item.title}</a>
                 <ul class="list-group menu list-unstyled">
                     <c:forEach items="${item.subfolders}" var="child" varStatus="loop">
                     	<li>
-                    	<a class="list-group-item" href='<c:url value="view.html?path=${child.path}&type=${type }"></c:url>'><span class="glyphicon glyphicon-folder-close"></span> ${child.title}</a>
-<%--                   	    	<a class="list-group-item" href='javascript:view("${child.path}","${child.title }","${type }")'><span class="glyphicon glyphicon-folder-close"></span> ${child.title}</a> --%>
+                    	<a class="list-group-item" href='<c:url value="view.html?path=${child.path}&type=${type }&w=${param.w}"></c:url>'><span class="glyphicon glyphicon-folder-close"></span> ${child.title}</a>
+<%--                   	    	<a class="list-group-item" href='javascript:view("${child.path}","${child.title }","${type }","${param.w}")'><span class="glyphicon glyphicon-folder-close"></span> ${child.title}</a> --%>
 						</li>
                     </c:forEach>
                 </ul>
