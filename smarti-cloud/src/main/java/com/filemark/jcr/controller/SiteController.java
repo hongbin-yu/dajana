@@ -1077,7 +1077,7 @@ public class SiteController extends BaseController {
    	public @ResponseBody Folder folderJson(String path,String type,Model model,HttpServletRequest request, HttpServletResponse response)  {
    		String username = getUsername();
 		boolean isIntranet = isIntranet(request);
-		String jsonName = (isIntranet?"Internet_":"")+"Output.json";
+		String jsonName = (isIntranet?"Intranet_":"")+"Output.json";
    		File json = new File(jcrService.getDevice()+path+"/"+jsonName);
    		Folder folder = new Folder();;
 		try {
@@ -1107,7 +1107,7 @@ public class SiteController extends BaseController {
 	   			if(!dir.exists()) {
 	   				dir.mkdirs();
 	   			}
-	   			OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(dir.getAbsolutePath()+"/Output.json"),"UTF-8");
+	   			OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(json),"UTF-8");
 	   			try  {
 	   			    Gson gson = new GsonBuilder().create();
 	   			    gson.toJson(folder, writer);
