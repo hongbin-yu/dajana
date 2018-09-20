@@ -405,7 +405,7 @@ public class SiteController extends BaseController {
 		
 		assets(path,type,input,kw,p,model,request,response);
 		Folder folder = jcrService.getFolder(path);
-		String ncolumn = "2";
+		String ncolumn = "1";
 		String sort = "desc";
 		String orderby = folder.getOrderby();
 		if(orderby !=null && orderby.endsWith("asc")) {
@@ -413,7 +413,7 @@ public class SiteController extends BaseController {
 		}
 		
 		if(orderby ==null || orderby.startsWith("lastModified")) {
-			ncolumn ="1";
+			ncolumn ="6";
 		}
 		
 		model.addAttribute("type", type);
