@@ -1485,6 +1485,21 @@ function openImage(url) {
 	
 }
 
+function openPdfGallery(path,total) {
+	var source = [[]];
+	
+    var array = [];
+	for(var i = 0; i< total; i++) {
+		array[i] = {};
+		array[i]["src"]="pdf2img.jpg?p="+i+"&path="+path;
+		array[i]["type"]="image";
+		source[i].push(array[i]);
+	}
+    //alert(JSON.stringify(source));
+	$(document).trigger( "open.wb-lbx", source);
+	
+}
+
 function openGallery(id) {
 	$("#gallery"+id).trigger("wb-init.wb-lbx");
 	setTimeout(function(){

@@ -83,6 +83,7 @@ import com.filemark.utils.WebPage;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
+import com.lowagie.text.pdf.PdfReader;
 
 
 @Controller
@@ -1221,7 +1222,7 @@ public class SiteController extends BaseController {
 				}
 			}
 			String icon = w!=null && w==1?asset.getIconSmall():asset.getIcon();
-			String title ="<input type=\"checkbox\" name=\"puid\" value=\""+asset.getUid()+"\"> <a href=\"javascript:openImage(\'"+asset.getLink()+(asset.getWidth() != null && asset.getWidth() >1200?"&w=12":"")+"')\"><img alt=\"\" class=\"img-responsive img-rounded pull-left mrgn-rght-md"+(asset.getContentType().endsWith("pdf") && w==4?" col-md-6":"")+"\" src=\""+icon+"\"><a href=\"file/"+asset.getLink()+"\" target=\"_blank\" title=\"打开原图\">"+asset.getTitle()+"</a>"
+			String title ="<input type=\"checkbox\" name=\"puid\" value=\""+asset.getUid()+"\"> <a href=\"javascript:openImage(\'"+asset.getLink()+(asset.getWidth() != null && asset.getWidth() >1200?"&w=12":"")+"')\"><img alt=\"\" class=\"img-responsive img-rounded pull-left mrgn-rght-md"+(asset.getContentType().endsWith("pdf") && w==4?" col-md-6":"")+"\" src=\""+icon+"\"><a href=\""+asset.getLink()+"\" target=\"_blank\" title=\"打开原图\">"+asset.getTitle()+"</a>"
 						+(asset.getPdf()?"<a class=\"btn-default btn-xs pull-right\" href=\"viewpdf.pdf?uid="+asset.getUid()+"\" title=\"PDF\" target=\"_blank\">打开 PDF</a>":"");
 			if(asset.getMp4()) {
 				if(w!=null && w==1) {
@@ -1239,7 +1240,14 @@ public class SiteController extends BaseController {
 			    		+"<a class=\""+asset.getCssClass()+"\" href=\"doc2pdf.pdf?path="+asset.getPath()+"\" target=\"_BLANK\">"
 					    +"<img id=\"img"+asset.getUid()+"\" src=\""+icon+"\" class=\"img-responsive img-rounded pull-left mrgn-rght-md "+(w==4?" col-md-6":"")+"\" draggable=\"true\"/>"
 					    +asset.getTitle()+"</a>";
-	        }			
+	        }	
+	        if(asset.getContentType().endsWith("/pdf")) {
+	        	title = "<a class=\"download pull-right\" href=\"file/"+asset.getName()+"?path="+asset.getPath()+" target=\"_BLANK\" download><span class=\"glyphicon glyphicon-download\">下载</span></a>"
+			    		//+"<a class=\""+asset.getCssClass()+"\" href=\"file/"+asset.getName()+"?path="+asset.getPath()+"\" target=\"_BLANK\">"
+	        			+"<a href=\"javascript:openPdfGallery('"+asset.getPath()+"',"+(asset.getTotal()==null?1:asset.getTotal())+")\">"
+			    		+"<img id=\"img"+asset.getUid()+"\" src=\""+icon+"\" class=\"img-responsive img-rounded pull-left mrgn-rght-md "+(w==4?" col-md-6":"")+"\" draggable=\"true\"/>"
+					    +asset.getTitle()+"</a>";
+	        }		        
 			a2news.setTitle(title);
 			a2news.setDescription(asset.getDescription()==null?"":asset.getDescription());
 			if(asset.getOriginalDate()!=null)
@@ -1345,6 +1353,10 @@ public class SiteController extends BaseController {
 
         		asset.setContentType(contentType);
         		asset.setSize(multipartFile.getSize());
+        		if("application/pdf".equals(contentType)) {
+    				PdfReader reader = new PdfReader(multipartFile.getInputStream());
+    				asset.setTotal((long)reader.getNumberOfPages());
+    			}
         		jcrService.addOrUpdate(asset);
         		jcrService.updateCalendar(path,"lastModified");
         		jcrService.setProperty(path, "changed", "true");
@@ -1372,7 +1384,7 @@ public class SiteController extends BaseController {
 	           			}else if("application/vnd.ms-powerpoint".equals(contentType) || "application/vnd.ms-word".equals(contentType) || "application/vnd.ms-excel".equals(contentType) || "application/msword".equals(contentType) || assetPath.endsWith(".doc") || assetPath.endsWith(".docx")) {	
 	           				 logger.debug("doc2pdf:"+file.getAbsolutePath());
 	        				 ImageUtil.doc2pdf(file.getAbsolutePath(), file.getParentFile().getAbsolutePath());
-	        			}        				
+	        			}
 	           			if(contentType!=null && contentType.startsWith("video/")) {	
 	           				 logger.debug("video2mp4:"+file.getAbsolutePath());
 	           				 Folder currentFolder = jcrService.getFolder(path);
