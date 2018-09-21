@@ -1505,7 +1505,7 @@ function openDocGallery(path,total) {
     var array = [];
 	for(var i = 0; i< total; i++) {
 		array[i] = {};
-		array[i]["src"]="doc2img.jpg?p="+i+"&path="+path;
+		array[i]["src"]="doc2jpg.jpg?p="+i+"&path="+path;
 		array[i]["type"]="image";
 		source[0].push(array[i]);
 	}
