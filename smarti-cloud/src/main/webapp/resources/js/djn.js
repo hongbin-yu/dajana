@@ -1497,7 +1497,6 @@ function openPdfGallery(path,total) {
 	}
     //alert(JSON.stringify(source));
 	$(document).trigger( "open.wb-lbx", source);
-	
 }
 
 function openGallery(id) {
