@@ -1499,6 +1499,19 @@ function openPdfGallery(path,total) {
 	$(document).trigger( "open.wb-lbx", source);
 }
 
+function openDocGallery(path,total) {
+	var source = [[]];
+	source[0] = [];
+    var array = [];
+	for(var i = 0; i< total; i++) {
+		array[i] = {};
+		array[i]["src"]="doc2img.jpg?p="+i+"&path="+path;
+		array[i]["type"]="image";
+		source[0].push(array[i]);
+	}
+    //alert(JSON.stringify(source));
+	$(document).trigger( "open.wb-lbx", source);
+}
 function openGallery(id) {
 	$("#gallery"+id).trigger("wb-init.wb-lbx");
 	setTimeout(function(){

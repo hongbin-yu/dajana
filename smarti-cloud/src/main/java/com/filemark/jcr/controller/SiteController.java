@@ -1237,16 +1237,17 @@ public class SiteController extends BaseController {
 			}
 	        if(asset.getDoc2pdf()) {
 	        	title = "<a class=\"download pull-right\" href=\"file/"+asset.getName()+"?path="+asset.getPath()+" target=\"_BLANK\" download><span class=\"glyphicon glyphicon-download\">下载</span></a>"
-			    		+"<a class=\""+asset.getCssClass()+"\" href=\"doc2pdf.pdf?path="+asset.getPath()+"\" target=\"_BLANK\">"
-					    +"<img id=\"img"+asset.getUid()+"\" src=\""+icon+"\" class=\"img-responsive img-rounded pull-left mrgn-rght-md "+(w==4?" col-md-6":"")+"\" draggable=\"true\"/>"
-					    +asset.getTitle()+"</a>";
+			    		//+"<a class=\""+asset.getCssClass()+"\" href=\"doc2pdf.pdf?path="+asset.getPath()+"\" target=\"_BLANK\">"
+	        			+"<a href=\"javascript:openDocGallery('"+asset.getPath()+"',"+getNumberOfPage(asset)+")\">"
+			    		+"<img id=\"img"+asset.getUid()+"\" src=\""+icon+"\" class=\"img-responsive img-rounded pull-left mrgn-rght-md "+(w==4?" col-md-6":"")+"\" draggable=\"true\"/></a>"
+					    +"<a class=\""+asset.getCssClass()+"\" href=\"doc2pdf.pdf?path="+asset.getPath()+"\" target=\"_BLANK\">"+asset.getTitle()+"</a>";
 	        }	
 	        if(asset.getContentType().endsWith("/pdf")) {
 	        	title = "<a class=\"download pull-right\" href=\"file/"+asset.getName()+"?path="+asset.getPath()+" target=\"_BLANK\" download><span class=\"glyphicon glyphicon-download\">下载</span></a>"
 			    		//+"<a class=\""+asset.getCssClass()+"\" href=\"file/"+asset.getName()+"?path="+asset.getPath()+"\" target=\"_BLANK\">"
-	        			+"<a href=\"javascript:openPdfGallery('"+asset.getPath()+"',"+(asset.getTotal()==null?1:asset.getTotal())+")\">"
-			    		+"<img id=\"img"+asset.getUid()+"\" src=\""+icon+"\" class=\"img-responsive img-rounded pull-left mrgn-rght-md "+(w==4?" col-md-6":"")+"\" draggable=\"true\"/>"
-					    +asset.getTitle()+"</a>";
+	        			+"<a href=\"javascript:openPdfGallery('"+asset.getPath()+"',"+getNumberOfPage(asset)+")\">"
+			    		+"<img id=\"img"+asset.getUid()+"\" src=\""+icon+"\" class=\"img-responsive img-rounded pull-left mrgn-rght-md "+(w==4?" col-md-6":"")+"\" draggable=\"true\"/></a>"
+					    +"<a href=\"file/"+asset.getName()+"?path="+asset.getPath()+"\" target=\"_BLANK\">"+asset.getTitle()+"</a>";
 	        }		        
 			a2news.setTitle(title);
 			a2news.setDescription(asset.getDescription()==null?"":asset.getDescription());
@@ -3715,6 +3716,24 @@ public class SiteController extends BaseController {
 			return filename+ext;
 	}
 	
-
+	private long getNumberOfPage(Asset asset) {
+		long numberOfPage = 1;
+		if(asset.getTotal()!=null) return asset.getTotal();
+		try {
+			File file = jcrService.getFile(asset.getPath());
+			File pdf = new File(file,"origin.pdf");
+			if(pdf.exists()) {
+				PdfReader reader = new PdfReader(pdf.getAbsolutePath());
+				reader.close();
+				jcrService.setProperty(asset.getPath(), "total", (long)reader.getNumberOfPages());
+				numberOfPage = reader.getNumberOfPages();				
+			}
+		} catch (RepositoryException e) {
+			logger.error(e.getMessage());
+		} catch (IOException e) {
+			logger.error(e.getMessage());
+		}
+		return numberOfPage;
+	}
 	  
 }
