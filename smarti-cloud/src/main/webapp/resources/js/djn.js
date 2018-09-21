@@ -1487,13 +1487,13 @@ function openImage(url) {
 
 function openPdfGallery(path,total) {
 	var source = [[]];
-	
+	source[0] = [];
     var array = [];
 	for(var i = 0; i< total; i++) {
 		array[i] = {};
 		array[i]["src"]="pdf2img.jpg?p="+i+"&path="+path;
 		array[i]["type"]="image";
-		source[i].push(array[i]);
+		source[0].push(array[i]);
 	}
     //alert(JSON.stringify(source));
 	$(document).trigger( "open.wb-lbx", source);
