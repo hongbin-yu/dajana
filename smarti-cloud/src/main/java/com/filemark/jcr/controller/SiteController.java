@@ -1236,14 +1236,14 @@ public class SiteController extends BaseController {
 						+"<source type=\"video/mp4\" src=\"video.mp4?path="+asset.getPath()+"\"/></video></figture>";
 			}
 	        if(asset.getDoc2pdf()) {
-	        	title = "<a class=\"download pull-right\" href=\"file/"+asset.getName()+"?path="+asset.getPath()+" target=\"_BLANK\" download><span class=\"glyphicon glyphicon-download\">下载</span></a>"
+	        	title = "<a class=\"download pull-right\" href=\"file/"+asset.getName()+"?path="+asset.getPath()+"\" download><span class=\"glyphicon glyphicon-download\">下载</span></a>"
 			    		//+"<a class=\""+asset.getCssClass()+"\" href=\"doc2pdf.pdf?path="+asset.getPath()+"\" target=\"_BLANK\">"
 	        			+"<a href=\"javascript:openDocGallery('"+asset.getPath()+"',"+getNumberOfPage(asset)+")\">"
 			    		+"<img id=\"img"+asset.getUid()+"\" src=\""+icon+"\" class=\"img-responsive img-rounded pull-left mrgn-rght-md "+(w==4?" col-md-6":"")+"\" draggable=\"true\"/></a>"
 					    +"<a class=\""+asset.getCssClass()+"\" href=\"doc2pdf.pdf?path="+asset.getPath()+"\" target=\"_BLANK\">"+asset.getTitle()+"</a>";
 	        }	
 	        if(asset.getContentType().endsWith("/pdf")) {
-	        	title = "<a class=\"download pull-right\" href=\"file/"+asset.getName()+"?path="+asset.getPath()+" target=\"_BLANK\" download><span class=\"glyphicon glyphicon-download\">下载</span></a>"
+	        	title = "<a class=\"download pull-right\" href=\"file/"+asset.getName()+"?path="+asset.getPath()+"\" download><span class=\"glyphicon glyphicon-download\">下载</span></a>"
 			    		//+"<a class=\""+asset.getCssClass()+"\" href=\"file/"+asset.getName()+"?path="+asset.getPath()+"\" target=\"_BLANK\">"
 	        			+"<a href=\"javascript:openPdfGallery('"+asset.getPath()+"',"+getNumberOfPage(asset)+")\">"
 			    		+"<img id=\"img"+asset.getUid()+"\" src=\""+icon+"\" class=\"img-responsive img-rounded pull-left mrgn-rght-md "+(w==4?" col-md-6":"")+"\" draggable=\"true\"/></a>"

@@ -8,13 +8,14 @@
 <div class="container">
      <main role="main" property="mainContentOfPage" class="col-md-9 col-md-push-3">
         <h1 id="wb-cont">
-        ${folder.title} <a href="view.html?path=${folder.path}&type=${type}&r=1&w=${param.w}" title="刷屏"><span class="glyphicon glyphicon-refresh"></span></a>	
+        ${folder.title}
         <c:if test="${param.w eq '1'}">
-        <a class="btn btn-default pull-right" href="/site/view.html?path=${folder.path}&type=${type }&w=4" title="<spring:message code="djn.bigicon"/>"><span class="glyphicon glyphicon-th-large pull-right"></span></a>
+        <a class="btn btn-default pull-right" href="/site/view.html?path=${folder.path}&type=${type }&w=4" title="<spring:message code="djn.bigicon"/>"><span class="glyphicon glyphicon-th-large"></span></a>
         </c:if>		
         <c:if test="${param.w ne '1' }">
-        <a class="btn btn-default pull-right" href="/site/view.html?path=${folder.path}&type=${type }&w=1" title="<spring:message code="djn.smallicon"/>"><span class="glyphicon glyphicon-th-list pull-right"></span></a>
+        <a class="btn btn-default pull-right" href="/site/view.html?path=${folder.path}&type=${type }&w=1" title="<spring:message code="djn.smallicon"/>"><span class="glyphicon glyphicon-th-list"></span></a>
         </c:if>	
+        <a class="btn btn-default pull-right" href="view.html?path=${folder.path}&type=${type}&r=1&w=${param.w}" title="刷屏"><span class="glyphicon glyphicon-refresh"></span></a>	
         </h1>
 	<span id="pagetag">${folder.description }</span>         
 	<section class="cn-search-dataTable"> 

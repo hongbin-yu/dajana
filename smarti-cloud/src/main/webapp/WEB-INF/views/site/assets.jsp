@@ -89,7 +89,7 @@
 
 <!--       </details>   -->
             <details id="${folder.uid }">
-            	<summary><input class="form-control" id="foldertitle" name="jcr:title" value="${folder.title}" size="20" uid="${folder.uid}"  onchange="updateNode(this)"/></summary>
+            	<summary><input class="form-control" id="foldertitle" name="jcr:title" value="${folder.title}" size="18" uid="${folder.uid}"  onchange="updateNode(this)"/></summary>
 <%--             	<c:if test="${assets.availablePages==0}">
     			    <a class="wb-lbx" title="<spring:message code="djn.delete"/>" href="<c:url value="/site/delete.html?uid=${folder.uid }&redirect=/site/assets.html?path=${folder.parent }"/>"><span class="glyphicon glyphicon-remove"></span><spring:message code="djn.delete"/></a>
 	      		</c:if> --%>
@@ -140,7 +140,7 @@
 	<c:forEach items="${assets.items }" var="item" varStatus="loop">
 	<div id="${item.uid}" class="col-md-6 col-lg-4  well">
 	<div class="checkbox"><input type="checkbox" class="checkbox" name="puid" value="${item.uid }">
-	<a class="download pull-right" href="file${item.ext}?path=${item.path}" target="_BLANK" download="${item.title }"><span class="glyphicon glyphicon-download pull-right">下载</span></a>
+	<a class="download pull-right" href="file${item.ext}?path=${item.path}" download="${item.title}" target="_blank"><span class="glyphicon glyphicon-download pull-right">下载</span></a>
 	</div>	
 		<c:if test="${item.pdf}">
 		<a title="<spring:message code="djn.open"/>PDF" href="viewpdf.pdf?uid=${item.uid}" target="_BLANK"><span class="glyphicon glyphicon-open"></span> <spring:message code="djn.open"/>PDF</a>
@@ -192,7 +192,7 @@
 	<div class="panel panel-default description" id="description${item.uid }" property="description"  uid="${item.uid}" placeholder="description">${item.description}</div>
 	
 	<details>
-		<summary><input class="form-control" id="title${item.uid  }" name="jcr:title" value="${item.title}" size="20" uid="${item.uid}"  onchange="updateNode(this)"/></summary>
+		<summary><input class="form-control" id="title${item.uid  }" name="jcr:title" value="${item.title}" size="18" uid="${item.uid}"  onchange="updateNode(this)"/></summary>
 		<span class="glyphicon glyphicon-remove"></span>
 		<a class="wb-lbx" title="<spring:message code="djn.delete"/>" href="<c:url value='deleteasset.html?path=${item.path}&redirect=/site/assets.html?path=${folder.path }'/>"><spring:message code="djn.delete"/>(${item.path })</a>
 <%-- 		<div class="form-group">
