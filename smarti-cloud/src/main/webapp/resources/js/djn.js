@@ -1374,6 +1374,13 @@ function view(path,type,w) {
 		    		
 		    	});
 		    	$("#leftmenu_ul").html(html);
+		    	var offset = $("#wb-cont");
+		    	offset.left -= 20;
+		    	offset.top -= 20;
+		    	$('html, body').animate({
+		    	    scrollTop: offset.top,
+		    	    scrollLeft: offset.left
+		    	});
 		    },
 		    error: function() {
 		    	alert(i18n("fail"));
