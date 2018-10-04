@@ -15,8 +15,7 @@
 		<span class="btn btn-default pull-right" title="选择切换"><input id="toggle" type="checkbox" onClick="toggle(this)"/></span>
         </h1>
 		<div class="panel panel-default description form-control" id="description${folder.uid }" property="description"  uid="${folder.uid}" placeholder="description">${folder.description}</div>
-<c:if test="${type!='video' }"><div class="row wb-eqht"></c:if>
-<c:if test="${type=='video' }"><div class="row"></c:if>
+
 		<div class="wb-frmvld col-md-6 col-lg-4 well">
 			<form action="upload.html" method="POST" id="form-upload" enctype="multipart/form-data">
 				<input type="hidden" id="path" name="path" value="${folder.path}"/>
@@ -133,7 +132,10 @@
     </div>
 	<span id="top_folder">	
 	</span>
+
 	<div class="clearfix"></div>	
+<c:if test="${type!='video' }"><div class="row wb-eqht"></c:if>
+<c:if test="${type=='video' }"><div class="row"></c:if>	
 	<span id="top_insert">
 	</span>
 
