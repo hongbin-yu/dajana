@@ -432,7 +432,7 @@ public class ContentController extends BaseController {
 							return null;
 				        }
 						//file.setReadOnly();
-						super.serveResource(request, response, file, null);
+						super.serveResource(request, response, file,file.getParentFile().getName(), null);
 
 						return null;
 					}else {
@@ -955,7 +955,7 @@ public class ContentController extends BaseController {
 			return null;
         }
         //cacheFile.setReadOnly();
-		super.serveResource(request, response, cacheFile, null);
+		super.serveResource(request, response, cacheFile, cacheFile.getName(), null);
 
 		return null;
 	}

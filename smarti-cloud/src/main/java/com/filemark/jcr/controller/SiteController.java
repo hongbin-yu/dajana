@@ -2402,7 +2402,7 @@ public class SiteController extends BaseController {
 				response.setContentType("application/pdf");
 				IOUtils.copy(in, response.getOutputStream());
 				in.close();	*/
-				super.serveResource(request, response, pdffile, "application/pdf");
+				super.serveResource(request, response, pdffile, pdffile.getParentFile().getName()+".pdf","application/pdf");
 
 				return null;
 			}
@@ -2438,7 +2438,7 @@ public class SiteController extends BaseController {
 					IOUtils.copy(in, response.getOutputStream());
 					in.close();				*/	
 					//file.setReadOnly();
-					super.serveResource(request, response, file, "application/jpdf");
+					super.serveResource(request, response, file,file.getParentFile().getName()+".pdf", "application/jpdf");
 
 				}
 			}
@@ -2487,7 +2487,7 @@ public class SiteController extends BaseController {
 					response.setContentType("image/jpeg");
 					IOUtils.copy(in, response.getOutputStream());
 					in.close();	*/
-					super.serveResource(request, response, jpgfile, "image/jpeg");
+					super.serveResource(request, response, jpgfile,jpgfile.getParentFile().getName()+".jpg", "image/jpeg");
 
 					return null;					
 				}
@@ -2499,7 +2499,7 @@ public class SiteController extends BaseController {
 				IOUtils.copy(in, response.getOutputStream());
 				in.close();	*/
 				//jpgfile.setReadOnly();
-				super.serveResource(request, response, jpgfile, "image/jpeg");
+				super.serveResource(request, response, jpgfile,jpgfile.getParentFile().getName()+".jpg", "image/jpeg");
 
 				return null;
 			}
@@ -2540,7 +2540,7 @@ public class SiteController extends BaseController {
 							IOUtils.copy(in, response.getOutputStream());
 							in.close();	*/
 							//jpgfile.setReadOnly();
-							super.serveResource(request, response, jpgfile, "image/jpeg");
+							super.serveResource(request, response, jpgfile, jpgfile.getParentFile().getName()+".jpg","image/jpeg");
 							return null;					
 						}
 							
@@ -2611,7 +2611,7 @@ public class SiteController extends BaseController {
 			IOUtils.copy(in, response.getOutputStream());
 			in.close();		*/	
 			//file.setReadOnly();
-			super.serveResource(request, response, file, "image/jpeg");
+			super.serveResource(request, response, file, file.getParentFile().getName()+".jpg","image/jpeg");
 		} catch (FileNotFoundException e) {
 			logger.error("pdf2jpg:"+e.getMessage());
 
@@ -2672,7 +2672,7 @@ public class SiteController extends BaseController {
 			IOUtils.copy(in, response.getOutputStream());
 			in.close();			*/
 			//file.setReadOnly();
-			super.serveResource(request, response, file, "image/jpeg");
+			super.serveResource(request, response, file,file.getParentFile().getName()+".jpg", "image/jpeg");
 		} catch (FileNotFoundException e) {
 			logger.error("pdf2img:"+e.getMessage());
 
@@ -2751,7 +2751,7 @@ public class SiteController extends BaseController {
 			IOUtils.copy(in, response.getOutputStream());
 			in.close();	*/	
 			//file.setReadOnly();
-			super.serveResource(request, response, file, "image/jpeg");
+			super.serveResource(request, response, file,file.getParentFile().getName()+".jpg", "image/jpeg");
 		} catch (FileNotFoundException e) {
 			logger.error("doc2jpg:"+e.getMessage());
 
@@ -2806,7 +2806,7 @@ public class SiteController extends BaseController {
 						response.sendRedirect("/resources/images/video-icon.png");								
 			}
 			//file.setReadOnly();
-			super.serveResource(request, response, file, "image/jpeg");
+			super.serveResource(request, response, file, file.getParentFile().getName()+".jpg","image/jpeg");
 /*			FileInputStream in = new FileInputStream(file);
 			response.setContentType("image/jpeg");
 			IOUtils.copy(in, response.getOutputStream());
@@ -2854,7 +2854,7 @@ public class SiteController extends BaseController {
 			}
 			//file.setReadOnly();
 
-			serveResource(request,response,file,contentType);
+			serveResource(request,response,file,file.getParentFile().getName()+".mp4",contentType);
 
 
 				
@@ -2894,7 +2894,7 @@ public class SiteController extends BaseController {
 					logger.error(e1.getMessage());
 				}				
 			}			
-			serveResource(request,response,file,contentType);
+			serveResource(request,response,file,file.getParentFile().getName()+".webm",contentType);
 
 					
 		} catch (FileNotFoundException e) {
@@ -2924,6 +2924,7 @@ public class SiteController extends BaseController {
 		try {
 			if(uid!=null && (path==null || "".equals(path)))
 				path = jcrService.getNodeById(uid);
+			Asset asset = (Asset)jcrService.getObject(path);
 			String devicePath = jcrService.getDevice();
 			File outFile = new File(devicePath+path);
 			if(!outFile.exists()) {
@@ -2941,7 +2942,7 @@ public class SiteController extends BaseController {
 					return null;
 		        }				
 				logger.debug("path is file output:"+outFile.getAbsolutePath());
-				super.serveResource(request, response, outFile, null);
+				super.serveResource(request, response, outFile, asset.getName(),null);
 				return null;					
 			}
 			String ext = ".jpg";
@@ -2949,12 +2950,12 @@ public class SiteController extends BaseController {
 			outFile = new File(devicePath+path+(width==null?"/origin"+ext:"/x"+width+".jpg"));
 			if(outFile.exists() && outFile.isFile()) {
 				logger.debug("output:"+outFile.getAbsolutePath());
-				super.serveResource(request, response, outFile, null);
+				super.serveResource(request, response, outFile,asset.getName(), null);
 				return null;					
 			}
 
 			if(path !=null  && jcrService.nodeExsits(path)) {
-				Asset asset = (Asset)jcrService.getObject(path);
+
 				ext = asset.getExt();
 /*				if(width!=null && jcrService.nodeExsits(path+"/file-"+width)) {
 					response.setContentType(asset.getContentType());
@@ -2979,7 +2980,7 @@ public class SiteController extends BaseController {
 					}
 					if(file.exists()) {
 						//file.setReadOnly();
-						super.serveResource(request, response, file, null);
+						super.serveResource(request, response, file,asset.getName(), null);
 					}else  if(jcrService.nodeExsits(path+"/original")) {
 						response.setContentType(asset.getContentType());
 						if(asset.getSize()!=null)
@@ -2995,7 +2996,7 @@ public class SiteController extends BaseController {
 						jcrService.addOrUpdate(asset);
 						
 						out.close();
-						super.serveResource(request, response, file, null);
+						super.serveResource(request, response, file,asset.getName(), null);
 						//jcrService.readAsset(path+"/original",  response.getOutputStream());
 
 						return null;
@@ -3023,7 +3024,7 @@ public class SiteController extends BaseController {
 					
 					out.close();
 					//file.setReadOnly();
-					super.serveResource(request, response, file, null);
+					super.serveResource(request, response, file,asset.getName(), null);
 					//jcrService.readAsset(path+"/original",  response.getOutputStream());
 
 					return null;
@@ -3094,7 +3095,7 @@ public class SiteController extends BaseController {
 					return null;
 		        }				
 				logger.debug("path is file output:"+outFile.getAbsolutePath());
-				super.serveResource(request, response, outFile, null);
+				super.serveResource(request, response, outFile,outFile.getParentFile().getName(), null);
 				return null;					
 			}
 
@@ -3146,7 +3147,7 @@ public class SiteController extends BaseController {
 					logger.debug(fileName+" modified");
 					return null;
 		        }
-				super.serveResource(request, response, outFile, null);				
+				super.serveResource(request, response, outFile,outFile.getParentFile().getName(), null);				
 			}else if(path !=null && jcrService.nodeExsits(path)) {
 				Asset asset = (Asset)jcrService.getObject(path);
 				if(width!=null && jcrService.nodeExsits(path+"/file-"+width)) {
@@ -3168,7 +3169,7 @@ public class SiteController extends BaseController {
 					IOUtils.copy(in, response.getOutputStream());	
 					in.close();*/
 					if(file.exists()) {
-						super.serveResource(request, response, file, null);
+						super.serveResource(request, response, file,file.getParentFile().getName(), null);
 						return null;						
 					}else {
 						if(jcrService.nodeExsits(path+"/original")) {
@@ -3182,7 +3183,7 @@ public class SiteController extends BaseController {
 							
 							out.close();
 							if(file.exists()) {
-								super.serveResource(request, response, file, null);
+								super.serveResource(request, response, file,file.getParentFile().getName(), null);
 								return null;	
 							}else {
 								jcrService.readAsset(path+"/original",  response.getOutputStream());
@@ -3206,7 +3207,7 @@ public class SiteController extends BaseController {
 					jcrService.addOrUpdate(asset);
 					out.close();
 					if(file.exists()) {
-						super.serveResource(request, response, file, null);
+						super.serveResource(request, response, file,file.getParentFile().getName(), null);
 						return null;	
 					}else {
 						jcrService.readAsset(path+"/original",  response.getOutputStream());
