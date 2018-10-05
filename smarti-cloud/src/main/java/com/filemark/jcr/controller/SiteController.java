@@ -1223,28 +1223,26 @@ public class SiteController extends BaseController {
 			}
 			String icon = w!=null && w==1?asset.getIconSmall():asset.getIcon();
 			String title ="<input type=\"checkbox\" name=\"puid\" value=\""+asset.getUid()+"\"> <a href=\"javascript:openImage(\'"+asset.getLink()+(asset.getWidth() != null && asset.getWidth() >1200?"&w=12":"")+"')\"><img alt=\"\" class=\"img-responsive img-rounded pull-left mrgn-rght-md"+(asset.getContentType().endsWith("pdf") && w==4?" col-md-6":"")+"\" src=\""+icon+"\"><a href=\""+asset.getLink()+"\" target=\"_blank\" title=\"打开原图\">"+asset.getTitle()+"</a>"
-						+"<a class=\"btn-default btn-xs pull-right\" href=\"download/"+asset.getName()+"?path="+asset.getPath()+"\" download=\""+asset.getName()+"\" title=\""+asset.getTitle()+"\" target=\"_blank\"><span class=\"glyphicon glyphicon-download pull-right\">下载</span></a>";
+						+"<a class=\"download btn-default btn-xs pull-right\" href=\"download/"+asset.getName()+"?path="+asset.getPath()+"\" download=\""+asset.getName()+"\" title=\""+asset.getTitle()+"\" target=\"_blank\"><span class=\"glyphicon glyphicon-download pull-right\">下载</span></a>";
 			if(asset.getMp4()) {
 				if(w!=null && w==1) {
-					title ="<figure class=\"pull-left\">"
+					title ="<a class=\"download btn-default btn-xs pull-right\" href=\"download/"+asset.getName()+"?path="+asset.getPath()+"\" download=\""+asset.getName()+"\" title=\""+asset.getTitle()+"\" target=\"_blank\"><span class=\"glyphicon glyphicon-download pull-right\">下载</span></a><figure class=\"pull-left\">"
 							+"<video poster=\"video2jpg.jpg?path="+asset.getPath()+"\" width=\"150\" height=\"100\" controls=\"controls\"  preload=\"none\">"
 							+"<source type=\"video/mp4\" src=\"video.mp4?path="+asset.getPath()+"\"/></video></figture>";
 					
 				} else 
-				title ="<figure class=\"pull-left\">"
+				   title ="<a class=\"download btn-default btn-xs pull-right\" href=\"download/"+asset.getName()+"?path="+asset.getPath()+"\" download=\""+asset.getName()+"\" title=\""+asset.getTitle()+"\" target=\"_blank\"><span class=\"glyphicon glyphicon-download pull-right\">下载</span></a><figure class=\"pull-left\">"
 						+"<video poster=\"video2jpg.jpg?path="+asset.getPath()+"\" width=\"400\" height=\"300\" controls=\"controls\"  preload=\"none\">"
 						+"<source type=\"video/mp4\" src=\"video.mp4?path="+asset.getPath()+"\"/></video></figture>";
 			}
 	        if(asset.getDoc2pdf()) {
-	        	title = "<a class=\"download pull-right\" href=\"download/"+asset.getName()+"?path="+asset.getPath()+"\" download><span class=\"glyphicon glyphicon-download\">下载</span></a>"
-			    		//+"<a class=\""+asset.getCssClass()+"\" href=\"doc2pdf.pdf?path="+asset.getPath()+"\" target=\"_BLANK\">"
+	        	title = "<a class=\"download pull-right\" href=\"download/"+asset.getName()+"?path="+asset.getPath()+"\" download=\""+asset.getName()+"\"><span class=\"glyphicon glyphicon-download\">下载</span></a>"
 	        			+"<a href=\"javascript:openDocGallery('"+asset.getPath()+"',"+getNumberOfPage(asset)+")\">"
-			    		+"<img id=\"img"+asset.getUid()+"\" src=\""+icon+"\" class=\"img-responsive img-rounded pull-left mrgn-rght-md "+(w==4?" col-md-6":"")+"\" draggable=\"true\"/></a>"
-					    +"<a class=\""+asset.getCssClass()+"\" href=\"doc2pdf.pdf?path="+asset.getPath()+"\" target=\"_BLANK\">"+asset.getTitle()+"</a>";
+			    		+"<img id=\"img"+asset.getUid()+"\" src=\""+icon+"\" class=\"img-responsive img-rounded pull-left mrgn-rght-md "+(w==4?" col-md-6":"")+"\" draggable=\"true\"/></a>";
+					    //+"<a class=\""+asset.getCssClass()+"\" href=\"doc2pdf.pdf?path="+asset.getPath()+"\" target=\"_BLANK\">"+asset.getTitle()+"</a>";
 	        }	
 	        if(asset.getContentType().endsWith("/pdf")) {
-	        	title = "<a class=\"download pull-right\" href=\"download/"+asset.getName()+"?path="+asset.getPath()+"\" download><span class=\"glyphicon glyphicon-download\">下载</span></a>"
-			    		//+"<a class=\""+asset.getCssClass()+"\" href=\"file/"+asset.getName()+"?path="+asset.getPath()+"\" target=\"_BLANK\">"
+	        	title = "<a class=\"download pull-right\" href=\"download/"+asset.getName()+"?path="+asset.getPath()+"\" download=\""+asset.getName()+"\"><span class=\"glyphicon glyphicon-download\">下载</span></a>"
 	        			+"<a href=\"javascript:openPdfGallery('"+asset.getPath()+"',"+getNumberOfPage(asset)+")\">"
 			    		+"<img id=\"img"+asset.getUid()+"\" src=\""+icon+"\" class=\"img-responsive img-rounded pull-left mrgn-rght-md "+(w==4?" col-md-6":"")+"\" draggable=\"true\"/></a>"
 					    +"<a href=\"file/"+asset.getName()+"?path="+asset.getPath()+"\" target=\"_BLANK\">"+asset.getTitle()+"</a>";

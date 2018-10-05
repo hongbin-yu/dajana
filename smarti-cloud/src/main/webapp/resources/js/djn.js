@@ -1561,6 +1561,46 @@ function traverseFileTree(item, path) {
 	    });
 	  }
 	}
+var downloadArray = [];
+function downloadAll() {
+      downloadLinks = $("a.download");
+      if(downloadLinks !=null && downloadLinks.length >0 && confirm("确信下载全部"+downloadLinks.length+"文件?")) {
+    	  downloadLinks.each(function(i) {
+    		  downloadArray.push($(this));
+    		});
+    	  setTimeout(downloadLink,200);
+      }
+	
+}
+
+function downloadLink() {
+	if(downloadArray.length==0) return ;
+	var a = downloadArray.pop();
+	$("#downloadIcon").html(" " +downloadArray.length+"<img src=\"/resources/images/ui-anim_basic_16x16.gif\" alt=\"\">");    	  
+	
+	var link = document.createElement('a');
+
+	  link.setAttribute('download', null);
+	  link.style.display = 'none';
+
+	  document.body.appendChild(link);	
+	  var url = a.attr("href");
+	  var name = a.attr("download");
+	  if(name!=null && name !="null")
+			link.download = name;
+	  link.setAttribute('href',url);
+	  link.click();
+	  
+	  document.body.removeChild(link);	
+      if(downloadArray.length>0) {
+    	  setTimeout(downloadLink,2000);	    	  
+      }else {
+  		$("#downloadIcon").html("");    	  
+   	  
+      }
+      
+	
+}
 
 document.addEventListener("dragenter", function(event) {
 	var id = event.target.id;
