@@ -142,7 +142,7 @@
 	<c:forEach items="${assets.items }" var="item" varStatus="loop">
 	<div id="${item.uid}" class="col-md-6 col-lg-4  well">
 	<div class="checkbox"><input type="checkbox" class="checkbox" name="puid" value="${item.uid }">
-	<a class="download pull-right" href="file${item.ext}?path=${item.path}" download="${item.title}" target="_blank"><span class="glyphicon glyphicon-download pull-right">下载</span></a>
+	<a class="download pull-right" href="download/${item.name}?path=${item.path}" download="${item.name}" target="_blank"><span class="glyphicon glyphicon-download pull-right">下载</span></a>
 	</div>	
 		<c:if test="${item.pdf}">
 		<a title="<spring:message code="djn.open"/>PDF" href="viewpdf.pdf?uid=${item.uid}" target="_BLANK"><span class="glyphicon glyphicon-open"></span> <spring:message code="djn.open"/>PDF</a>

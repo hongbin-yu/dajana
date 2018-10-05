@@ -1223,7 +1223,7 @@ public class SiteController extends BaseController {
 			}
 			String icon = w!=null && w==1?asset.getIconSmall():asset.getIcon();
 			String title ="<input type=\"checkbox\" name=\"puid\" value=\""+asset.getUid()+"\"> <a href=\"javascript:openImage(\'"+asset.getLink()+(asset.getWidth() != null && asset.getWidth() >1200?"&w=12":"")+"')\"><img alt=\"\" class=\"img-responsive img-rounded pull-left mrgn-rght-md"+(asset.getContentType().endsWith("pdf") && w==4?" col-md-6":"")+"\" src=\""+icon+"\"><a href=\""+asset.getLink()+"\" target=\"_blank\" title=\"打开原图\">"+asset.getTitle()+"</a>"
-						+(asset.getPdf()?"<a class=\"btn-default btn-xs pull-right\" href=\"viewpdf.pdf?uid="+asset.getUid()+"\" title=\"PDF\" target=\"_blank\">打开 PDF</a>":"");
+						+"<a class=\"btn-default btn-xs pull-right\" href=\"download/"+asset.getName()+"?path="+asset.getPath()+"\" download=\""+asset.getName()+"\" title=\""+asset.getTitle()+"\" target=\"_blank\"><span class=\"glyphicon glyphicon-download pull-right\">下载</span></a>";
 			if(asset.getMp4()) {
 				if(w!=null && w==1) {
 					title ="<figure class=\"pull-left\">"
@@ -1236,14 +1236,14 @@ public class SiteController extends BaseController {
 						+"<source type=\"video/mp4\" src=\"video.mp4?path="+asset.getPath()+"\"/></video></figture>";
 			}
 	        if(asset.getDoc2pdf()) {
-	        	title = "<a class=\"download pull-right\" href=\"file/"+asset.getName()+"?path="+asset.getPath()+"\" download><span class=\"glyphicon glyphicon-download\">下载</span></a>"
+	        	title = "<a class=\"download pull-right\" href=\"download/"+asset.getName()+"?path="+asset.getPath()+"\" download><span class=\"glyphicon glyphicon-download\">下载</span></a>"
 			    		//+"<a class=\""+asset.getCssClass()+"\" href=\"doc2pdf.pdf?path="+asset.getPath()+"\" target=\"_BLANK\">"
 	        			+"<a href=\"javascript:openDocGallery('"+asset.getPath()+"',"+getNumberOfPage(asset)+")\">"
 			    		+"<img id=\"img"+asset.getUid()+"\" src=\""+icon+"\" class=\"img-responsive img-rounded pull-left mrgn-rght-md "+(w==4?" col-md-6":"")+"\" draggable=\"true\"/></a>"
 					    +"<a class=\""+asset.getCssClass()+"\" href=\"doc2pdf.pdf?path="+asset.getPath()+"\" target=\"_BLANK\">"+asset.getTitle()+"</a>";
 	        }	
 	        if(asset.getContentType().endsWith("/pdf")) {
-	        	title = "<a class=\"download pull-right\" href=\"file/"+asset.getName()+"?path="+asset.getPath()+"\" download><span class=\"glyphicon glyphicon-download\">下载</span></a>"
+	        	title = "<a class=\"download pull-right\" href=\"download/"+asset.getName()+"?path="+asset.getPath()+"\" download><span class=\"glyphicon glyphicon-download\">下载</span></a>"
 			    		//+"<a class=\""+asset.getCssClass()+"\" href=\"file/"+asset.getName()+"?path="+asset.getPath()+"\" target=\"_BLANK\">"
 	        			+"<a href=\"javascript:openPdfGallery('"+asset.getPath()+"',"+getNumberOfPage(asset)+")\">"
 			    		+"<img id=\"img"+asset.getUid()+"\" src=\""+icon+"\" class=\"img-responsive img-rounded pull-left mrgn-rght-md "+(w==4?" col-md-6":"")+"\" draggable=\"true\"/></a>"
@@ -3045,7 +3045,55 @@ public class SiteController extends BaseController {
 		
 		
 	} 
+	@RequestMapping(value = {"/protected/download/*.*","/site/download/*.*","/protected/download/**","/site/download/**"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
+	public @ResponseBody String downloadFile(String uid,String path,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
 
+
+		try {
+			if(uid!=null && (path==null || "".equals(path)))
+				path = jcrService.getNodeById(uid);
+			if(path !=null  && jcrService.nodeExsits(path)) {			
+				Asset asset = (Asset)jcrService.getObject(path);
+				String ext = asset.getExt();
+
+				if(asset.getDevice()!=null) {
+					Device device = (Device)jcrService.getObject(asset.getDevice());
+					File file = new File(device.getLocation()+asset.getPath()+"/origin"+ext);
+					if(file.exists()) {
+						response.setContentType(asset.getContentType());
+						if(asset.getSize()!=null)
+							response.setContentLength(asset.getSize().intValue());
+						if(asset.getOriginalDate()!=null)
+							response.setDateHeader("Last-Modified", asset.getOriginalDate().getTime());
+						String fileName = asset.getName();
+				        response.setHeader("Content-Disposition", "attachement;filename=\"" + new String (fileName.getBytes("UTF-8"),"ISO-8859-1") + "\"");
+						
+						FileInputStream in = new FileInputStream(file);
+						IOUtils.copy(in, response.getOutputStream());	
+						in.close();	
+						return null;
+					}else {
+						return path +" file not found";								
+					}
+				}else {
+
+					return path +" device not found";
+				}
+			}else {
+
+				return path +" file not found";		
+			}
+
+		}catch(Exception e) {
+			logger.error("downloadFile:"+e.getMessage()+",path="+path);
+
+			return e.getMessage();
+		}
+		
+		
+	} 
+
+	
 	@RequestMapping(value = {"/site/cache/viewimage"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public @ResponseBody String cacheFile(String uid,String path,Integer w,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
 
