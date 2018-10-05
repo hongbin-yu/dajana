@@ -3060,7 +3060,7 @@ public class SiteController extends BaseController {
 					if(file.exists()) {
 						response.setContentType(asset.getContentType());
 						if(asset.getSize()!=null)
-							response.setContentLength(asset.getSize().intValue());
+							response.setContentLength((int)file.length());
 						if(asset.getOriginalDate()!=null)
 							response.setDateHeader("Last-Modified", asset.getOriginalDate().getTime());
 						String fileName = asset.getName();
