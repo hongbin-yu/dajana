@@ -1345,12 +1345,10 @@ function view(path,type,w) {
 		    	var html = "";
 		    	$.each(json.subfolders,function(i,f){
 		    			if(f.path == path) {
-		    				title = f.title+'<a href="view.html?path='+path+"&type="+type+"&w="+w+'&r=1" title="刷屏"><span class="glyphicon glyphicon-refresh"></span></a>'; 
-		    		    	if(w=='1') {
-		    		    		title += "<a class=\"btn btn-default pull-right\" href=\"/site/view.html?path="+path+"&type="+type+"&w=4\" title=\"大图标\"><span class=\"glyphicon glyphicon-th-large pull-right\"></span></a>";
-		    		    	}else {
-		    		    		title += "<a class=\"btn btn-default pull-right\" href=\"/site/view.html?path="+path+"&type="+type+"&w=1\" title=\"小图标\"><span class=\"glyphicon glyphicon-th-list pull-right\"></span></a>";
-		    		    	}		    				
+		    				title = f.title 
+		    		        +"<a class=\"btn btn-default pull-right\" href=\"javascript:downloadAll()\" title=\"下载本页全部文件\"><span id=\"downloadIcon\" class=\"glyphicon glyphicon-download\"></span></a>"	
+		    		        +"<a class=\"btn btn-default pull-right\" href=\"view.html?path=${folder.path}&type=${type}&r=1&w=${param.w}\" title=\"刷屏\"><span class=\"glyphicon glyphicon-refresh\"></span></a>";	
+		    				
 		    				$("h1").html(title);
 		    				$("#pagetag").html(f.description);
 		    			}
