@@ -23,8 +23,8 @@ tinymce.init({
 	  selector: 'div.description',
 	  inline: true,
 	  language: 'zh_CN.GB2312',
-	  plugins: ['save paste advlist autolink lists link image imagetools autosave'],
-      image_class_list:  [{title: 'Image Responsive', value: 'img-responsive'},
+	  plugins: ['save paste advlist autolink lists link image imagetools autosave contextmenu'],
+	  image_class_list:  [{title: 'Image Responsive', value: 'img-responsive'},
 					      {title: 'Image Thumbnail', value: 'thumbnail'},
 					      {title: 'Image Circle', value: 'img-circle'},
 					      {title: 'Image Rounded', value: 'img-rounded'},					      
@@ -43,7 +43,7 @@ tinymce.init({
 	  toolbar: 'save undo redo image paste',
 	  autosave_ask_before_unload: false,
 	  autosave_interval: "10s",
-	  menubar: false,
+	  menubar: true,
 	  save_onsavecallback: function() {
 	    var id = tinyMCE.activeEditor.id;
 	    var uid = id.replace("description","");
