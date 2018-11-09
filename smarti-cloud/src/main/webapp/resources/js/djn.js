@@ -1332,7 +1332,7 @@ function removeNode(path,uid) {
 	});	 
 }
 function view(path,type,w) {
-	var table = $('#dataset-filter').DataTable();
+	var table = $('#mobile-centre').DataTable();
 	table.ajax.url( "getassets.json?path="+path+"&type="+type+"&w="+w ).load();
 
 	$("#goto_cloud_edit").html("<a class=\"item\" title=\"云编辑\" href=\"/site/assets.html?path="+path+"&type="+type+"\"><span class=\"glyphicon glyphicon-edit\"></span>云站编辑</a>");//.attr({"href":"assets.html?path="+path+"&type="+type});
@@ -1347,7 +1347,7 @@ function view(path,type,w) {
 		    			if(f.path == path) {
 		    				title = f.title 
 		    		        +"<a class=\"btn btn-default pull-right\" href=\"javascript:downloadAll()\" title=\"下载本页全部文件\"><span id=\"downloadIcon\" class=\"glyphicon glyphicon-download\"></span></a>"	
-		    		        +"<a class=\"btn btn-default pull-right\" href=\"view.html?path=${folder.path}&type=${type}&r=1&w=${param.w}\" title=\"刷屏\"><span class=\"glyphicon glyphicon-refresh\"></span></a>";	
+		    		        +"<a class=\"btn btn-default pull-right\" href=\"view.html?path="+path+"&type="+type+"&r=1\" title=\"刷屏\"><span class=\"glyphicon glyphicon-refresh\"></span></a>";	
 		    				
 		    				$("h1").html(title);
 		    				$("#pagetag").html(f.description);
