@@ -23,7 +23,8 @@ tinymce.init({
 	  selector: 'div.description',
 	  inline: true,
 	  language: 'zh_CN.GB2312',
-	  plugins: ['save paste advlist autolink lists link image imagetools autosave contextmenu'],
+	  plugins: ['save paste advlist autolink lists link image imagetools autosave contextmenu template code'],
+	  templates:contentPath+"/assets/templates/json/components.json",//"resources/templates/wet.json",
 	  image_class_list:  [{title: 'Image Responsive', value: 'img-responsive'},
 					      {title: 'Image Thumbnail', value: 'thumbnail'},
 					      {title: 'Image Circle', value: 'img-circle'},
@@ -40,7 +41,7 @@ tinymce.init({
     	  //win.document.getElementById(field_name).value = 'my browser value';
       },
       file_browser_callback_types: 'file image media',	  
-	  toolbar: 'save undo redo image paste',
+	  toolbar: 'save undo redo image paste | template code',
 	  autosave_ask_before_unload: false,
 	  autosave_interval: "10s",
 	  menubar: true,
