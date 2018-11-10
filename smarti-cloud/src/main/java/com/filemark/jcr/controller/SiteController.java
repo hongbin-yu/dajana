@@ -1235,8 +1235,8 @@ public class SiteController extends BaseController {
 					
 				} else {
 				   title = asset.getTitle();
-				   String url  ="<figure>" //<a class=\"download btn-default btn-xs pull-right\" href=\"download/"+asset.getName()+"?path="+asset.getPath()+"\" download=\""+asset.getName()+"\" title=\""+asset.getTitle()+"\" target=\"_blank\"><span class=\"glyphicon glyphicon-download pull-right\">下载</span></a>
-						+"<video poster=\"video2jpg.jpg?path="+asset.getPath()+"\" width=\"300\" height=\"200\" controls=\"controls\"  preload=\"none\">"
+				   String url  ="<figure class=\"wb-mltmd\">" //<a class=\"download btn-default btn-xs pull-right\" href=\"download/"+asset.getName()+"?path="+asset.getPath()+"\" download=\""+asset.getName()+"\" title=\""+asset.getTitle()+"\" target=\"_blank\"><span class=\"glyphicon glyphicon-download pull-right\">下载</span></a>
+						+"<video poster=\"video2jpg.jpg?path="+asset.getPath()+"\" width=\"250\" height=\"180\" controls=\"controls\"  preload=\"none\">"
 						+"<source type=\"video/mp4\" src=\"video.mp4?path="+asset.getPath()+"\"/></video></figture>";
 				   a2news.setUrl(url);
 				}
