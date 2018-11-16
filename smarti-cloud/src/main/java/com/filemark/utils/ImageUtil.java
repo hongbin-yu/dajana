@@ -321,8 +321,8 @@ public class ImageUtil
     	if(maxWidth>=720) maxWidth=720;
     	else if(maxWidth>=450) maxWidth=450;
     	else maxWidth=300;
-    	String shellCommand = "/mnt/device/dajana/smarti-cloud/streamer"+maxWidth+".sh";
-    	ProcessBuilder pb = new ProcessBuilder("/mnt/device/dajana/smarti-cloud/streamer"+maxWidth+".sh");
+    	String shellCommand = "/home/device/dajana/smarti-cloud/streamer"+maxWidth+".sh";
+    	ProcessBuilder pb = new ProcessBuilder("/home/device/dajana/smarti-cloud/streamer"+maxWidth+".sh");
     	pb.redirectErrorStream(true);
 	    try {
 	    	closevideo();
