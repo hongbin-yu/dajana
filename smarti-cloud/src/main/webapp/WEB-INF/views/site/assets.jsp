@@ -134,8 +134,9 @@
 	</span>
 
 	<div class="clearfix"></div>	
-<c:if test="${type!='video' }"><div class="row wb-eqht"></c:if>
-<c:if test="${type=='video' }"><div class="row"></c:if>	
+<%-- <c:if test="${type!='video' }"><div class="row wb-eqht"></c:if> --%>
+<%-- <c:if test="${type=='video' }"><div class="row"></c:if>	 --%>
+<div class="row">
 	<span id="top_insert">
 	</span>
 
@@ -194,7 +195,7 @@
 	<div class="panel panel-default description" id="description${item.uid }" property="description"  uid="${item.uid}" placeholder="description">${item.description}</div>
 	
 	<details>
-		<summary><input class="form-control" id="title${item.uid  }" name="jcr:title" value="${item.title}" size="18" uid="${item.uid}"  onchange="updateNode(this)"/></summary>
+		<summary><input class="form-control" id="title${item.uid  }" name="jcr:title" value="${item.title}" size="20" uid="${item.uid}"  onchange="updateNode(this)"/></summary>
 		<span class="glyphicon glyphicon-remove"></span>
 		<a class="wb-lbx" title="<spring:message code="djn.delete"/>" href="<c:url value='deleteasset.html?path=${item.path}&redirect=/site/assets.html?path=${folder.path }'/>"><spring:message code="djn.delete"/>(${item.path })</a>
 <%-- 		<div class="form-group">
@@ -236,7 +237,7 @@
 	</details>
 	
 	</div>
-<%-- 	<c:if test="${(loop.index+1) % 3 ==0  }"><div class="clearfix"></div></c:if> --%>
+ 	<c:if test="${(loop.index+1) % 3 ==0  }"><div class="clearfix"></div></c:if> 
 	</c:forEach>
 	<div class="clearfix"></div>
 </div>
