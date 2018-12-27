@@ -89,7 +89,11 @@ public class SigninController extends BaseController{
     	User user = new User();
     	Page page = new Page();
     	String title = messageSource.getMessage("djn.login", null,"&#30331;&#20837;", localeResolver.resolveLocale(request));
-
+    	int maxAge = -1;
+    	if(request.getParameter("reme")!=null) {
+    		maxAge = 86400*30;
+    		//logger.info("Signin Cookie age="+maxAge);
+    	}
     	page.setTitle(title);
     	String lastIp = getClientIpAddress(request);
     	if(loginCount==null) return signin(redirect,j_username, request, httpServletResponse,model);
@@ -191,7 +195,7 @@ public class SigninController extends BaseController{
 			}	
         }*/
         
-        CookieUtil.create(httpServletResponse, JwtUtil.jwtTokenCookieName, token, false, -1, domain);
+        CookieUtil.create(httpServletResponse, JwtUtil.jwtTokenCookieName, token, false, maxAge, domain);
         //if(user.getHost()!=null && !domain.equals(user.getHost()))
         	//CookieUtil.create(httpServletResponse, JwtUtil.jwtTokenCookieName, token, false, -1, user.getHost());
         if(redirect==null || "".equals(redirect) || "signin".equals(redirect)) {

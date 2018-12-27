@@ -20,6 +20,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.filemark.jcr.controller.ContentController;
 import com.filemark.jcr.model.User;
+import com.filemark.sso.CookieUtil;
 import com.filemark.sso.JwtUtil;
 
 public class ProtectedFilter implements Filter {
@@ -39,6 +40,7 @@ public class ProtectedFilter implements Filter {
 		HttpServletResponse httpServletResponse = (HttpServletResponse)response;
         String authService = this.getFilterConfig().getInitParameter("services.auth");
         String redirectUrl = httpServletRequest.getRequestURL().toString() ;
+    	String domain = httpServletRequest.getServerName();
         String signingUser = JwtUtil.getSubject(httpServletRequest, JwtUtil.jwtTokenCookieName, JwtUtil.signingKey);
         if(!httpServletRequest.getContextPath().equals("/") && !authService.startsWith("http")) {
         	authService = httpServletRequest.getContextPath()+authService;
@@ -78,6 +80,8 @@ public class ProtectedFilter implements Filter {
 			httpServletRequest.setAttribute("usertitle", authors[3]);
 			httpServletRequest.setAttribute("signingKey", authors[4]);	        	
     	    //chain.doFilter(httpServletRequest, httpServletResponse);
+	        CookieUtil.create(httpServletResponse, JwtUtil.jwtTokenCookieName, JwtUtil.generateToken(JwtUtil.signingKey, signingUser), false, 86400*30, domain);
+			
         }
         chain.doFilter(httpServletRequest, httpServletResponse);
 

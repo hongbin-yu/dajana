@@ -25,6 +25,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.filemark.jcr.controller.BaseController;
 import com.filemark.jcr.model.User;
+import com.filemark.sso.CookieUtil;
 import com.filemark.sso.JwtUtil;
 
 public class AdminFilter implements Filter {
@@ -100,7 +101,9 @@ public class AdminFilter implements Filter {
     			session.setAttribute("port", authors[1]);    			
     			session.setAttribute("username", authors[2]);
     			session.setAttribute("usertitle", authors[3]);	 
-    			session.setAttribute("signingKey", authors[4]);	                  	
+    			session.setAttribute("signingKey", authors[4]);	
+    	        CookieUtil.create(httpServletResponse, JwtUtil.jwtTokenCookieName, JwtUtil.generateToken(JwtUtil.signingKey, signingUser), false, 86400*30, domain);
+    			
             }
   	
     	    chain.doFilter(httpServletRequest, httpServletResponse);

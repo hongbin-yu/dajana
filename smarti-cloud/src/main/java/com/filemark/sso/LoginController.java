@@ -129,7 +129,11 @@ public class LoginController extends BaseController {
     	User user = new User();
     	Page page = new Page();
     	String title = messageSource.getMessage("djn.login", null,"&#30331;&#20837;", localeResolver.resolveLocale(request));
-
+    	int maxAge = -1;
+    	if(request.getParameter("reme")!=null) {
+    		maxAge = 86400*30;
+    		//logger.info("Cookie age="+maxAge);
+    	}
     	page.setTitle(title);
     	String lastIp = getClientIpAddress(request);
     	if(loginCount==null) loginCount=0;
@@ -211,14 +215,14 @@ public class LoginController extends BaseController {
 			logger.error("sigin error:"+e.getMessage());
 		}        
         logger.debug("domain:"+domain);
-        CookieUtil.create(httpServletResponse, JwtUtil.jwtTokenCookieName, token, false, -1, domain);
+        CookieUtil.create(httpServletResponse, JwtUtil.jwtTokenCookieName, token, false, maxAge, domain);
 
         if(redirect==null || "".equals(redirect) || "login".equals(redirect)) {
     		String content = "/content/"+user.getUserName();
 
     		if(user.getHost()!=null && !"".equals(user.getHost())) {
     			String url = "/content.html";//"http://"+(user.getHost()+(user.getPort()==null || "".equals(user.getPort())?"":user.getPort()) + content+".html");
-    	        CookieUtil.create(httpServletResponse, JwtUtil.jwtTokenCookieName, token, false, -1, user.getHost());
+    	        CookieUtil.create(httpServletResponse, JwtUtil.jwtTokenCookieName, token, false, maxAge, user.getHost());
 
     			logger.debug("redirect:"+url);
     			return "redirect:"+url;
