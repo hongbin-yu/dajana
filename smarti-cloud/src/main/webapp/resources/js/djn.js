@@ -1098,7 +1098,17 @@ function output(data) {
 	}
 	if(topInsert != null) 
 	    html = '<div id="'+data.uid+'" class="col-md-6 col-lg-4 well">';
-    	if(data.contentType.indexOf('video/')>=0) {
+	    if(data.contentType.indexOf('audio/')>=0) {
+    		html +='<a class="download" href="file/'+data.name+'?path='+data.path+'" target="_BLANK" download><span class="glyphicon glyphicon-download">下载</span></a>'
+			  +'<figure>'
+			  +'<audio poster="video2jpg.jpg?path='+data.path+'" title="'+data.title+'" controls="controls" preload="metadata">'
+			  +'<source type="'+data.contentType+'" src="file/'+data.name+'?path='+data.path+'"/>'
+			  +'</audio>'
+			  +'<figcaption>'
+			  +'<p>'+data.title+'</p>'
+			  +'</figcaption>'
+			  +'</figure>';  	    	
+	    }else if(data.contentType.indexOf('video/')>=0) {
     		html +='<a class="download" href="file/'+data.name+'?path='+data.path+'" target="_BLANK" download><span class="glyphicon glyphicon-download">下载</span></a>'
     			  +'<figure class="wb-mltmd">'
     			  +'<video poster="video2jpg.jpg?path='+data.path+'" title="'+data.title+'" controls="controls" preload="none">'
@@ -1114,7 +1124,7 @@ function output(data) {
 		  		 html +='<a title="打开PDF" href="viewpdf.pdf?uid='+data.uid+'" target="_BLANK"><span class="glyphicon glyphicon-open"></span> 打开PDF</a>';
 		  	}
 		  	html	+='	<a class="download pull-right" href="file'+data.ext+'?path='+data.path+'" target="_BLANK" download="'+data.title+'"><span class="glyphicon glyphicon-download pull-right">下载</span></a>';
-
+		  	
 	    	html +='<a href="javascript:openImage(\''+data.link+'\')"><img id="img'+data.uid+'" src="'+data.icon+'" class="img-responsive" draggable="true"></img></a>'
 	    		  +'</div>'
 				  +'<input class="form-control" id="description'+data.uid+'" name="jcr:description" value="'+(data.description==null?"":+data.description)+'" size="42" uid="'+data.uid+'"  onchange="updateNode(this)"/>';
