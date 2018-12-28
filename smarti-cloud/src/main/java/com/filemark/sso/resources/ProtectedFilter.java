@@ -68,20 +68,23 @@ public class ProtectedFilter implements Filter {
   		
           } else {
             String authors[] = signingUser.split("/");
-			User user = new User();
-			user.setHost(authors[0]);
-			user.setPort(authors[1]);
-			user.setUserName(authors[2]);
-			user.setTitle(authors[3]);
-			user.setSigningKey(authors[4]);	
-			httpServletRequest.setAttribute("usersite", authors[0]);
-			httpServletRequest.setAttribute("port", authors[1]);
-			httpServletRequest.setAttribute("username", authors[2]);
-			httpServletRequest.setAttribute("usertitle", authors[3]);
-			httpServletRequest.setAttribute("signingKey", authors[4]);	        	
-    	    //chain.doFilter(httpServletRequest, httpServletResponse);
-	        CookieUtil.create(httpServletResponse, JwtUtil.jwtTokenCookieName, JwtUtil.generateToken(JwtUtil.signingKey, signingUser), false, 86400*30, domain);
-			
+
+          	if(domain.equals(authors[0])) {
+
+				User user = new User();
+				user.setHost(authors[0]);
+				user.setPort(authors[1]);
+				user.setUserName(authors[2]);
+				user.setTitle(authors[3]);
+				user.setSigningKey(authors[4]);	
+				httpServletRequest.setAttribute("usersite", authors[0]);
+				httpServletRequest.setAttribute("port", authors[1]);
+				httpServletRequest.setAttribute("username", authors[2]);
+				httpServletRequest.setAttribute("usertitle", authors[3]);
+				httpServletRequest.setAttribute("signingKey", authors[4]);	        	
+	    	    //chain.doFilter(httpServletRequest, httpServletResponse);
+		        CookieUtil.create(httpServletResponse, JwtUtil.jwtTokenCookieName, JwtUtil.generateToken(JwtUtil.signingKey, signingUser), false, 86400*30, domain);
+          	}
         }
         chain.doFilter(httpServletRequest, httpServletResponse);
 
