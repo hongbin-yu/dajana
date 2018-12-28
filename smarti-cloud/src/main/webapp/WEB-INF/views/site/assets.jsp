@@ -173,8 +173,8 @@
 		</c:if>
 		<c:if test="${item.audio}">
 <%-- 		<a class="download" href="file/${item.name}?path=${item.path}" download><span class="glyphicon glyphicon-volume-up">下载</span></a>
- --%>		<figure class="wb-mltmd">
-				<audio title="${item.title }" preload="metadata">
+ --%>		<figure>
+				<audio title="${item.title }" controls="controls" preload="metadata">
 					<source type="${item.contentType }" src="file/${item.name}?path=${item.path}"/>
 				</audio>
 		</figure>
