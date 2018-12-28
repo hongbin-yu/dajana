@@ -1423,6 +1423,13 @@ public class SiteController extends BaseController {
 	           				if(!"1080x720".equals(resolution) && !contentType.equals("video/mp4"))
 	           					ImageUtil.video2mp4(file.getAbsolutePath(),resolution);
 	        			} 
+           				if(asset.getContentType().startsWith("audio/amr")) {
+           				   ImageUtil.amr2mp3(file.getAbsolutePath(),"22050", file.getAbsolutePath().replace(".amr", "mp3"));
+           				   asset.setContentType("audio/mp3");
+           				   asset.setExt(".mp3");
+           				   asset.setName(asset.getName().replaceAll(".amr", ".mp3"));
+           				   jcrService.addOrUpdate(asset);
+           				}
            				//if(asset.getContentType().startsWith("image/")) {
            				//	jcrService.autoRoateImage(path);
            				//	jcrService.createIcon(path, 400, 400);
