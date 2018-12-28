@@ -1243,7 +1243,7 @@ public class SiteController extends BaseController {
 			}
 			if(asset.getAudio()) {
 				   String url  ="<figure>" //<a class=\"download btn-default btn-xs pull-right\" href=\"download/"+asset.getName()+"?path="+asset.getPath()+"\" download=\""+asset.getName()+"\" title=\""+asset.getTitle()+"\" target=\"_blank\"><span class=\"glyphicon glyphicon-download pull-right\">下载</span></a>
-						+"<audio title=\""+asset.getTitle()+"\"  preload=\"metadata\">"
+						+"<audio controls=\"controls\" title=\""+asset.getTitle()+"\"  preload=\"metadata\">"
 						+"<source type=\""+asset.getContentType()+"\" src=\"file/"+asset.getName()+"?path="+asset.getPath()+"\"/></audio></figture>";
 				   a2news.setUrl(url);			
 			}
