@@ -1241,6 +1241,13 @@ public class SiteController extends BaseController {
 				   a2news.setUrl(url);
 				}
 			}
+			if(asset.getAudio()) {
+				   String url  ="<figure class=\"wb-mltmd\">" //<a class=\"download btn-default btn-xs pull-right\" href=\"download/"+asset.getName()+"?path="+asset.getPath()+"\" download=\""+asset.getName()+"\" title=\""+asset.getTitle()+"\" target=\"_blank\"><span class=\"glyphicon glyphicon-download pull-right\">下载</span></a>
+						+"<audio controls=\"controls\"  preload=\"none\">"
+						+"<source type=\""+asset.getContentType()+"\" src=\"file/"+asset.getName()+"?path="+asset.getPath()+"\"/></audio></figture>";
+				   a2news.setUrl(url);			
+			}
+			
 	        if(asset.getDoc2pdf()) {
 	        	title = "<a class=\""+asset.getCssClass()+"\" href=\"doc2pdf.pdf?path="+asset.getPath()+" title=\"DOC2PDF\""+"\" target=\"_BLANK\">"+asset.getTitle()+"</a>"//+"<a class=\"download pull-right\" href=\"download/"+asset.getName()+"?path="+asset.getPath()+"\" download=\""+asset.getName()+"\"><span class=\"glyphicon glyphicon-download\">下载</span></a>"
 	        			+"<a href=\"javascript:openDocGallery('"+asset.getPath()+"',"+getNumberOfPage(asset)+")\">";
