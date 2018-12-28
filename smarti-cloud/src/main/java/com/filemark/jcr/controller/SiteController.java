@@ -3286,7 +3286,7 @@ public class SiteController extends BaseController {
 		return null;
 		
 	} 	
-	@RequestMapping(value = {"/viewpdf.pdf","/site/viewpdf","/site/viewpdf.pdf","/content/viewpdf","/content/**/viewpdf"}, method = {RequestMethod.GET})
+	@RequestMapping(value = {"/viewpdf*.pdf","/site/viewpdf*","/site/viewpdf.pdf","/content/viewpdf","/content/**/viewpdf"}, method = {RequestMethod.GET})
 	public @ResponseBody String viewPdf(String uid[],HttpServletRequest request, HttpServletResponse response) throws IOException, RepositoryException {
 		List<Asset> assets = new ArrayList<Asset>();
 		ImageUtil.HDDOn();

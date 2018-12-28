@@ -689,13 +689,16 @@ function showPages(obj) {
 function openPdf() {
 	var uids = document.getElementsByName("puid");
 	var url = "";
-
+	var now = new Date();
+	var checkedCount = 0;
+	var viewpdf = "viewpdf_"+now.getTime()+".pdf";
 	for(var i = 0; i<uids.length; i++) {
 		if(uids[i].checked) {
 			if(url =="")
 				url+="?uid="+uids[i].value;
 			else
 				url+="&uid="+uids[i].value;
+			checkedCount ++;
 		}
 			
 	}
@@ -703,8 +706,9 @@ function openPdf() {
 	if(url =="") {
     	$("#header_message").html("<section class='alert alert-warning'><h3>"+i18n("select_andthen_open")+"</h3></section>");
     	return;
-	}	
-	url ="viewpdf"+url;
+	}
+
+	url =(checkedCount==1?"viewpdf_"+uids[0].value+".pdf":viewpdf)+url;
 	window.location.href=url;
 }
 
