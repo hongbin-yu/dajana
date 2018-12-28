@@ -2967,7 +2967,7 @@ public class SiteController extends BaseController {
 			}
 			String ext = ".jpg";
 			if(path.lastIndexOf(".")>0) ext = path.substring(path.lastIndexOf("."));
-			outFile = new File(devicePath+path+(width==null?"/origin"+ext:"/x"+width+".jpg"));
+			outFile = new File(devicePath+path+(width==null?"/origin"+asset.getExt():"/x"+width+".jpg"));
 			if(outFile.exists() && outFile.isFile()) {
 				logger.debug("output:"+outFile.getAbsolutePath());
 				super.serveResource(request, response, outFile,asset.getName(), null);
