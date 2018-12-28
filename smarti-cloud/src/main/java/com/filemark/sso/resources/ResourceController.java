@@ -7,6 +7,7 @@ import com.filemark.jcr.controller.BaseController;
 import com.filemark.sso.CookieUtil;
 import com.filemark.sso.JwtUtil;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 //import javax.servlet.http.HttpSession;
@@ -30,7 +31,14 @@ public class ResourceController  extends BaseController{
         String domain = request.getServerName();//.replaceAll(".*\\.(?=.*\\.)", "");
         
         CookieUtil.clear(httpServletResponse, JwtUtil.jwtTokenCookieName,domain);
-        
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null)
+            for (Cookie cookie : cookies) {
+                cookie.setValue("");
+                cookie.setPath("/");
+                cookie.setMaxAge(0);
+                httpServletResponse.addCookie(cookie);
+            }       
         request.getSession().invalidate();
         
         if(redirect !=null && !"".equals(redirect))
