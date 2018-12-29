@@ -609,7 +609,7 @@ public class ImageUtil
     	
     }
 
-    public static int amr2mp3(String infile,String rate, String outfile) {
+    public static int amr2wav(String infile,String rate, String outfile) {
     	String s;
     	Process p;
     	int exit=1;

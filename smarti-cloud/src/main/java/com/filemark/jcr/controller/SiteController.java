@@ -1424,10 +1424,10 @@ public class SiteController extends BaseController {
 	           					ImageUtil.video2mp4(file.getAbsolutePath(),resolution);
 	        			} 
            				if(asset.getContentType().startsWith("audio/amr")) {
-           				   ImageUtil.amr2mp3(file.getAbsolutePath(),"22050", file.getAbsolutePath().replace(".amr", "mp3"));
-           				   asset.setContentType("audio/mp3");
-           				   asset.setExt(".mp3");
-           				   asset.setName(asset.getName().replaceAll(".amr", ".mp3"));
+           				   ImageUtil.amr2wav(file.getAbsolutePath(),"22050", file.getAbsolutePath().replace(".amr", ".wav"));
+           				   asset.setContentType("audio/wav");
+           				   asset.setExt(".wav");
+           				   asset.setName(asset.getName().replaceAll(".amr", ".wav"));
            				   jcrService.addOrUpdate(asset);
            				}
            				//if(asset.getContentType().startsWith("image/")) {
@@ -2965,9 +2965,9 @@ public class SiteController extends BaseController {
 				super.serveResource(request, response, outFile, asset.getName(),null);
 				return null;					
 			}
-			String ext = ".jpg";
-			if(path.lastIndexOf(".")>0) ext = path.substring(path.lastIndexOf("."));
-			outFile = new File(devicePath+path+(width==null?"/origin"+asset.getExt():"/x"+width+".jpg"));
+			String ext = asset.getExt();
+			if(ext==null && path.lastIndexOf(".")>0) ext = path.substring(path.lastIndexOf("."));
+			outFile = new File(devicePath+path+(width==null?"/origin"+ext:"/x"+width+".jpg"));
 			if(outFile.exists() && outFile.isFile()) {
 				logger.debug("output:"+outFile.getAbsolutePath());
 				super.serveResource(request, response, outFile,asset.getName(), null);
