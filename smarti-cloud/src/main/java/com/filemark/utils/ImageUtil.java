@@ -321,8 +321,8 @@ public class ImageUtil
     	if(maxWidth>=720) maxWidth=720;
     	else if(maxWidth>=450) maxWidth=450;
     	else maxWidth=300;
-    	String shellCommand = "/mnt/device/dajana/smarti-cloud/streamer"+maxWidth+".sh";
-    	ProcessBuilder pb = new ProcessBuilder("/mnt/device/dajana/smarti-cloud/streamer"+maxWidth+".sh");
+    	String shellCommand = "/home/device/dajana/smarti-cloud/streamer"+maxWidth+".sh";
+    	ProcessBuilder pb = new ProcessBuilder("/home/device/dajana/smarti-cloud/streamer"+maxWidth+".sh");
     	pb.redirectErrorStream(true);
 	    try {
 	    	closevideo();
@@ -608,7 +608,41 @@ public class ImageUtil
         return exit;
     	
     }
-    
+
+    public static int amr2wav(String infile,String rate, String outfile) {
+    	String s;
+    	Process p;
+    	int exit=1;
+    	ProcessBuilder pb = new ProcessBuilder("ffmpeg","-i", infile, "-ar", rate, outfile);
+    	pb.redirectErrorStream(true);
+        try {
+	        p = pb.start();//Runtime.getRuntime().exec(shellCommand);
+	
+	        BufferedReader br = new BufferedReader(
+	            new InputStreamReader(p.getInputStream()));
+	        while ((s = br.readLine()) != null)
+	            log.debug("line: " + s);
+	        p.waitFor();
+	        exit = p.exitValue();
+	        if(exit !=0) {
+	        	br = new BufferedReader(
+	                    new InputStreamReader(p.getErrorStream()));
+	                while ((s = br.readLine()) != null) {
+	                    log.debug("line: " + s);
+	                }
+	
+	        	log.error("convert exit: " + exit);
+	        	
+	        }
+	        p.destroy();
+        } catch (IOException e) {
+			log.error("amr2mp3 :"+e.getMessage());;
+        } catch (InterruptedException e) {
+			log.error("amr2mp3 :"+e.getMessage());;
+		}
+        return exit;
+    	
+    }
     
     public static String oreintation(String infile) {
     	String s;

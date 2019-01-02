@@ -37,7 +37,7 @@
 </a>
 </div>
 
-<section id="wb-srch" class="col-xs-6 text-right visible-md visible-lg">
+<section id="wb-srch" class="col-xs-4 col-md-6 text-right visible-md visible-lg">
 <h2 class="wb-inv"><spring:message code="djn.search"/></h2>
 <form action='<c:url value="assets.html"></c:url>' method="get" name="cse-search-box" role="search" class="form-inline" accept-charset="UTF-8">
 <div class="form-group">

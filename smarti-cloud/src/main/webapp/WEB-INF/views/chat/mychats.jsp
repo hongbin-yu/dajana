@@ -78,7 +78,7 @@
         
 </div>
 </div>
-<section id="left-bar" class="wb-overlay modal-content overlay-def wb-panel-l col-md-4">
+<section id="left-bar" class="wb-overlay modal-content overlay-def wb-panel-l col-md-4 col-xs-12">
 	<header class="modal-header">
 		<h2 class="modal-title">云站</h2>
 	</header>

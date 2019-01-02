@@ -18,7 +18,7 @@
 		<org.slf4j-version>1.6.6</org.slf4j-version>
 		<jackrabbit.version>2.10.1</jackrabbit.version>
 		<spring.modules.version>0.8</spring.modules.version>
-		<jackson.version>2.9.0</jackson.version>
+		<jackson.version>2.9.4</jackson.version>
 		<localpath>${project.basedir}/src/lib/local</localpath>
 	</properties>
 
@@ -297,7 +297,13 @@
 		    <artifactId>commons-httpclient</artifactId>
 		    <version>3.1</version>
 		</dependency>
-		 	
+		<!-- https://mvnrepository.com/artifact/javax.json/javax.json-api -->
+		<dependency>
+		    <groupId>javax.json</groupId>
+		    <artifactId>javax.json-api</artifactId>
+		    <version>1.0</version>
+		</dependency>
+	 	
 		<dependency>
 			<groupId>com.lowagie</groupId>
 			<artifactId>itext</artifactId>

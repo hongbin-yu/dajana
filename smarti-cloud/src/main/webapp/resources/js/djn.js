@@ -1096,9 +1096,21 @@ function output(data) {
 		outputView(data);
 		return;
 	}
+	
+
 	if(topInsert != null) 
 	    html = '<div id="'+data.uid+'" class="col-md-6 col-lg-4 well">';
-    	if(data.contentType.indexOf('video/')>=0) {
+	    if(data.contentType.indexOf('audio/')>=0) {
+    		html +='<a class="download" href="file/'+data.name+'?path='+data.path+'" target="_BLANK" download><span class="glyphicon glyphicon-download">下载</span></a>'
+			  +'<figure>'
+			  +'<audio poster="video2jpg.jpg?path='+data.path+'" title="'+data.title+'" controls="controls" preload="metadata">'
+			  +'<source type="'+data.contentType+'" src="file/'+data.name+'?path='+data.path+'"/>'
+			  +'</audio>'
+			  +'<figcaption>'
+			  +'<p>'+data.title+'</p>'
+			  +'</figcaption>'
+			  +'</figure>';  	    	
+	    }else if(data.contentType.indexOf('video/')>=0) {
     		html +='<a class="download" href="file/'+data.name+'?path='+data.path+'" target="_BLANK" download><span class="glyphicon glyphicon-download">下载</span></a>'
     			  +'<figure class="wb-mltmd">'
     			  +'<video poster="video2jpg.jpg?path='+data.path+'" title="'+data.title+'" controls="controls" preload="none">'
@@ -1114,8 +1126,8 @@ function output(data) {
 		  		 html +='<a title="打开PDF" href="viewpdf.pdf?uid='+data.uid+'" target="_BLANK"><span class="glyphicon glyphicon-open"></span> 打开PDF</a>';
 		  	}
 		  	html	+='	<a class="download pull-right" href="file'+data.ext+'?path='+data.path+'" target="_BLANK" download="'+data.title+'"><span class="glyphicon glyphicon-download pull-right">下载</span></a>';
-
-	    	html +='<a href="javascript:openImage(\''+data.link+'\')"><img id="img'+data.uid+'" src="'+data.icon+'" class="img-responsive" draggable="true"></img></a>'
+		  	
+	    	html +='<a href="javascript:openImage(\''+data.link+'\')"><img id="img'+data.uid+'" src="'+data.icon+'" class="img-responsive loading" draggable="true"></img></a><img id="loadimg'+data.uid+'" src="/resources/images/ui-anim_basic_16x16.gif">'
 	    		  +'</div>'
 				  +'<input class="form-control" id="description'+data.uid+'" name="jcr:description" value="'+(data.description==null?"":+data.description)+'" size="42" uid="'+data.uid+'"  onchange="updateNode(this)"/>';
 
@@ -1157,7 +1169,8 @@ function output(data) {
 				  +'</div>'			  
 				  +'</details>'
 	    		  +'</div>';	
-	    	$("#top_insert").after(html);		    	
+	    	$("#top_insert").after(html);	
+
 	    }else if(online_chat_editor){
 	    	if(i==0) {
 		    	document.getElementById("online_chat_editor").focus();
@@ -1204,7 +1217,14 @@ function output(data) {
 
 	    	tinyMCE.activeEditor.setDirty(true);	    	
 	    }
-	
+    	$(".loading").on('load',function() {
+    		var id = "#load"+this.id;
+    		var loadingImage = $(id);
+    		if(loadingImage) {
+    			loadingImage.remove();
+    		}
+
+    	});
 }
 
 function outputView(data) {
@@ -1332,7 +1352,7 @@ function removeNode(path,uid) {
 	});	 
 }
 function view(path,type,w) {
-	var table = $('#dataset-filter').DataTable();
+	var table = $('#mobile-centre').DataTable();
 	table.ajax.url( "getassets.json?path="+path+"&type="+type+"&w="+w ).load();
 
 	$("#goto_cloud_edit").html("<a class=\"item\" title=\"云编辑\" href=\"/site/assets.html?path="+path+"&type="+type+"\"><span class=\"glyphicon glyphicon-edit\"></span>云站编辑</a>");//.attr({"href":"assets.html?path="+path+"&type="+type});
@@ -1345,12 +1365,10 @@ function view(path,type,w) {
 		    	var html = "";
 		    	$.each(json.subfolders,function(i,f){
 		    			if(f.path == path) {
-		    				title = f.title+'<a href="view.html?path='+path+"&type="+type+"&w="+w+'&r=1" title="刷屏"><span class="glyphicon glyphicon-refresh"></span></a>'; 
-		    		    	if(w=='1') {
-		    		    		title += "<a class=\"btn btn-default pull-right\" href=\"/site/view.html?path="+path+"&type="+type+"&w=4\" title=\"大图标\"><span class=\"glyphicon glyphicon-th-large pull-right\"></span></a>";
-		    		    	}else {
-		    		    		title += "<a class=\"btn btn-default pull-right\" href=\"/site/view.html?path="+path+"&type="+type+"&w=1\" title=\"小图标\"><span class=\"glyphicon glyphicon-th-list pull-right\"></span></a>";
-		    		    	}		    				
+		    				title = f.title 
+		    		        +"<a class=\"btn btn-default pull-right\" href=\"javascript:downloadAll()\" title=\"下载本页全部文件\"><span id=\"downloadIcon\" class=\"glyphicon glyphicon-download\"></span></a>"	
+		    		        +"<a class=\"btn btn-default pull-right\" href=\"view.html?path="+path+"&type="+type+"&r=1\" title=\"刷屏\"><span class=\"glyphicon glyphicon-refresh\"></span></a>";	
+		    				
 		    				$("h1").html(title);
 		    				$("#pagetag").html(f.description);
 		    			}
@@ -1374,6 +1392,13 @@ function view(path,type,w) {
 		    		
 		    	});
 		    	$("#leftmenu_ul").html(html);
+		    	var offset = $("#wb-cont");
+		    	offset.left -= 20;
+		    	offset.top -= 20;
+		    	$('html, body').animate({
+		    	    scrollTop: offset.top,
+		    	    scrollLeft: offset.left
+		    	});
 		    },
 		    error: function() {
 		    	alert(i18n("fail"));
@@ -1485,6 +1510,33 @@ function openImage(url) {
 	
 }
 
+function openPdfGallery(path,total) {
+	var source = [[]];
+	source[0] = [];
+    var array = [];
+	for(var i = 0; i< total; i++) {
+		array[i] = {};
+		array[i]["src"]="pdf2img.jpg?p="+i+"&path="+path;
+		array[i]["type"]="image";
+		source[0].push(array[i]);
+	}
+    //alert(JSON.stringify(source));
+	$(document).trigger( "open.wb-lbx", source);
+}
+
+function openDocGallery(path,total) {
+	var source = [[]];
+	source[0] = [];
+    var array = [];
+	for(var i = 0; i< total; i++) {
+		array[i] = {};
+		array[i]["src"]="doc2jpg.jpg?p="+i+"&path="+path;
+		array[i]["type"]="image";
+		source[0].push(array[i]);
+	}
+    //alert(JSON.stringify(source));
+	$(document).trigger( "open.wb-lbx", source);
+}
 function openGallery(id) {
 	$("#gallery"+id).trigger("wb-init.wb-lbx");
 	setTimeout(function(){
@@ -1527,6 +1579,46 @@ function traverseFileTree(item, path) {
 	    });
 	  }
 	}
+var downloadArray = [];
+function downloadAll() {
+      downloadLinks = $("a.download");
+      if(downloadLinks !=null && downloadLinks.length >0 && confirm("确信下载全部"+downloadLinks.length+"文件?")) {
+    	  downloadLinks.each(function(i) {
+    		  downloadArray.push($(this));
+    		});
+    	  setTimeout(downloadLink,200);
+      }
+	
+}
+
+function downloadLink() {
+	if(downloadArray.length==0) return ;
+	var a = downloadArray.pop();
+	$("#downloadIcon").html(" " +downloadArray.length+"<img src=\"/resources/images/ui-anim_basic_16x16.gif\" alt=\"\">");    	  
+	
+	var link = document.createElement('a');
+
+	  link.setAttribute('download', null);
+	  link.style.display = 'none';
+
+	  document.body.appendChild(link);	
+	  var url = a.attr("href");
+	  var name = a.attr("download");
+	  if(name!=null && name !="null")
+			link.download = name;
+	  link.setAttribute('href',url);
+	  link.click();
+	  
+	  document.body.removeChild(link);	
+      if(downloadArray.length>0) {
+    	  setTimeout(downloadLink,2000);	    	  
+      }else {
+  		$("#downloadIcon").html("");    	  
+   	  
+      }
+      
+	
+}
 
 document.addEventListener("dragenter", function(event) {
 	var id = event.target.id;
@@ -1585,3 +1677,11 @@ window.addEventListener("drop",function(e){
 	if(submit_youchat)
 		uploadFiles();
 });*/
+$(".loading").on('load',function() {
+	var id = "#load"+this.id;
+	var loadingImage = $(id);
+	if(loadingImage) {
+		loadingImage.remove();
+	}
+
+});

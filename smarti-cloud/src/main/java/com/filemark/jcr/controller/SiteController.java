@@ -83,6 +83,7 @@ import com.filemark.utils.WebPage;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
+import com.lowagie.text.pdf.PdfReader;
 
 
 @Controller
@@ -405,7 +406,7 @@ public class SiteController extends BaseController {
 		
 		assets(path,type,input,kw,p,model,request,response);
 		Folder folder = jcrService.getFolder(path);
-		String ncolumn = "2";
+		String ncolumn = "1";
 		String sort = "desc";
 		String orderby = folder.getOrderby();
 		if(orderby !=null && orderby.endsWith("asc")) {
@@ -413,7 +414,7 @@ public class SiteController extends BaseController {
 		}
 		
 		if(orderby ==null || orderby.startsWith("lastModified")) {
-			ncolumn ="1";
+			ncolumn ="6";
 		}
 		
 		model.addAttribute("type", type);
@@ -1077,7 +1078,7 @@ public class SiteController extends BaseController {
    	public @ResponseBody Folder folderJson(String path,String type,Model model,HttpServletRequest request, HttpServletResponse response)  {
    		String username = getUsername();
 		boolean isIntranet = isIntranet(request);
-		String jsonName = (isIntranet?"Internet_":"")+"Output.json";
+		String jsonName = (isIntranet?"Intranet_":"")+"Output.json";
    		File json = new File(jcrService.getDevice()+path+"/"+jsonName);
    		Folder folder = new Folder();;
 		try {
@@ -1107,7 +1108,7 @@ public class SiteController extends BaseController {
 	   			if(!dir.exists()) {
 	   				dir.mkdirs();
 	   			}
-	   			OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(dir.getAbsolutePath()+"/Output.json"),"UTF-8");
+	   			OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(json),"UTF-8");
 	   			try  {
 	   			    Gson gson = new GsonBuilder().create();
 	   			    gson.toJson(folder, writer);
@@ -1220,32 +1221,53 @@ public class SiteController extends BaseController {
 					continue;
 				}
 			}
-			String icon = w!=null && w==1?asset.getIconSmall():asset.getIcon();
-			String title ="<input type=\"checkbox\" name=\"puid\" value=\""+asset.getUid()+"\"> <a href=\"javascript:openImage(\'"+asset.getLink()+(asset.getWidth() != null && asset.getWidth() >1200?"&w=12":"")+"')\"><img alt=\"\" class=\"img-responsive img-rounded pull-left mrgn-rght-md"+(asset.getContentType().endsWith("pdf") && w==4?" col-md-6":"")+"\" src=\""+icon+"\"><a href=\"file/"+asset.getLink()+"\" target=\"_blank\" title=\"打开原图\">"+asset.getTitle()+"</a>"
-						+(asset.getPdf()?"<a class=\"btn-default btn-xs pull-right\" href=\"viewpdf.pdf?uid="+asset.getUid()+"\" title=\"PDF\" target=\"_blank\">打开 PDF</a>":"");
+			String icon = asset.getIcon();// w!=null && w==1?asset.getIconSmall():asset.getIcon();
+			String title ="<input type=\"checkbox\" name=\"puid\" value=\""+asset.getUid()+"\"><a href=\""+asset.getLink()+"\" target=\"_blank\" title=\"打开原图\">"+(asset.getTitle().length()>25?asset.getTitle().substring(0, 25)+"...":asset.getTitle())+"</a>";
+						//+"<a class=\"download btn-default btn-xs pull-right\" href=\"download/"+asset.getName()+"?path="+asset.getPath()+"\" download=\""+asset.getName()+"\" title=\""+asset.getTitle()+"\" target=\"_blank\"><span class=\"glyphicon glyphicon-download pull-right\">下载</span></a>"
+						//+"<a href=\"javascript:openImage(\'"+asset.getLink()+(asset.getWidth() != null && asset.getWidth() >1200?"&w=12":"")+"')\"><img alt=\"\" class=\"img-responsive img-rounded mrgn-rght-md"+(asset.getContentType().endsWith("pdf") && w==4?" col-md-6":"")+"\" src=\""+icon+"\">";
+			a2news.setUrl("<a href=\"javascript:openImage(\'"+asset.getLink()+(asset.getWidth() != null && asset.getWidth() >1200?"&w=12":"")+"')\"><img alt=\"\" class=\"img-responsive img-rounded mrgn-rght-md"+(asset.getContentType().endsWith("pdf") && w==4?" col-md-6":"")+"\" src=\""+icon+"\">");
+
 			if(asset.getMp4()) {
 				if(w!=null && w==1) {
-					title ="<figure class=\"pull-left\">"
+					title ="<a class=\"download btn-default btn-xs pull-right\" href=\"download/"+asset.getName()+"?path="+asset.getPath()+"\" download=\""+asset.getName()+"\" title=\""+asset.getTitle()+"\" target=\"_blank\"><span class=\"glyphicon glyphicon-download pull-right\">下载</span></a><figure class=\"pull-left\">"
 							+"<video poster=\"video2jpg.jpg?path="+asset.getPath()+"\" width=\"150\" height=\"100\" controls=\"controls\"  preload=\"none\">"
 							+"<source type=\"video/mp4\" src=\"video.mp4?path="+asset.getPath()+"\"/></video></figture>";
 					
-				} else 
-				title ="<figure class=\"pull-left\">"
-						+"<video poster=\"video2jpg.jpg?path="+asset.getPath()+"\" width=\"400\" height=\"300\" controls=\"controls\"  preload=\"none\">"
+				} else {
+				   title = asset.getTitle();
+				   String url  ="<figure class=\"wb-mltmd\">" //<a class=\"download btn-default btn-xs pull-right\" href=\"download/"+asset.getName()+"?path="+asset.getPath()+"\" download=\""+asset.getName()+"\" title=\""+asset.getTitle()+"\" target=\"_blank\"><span class=\"glyphicon glyphicon-download pull-right\">下载</span></a>
+						+"<video poster=\"video2jpg.jpg?path="+asset.getPath()+"\" width=\"250\" height=\"180\" controls=\"controls\"  preload=\"none\">"
 						+"<source type=\"video/mp4\" src=\"video.mp4?path="+asset.getPath()+"\"/></video></figture>";
+				   a2news.setUrl(url);
+				}
 			}
+			if(asset.getAudio()) {
+				   String url  ="<figure>" //<a class=\"download btn-default btn-xs pull-right\" href=\"download/"+asset.getName()+"?path="+asset.getPath()+"\" download=\""+asset.getName()+"\" title=\""+asset.getTitle()+"\" target=\"_blank\"><span class=\"glyphicon glyphicon-download pull-right\">下载</span></a>
+						+"<audio controls=\"controls\" title=\""+asset.getTitle()+"\"  preload=\"metadata\">"
+						+"<source type=\""+asset.getContentType()+"\" src=\"file/"+asset.getName()+"?path="+asset.getPath()+"\"/></audio></figture>";
+				   a2news.setUrl(url);			
+			}
+			
 	        if(asset.getDoc2pdf()) {
-	        	title = "<a class=\"download pull-right\" href=\"file/"+asset.getName()+"?path="+asset.getPath()+" target=\"_BLANK\" download><span class=\"glyphicon glyphicon-download\">下载</span></a>"
-			    		+"<a class=\""+asset.getCssClass()+"\" href=\"doc2pdf.pdf?path="+asset.getPath()+"\" target=\"_BLANK\">"
-					    +"<img id=\"img"+asset.getUid()+"\" src=\""+icon+"\" class=\"img-responsive img-rounded pull-left mrgn-rght-md "+(w==4?" col-md-6":"")+"\" draggable=\"true\"/>"
-					    +asset.getTitle()+"</a>";
-	        }			
+	        	title = "<a class=\""+asset.getCssClass()+"\" href=\"doc2pdf.pdf?path="+asset.getPath()+" title=\"DOC2PDF\""+"\" target=\"_BLANK\">"+asset.getTitle()+"</a>"//+"<a class=\"download pull-right\" href=\"download/"+asset.getName()+"?path="+asset.getPath()+"\" download=\""+asset.getName()+"\"><span class=\"glyphicon glyphicon-download\">下载</span></a>"
+	        			+"<a href=\"javascript:openDocGallery('"+asset.getPath()+"',"+getNumberOfPage(asset)+")\">";
+	        	a2news.setUrl("<img id=\"img"+asset.getUid()+"\" src=\""+icon+"\" class=\"img-responsive img-rounded mrgn-rght-md "+"\" draggable=\"true\"/></a>");
+			    		//+"<img id=\"img"+asset.getUid()+"\" src=\""+icon+"\" class=\"img-responsive img-rounded mrgn-rght-md "+(w==4?" col-md-6":"")+"\" draggable=\"true\"/></a>";
+					    //+"<a class=\""+asset.getCssClass()+"\" href=\"doc2pdf.pdf?path="+asset.getPath()+" title=\"DOC2PDF\""+"\" target=\"_BLANK\">"+asset.getTitle()+"</a>";
+	        }	
+	        if(asset.getContentType().endsWith("/pdf")) {
+	        	title = "<a href=\"file/"+asset.getName()+"?path="+asset.getPath()+"\" target=\"_BLANK\">"+asset.getTitle()+"</a>"//+"<a class=\"download pull-right\" href=\"download/"+asset.getName()+"?path="+asset.getPath()+"\" download=\""+asset.getName()+"\"><span class=\"glyphicon glyphicon-download\">下载</span></a>"
+	        			+"<a href=\"javascript:openPdfGallery('"+asset.getPath()+"',"+getNumberOfPage(asset)+")\">";
+			    		//+"<img id=\"img"+asset.getUid()+"\" src=\""+icon+"\" class=\"img-responsive img-rounded mrgn-rght-md "+(w==4?" col-md-6":"")+"\" draggable=\"true\"/></a>";
+	        	a2news.setUrl("<img id=\"img"+asset.getUid()+"\" src=\""+icon+"\" class=\"img-responsive img-rounded mrgn-rght-md "+"\" draggable=\"true\"/></a>");
+					    //+"<a href=\"file/"+asset.getName()+"?path="+asset.getPath()+"\" target=\"_BLANK\">"+asset.getTitle()+"</a>";
+	        }		        
 			a2news.setTitle(title);
 			a2news.setDescription(asset.getDescription()==null?"":asset.getDescription());
 			if(asset.getOriginalDate()!=null)
-				a2news.setLastPublished(sf.format(asset.getOriginalDate()));
+				a2news.setLastPublished(sf.format(asset.getOriginalDate())+"<a class=\"download btn-default btn-xs pull-right\" href=\"download/"+asset.getName()+"?path="+asset.getPath()+"\" download=\""+asset.getName()+"\" title=\""+asset.getTitle()+"\" target=\"_blank\"><span class=\"glyphicon glyphicon-download pull-right\">下载</span></a>");
 			if(asset.getLastModified()!=null)
-				a2news.setLastModified(sf.format(asset.getLastModified()));			
+				a2news.setLastModified(sf.format(asset.getLastModified())+"<a class=\"download btn-default btn-xs pull-right\" href=\"download/"+asset.getName()+"?path="+asset.getPath()+"\" download=\""+asset.getName()+"\" title=\""+asset.getTitle()+"\" target=\"_blank\"><span class=\"glyphicon glyphicon-download pull-right\">下载</span></a>");			
 			a2news.setSubjects(folder.getTitle());
 			if(asset.getPosition()!=null && !"".equals(asset.getPosition()))
 				a2news.setLocation("<a href=\"https://www.google.com/maps?q="+asset.getPosition()+"\" target=\"_blank\">拍摄地址</a>");
@@ -1345,6 +1367,10 @@ public class SiteController extends BaseController {
 
         		asset.setContentType(contentType);
         		asset.setSize(multipartFile.getSize());
+        		if("application/pdf".equals(contentType)) {
+    				PdfReader reader = new PdfReader(multipartFile.getInputStream());
+    				asset.setTotal((long)reader.getNumberOfPages());
+    			}
         		jcrService.addOrUpdate(asset);
         		jcrService.updateCalendar(path,"lastModified");
         		jcrService.setProperty(path, "changed", "true");
@@ -1372,7 +1398,7 @@ public class SiteController extends BaseController {
 	           			}else if("application/vnd.ms-powerpoint".equals(contentType) || "application/vnd.ms-word".equals(contentType) || "application/vnd.ms-excel".equals(contentType) || "application/msword".equals(contentType) || assetPath.endsWith(".doc") || assetPath.endsWith(".docx")) {	
 	           				 logger.debug("doc2pdf:"+file.getAbsolutePath());
 	        				 ImageUtil.doc2pdf(file.getAbsolutePath(), file.getParentFile().getAbsolutePath());
-	        			}        				
+	        			}
 	           			if(contentType!=null && contentType.startsWith("video/")) {	
 	           				 logger.debug("video2mp4:"+file.getAbsolutePath());
 	           				 Folder currentFolder = jcrService.getFolder(path);
@@ -1397,9 +1423,16 @@ public class SiteController extends BaseController {
 	           				if(!"1080x720".equals(resolution) && !contentType.equals("video/mp4"))
 	           					ImageUtil.video2mp4(file.getAbsolutePath(),resolution);
 	        			} 
+/*           				if(asset.getContentType().startsWith("audio/amr")) {
+           				   ImageUtil.amr2wav(file.getAbsolutePath(),"22050", file.getAbsolutePath().replace(".amr", ".wav"));
+           				   asset.setContentType("audio/wav");
+           				   asset.setExt(".wav");
+           				   asset.setName(asset.getName().replaceAll(".amr", ".wav"));
+           				   jcrService.addOrUpdate(asset);
+           				}*/
            				//if(asset.getContentType().startsWith("image/")) {
-           					//jcrService.autoRoateImage(path);
-           					//jcrService.createIcon(path, 400, 400);
+           				//	jcrService.autoRoateImage(path);
+           				//	jcrService.createIcon(path, 400, 400);
            				//}
 
         			}else {
@@ -2406,7 +2439,7 @@ public class SiteController extends BaseController {
 				response.setContentType("application/pdf");
 				IOUtils.copy(in, response.getOutputStream());
 				in.close();	*/
-				super.serveResource(request, response, pdffile, "application/pdf");
+				super.serveResource(request, response, pdffile, pdffile.getParentFile().getName()+".pdf","application/pdf");
 
 				return null;
 			}
@@ -2442,7 +2475,7 @@ public class SiteController extends BaseController {
 					IOUtils.copy(in, response.getOutputStream());
 					in.close();				*/	
 					//file.setReadOnly();
-					super.serveResource(request, response, file, "application/jpdf");
+					super.serveResource(request, response, file,file.getParentFile().getName()+".pdf", "application/jpdf");
 
 				}
 			}
@@ -2491,7 +2524,7 @@ public class SiteController extends BaseController {
 					response.setContentType("image/jpeg");
 					IOUtils.copy(in, response.getOutputStream());
 					in.close();	*/
-					super.serveResource(request, response, jpgfile, "image/jpeg");
+					super.serveResource(request, response, jpgfile,jpgfile.getParentFile().getName()+".jpg", "image/jpeg");
 
 					return null;					
 				}
@@ -2503,7 +2536,7 @@ public class SiteController extends BaseController {
 				IOUtils.copy(in, response.getOutputStream());
 				in.close();	*/
 				//jpgfile.setReadOnly();
-				super.serveResource(request, response, jpgfile, "image/jpeg");
+				super.serveResource(request, response, jpgfile,jpgfile.getParentFile().getName()+".jpg", "image/jpeg");
 
 				return null;
 			}
@@ -2544,7 +2577,7 @@ public class SiteController extends BaseController {
 							IOUtils.copy(in, response.getOutputStream());
 							in.close();	*/
 							//jpgfile.setReadOnly();
-							super.serveResource(request, response, jpgfile, "image/jpeg");
+							super.serveResource(request, response, jpgfile, jpgfile.getParentFile().getName()+".jpg","image/jpeg");
 							return null;					
 						}
 							
@@ -2615,7 +2648,7 @@ public class SiteController extends BaseController {
 			IOUtils.copy(in, response.getOutputStream());
 			in.close();		*/	
 			//file.setReadOnly();
-			super.serveResource(request, response, file, "image/jpeg");
+			super.serveResource(request, response, file, file.getParentFile().getName()+".jpg","image/jpeg");
 		} catch (FileNotFoundException e) {
 			logger.error("pdf2jpg:"+e.getMessage());
 
@@ -2676,7 +2709,7 @@ public class SiteController extends BaseController {
 			IOUtils.copy(in, response.getOutputStream());
 			in.close();			*/
 			//file.setReadOnly();
-			super.serveResource(request, response, file, "image/jpeg");
+			super.serveResource(request, response, file,file.getParentFile().getName()+".jpg", "image/jpeg");
 		} catch (FileNotFoundException e) {
 			logger.error("pdf2img:"+e.getMessage());
 
@@ -2755,7 +2788,7 @@ public class SiteController extends BaseController {
 			IOUtils.copy(in, response.getOutputStream());
 			in.close();	*/	
 			//file.setReadOnly();
-			super.serveResource(request, response, file, "image/jpeg");
+			super.serveResource(request, response, file,file.getParentFile().getName()+".jpg", "image/jpeg");
 		} catch (FileNotFoundException e) {
 			logger.error("doc2jpg:"+e.getMessage());
 
@@ -2810,7 +2843,7 @@ public class SiteController extends BaseController {
 						response.sendRedirect("/resources/images/video-icon.png");								
 			}
 			//file.setReadOnly();
-			super.serveResource(request, response, file, "image/jpeg");
+			super.serveResource(request, response, file, file.getParentFile().getName()+".jpg","image/jpeg");
 /*			FileInputStream in = new FileInputStream(file);
 			response.setContentType("image/jpeg");
 			IOUtils.copy(in, response.getOutputStream());
@@ -2858,7 +2891,7 @@ public class SiteController extends BaseController {
 			}
 			//file.setReadOnly();
 
-			serveResource(request,response,file,contentType);
+			serveResource(request,response,file,file.getParentFile().getName()+".mp4",contentType);
 
 
 				
@@ -2898,7 +2931,7 @@ public class SiteController extends BaseController {
 					logger.error(e1.getMessage());
 				}				
 			}			
-			serveResource(request,response,file,contentType);
+			serveResource(request,response,file,file.getParentFile().getName()+".webm",contentType);
 
 					
 		} catch (FileNotFoundException e) {
@@ -2928,6 +2961,7 @@ public class SiteController extends BaseController {
 		try {
 			if(uid!=null && (path==null || "".equals(path)))
 				path = jcrService.getNodeById(uid);
+			Asset asset = (Asset)jcrService.getObject(path);
 			String devicePath = jcrService.getDevice();
 			File outFile = new File(devicePath+path);
 			if(!outFile.exists()) {
@@ -2945,20 +2979,20 @@ public class SiteController extends BaseController {
 					return null;
 		        }				
 				logger.debug("path is file output:"+outFile.getAbsolutePath());
-				super.serveResource(request, response, outFile, null);
+				super.serveResource(request, response, outFile, asset.getName(),null);
 				return null;					
 			}
-			String ext = ".jpg";
-			if(path.lastIndexOf(".")>0) ext = path.substring(path.lastIndexOf("."));
+			String ext = asset.getExt();
+			if(ext==null && path.lastIndexOf(".")>0) ext = path.substring(path.lastIndexOf("."));
 			outFile = new File(devicePath+path+(width==null?"/origin"+ext:"/x"+width+".jpg"));
 			if(outFile.exists() && outFile.isFile()) {
 				logger.debug("output:"+outFile.getAbsolutePath());
-				super.serveResource(request, response, outFile, null);
+				super.serveResource(request, response, outFile,asset.getName(), null);
 				return null;					
 			}
 
 			if(path !=null  && jcrService.nodeExsits(path)) {
-				Asset asset = (Asset)jcrService.getObject(path);
+
 				ext = asset.getExt();
 /*				if(width!=null && jcrService.nodeExsits(path+"/file-"+width)) {
 					response.setContentType(asset.getContentType());
@@ -2983,7 +3017,7 @@ public class SiteController extends BaseController {
 					}
 					if(file.exists()) {
 						//file.setReadOnly();
-						super.serveResource(request, response, file, null);
+						super.serveResource(request, response, file,asset.getName(), null);
 					}else  if(jcrService.nodeExsits(path+"/original")) {
 						response.setContentType(asset.getContentType());
 						if(asset.getSize()!=null)
@@ -2999,7 +3033,7 @@ public class SiteController extends BaseController {
 						jcrService.addOrUpdate(asset);
 						
 						out.close();
-						super.serveResource(request, response, file, null);
+						super.serveResource(request, response, file,asset.getName(), null);
 						//jcrService.readAsset(path+"/original",  response.getOutputStream());
 
 						return null;
@@ -3027,7 +3061,7 @@ public class SiteController extends BaseController {
 					
 					out.close();
 					//file.setReadOnly();
-					super.serveResource(request, response, file, null);
+					super.serveResource(request, response, file,asset.getName(), null);
 					//jcrService.readAsset(path+"/original",  response.getOutputStream());
 
 					return null;
@@ -3048,7 +3082,55 @@ public class SiteController extends BaseController {
 		
 		
 	} 
+	@RequestMapping(value = {"/protected/download/*.*","/site/download/*.*","/protected/download/**","/site/download/**"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
+	public @ResponseBody String downloadFile(String uid,String path,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
 
+
+		try {
+			if(uid!=null && (path==null || "".equals(path)))
+				path = jcrService.getNodeById(uid);
+			if(path !=null  && jcrService.nodeExsits(path)) {			
+				Asset asset = (Asset)jcrService.getObject(path);
+				String ext = asset.getExt();
+
+				if(asset.getDevice()!=null) {
+					Device device = (Device)jcrService.getObject(asset.getDevice());
+					File file = new File(device.getLocation()+asset.getPath()+"/origin"+ext);
+					if(file.exists()) {
+						response.setContentType(asset.getContentType());
+						if(asset.getSize()!=null)
+							response.setContentLength((int)file.length());
+						if(asset.getOriginalDate()!=null)
+							response.setDateHeader("Last-Modified", asset.getOriginalDate().getTime());
+						String fileName = asset.getName();
+				        response.setHeader("Content-Disposition", "attachement;filename=\"" + new String (fileName.getBytes("UTF-8"),"ISO-8859-1") + "\"");
+						
+						FileInputStream in = new FileInputStream(file);
+						IOUtils.copy(in, response.getOutputStream());	
+						in.close();	
+						return null;
+					}else {
+						return path +" file not found";								
+					}
+				}else {
+
+					return path +" device not found";
+				}
+			}else {
+
+				return path +" file not found";		
+			}
+
+		}catch(Exception e) {
+			logger.error("downloadFile:"+e.getMessage()+",path="+path);
+
+			return e.getMessage();
+		}
+		
+		
+	} 
+
+	
 	@RequestMapping(value = {"/site/cache/viewimage"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public @ResponseBody String cacheFile(String uid,String path,Integer w,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
 
@@ -3098,7 +3180,7 @@ public class SiteController extends BaseController {
 					return null;
 		        }				
 				logger.debug("path is file output:"+outFile.getAbsolutePath());
-				super.serveResource(request, response, outFile, null);
+				super.serveResource(request, response, outFile,outFile.getParentFile().getName(), null);
 				return null;					
 			}
 
@@ -3150,7 +3232,7 @@ public class SiteController extends BaseController {
 					logger.debug(fileName+" modified");
 					return null;
 		        }
-				super.serveResource(request, response, outFile, null);				
+				super.serveResource(request, response, outFile,outFile.getParentFile().getName(), null);				
 			}else if(path !=null && jcrService.nodeExsits(path)) {
 				Asset asset = (Asset)jcrService.getObject(path);
 				if(width!=null && jcrService.nodeExsits(path+"/file-"+width)) {
@@ -3172,7 +3254,7 @@ public class SiteController extends BaseController {
 					IOUtils.copy(in, response.getOutputStream());	
 					in.close();*/
 					if(file.exists()) {
-						super.serveResource(request, response, file, null);
+						super.serveResource(request, response, file,file.getParentFile().getName(), null);
 						return null;						
 					}else {
 						if(jcrService.nodeExsits(path+"/original")) {
@@ -3186,7 +3268,7 @@ public class SiteController extends BaseController {
 							
 							out.close();
 							if(file.exists()) {
-								super.serveResource(request, response, file, null);
+								super.serveResource(request, response, file,file.getParentFile().getName(), null);
 								return null;	
 							}else {
 								jcrService.readAsset(path+"/original",  response.getOutputStream());
@@ -3210,7 +3292,7 @@ public class SiteController extends BaseController {
 					jcrService.addOrUpdate(asset);
 					out.close();
 					if(file.exists()) {
-						super.serveResource(request, response, file, null);
+						super.serveResource(request, response, file,file.getParentFile().getName(), null);
 						return null;	
 					}else {
 						jcrService.readAsset(path+"/original",  response.getOutputStream());
@@ -3235,7 +3317,7 @@ public class SiteController extends BaseController {
 		return null;
 		
 	} 	
-	@RequestMapping(value = {"/viewpdf.pdf","/site/viewpdf","/site/viewpdf.pdf","/content/viewpdf","/content/**/viewpdf"}, method = {RequestMethod.GET})
+	@RequestMapping(value = {"/viewpdf*.pdf","/site/viewpdf*","/site/viewpdf.pdf","/content/viewpdf","/content/**/viewpdf"}, method = {RequestMethod.GET})
 	public @ResponseBody String viewPdf(String uid[],HttpServletRequest request, HttpServletResponse response) throws IOException, RepositoryException {
 		List<Asset> assets = new ArrayList<Asset>();
 		ImageUtil.HDDOn();
@@ -3720,6 +3802,24 @@ public class SiteController extends BaseController {
 			return filename+ext;
 	}
 	
-
+	private long getNumberOfPage(Asset asset) {
+		long numberOfPage = 1;
+		if(asset.getTotal()!=null) return asset.getTotal();
+		try {
+			File file = jcrService.getFile(asset.getPath());
+			File pdf = new File(file,"origin.pdf");
+			if(pdf.exists()) {
+				PdfReader reader = new PdfReader(pdf.getAbsolutePath());
+				reader.close();
+				jcrService.setProperty(asset.getPath(), "total", (long)reader.getNumberOfPages());
+				numberOfPage = reader.getNumberOfPages();				
+			}
+		} catch (RepositoryException e) {
+			logger.error(e.getMessage());
+		} catch (IOException e) {
+			logger.error(e.getMessage());
+		}
+		return numberOfPage;
+	}
 	  
 }

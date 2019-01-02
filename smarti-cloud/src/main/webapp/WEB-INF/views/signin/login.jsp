@@ -49,19 +49,20 @@
 	<form action="<c:url value="/signin" />" method="post" id="validation-example">
 		<input type="hidden" id="count" name="count" value="0"/>
 		<input type="hidden" name="loginCount" value="${loginCount }"/>
+<!-- 		<input type="hidden" id="reme" name="reme" value="86400"/>		 -->
 		<div class="form-group">
-			<label for="username" class="required"><span class="field-name"><spring:message code="djn.username"/></span> <strong class="required">(<spring:message code="djn.required"/>)</strong></label>
+			<label for="username" class="required visible-lg visible-md"><span class="field-name"><spring:message code="djn.username"/></span> <strong class="required">(<spring:message code="djn.required"/>)</strong></label>
 			<input class="form-control" id="username" name="j_username" type="text" value="${j_username }" required="required" pattern=".{2,}" data-rule-minlength="2" size="40"  placeholder="<spring:message code="djn.input_username"/>"/>
 		</div>
 		<div class="form-group">
-			<details id="details_password">
-			<summary>
-			<label for="password">
+<!-- 			<details id="details_password" open="open">
+			<summary> -->
+			<label for="password" class="required visible-lg visible-md">
 			<span class="field-name"><spring:message code="djn.password"/></span> (<spring:message code="djn.select_password"/>)
 			</label>
-			<input class="form-control" id="j_password" name="j_password" type="password" maxlength="32" size="40" pattern=".{3,}" data-rule-rangelength="[4,32]" placeholder="<spring:message code="djn.select_4_icon"/>"/>
+			<input class="form-control" id="j_password" name="j_password" type="password" maxlength="32" size="40" pattern=".{3,}" data-rule-rangelength="[4,32]" placeholder="<spring:message code="djn.password"/>:<spring:message code="djn.select_4_icon"/>"/>
 
-			</summary>
+<!-- 			</summary> -->
 			<div class="btn-group btn-group-justified">
 			<a class="btn btn-default security" id='A0'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/mouse.png"></c:url>'/></a>
 			<a class="btn btn-default security" id='A1'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/cow.png"></c:url>'/></a>
@@ -82,12 +83,14 @@
 			<a class="btn btn-default security" id='D1'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/dog.png"></c:url>'/></a>
 			<a class="btn btn-default security" id='D2'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/pig.png"></c:url>'/></a>
 			</div>
-			</details>
+			<div class="checkbox-inline"><label><input type ="checkbox" name="reme" value="true" checked><spring:message code="djn.remember_password"/></label></div> 
+			<a class="pull-right" href="/forget"><spring:message code="djn.forget_password"/></a>	
+
+<!-- 			</details> -->
 		</div>
 
                
 	<input type="submit" id="submit" value="<spring:message code="djn.submit"/>" class="btn btn-primary"> <input type="reset" value="<spring:message code="djn.reset"/>" class="btn btn-default">
-	<a class="pull-right" href="/forget"><spring:message code="djn.forget_password"/></a>	
     </form>
 </div>
 

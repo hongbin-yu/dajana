@@ -25,6 +25,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.filemark.jcr.controller.BaseController;
 import com.filemark.jcr.model.User;
+import com.filemark.sso.CookieUtil;
 import com.filemark.sso.JwtUtil;
 
 public class AdminFilter implements Filter {
@@ -54,54 +55,61 @@ public class AdminFilter implements Filter {
     		httpServletResponse.sendRedirect(authService + "?redirect=" + redirectUrl+"&noSigningUser="+request.getRemoteHost());
 
         } else {
-        	String usersite = (String)httpServletRequest.getAttribute("usersite");
-        	String port = (String)httpServletRequest.getAttribute("port");
-        	String username = (String)httpServletRequest.getAttribute("username");
-        	String domain = httpServletRequest.getServerName();
-        	if(!"".equals(usersite) && !domain.equals(usersite)) {
-            	httpServletResponse.sendRedirect("http://"+usersite+port+"/protected/mysite"+"?domain="+domain);
-        	}
-			SecurityContext securityContext = SecurityContextHolder.getContext();
-			Authentication authen = securityContext.getAuthentication();
             String authors[] = signingUser.split("/");
-            if(!BaseController.isIntranet(httpServletRequest) && !authors[4].equals(request.getRemoteAddr())) {
-                httpServletResponse.sendRedirect(authService + "?redirect=" + redirectUrl+"&keyerror=1");
-            }
-            if(authen == null || !authen.getName().equals(authors[2])) {
-    			Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-    			User user = new User();
-    			user.setHost(authors[0]);
-    			user.setPort(authors[1]);
-    			user.setUserName(authors[2]);
-    			user.setTitle(authors[3]);
-    			user.setSigningKey(authors[4]);	
-    			httpServletRequest.setAttribute("usersite", authors[0]);
-    			httpServletRequest.setAttribute("port", authors[1]);
-    			httpServletRequest.setAttribute("username", authors[2]);
-    			httpServletRequest.setAttribute("usertitle", authors[3]);
-    			httpServletRequest.setAttribute("signingKey", authors[4]);	
-    			if(authors.length < 5) {
-    	            httpServletResponse.sendRedirect(authService + "?redirect=" + redirectUrl);
-    			}
-    			for(int i=5; i<authors.length; i++) {
-    				authorities.add(new SimpleGrantedAuthority(this.getRolePrefix()+authors[i].toUpperCase()));
-    				
-    			}
-    			authorities.add(new SimpleGrantedAuthority(this.getRolePrefix()+"USER"));//default role
-    			
-    			org.springframework.security.core.userdetails.User userdetails = new org.springframework.security.core.userdetails.User(user.getUserName(),"protected",true,true,true,true,authorities);
-    			
-    			Authentication auth = 
-    			new UsernamePasswordAuthenticationToken(userdetails, null, authorities);
-    			securityContext.setAuthentication(auth);    			
-    			HttpSession session = httpServletRequest.getSession(true);
-    	        session.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);  
-    			session.setAttribute("usersite", authors[0]);
-    			session.setAttribute("port", authors[1]);    			
-    			session.setAttribute("username", authors[2]);
-    			session.setAttribute("usertitle", authors[3]);	 
-    			session.setAttribute("signingKey", authors[4]);	                  	
-            }
+        	String domain = httpServletRequest.getServerName();
+        	if(domain.equals(authors[0])) {
+                String usersite = (String)httpServletRequest.getAttribute("usersite");
+            	String port = (String)httpServletRequest.getAttribute("port");
+            	String username = (String)httpServletRequest.getAttribute("username");
+
+            	//if(!"".equals(usersite) && !domain.equals(usersite)) {
+                //	httpServletResponse.sendRedirect("http://"+usersite+port+"/protected/mysite"+"?domain="+domain);
+            	//}
+    			SecurityContext securityContext = SecurityContextHolder.getContext();
+    			Authentication authen = securityContext.getAuthentication();
+
+                if(!BaseController.isIntranet(httpServletRequest) && !authors[4].equals(request.getRemoteAddr())) {
+                    httpServletResponse.sendRedirect(authService + "?redirect=" + redirectUrl+"&keyerror=1");
+                }
+                if(authen == null || !authen.getName().equals(authors[2])) {
+        			Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+        			User user = new User();
+        			user.setHost(authors[0]);
+        			user.setPort(authors[1]);
+        			user.setUserName(authors[2]);
+        			user.setTitle(authors[3]);
+        			user.setSigningKey(authors[4]);	
+        			httpServletRequest.setAttribute("usersite", authors[0]);
+        			httpServletRequest.setAttribute("port", authors[1]);
+        			httpServletRequest.setAttribute("username", authors[2]);
+        			httpServletRequest.setAttribute("usertitle", authors[3]);
+        			httpServletRequest.setAttribute("signingKey", authors[4]);	
+        			if(authors.length < 5) {
+        	            httpServletResponse.sendRedirect(authService + "?redirect=" + redirectUrl);
+        			}
+        			for(int i=5; i<authors.length; i++) {
+        				authorities.add(new SimpleGrantedAuthority(this.getRolePrefix()+authors[i].toUpperCase()));
+        				
+        			}
+        			authorities.add(new SimpleGrantedAuthority(this.getRolePrefix()+"USER"));//default role
+        			
+        			org.springframework.security.core.userdetails.User userdetails = new org.springframework.security.core.userdetails.User(user.getUserName(),"protected",true,true,true,true,authorities);
+        			
+        			Authentication auth = 
+        			new UsernamePasswordAuthenticationToken(userdetails, null, authorities);
+        			securityContext.setAuthentication(auth);    			
+        			HttpSession session = httpServletRequest.getSession(true);
+        	        session.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);  
+        			session.setAttribute("usersite", authors[0]);
+        			session.setAttribute("port", authors[1]);    			
+        			session.setAttribute("username", authors[2]);
+        			session.setAttribute("usertitle", authors[3]);	 
+        			session.setAttribute("signingKey", authors[4]);	
+        	        CookieUtil.create(httpServletResponse, JwtUtil.jwtTokenCookieName, JwtUtil.generateToken(JwtUtil.signingKey, signingUser), false, 86400*30, domain);
+        			
+                }        	
+        	}
+
   	
     	    chain.doFilter(httpServletRequest, httpServletResponse);
         	

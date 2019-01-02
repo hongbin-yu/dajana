@@ -4,19 +4,20 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" session="false" %>
 <c:set var="contentPath"><c:url value="/"></c:url></c:set>
-      
+
 <div class="container">
 <div class="row">
+
      <main role="main" property="mainContentOfPage" class="col-md-9 col-md-push-3">
-        <h1 id="wb-cont"><c:if test="${folder.parent!='/assets' }"><a href="assets.html?path=${folder.parent}&type=${type}"><span class="glyphicon glyphicon-backward"></span></a></c:if>
-        ${folder.title} <a href="?path=${folder.path}&type=${type}" title="刷屏"><span class="glyphicon glyphicon-refresh"></span></a><%-- 			<a class="btn btn-default pull-right" href="/site/view.html?path=${folder.path}&type=${type}" title="快速阅览"><span class="glyphicon glyphicon-eye-open pull-right"></span></a> --%>
+        <h1 id="wb-cont">
+<%--         <c:if test="${folder.parent!='/assets' }"><a href="assets.html?path=${folder.parent}&type=${type}"><span class="glyphicon glyphicon-backward"></span></a></c:if> --%>
+        ${folder.title}<%-- <a href="?path=${folder.path}&type=${type}" title="刷屏"><span class="glyphicon glyphicon-refresh"></span></a> 			<a class="btn btn-default pull-right" href="/site/view.html?path=${folder.path}&type=${type}" title="快速阅览"><span class="glyphicon glyphicon-eye-open pull-right"></span></a> --%>
         <a href="javascript:deleteFiles()" class="btn bnt-default btn-danger pull-right" title="删除"><span class="glyphicon glyphicon-remove"></span></a>
 		<a href="javascript:openPdf()" class="btn btn-primary pull-right" title="打开PDF"><span class="glyphicon glyphicon-open"></span></a>
 		<span class="btn btn-default pull-right" title="选择切换"><input id="toggle" type="checkbox" onClick="toggle(this)"/></span>
         </h1>
 		<div class="panel panel-default description form-control" id="description${folder.uid }" property="description"  uid="${folder.uid}" placeholder="description">${folder.description}</div>
-<c:if test="${type!='video' }"><div class="row wb-eqht"></c:if>
-<c:if test="${type=='video' }"><div class="row"></c:if>
+
 		<div class="wb-frmvld col-md-6 col-lg-4 well">
 			<form action="upload.html" method="POST" id="form-upload" enctype="multipart/form-data">
 				<input type="hidden" id="path" name="path" value="${folder.path}"/>
@@ -89,7 +90,7 @@
 
 <!--       </details>   -->
             <details id="${folder.uid }">
-            	<summary><input class="form-control" id="foldertitle" name="jcr:title" value="${folder.title}" size="20" uid="${folder.uid}"  onchange="updateNode(this)"/></summary>
+            	<summary><input class="form-control" id="foldertitle" name="jcr:title" value="${folder.title}" size="18" uid="${folder.uid}"  onchange="updateNode(this)"/></summary>
 <%--             	<c:if test="${assets.availablePages==0}">
     			    <a class="wb-lbx" title="<spring:message code="djn.delete"/>" href="<c:url value="/site/delete.html?uid=${folder.uid }&redirect=/site/assets.html?path=${folder.parent }"/>"><span class="glyphicon glyphicon-remove"></span><spring:message code="djn.delete"/></a>
 	      		</c:if> --%>
@@ -133,14 +134,18 @@
     </div>
 	<span id="top_folder">	
 	</span>
+
 	<div class="clearfix"></div>	
+<%-- <c:if test="${type!='video' }"><div class="row wb-eqht"></c:if> --%>
+<%-- <c:if test="${type=='video' }"><div class="row"></c:if>	 --%>
+<div class="row">
 	<span id="top_insert">
 	</span>
 
 	<c:forEach items="${assets.items }" var="item" varStatus="loop">
 	<div id="${item.uid}" class="col-md-6 col-lg-4  well">
 	<div class="checkbox"><input type="checkbox" class="checkbox" name="puid" value="${item.uid }">
-	<a class="download pull-right" href="file${item.ext}?path=${item.path}" target="_BLANK" download="${item.title }"><span class="glyphicon glyphicon-download pull-right">下载</span></a>
+	<a class="download pull-right" href="download/${item.name}?path=${item.path}" download="${item.name}" target="_blank"><span class="glyphicon glyphicon-download pull-right">下载</span></a>
 	</div>	
 		<c:if test="${item.pdf}">
 		<a title="<spring:message code="djn.open"/>PDF" href="viewpdf.pdf?uid=${item.uid}" target="_BLANK"><span class="glyphicon glyphicon-open"></span> <spring:message code="djn.open"/>PDF</a>
@@ -169,8 +174,8 @@
 		</c:if>
 		<c:if test="${item.audio}">
 <%-- 		<a class="download" href="file/${item.name}?path=${item.path}" download><span class="glyphicon glyphicon-volume-up">下载</span></a>
- --%>		<figure class="wb-mltmd">
-				<audio title="${item.title }" preload="none">
+ --%>		<figure>
+				<audio title="${item.title }" controls="controls" preload="metadata">
 					<source type="${item.contentType }" src="file/${item.name}?path=${item.path}"/>
 				</audio>
 		</figure>
@@ -184,8 +189,8 @@
 				</c:if>	
 				<c:if test="${item.contentType!='application/pdf'}">
 				    <a href="javascript:openImage('<c:url value='${item.link}'></c:url>')">
-						<img id="img${item.uid}" src="<c:url value='${item.icon }'></c:url>" class="img-responsive" draggable="true"/>
-					</a>
+						<img id="img${item.uid}" src="<c:url value='${item.icon }'></c:url>" class="img-responsive loading" draggable="true"/>
+					</a><%-- <img id="loadimg${item.uid}" src="/resources/images/ui-anim_basic_16x16.gif"> --%>
 				</c:if>	
 		</c:if>
 
@@ -234,7 +239,7 @@
 	</details>
 	
 	</div>
-<%-- 	<c:if test="${(loop.index+1) % 3 ==0  }"><div class="clearfix"></div></c:if> --%>
+ 	<c:if test="${(loop.index+1) % 3 ==0  }"><div class="clearfix"></div></c:if> 
 	</c:forEach>
 	<div class="clearfix"></div>
 </div>

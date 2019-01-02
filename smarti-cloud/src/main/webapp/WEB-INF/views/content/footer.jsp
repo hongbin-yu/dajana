@@ -4,7 +4,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" session="false" %>
 <c:set var="host"><c:url value="/"></c:url></c:set>
 <footer role="contentinfo" id="wb-info">
-<nav role="navigation" class="container wb-navcurr">
+<nav role="navigation" class="container wb-navcurr  visible-md visible-lg">
 <h2><spring:message code="djn.about_this_site"/></h2>
 <section class="col-sm-3">
 <h3><spring:message code="djn.about_this_site"/></h3>

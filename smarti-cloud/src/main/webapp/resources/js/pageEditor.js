@@ -23,8 +23,9 @@ tinymce.init({
 	  selector: 'div.description',
 	  inline: true,
 	  language: 'zh_CN.GB2312',
-	  plugins: ['save paste advlist autolink lists link image imagetools autosave'],
-      image_class_list:  [{title: 'Image Responsive', value: 'img-responsive'},
+	  plugins: ['save paste advlist autolink lists link image imagetools autosave contextmenu template code'],
+	  templates:contentPath+"/assets/templates/json/components.json",//"resources/templates/wet.json",
+	  image_class_list:  [{title: 'Image Responsive', value: 'img-responsive'},
 					      {title: 'Image Thumbnail', value: 'thumbnail'},
 					      {title: 'Image Circle', value: 'img-circle'},
 					      {title: 'Image Rounded', value: 'img-rounded'},					      
@@ -40,10 +41,10 @@ tinymce.init({
     	  //win.document.getElementById(field_name).value = 'my browser value';
       },
       file_browser_callback_types: 'file image media',	  
-	  toolbar: 'save undo redo image paste',
+	  toolbar: 'save undo redo image paste | template code',
 	  autosave_ask_before_unload: false,
 	  autosave_interval: "10s",
-	  menubar: false,
+	  menubar: true,
 	  save_onsavecallback: function() {
 	    var id = tinyMCE.activeEditor.id;
 	    var uid = id.replace("description","");
@@ -688,13 +689,16 @@ function showPages(obj) {
 function openPdf() {
 	var uids = document.getElementsByName("puid");
 	var url = "";
-
+	var now = new Date();
+	var checkedCount = 0;
+	var viewpdf = "viewpdf_"+now.getTime()+".pdf";
 	for(var i = 0; i<uids.length; i++) {
 		if(uids[i].checked) {
 			if(url =="")
 				url+="?uid="+uids[i].value;
 			else
 				url+="&uid="+uids[i].value;
+			checkedCount ++;
 		}
 			
 	}
@@ -702,8 +706,9 @@ function openPdf() {
 	if(url =="") {
     	$("#header_message").html("<section class='alert alert-warning'><h3>"+i18n("select_andthen_open")+"</h3></section>");
     	return;
-	}	
-	url ="viewpdf"+url;
+	}
+
+	url =(checkedCount==1?"viewpdf_"+uids[0].value+".pdf":viewpdf)+url;
 	window.location.href=url;
 }
 

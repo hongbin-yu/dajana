@@ -356,11 +356,12 @@ public class BaseController {
 	public void setLocaleResolver(SessionLocaleResolver localeResolver) {
 		this.localeResolver = localeResolver;
 	}
-    public void serveResource(HttpServletRequest request,HttpServletResponse response, File file,String contentType) throws Exception {
+    public void serveResource(HttpServletRequest request,HttpServletResponse response, File file,String original,String contentType) throws Exception {
         
     	if (response == null || request == null) {
             return;
         }
+    	original = new String(original.getBytes("UTF-8"),"ISO-8859-1");
     	//if(file.getAbsolutePath().indexOf("/mnt/devide/")>0)
     	//	ImageUtil.HDDOn();
         if (!file.exists()) {
@@ -368,7 +369,8 @@ public class BaseController {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
-
+        // Get content type by file name and set content disposition.
+        String disposition = "inline";
         Long length = file.length();
         String fileName = file.getParent()+"/"+file.getName();
         long lastModified = file.lastModified();
@@ -391,6 +393,7 @@ public class BaseController {
         long ifModifiedSince = request.getDateHeader("If-Modified-Since");
         if (ifNoneMatch == null && ifModifiedSince != -1 && ifModifiedSince + 1000 > lastModified) {
             response.setHeader("ETag", fileName); // Required in 304.
+            response.setHeader("Content-Disposition", disposition + ";filename=\"" + original + "\"");
             response.sendError(HttpServletResponse.SC_NOT_MODIFIED);
             return;
         }
@@ -470,8 +473,7 @@ public class BaseController {
 
         // Prepare and initialize response --------------------------------------------------------
 
-        // Get content type by file name and set content disposition.
-        String disposition = "inline";
+
 
         // If content type is unknown, then set the default value.
         // For all content types, see: http://www.w3schools.com/media/media_mimeref.asp
@@ -489,7 +491,7 @@ public class BaseController {
         response.reset();
         response.setBufferSize(DEFAULT_BUFFER_SIZE);
         response.setHeader("Content-Type", contentType);
-        response.setHeader("Content-Disposition", disposition + ";filename=\"" + fileName + "\"");
+        response.setHeader("Content-Disposition", disposition + ";filename=\"" + original + "\"");
         logger.debug("Content-Disposition : {}", disposition);
         response.setHeader("Accept-Ranges", "bytes");
         response.setHeader("ETag", fileName);
@@ -520,6 +522,7 @@ public class BaseController {
                 response.setContentType(contentType);
                 response.setHeader("Content-Range", "bytes " + r.start + "-" + r.end + "/" + r.total);
                 response.setHeader("Content-Length", String.valueOf(r.length));
+                response.setHeader("Content-Disposition", disposition + ";filename=\"" + original + "\"");
                 response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT); // 206.
 
                 // Copy single part range.
@@ -529,6 +532,7 @@ public class BaseController {
 
                 // Return multiple parts of file.
                 response.setContentType("multipart/byteranges; boundary=" + MULTIPART_BOUNDARY);
+                response.setHeader("Content-Disposition", disposition + ";filename=\"" + original + "\"");                
                 response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT); // 206.
 
                 // Cast back to ServletOutputStream to get the easy println methods.
