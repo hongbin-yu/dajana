@@ -4,9 +4,13 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" session="false" %>
 <c:set var="contentPath"><c:url value="/"></c:url></c:set>
-      
+<style type="text/css">
+.loading { background-image: url('/resources/images/loading16x16.gif'); }
+.loaderror { background-image: url(/resources/images/cut.gif); }
+</style>      
 <div class="container">
 <div class="row">
+
      <main role="main" property="mainContentOfPage" class="col-md-9 col-md-push-3">
         <h1 id="wb-cont">
 <%--         <c:if test="${folder.parent!='/assets' }"><a href="assets.html?path=${folder.parent}&type=${type}"><span class="glyphicon glyphicon-backward"></span></a></c:if> --%>
@@ -156,7 +160,7 @@
         <p>&nbsp;</p>
 <%--         	<a class="download" href="file/${item.name}?path=${item.path}" target="_BLANK" download><span class="glyphicon glyphicon-download">下载</span></a> --%>
 		    <a class="${item.cssClass }" href="doc2pdf.pdf?path=${item.path }" target="_BLANK">
-				<img id="img${item.uid}" src="<c:url value='${item.icon }'></c:url>" class="img-responsive"/>
+				<img id="img${item.uid}" src="<c:url value='${item.icon }'></c:url>" class="img-responsive loading"/>
 			</a>
 		</c:if>	
 		<c:if test="${item.mp4}">

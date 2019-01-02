@@ -1125,12 +1125,12 @@ function output(data) {
 		  	}
 		  	html	+='	<a class="download pull-right" href="file'+data.ext+'?path='+data.path+'" target="_BLANK" download="'+data.title+'"><span class="glyphicon glyphicon-download pull-right">下载</span></a>';
 		  	
-	    	html +='<a href="javascript:openImage(\''+data.link+'\')"><img id="img'+data.uid+'" src="'+data.icon+'" class="img-responsive" draggable="true"></img></a>'
+	    	html +='<a href="javascript:openImage(\''+data.link+'\')"><img id="img'+data.uid+'" src="'+data.icon+'" class="img-responsive loading" draggable="true"></img></a>'
 	    		  +'</div>'
 				  +'<input class="form-control" id="description'+data.uid+'" name="jcr:description" value="'+(data.description==null?"":+data.description)+'" size="42" uid="'+data.uid+'"  onchange="updateNode(this)"/>';
 
     	}else {
-    		html +='<a href="javascript-edit:openImage(\''+data.link+'\')"><img id="img'+data.uid+'" src="'+data.icon+'" class="img-responsive" draggable="true" alt=""></img></a>';
+    		html +='<a href="javascript-edit:openImage(\''+data.link+'\')"><img id="img'+data.uid+'" src="'+data.icon+'" class="img-responsive loading" draggable="true" alt=""></img></a>';
     	}	  
     	
     	if(topInsert != null) 	{
@@ -1214,7 +1214,7 @@ function output(data) {
 
 	    	tinyMCE.activeEditor.setDirty(true);	    	
 	    }
-	
+	$('.loading').show();
 }
 
 function outputView(data) {
