@@ -190,7 +190,7 @@
 				<c:if test="${item.contentType!='application/pdf'}">
 				    <a href="javascript:openImage('<c:url value='${item.link}'></c:url>')">
 						<img id="img${item.uid}" src="<c:url value='${item.icon }'></c:url>" class="img-responsive loading" draggable="true"/>
-					</a><img id="loadimg${item.uid}" src="/resources/images/ui-anim_basic_16x16.gif">
+					</a><%-- <img id="loadimg${item.uid}" src="/resources/images/ui-anim_basic_16x16.gif"> --%>
 				</c:if>	
 		</c:if>
 
