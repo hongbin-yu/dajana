@@ -2374,6 +2374,23 @@ public class SiteController extends BaseController {
 		}
 		return "redirect:/signin?info=pwchanged&username="+username;
 	}
+
+	@RequestMapping(value = {"/site/profile.json"}, method = RequestMethod.GET)
+	public User getUser(String path,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String username = getUsername();
+		User dbuser  = (User)jcrService.getObject("/system/users/"+username);
+		Date now = new Date();
+		if(dbuser.getLastVerified()==null || now.getTime() - dbuser.getLastVerified().getTime() > 120000) {
+			Random random = new Random();
+			int code = random.nextInt(899999)+100000;
+			dbuser.setCode(""+code);
+			dbuser.setLastVerified(now);
+			jcrService.addOrUpdate(dbuser);			
+		}
+
+		
+		return dbuser;
+	}
 	
 	@RequestMapping(value = {"/site/doc2pdf.pdf","/protected/doc2pdf.pdf"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public @ResponseBody String doc2pdf(String path,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {

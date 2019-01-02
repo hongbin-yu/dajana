@@ -57,6 +57,10 @@ public class User implements SmartiNode {
 	@Field
 	private String role;
 	@Field
+	private String code;	
+	@Field 
+	private Date lastVerified;		
+	@Field
 	private String icon="/resources/images/usericon.png";	
 	@Field
 	private String city;	
@@ -302,6 +306,22 @@ public class User implements SmartiNode {
 
 	public void setRedirect(String redirect) {
 		this.redirect = redirect;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public Date getLastVerified() {
+		return lastVerified;
+	}
+
+	public void setLastVerified(Date lastVerified) {
+		this.lastVerified = lastVerified;
 	}
 	
 }
