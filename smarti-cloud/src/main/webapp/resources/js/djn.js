@@ -1096,6 +1096,8 @@ function output(data) {
 		outputView(data);
 		return;
 	}
+	
+
 	if(topInsert != null) 
 	    html = '<div id="'+data.uid+'" class="col-md-6 col-lg-4 well">';
 	    if(data.contentType.indexOf('audio/')>=0) {
@@ -1125,12 +1127,12 @@ function output(data) {
 		  	}
 		  	html	+='	<a class="download pull-right" href="file'+data.ext+'?path='+data.path+'" target="_BLANK" download="'+data.title+'"><span class="glyphicon glyphicon-download pull-right">下载</span></a>';
 		  	
-	    	html +='<a href="javascript:openImage(\''+data.link+'\')"><img id="img'+data.uid+'" src="'+data.icon+'" class="img-responsive loading" draggable="true"></img></a>'
+	    	html +='<a href="javascript:openImage(\''+data.link+'\')"><img id="img'+data.uid+'" src="'+data.icon+'" class="img-responsive loading" draggable="true"></img></a><img id="loadimg'+data.uid+'" src="/resources/images/ui-anim_basic_16x16.gif">'
 	    		  +'</div>'
 				  +'<input class="form-control" id="description'+data.uid+'" name="jcr:description" value="'+(data.description==null?"":+data.description)+'" size="42" uid="'+data.uid+'"  onchange="updateNode(this)"/>';
 
     	}else {
-    		html +='<a href="javascript-edit:openImage(\''+data.link+'\')"><img id="img'+data.uid+'" src="'+data.icon+'" class="img-responsive loading" draggable="true" alt=""></img></a>';
+    		html +='<a href="javascript-edit:openImage(\''+data.link+'\')"><img id="img'+data.uid+'" src="'+data.icon+'" class="img-responsive" draggable="true" alt=""></img></a>';
     	}	  
     	
     	if(topInsert != null) 	{
@@ -1167,7 +1169,8 @@ function output(data) {
 				  +'</div>'			  
 				  +'</details>'
 	    		  +'</div>';	
-	    	$("#top_insert").after(html);		    	
+	    	$("#top_insert").after(html);	
+
 	    }else if(online_chat_editor){
 	    	if(i==0) {
 		    	document.getElementById("online_chat_editor").focus();
@@ -1214,7 +1217,14 @@ function output(data) {
 
 	    	tinyMCE.activeEditor.setDirty(true);	    	
 	    }
-	$('.loading').show();
+    	$(".loading").on('load',function() {
+    		var id = "#load"+this.id;
+    		var loadingImage = $(id);
+    		if(loadingImage) {
+    			loadingImage.remove();
+    		}
+
+    	});
 }
 
 function outputView(data) {
@@ -1667,3 +1677,11 @@ window.addEventListener("drop",function(e){
 	if(submit_youchat)
 		uploadFiles();
 });*/
+$(".loading").on('load',function() {
+	var id = "#load"+this.id;
+	var loadingImage = $(id);
+	if(loadingImage) {
+		loadingImage.remove();
+	}
+
+});

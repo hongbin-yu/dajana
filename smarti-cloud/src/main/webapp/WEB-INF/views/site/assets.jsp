@@ -4,10 +4,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" session="false" %>
 <c:set var="contentPath"><c:url value="/"></c:url></c:set>
-<style type="text/css">
-.loading { background-image: url('/resources/images/loading16x16.gif'); }
-.loaderror { background-image: url(/resources/images/cut.gif); }
-</style>      
+
 <div class="container">
 <div class="row">
 
@@ -160,7 +157,7 @@
         <p>&nbsp;</p>
 <%--         	<a class="download" href="file/${item.name}?path=${item.path}" target="_BLANK" download><span class="glyphicon glyphicon-download">下载</span></a> --%>
 		    <a class="${item.cssClass }" href="doc2pdf.pdf?path=${item.path }" target="_BLANK">
-				<img id="img${item.uid}" src="<c:url value='${item.icon }'></c:url>" class="img-responsive loading"/>
+				<img id="img${item.uid}" src="<c:url value='${item.icon }'></c:url>" class="img-responsive"/>
 			</a>
 		</c:if>	
 		<c:if test="${item.mp4}">
@@ -192,8 +189,8 @@
 				</c:if>	
 				<c:if test="${item.contentType!='application/pdf'}">
 				    <a href="javascript:openImage('<c:url value='${item.link}'></c:url>')">
-						<img id="img${item.uid}" src="<c:url value='${item.icon }'></c:url>" class="img-responsive" draggable="true"/>
-					</a>
+						<img id="img${item.uid}" src="<c:url value='${item.icon }'></c:url>" class="img-responsive loading" draggable="true"/>
+					</a><img id="loadimg${item.uid}" src="/resources/images/ui-anim_basic_16x16.gif">
 				</c:if>	
 		</c:if>
 
