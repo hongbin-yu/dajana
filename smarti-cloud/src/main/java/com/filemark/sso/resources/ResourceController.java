@@ -31,6 +31,7 @@ public class ResourceController  extends BaseController{
         String domain = request.getServerName();//.replaceAll(".*\\.(?=.*\\.)", "");
         
         CookieUtil.clear(httpServletResponse, JwtUtil.jwtTokenCookieName,domain);
+        CookieUtil.clear(httpServletResponse, JwtUtil.jwtTokenCookieName,"dajana.ca");
         Cookie[] cookies = request.getCookies();
         if (cookies != null)
             for (Cookie cookie : cookies) {

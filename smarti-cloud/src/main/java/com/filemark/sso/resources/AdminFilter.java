@@ -45,6 +45,7 @@ public class AdminFilter implements Filter {
 		HttpServletResponse httpServletResponse = (HttpServletResponse)response;
         String authService = this.getFilterConfig().getInitParameter("services.auth");
         String authKey = this.getFilterConfig().getInitParameter("services.key");
+    	String domain = httpServletRequest.getServerName();
         String redirectUrl = httpServletRequest.getRequestURL().toString() ;
         String signingUser = JwtUtil.getSubject(httpServletRequest, JwtUtil.jwtTokenCookieName, JwtUtil.signingKey);
         if(!httpServletRequest.getContextPath().equals("/") && !authService.startsWith("http")) {
@@ -56,7 +57,6 @@ public class AdminFilter implements Filter {
 
         } else {
             String authors[] = signingUser.split("/");
-        	String domain = httpServletRequest.getServerName();
         	if(domain.equals(authors[0])) {
                 String usersite = (String)httpServletRequest.getAttribute("usersite");
             	String port = (String)httpServletRequest.getAttribute("port");

@@ -44,6 +44,7 @@ public class JwtFilter implements Filter {
 		FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest httpServletRequest = (HttpServletRequest)request;
 		HttpServletResponse httpServletResponse = (HttpServletResponse)response;
+    	String domain = httpServletRequest.getServerName();
         String signingUser = JwtUtil.getSubject(httpServletRequest, JwtUtil.jwtTokenCookieName, JwtUtil.signingKey);
         if(signingUser != null && getUsername()==null){
             String authors[] = signingUser.split("/");

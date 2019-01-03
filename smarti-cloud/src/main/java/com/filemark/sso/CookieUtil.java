@@ -12,6 +12,9 @@ public class CookieUtil {
         cookie.setSecure(secure);
         //cookie.setHttpOnly(true);
         cookie.setMaxAge(maxAge);
+        if(domain.startsWith(".")) {
+        	domain ="www."+domain;
+        }
         cookie.setDomain(domain);
         cookie.setPath("/");
         httpServletResponse.addCookie(cookie);

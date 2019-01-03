@@ -14,7 +14,7 @@
 	<div class="wb-frmvld">
 	<form action='<c:url value="/site/yzm.html" />' method="get" id="validation-signup">
 		<h1 id="verified_code">${user.code }</h1>
-		<p><span id="countdown" class="badge">120</span>秒内输入以上验证码有效</p>		
+		<p><span id="countdown" class="badge">120</span>秒内输入以上验证码和用户名：${user.userName }</p>		
 <!-- 	<input type="submit" id="submit" value="确认" class="btn btn-primary"> <input type="reset" value="重填" class="btn btn-default"> -->
 	</form>
 	</div>
