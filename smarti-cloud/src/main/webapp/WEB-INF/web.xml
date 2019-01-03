@@ -87,12 +87,12 @@
 		<url-pattern>/protected/*</url-pattern>
 		
 	</filter-mapping>
-<!--
+
 	<filter-mapping>
-		<filter-name>jwtAdmin</filter-name>
+		<filter-name>jwtProtected</filter-name>
  		<url-pattern>/site/*</url-pattern>
 	</filter-mapping>
-				 -->
+
 	<filter-mapping>
 		<filter-name>springSecurityFilterChain</filter-name>
 		<url-pattern>/*</url-pattern>
