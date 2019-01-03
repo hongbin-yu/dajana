@@ -46,8 +46,9 @@ public class LoginController extends BaseController {
 
     @RequestMapping(value="/login",method = RequestMethod.GET)
     public String login(Model model,HttpServletRequest request,HttpServletResponse httpServletResponse, String redirect,String info, Integer loginCount) throws UnsupportedEncodingException{
+        String domain = request.getServerName();//.replaceAll(".*\\.(?=.*\\.)", "");
+
     	if(redirect!=null && redirect.equals("")) {
-            String domain = request.getServerName();//.replaceAll(".*\\.(?=.*\\.)", "");
             CookieUtil.clear(httpServletResponse, JwtUtil.jwtTokenCookieName,domain);
             
             request.getSession().invalidate();
@@ -60,55 +61,59 @@ public class LoginController extends BaseController {
         if(loginCount==null) {
         	loginCount=0;
         }
-        if(username != null){
+        if(username != null) {
         	String authors[] = username.split("/");
-        	if(authors[0]==null || "null".equals(authors[0])) {
-        		authors[0] = "";
-        	}
-			Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-			User user = new User();
-			user.setHost(authors[0]);
-			user.setPort(authors[1]);
-			user.setUserName(authors[2]);
-			user.setTitle(authors[3]);
-			user.setSigningKey(authors[4]);			
-        	try {
-        		if(jcrService.nodeExsits("/system/users/"+authors[1].toLowerCase())) {
-        			user = (User)jcrService.getObject("/system/users/"+authors[2].toLowerCase());
-        			if(!lastIp.equals(user.getLastIp())) return "login";
-        			for(Role role:user.getRoles()) {
-        				authorities.add(new SimpleGrantedAuthority(this.getRolePrefix()+role.getRoleName().toUpperCase()));
+        	if(authors[0].equals(domain)) {
+            	if(authors[0]==null || "null".equals(authors[0])) {
+            		authors[0] = "";
+            	}
+    			Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+    			User user = new User();
+    			user.setHost(authors[0]);
+    			user.setPort(authors[1]);
+    			user.setUserName(authors[2]);
+    			user.setTitle(authors[3]);
+    			user.setSigningKey(authors[4]);			
+            	try {
+            		if(jcrService.nodeExsits("/system/users/"+authors[1].toLowerCase())) {
+            			user = (User)jcrService.getObject("/system/users/"+authors[2].toLowerCase());
+            			if(!lastIp.equals(user.getLastIp())) return "login";
+            			for(Role role:user.getRoles()) {
+            				authorities.add(new SimpleGrantedAuthority(this.getRolePrefix()+role.getRoleName().toUpperCase()));
+            			}
+            			
+            			
+            		}
+        			for(int i=4; i<authors.length; i++) {
+        				authorities.add(new SimpleGrantedAuthority(this.getRolePrefix()+authors[i].toUpperCase()));
+        				
         			}
         			
-        			
-        		}
-    			for(int i=4; i<authors.length; i++) {
-    				authorities.add(new SimpleGrantedAuthority(this.getRolePrefix()+authors[i].toUpperCase()));
-    				
+    				authorities.add(new SimpleGrantedAuthority(this.getRolePrefix()+user.getRole().toLowerCase()));//default role
+    				org.springframework.security.core.userdetails.User userdetails = new org.springframework.security.core.userdetails.User(user.getUserName(),"protected",true,true,true,true,authorities);
+      			
+        			Authentication auth = 
+        			new UsernamePasswordAuthenticationToken(userdetails, null, authorities);
+        			SecurityContext securityContext = SecurityContextHolder.getContext();
+        			securityContext.setAuthentication(auth);    			
+        			HttpSession session = request.getSession(true);
+        	        session.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);
+            		if(redirect !=null && !"".equals(redirect) && !"login".equals(redirect))
+            			return "redirect:"+redirect;
+            		else if(!authors[0].equals(remoteHost)) {
+            			return "redirect:http://"+authors[0]+"/site/editor.html?path=/content/"+authors[2];
+            		}else {
+            			return "redirect:/site/editor.html?path=/content/"+authors[2];
+            			
+            		}        		
+            	} catch (RepositoryException e) {
+    				Log.error(e.getMessage());
+    				model.addAttribute("error", e.getMessage());
     			}
-    			
-				authorities.add(new SimpleGrantedAuthority(this.getRolePrefix()+user.getRole().toLowerCase()));//default role
-				org.springframework.security.core.userdetails.User userdetails = new org.springframework.security.core.userdetails.User(user.getUserName(),"protected",true,true,true,true,authorities);
-  			
-    			Authentication auth = 
-    			new UsernamePasswordAuthenticationToken(userdetails, null, authorities);
-    			SecurityContext securityContext = SecurityContextHolder.getContext();
-    			securityContext.setAuthentication(auth);    			
-    			HttpSession session = request.getSession(true);
-    	        session.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);
-        		if(redirect !=null && !"".equals(redirect) && !"login".equals(redirect))
-        			return "redirect:"+redirect;
-        		else if(!authors[0].equals(remoteHost)) {
-        			return "redirect:http://"+authors[0]+"/site/editor.html?path=/content/"+authors[2];
-        		}else {
-        			return "redirect:/site/editor.html?path=/content/"+authors[2];
-        			
-        		}
+            }
 
-        	} catch (RepositoryException e) {
-				Log.error(e.getMessage());
-				model.addAttribute("error", e.getMessage());
-			}
+
+
         }    	
  
     	Page page = new Page();
