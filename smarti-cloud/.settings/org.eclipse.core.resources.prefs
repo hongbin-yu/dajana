@@ -4,6 +4,7 @@ encoding//resources/error500.html=UTF-8
 encoding//resources/js/pageEditor.js=UTF-8
 encoding//src/main/java/com/filemark/jcr/controller/ContentController.java=UTF-8
 encoding//src/main/java/com/filemark/jcr/controller/ProtectedController.java=UTF-8
+encoding//src/main/java/com/filemark/jcr/controller/SigninController.java=UTF-8
 encoding//src/main/java/com/filemark/jcr/controller/SiteController.java=UTF-8
 encoding//src/main/java/com/filemark/jcr/model/Chat.java=UTF-8
 encoding//src/main/java/com/filemark/sso/LoginController.java=UTF-8

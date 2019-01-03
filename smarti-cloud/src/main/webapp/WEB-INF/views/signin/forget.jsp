@@ -37,9 +37,8 @@
 <div class="container">
 <div class="col-md-4">
 <section class="alert alert-warning">
-<h3><spring:message code="djn.login_fail"/>!</h3>
 <p>
-  	<spring:message code="djn.login_error"/>。 ${error}<spring:message code="djn.try_again"/>。
+  <spring:message code="djn.try_again"/>。
  </p>
 </section>
 </div>
@@ -48,12 +47,12 @@
 <c:if test="${param.error eq 'multiple_users'}">
 <div class="container">
 <div class="col-md-4">
-<section class="alert alert-danger">
+<%-- <section class="alert alert-danger">
 <h3><spring:message code="djn.login_fail"/>!</h3>
 <p>
-	<spring:message code="djn.login_error"/>。 <spring:message code="djn.try_once_more"/>。
+  ${error} <spring:message code="djn.try_once_more"/>。
 </p>
-</section>
+</section> --%>
 </div>
 </div>
 </c:if>
@@ -64,8 +63,18 @@
 				<c:if test="${qrimage !=null}">
 				<img class="img-responsive" src="${qrimage}" alt="">
 				</c:if>
+			<div class="form-group">
+				<label for="username" class="required"><span class="field-name"><spring:message code="djn.username"/></span> <strong class="required">(<spring:message code="djn.required"/>)</strong></label>
+				<input class="form-control" id="username" name="j_username" type="text" value="${j_username }" required="required" pattern=".{2,}" data-rule-minlength="2" size="40"  placeholder="<spring:message code="djn.input_username"/>"/>
+			</div>
+			<div class="form-group">
+				<label for="password" class="required">
+				<span class="field-name"><spring:message code="djn.verified_code"/></span> (<spring:message code="djn.select_verified_code"/>)
+				</label>
+				<input class="form-control" id="j_code" name="j_code" type="password" maxlength="32" size="40" required="required" pattern=".{3,}" data-rule-rangelength="[4,32]" placeholder="<spring:message code="djn.verified_code"/>:<spring:message code="djn.select_verified_code"/>"/>
+			</div>					
+<%-- 			<label for="fileUpload">或点击选择二维密码图</label>
 				<div class="form-group text-center">
-					<label for="fileUpload" class="required">点击选择二维密码图</label>
 					<br/><a href="#" onclick="openFiles()">
 					<img id="uploadImg" alt="" src="<c:url value='/resources/images/upload.png'/>"/>
 					</a>
@@ -74,7 +83,8 @@
 					
 					<input class="form-control wb-inv" type="file" id="fileUpload" name="file" size="60" required="required"  multiple/>
 				</div>
-				<input id="submit_upload" type="submit"  value="<spring:message code="djn.upload"/>" class="btn btn-primary"> <input type="reset" value="<spring:message code="djn.clear"/>" class="btn btn-default">
+ --%>
+				<input id="submit_upload" type="submit"  value="<spring:message code="djn.submit"/>" class="btn btn-primary"> <input type="reset" value="<spring:message code="djn.reset"/>" class="btn btn-default">
 
 			</form>
 </div>

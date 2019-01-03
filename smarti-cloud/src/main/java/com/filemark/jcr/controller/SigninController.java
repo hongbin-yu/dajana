@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Random;
 
 import javax.imageio.ImageIO;
 import javax.jcr.RepositoryException;
@@ -284,10 +285,22 @@ public class SigninController extends BaseController{
     	return "forget";
     }
     @RequestMapping(value = {"/forget","/uploadAsset.html"}, method ={ RequestMethod.POST}) 
-    public String forgetPost(ScanUploadForm uploadForm,Model model,HttpServletRequest request, HttpServletResponse response) {
-    	String error=uploadForm.getFilename();
+    public String forgetPost(String j_username, String j_code, String redirect,/*ScanUploadForm uploadForm,*/Model model,HttpServletRequest request, HttpServletResponse response) {
+    	//String error=uploadForm.getFilename();
+    	
     	try {
-			for (MultipartFile multipartFile : uploadForm.getFile()) {
+    		//if(j_username !=null && j_password != null && !"".equals(j_password) && !"".equals(j_username)) {
+            	User user = (User)jcrService.getObject("/system/users/"+j_username.toLowerCase());
+        		Date now = new Date();
+         	
+            	if(!user.getCode().equals(j_code) || user.getLastVerified()==null || now.getTime() - user.getLastVerified().getTime() > 120000) {
+                	String login_error = messageSource.getMessage("djn.verified_error", null,"用户名或验证码无效", localeResolver.resolveLocale(request));
+                    model.addAttribute("error", login_error);
+                    return "forget";        		
+            	}    			
+    		//}
+            	return signinPost(request,response,user.getUserName(),user.getSigningKey(),redirect,1,model);
+/*    		for (MultipartFile multipartFile : uploadForm.getFile()) {
 		    	final ByteArrayOutputStream os = new ByteArrayOutputStream();	
 	    		InputStream in = multipartFile.getInputStream();
 	    		BufferedImage image = ImageIO.read(in);
@@ -312,11 +325,11 @@ public class SigninController extends BaseController{
 
 
 
-			}
+			}*/
     	}catch(Exception e) {
-    		logger.error("Barcode error:"+e.getMessage());
-    		error=e.getMessage();
-    		model.addAttribute("error", "Barcode error:"+error);
+    		logger.error("error:"+e.getMessage());
+    		String error=e.getMessage();
+    		model.addAttribute("error", "出错:"+error);
     	}
 
     	return "forget";
