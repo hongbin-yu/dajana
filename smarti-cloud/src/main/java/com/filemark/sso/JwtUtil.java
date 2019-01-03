@@ -44,7 +44,16 @@ public class JwtUtil {
         if(token == null) return null;
         return Jwts.parser().setSigningKey(SECRET).parseClaimsJws(token).getBody().getSubject();
     }
-    
+ 
+    public static String getSubject(HttpServletRequest httpServletRequest, String jwtTokenCookieName, String signingKey,String domain){
+        String token = CookieUtil.getValue(httpServletRequest, jwtTokenCookieName);
+        final String SECRET = Base64.getEncoder().encodeToString(signingKey.getBytes());
+        
+        if(token == null) return null;
+        String siginString =	Jwts.parser().setSigningKey(SECRET).parseClaimsJws(token).getBody().getSubject();
+        if(siginString.startsWith(domain+"/")) return  siginString;
+        else return null;
+    }    
     public static String decodeToken(String signingKey, String token) {
         if(token == null) return null;
         final String SECRET = Base64.getEncoder().encodeToString(signingKey.getBytes());

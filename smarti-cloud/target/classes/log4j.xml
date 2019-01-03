@@ -12,7 +12,7 @@
 	
 	<!-- Application Loggers -->
 	<logger name="com.filemark">
-		<level value="error" />
+		<level value="info" />
 	</logger>
 	<!-- 3rdparty Loggers -->
 	<logger name="apache.jackrabbit.core">

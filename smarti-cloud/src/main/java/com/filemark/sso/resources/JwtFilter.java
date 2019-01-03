@@ -45,43 +45,46 @@ public class JwtFilter implements Filter {
 		HttpServletRequest httpServletRequest = (HttpServletRequest)request;
 		HttpServletResponse httpServletResponse = (HttpServletResponse)response;
     	String domain = httpServletRequest.getServerName();
-        String signingUser = JwtUtil.getSubject(httpServletRequest, JwtUtil.jwtTokenCookieName, JwtUtil.signingKey);
-        if(signingUser != null && getUsername()==null){
-            String authors[] = signingUser.split("/");
-			Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-			User user = new User();
-			user.setHost(authors[0]);
-			user.setPort(authors[1]);
-			user.setUserName(authors[2]);
-			user.setTitle(authors[3]);
-			user.setSigningKey(authors[4]);	
-			httpServletRequest.setAttribute("signingUser", signingUser);
-			httpServletRequest.setAttribute("usersite", authors[0]);
-			httpServletRequest.setAttribute("port", authors[1]);			
-			httpServletRequest.setAttribute("username", authors[2]);
-			httpServletRequest.setAttribute("usertitle", authors[3]);
-			httpServletRequest.setAttribute("signingKey", authors[4]);			
-			for(int i=4; i<authors.length; i++) {
-				authorities.add(new SimpleGrantedAuthority(this.getRolePrefix()+authors[i].toUpperCase()));
-				
-			}
-			authorities.add(new SimpleGrantedAuthority(this.getRolePrefix()+"USER"));//default role
-			
-			org.springframework.security.core.userdetails.User userdetails = new org.springframework.security.core.userdetails.User(user.getUserName(),"protected",true,true,true,true,authorities);
-			
-			Authentication auth = 
-			new UsernamePasswordAuthenticationToken(userdetails, null, authorities);
-			SecurityContext securityContext = SecurityContextHolder.getContext();
-			securityContext.setAuthentication(auth);    			
-			HttpSession session = httpServletRequest.getSession(true);
-	        session.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);  
-			session.setAttribute("usersite", authors[0]);
-			session.setAttribute("port", authors[1]);	
-			session.setAttribute("username", authors[2]);
-			session.setAttribute("usertitle", authors[3]);	 
-			session.setAttribute("signingKey", authors[4]);					
-        	
-        }
+    	if(getUsername()==null) {
+            String signingUser = JwtUtil.getSubject(httpServletRequest, JwtUtil.jwtTokenCookieName, JwtUtil.signingKey,domain);
+            if(signingUser != null){
+                String authors[] = signingUser.split("/");
+    			Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+    			User user = new User();
+    			user.setHost(authors[0]);
+    			user.setPort(authors[1]);
+    			user.setUserName(authors[2]);
+    			user.setTitle(authors[3]);
+    			user.setSigningKey(authors[4]);	
+    			httpServletRequest.setAttribute("signingUser", signingUser);
+    			httpServletRequest.setAttribute("usersite", authors[0]);
+    			httpServletRequest.setAttribute("port", authors[1]);			
+    			httpServletRequest.setAttribute("username", authors[2]);
+    			httpServletRequest.setAttribute("usertitle", authors[3]);
+    			httpServletRequest.setAttribute("signingKey", authors[4]);			
+    			for(int i=4; i<authors.length; i++) {
+    				authorities.add(new SimpleGrantedAuthority(this.getRolePrefix()+authors[i].toUpperCase()));
+    				
+    			}
+    			authorities.add(new SimpleGrantedAuthority(this.getRolePrefix()+"USER"));//default role
+    			
+    			org.springframework.security.core.userdetails.User userdetails = new org.springframework.security.core.userdetails.User(user.getUserName(),"protected",true,true,true,true,authorities);
+    			
+    			Authentication auth = 
+    			new UsernamePasswordAuthenticationToken(userdetails, null, authorities);
+    			SecurityContext securityContext = SecurityContextHolder.getContext();
+    			securityContext.setAuthentication(auth);    			
+    			HttpSession session = httpServletRequest.getSession(true);
+    	        session.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);  
+    			session.setAttribute("usersite", authors[0]);
+    			session.setAttribute("port", authors[1]);	
+    			session.setAttribute("username", authors[2]);
+    			session.setAttribute("usertitle", authors[3]);	 
+    			session.setAttribute("signingKey", authors[4]);					
+            	
+            }    		
+    	}
+
         chain.doFilter(httpServletRequest, httpServletResponse);
 
         /*        if(signingUser == null){

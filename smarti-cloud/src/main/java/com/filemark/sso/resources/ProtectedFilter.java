@@ -41,51 +41,55 @@ public class ProtectedFilter implements Filter {
         String authService = this.getFilterConfig().getInitParameter("services.auth");
         String redirectUrl = httpServletRequest.getRequestURL().toString() ;
     	String domain = httpServletRequest.getServerName();
-        String signingUser = JwtUtil.getSubject(httpServletRequest, JwtUtil.jwtTokenCookieName, JwtUtil.signingKey);
-        if(!httpServletRequest.getContextPath().equals("/") && !authService.startsWith("http")) {
-        	authService = httpServletRequest.getContextPath()+authService;
-        }
-        if(signingUser==null) {
-    		//SecurityContext securityContext = SecurityContextHolder.getContext();
-/*    		HttpSession session = httpServletRequest.getSession(true);
-    		SecurityContext securityContext = (SecurityContext)session.getAttribute("SPRING_SECURITY_CONTEXT");
-    		if(securityContext!=null) {
-        		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-    			if(auth!=null && auth.getName()!=null) {
-            	    chain.doFilter(httpServletRequest, httpServletResponse);   				
-    			}else {
-    	        	logger.debug("no signingUser and authen user"+authService + "?redirect=" + redirectUrl);
-    	            httpServletResponse.sendRedirect(authService + "?redirect=" + redirectUrl+"&authenUser=0");
-   				
-    			}
-    		}else {
+    	if(getUsername()==null) {
+            String signingUser = JwtUtil.getSubject(httpServletRequest, JwtUtil.jwtTokenCookieName, JwtUtil.signingKey,domain);
+            if(!httpServletRequest.getContextPath().equals("/") && !authService.startsWith("http")) {
+            	authService = httpServletRequest.getContextPath()+authService;
+            }
+            if(signingUser==null) {
+        		//SecurityContext securityContext = SecurityContextHolder.getContext();
+    /*    		HttpSession session = httpServletRequest.getSession(true);
+        		SecurityContext securityContext = (SecurityContext)session.getAttribute("SPRING_SECURITY_CONTEXT");
+        		if(securityContext!=null) {
+            		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        			if(auth!=null && auth.getName()!=null) {
+                	    chain.doFilter(httpServletRequest, httpServletResponse);   				
+        			}else {
+        	        	logger.debug("no signingUser and authen user"+authService + "?redirect=" + redirectUrl);
+        	            httpServletResponse.sendRedirect(authService + "?redirect=" + redirectUrl+"&authenUser=0");
+       				
+        			}
+        		}else {
 
-	        	logger.debug("no signingUser "+authService + "?redirect=" + redirectUrl);
-	            httpServletResponse.sendRedirect(authService + "?redirect=" + redirectUrl+"&signingUser=0");
+    	        	logger.debug("no signingUser "+authService + "?redirect=" + redirectUrl);
+    	            httpServletResponse.sendRedirect(authService + "?redirect=" + redirectUrl+"&signingUser=0");
 
-    		}*/
-        	logger.debug("no signingUser "+authService + "?redirect=" + redirectUrl);
-  		
-          } else {
-            String authors[] = signingUser.split("/");
+        		}*/
+            	logger.debug("no signingUser "+authService + "?redirect=" + redirectUrl);
+      		
+              } else {
+                String authors[] = signingUser.split("/");
 
-          	if(domain.equals(authors[0])) {
+              	if(domain.equals(authors[0])) {
 
-				User user = new User();
-				user.setHost(authors[0]);
-				user.setPort(authors[1]);
-				user.setUserName(authors[2]);
-				user.setTitle(authors[3]);
-				user.setSigningKey(authors[4]);	
-				httpServletRequest.setAttribute("usersite", authors[0]);
-				httpServletRequest.setAttribute("port", authors[1]);
-				httpServletRequest.setAttribute("username", authors[2]);
-				httpServletRequest.setAttribute("usertitle", authors[3]);
-				httpServletRequest.setAttribute("signingKey", authors[4]);	        	
-	    	    //chain.doFilter(httpServletRequest, httpServletResponse);
-		        CookieUtil.create(httpServletResponse, JwtUtil.jwtTokenCookieName, JwtUtil.generateToken(JwtUtil.signingKey, signingUser), false, 86400*30, domain);
-          	}
-        }
+    				User user = new User();
+    				user.setHost(authors[0]);
+    				user.setPort(authors[1]);
+    				user.setUserName(authors[2]);
+    				user.setTitle(authors[3]);
+    				user.setSigningKey(authors[4]);	
+    				httpServletRequest.setAttribute("usersite", authors[0]);
+    				httpServletRequest.setAttribute("port", authors[1]);
+    				httpServletRequest.setAttribute("username", authors[2]);
+    				httpServletRequest.setAttribute("usertitle", authors[3]);
+    				httpServletRequest.setAttribute("signingKey", authors[4]);	        	
+    	    	    //chain.doFilter(httpServletRequest, httpServletResponse);
+    				logger.info("Create Cookie:"+domain);
+    		        CookieUtil.create(httpServletResponse, JwtUtil.jwtTokenCookieName, JwtUtil.generateToken(JwtUtil.signingKey, signingUser), false, 86400*30, domain);
+              	}
+            }    		
+    	}
+
         chain.doFilter(httpServletRequest, httpServletResponse);
 
 	}
