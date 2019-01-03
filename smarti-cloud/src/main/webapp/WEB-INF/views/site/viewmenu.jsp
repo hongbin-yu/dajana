@@ -85,7 +85,7 @@
 			<li><a class="item" title="<spring:message code="djn.website"></spring:message>" href="<c:url value="editor.html"/>"><span class="glyphicon glyphicon-globe"></span><spring:message code="djn.website"></spring:message></a></li>
 			<li><a class="item" href='<c:url value="/protected/youchat.html"></c:url>' title="<spring:message code="djn.online_chat"></spring:message>"><span class="glyphicon glyphicon-envelope"></span><spring:message code="djn.chat"></spring:message><span class="badge"></span></a></li>
 			<li><a class="item" href='<c:url value="/protected/youlook.html"></c:url>' title="<spring:message code="djn.online_chat"></spring:message>"><span class="glyphicon glyphicon-facetime-video"></span><spring:message code="djn.youlook"></spring:message><span class="badge"></span></a></li>
-		
+			<li><a class="item" href='<c:url value="/site/yzm.html"></c:url>' title='<spring:message code="djn.forget_password"></spring:message>'><span class="glyphicon glyphicon-lock"></span><spring:message code="djn.verified_code"></spring:message></a></li>
 		</ul>
 	</div>
 	</div>

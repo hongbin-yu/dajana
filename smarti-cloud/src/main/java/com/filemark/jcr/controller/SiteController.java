@@ -2409,7 +2409,7 @@ public class SiteController extends BaseController {
 	}
 
 	@RequestMapping(value = {"/site/profile.json"}, method = RequestMethod.GET)
-	public User getUser(String path,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public @ResponseBody User getUser(String path,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String username = getUsername();
 		User dbuser  = (User)jcrService.getObject("/system/users/"+username);
 		Date now = new Date();
@@ -2420,9 +2420,29 @@ public class SiteController extends BaseController {
 			dbuser.setLastVerified(now);
 			jcrService.addOrUpdate(dbuser);			
 		}
-
+		response.setContentType("application/json");
+		dbuser.setSigningKey("******");
+		dbuser.setPassword("******");
 		
 		return dbuser;
+	}
+
+	@RequestMapping(value = {"/site/yzm.html"}, method = RequestMethod.GET)
+	public String verifiedCode(String path,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String username = getUsername();
+		User dbuser  = (User)jcrService.getObject("/system/users/"+username);
+		Date now = new Date();
+		//if(dbuser.getLastVerified()==null || now.getTime() - dbuser.getLastVerified().getTime() > 120000) {
+		Random random = new Random();
+		int code = random.nextInt(899999)+100000;
+		dbuser.setCode(""+code);
+		dbuser.setLastVerified(now);
+		jcrService.addOrUpdate(dbuser);			
+		//}
+		dbuser.setSigningKey("******");
+		dbuser.setPassword("******");
+		model.addAttribute("user", dbuser);
+		return "site/yzm";
 	}
 	
 	@RequestMapping(value = {"/site/doc2pdf.pdf","/protected/doc2pdf.pdf"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})

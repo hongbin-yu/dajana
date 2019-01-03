@@ -94,7 +94,12 @@
 	    <put-attribute name="topmenu" value="/WEB-INF/views/site/assetsmenu.jsp"/>	    
 	    <put-attribute name="content" value="/WEB-INF/views/site/usereditor.jsp"/>
   
-	</definition>			
+	</definition>	
+	<definition name="site/yzm" extends="sitepage">
+	    <put-attribute name="topmenu" value="/WEB-INF/views/site/assetsmenu.jsp"/>	    
+	    <put-attribute name="content" value="/WEB-INF/views/site/verified_code.jsp"/>
+  
+	</definition>				
 </tiles-definitions>
 
 

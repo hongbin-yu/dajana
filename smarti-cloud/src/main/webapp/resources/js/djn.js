@@ -187,6 +187,40 @@ function deleteChat(uid,timer) {
 	    }
 	  }
 }
+
+function updateVerifiedCode(timer) {
+	  var elem = document.getElementById("countdown");
+	  var count = timer*1000;
+	  var idVar = setInterval(countDown, 1000);
+	  function countDown() {
+	    if (count == 0) {
+	      var verified_code = $("#verified_code");
+	      if(verified_code)
+	      //clearInterval(idVar);
+	      $.ajax({
+	  	    url: '/site/profile.json',
+	  	    type: "Get", 
+	  	    success: function(data) {
+	  	    	verified_code.html(data.code);
+	  	    	count = timer*1000;
+	  	    },
+	  	    error: function() {
+	  	    	alert(i18n("fail"));
+	  	    }
+
+	  	  });	
+	      else
+	    	  clearInterval(idVar); 
+	    } else {
+	      count-=1000;
+	      if(elem)
+	    	  elem.innerHTML = ""+count/1000;
+	      else
+	    	  clearInterval(idVar);  
+	    }
+	  }
+}
+
 function AssetTable(folder,asset) {
 	this._asset = asset;
 	this.lastModified = asset.lastModified;
@@ -1620,6 +1654,20 @@ function downloadLink() {
 	
 }
 
+function getVerifiedCode() {
+    $.ajax({
+	    url: '/site/profile.json',
+	    type: "Get", 
+	    success: function(data) {
+	    	$("#verified_code").html(data.userName+",两分钟内输入 "+data.code);
+	    },
+	    error: function() {
+	    	alert(i18n("fail"));
+	    }
+
+	});	 	
+}
+
 document.addEventListener("dragenter", function(event) {
 	var id = event.target.id;
 	if(id)
@@ -1685,3 +1733,4 @@ $(".loading").on('load',function() {
 	}
 
 });
+
