@@ -78,6 +78,57 @@ public class SigninController extends BaseController{
         //String domain = request.getServerName().replaceAll(".*\\.(?=.*\\.)", "");
         //CookieUtil.clear(response, jwtTokenCookieName,domain);
         //request.getSession().invalidate();
+    	String domain = request.getServerName();
+        String signingUser = JwtUtil.getSubject(request, JwtUtil.jwtTokenCookieName, JwtUtil.signingKey);
+        if(signingUser!=null) {
+            String authors[] = signingUser.split("/");
+			SecurityContext securityContext = SecurityContextHolder.getContext();
+			Authentication authen = securityContext.getAuthentication();
+
+            if(authen == null || !authen.getName().equals(authors[2])) {
+    			Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+    			User user = new User();
+    			user.setHost(authors[0]);
+    			user.setPort(authors[1]);
+    			user.setUserName(authors[2]);
+    			user.setTitle(authors[3]);
+    			user.setSigningKey(authors[4]);	
+    			request.setAttribute("usersite", authors[0]);
+    			request.setAttribute("port", authors[1]);
+    			request.setAttribute("username", authors[2]);
+    			request.setAttribute("usertitle", authors[3]);
+    			request.setAttribute("signingKey", authors[4]);	
+
+    			for(int i=5; i<authors.length; i++) {
+    				authorities.add(new SimpleGrantedAuthority(this.getRolePrefix()+authors[i].toUpperCase()));
+    				
+    			}
+    			authorities.add(new SimpleGrantedAuthority(this.getRolePrefix()+"USER"));//default role
+    			
+    			org.springframework.security.core.userdetails.User userdetails = new org.springframework.security.core.userdetails.User(user.getUserName(),"protected",true,true,true,true,authorities);
+    			
+    			Authentication auth = 
+    			new UsernamePasswordAuthenticationToken(userdetails, null, authorities);
+    			securityContext.setAuthentication(auth);    			
+    			HttpSession session = request.getSession(true);
+    	        session.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);  
+    			session.setAttribute("usersite", authors[0]);
+    			session.setAttribute("port", authors[1]);    			
+    			session.setAttribute("username", authors[2]);
+    			session.setAttribute("usertitle", authors[3]);	 
+    			session.setAttribute("signingKey", authors[4]);	
+    	        //CookieUtil.create(response, JwtUtil.jwtTokenCookieName, JwtUtil.generateToken(JwtUtil.signingKey, signingUser), false, 86400*30, domain);	
+    	        if(redirect==null || "".equals(redirect) || "signin".equals(redirect)) {
+    	    		return "redirect:/site/view.html?type=child";
+    	        }else {
+    	        	logger.debug("Redirect to:"+ redirect+"&domain="+domain);
+    	       		return "redirect:"+ redirect+"&domain="+domain;
+    	        }    	        
+          	}
+        }
+
+
+
 		if(username==null) username="";
 		model.addAttribute("j_username",username);
 		model.addAttribute("loginCount", "0");
