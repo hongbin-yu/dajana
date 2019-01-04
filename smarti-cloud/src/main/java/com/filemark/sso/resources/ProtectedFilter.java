@@ -41,7 +41,7 @@ public class ProtectedFilter implements Filter {
         String authService = this.getFilterConfig().getInitParameter("services.auth");
         String redirectUrl = httpServletRequest.getRequestURL().toString() ;
     	String domain = httpServletRequest.getServerName();
-        String signingUser = JwtUtil.getSubject(httpServletRequest, JwtUtil.jwtTokenCookieName, JwtUtil.signingKey,domain);
+        String signingUser = JwtUtil.getSubject(httpServletRequest, JwtUtil.jwtTokenCookieName, JwtUtil.signingKey);
         if(!httpServletRequest.getContextPath().equals("/") && !authService.startsWith("http")) {
         	authService = httpServletRequest.getContextPath()+authService;
         }
