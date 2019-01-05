@@ -1,7 +1,6 @@
 package com.filemark.jcr.controller;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.InetAddress;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -12,12 +11,6 @@ import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.jivesoftware.smack.AbstractXMPPConnection;
-import org.jivesoftware.smack.SmackException;
-import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smack.roster.Roster;
-import org.jivesoftware.smack.tcp.XMPPTCPConnection;
-import org.jxmpp.stringprep.XmppStringprepException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
