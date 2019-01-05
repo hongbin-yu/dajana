@@ -1,6 +1,7 @@
 package com.filemark.jcr.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -11,6 +12,12 @@ import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.jivesoftware.smack.AbstractXMPPConnection;
+import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.roster.Roster;
+import org.jivesoftware.smack.tcp.XMPPTCPConnection;
+import org.jxmpp.stringprep.XmppStringprepException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -749,7 +756,33 @@ public class ProtectedController extends BaseController {
 		return "chat/asset";
    		//return "protected/sharing";
    	}
-   	
+/*   	@RequestMapping(value = {"/protected/smack.html"}, method = {RequestMethod.GET})
+   	public String smack() {
+   		AbstractXMPPConnection conn1;
+		try {
+			conn1 = new XMPPTCPConnection("username", "password", jcrService.getDomain());
+	   		conn1.connect().login();
+	   		Roster roster = Roster.getInstanceFor(conn1);
+	   		
+	   		
+		} catch (XmppStringprepException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (XMPPException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SmackException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+   		return "chat/smack";
+   	}*/
    	private Page copy(String username,String path) throws RepositoryException {
    		Page shared = jcrService.getPage(path);
    		String paths[] = path.split("/");
@@ -771,7 +804,9 @@ public class ProtectedController extends BaseController {
    		page.setCreatedBy(username);
    		jcrService.addOrUpdate(page);
    		return page;
-   	}   	
+   	}   
+   	
+   	
 	private String getRolePrefix() {
 		
 		return "ROLE_";
