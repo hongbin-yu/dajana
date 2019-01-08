@@ -1,4 +1,4 @@
-var BOSH_SERVICE = '/xmpp-httpbind';
+var BOSH_SERVICE = 'https://dajana.ca:7443/http-bind';
 var connection = null;
 
 function log(msg, data) {
