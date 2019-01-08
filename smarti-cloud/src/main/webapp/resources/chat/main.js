@@ -45,11 +45,12 @@ function onConnect(status)
 	log('Strophe is disconnecting.');
     } else if (status == Strophe.Status.DISCONNECTED) {
 	log('Strophe is disconnected.');
-	connection.addHandler(onMessage, null, 'message', null, null,  null); 
-	connection.send($pres().tree());	
+	
 	$('#connect').get(0).value = 'connect';
     } else if (status == Strophe.Status.CONNECTED) {
 	log('Strophe is connected.');
+	connection.addHandler(onMessage, null, 'message', null, null,  null); 
+	connection.send($pres().tree());
 	//connection.disconnect();
     } else if (status == Strophe.Status.ATTACHED) {
          log('Strophe is attached.');
