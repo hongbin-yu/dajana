@@ -40,6 +40,9 @@ function onConnect(status)
 	log('Strophe is connecting.');
     } else if (status == Strophe.Status.CONNFAIL) {
 	log('Strophe failed to connect.');
+    } else if (status == Strophe.Status.AUTHFAIL) {
+    	log('Strophe authen failed to connect.');
+    	connection.disconnect();
 	$('#connect').get(0).value = 'connect';
     } else if (status == Strophe.Status.DISCONNECTING) {
 	log('Strophe is disconnecting.');
