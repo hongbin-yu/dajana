@@ -88,9 +88,11 @@ function onMessage(msg) {
     return true;
 }
 function onGetRoster(items) {
-    if (!items || items.length == 0)
-        return;
-    console.log(items);
+    if (!items || items.length == 0) {
+    	log("Roster items length = 0"); 
+    	return;
+    }
+    //console.log(items);
 }
 
 $(document).ready(function () {
