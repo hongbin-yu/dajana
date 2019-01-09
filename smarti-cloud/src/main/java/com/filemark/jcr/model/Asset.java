@@ -299,7 +299,7 @@ public class Asset implements SmartiNode, Serializable {
 	}	
 	
 	public boolean getText() {
-		if(contentType != null && (contentType.startsWith("text/") || contentType.startsWith("application/json"))) {
+		if(contentType != null && (contentType.startsWith("text/") || contentType.startsWith("application/json") || contentType.startsWith("application/javascript"))) {
 			return true;
 		}else {	
 			return false;
