@@ -92,7 +92,7 @@ function onGetRoster(items) {
     	log("Roster items length = 0"); 
     	return;
     }
-    //console.log(items);
+    log("Roster",items);
 }
 
 $(document).ready(function () {
