@@ -52,8 +52,9 @@ function onConnect(status)
 	$('#connect').get(0).value = 'connect';
     } else if (status == Strophe.Status.CONNECTED) {
 	log('Strophe is connected.');
-	connection.addHandler(onMessage, null, 'message', null, null,  null); 
-	connection.send($pres().tree());
+	   connection.roster.get(onGetRoster, 0);
+	   connection.addHandler(onMessage, null, 'message', null, null,  null); 
+	   connection.send($pres().tree());
 	//connection.disconnect();
     } else if (status == Strophe.Status.ATTACHED) {
          log('Strophe is attached.');
@@ -62,6 +63,7 @@ function onConnect(status)
          $(button).show();
      }
 }
+
 function onMessage(msg) {
     var to = msg.getAttribute('to');
     var from = msg.getAttribute('from');
@@ -84,6 +86,11 @@ function onMessage(msg) {
     // we must return true to keep the handler alive.  
     // returning false would remove it after it finishes.
     return true;
+}
+function onGetRoster(items) {
+    if (!items || items.length == 0)
+        return;
+    console.log(items);
 }
 
 $(document).ready(function () {
