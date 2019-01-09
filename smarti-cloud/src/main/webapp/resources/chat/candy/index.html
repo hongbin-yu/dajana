@@ -16,7 +16,7 @@
 			Candy.init('/http-bind/', {
 				core: {
 					// only set this to true if developing / debugging errors
-					debug: false,
+					debug: true,
 					// autojoin is a *required* parameter if you don't have a plugin (e.g. roomPanel) for it
 					//   true
 					//     -> fetch info from server (NOTE: does only work with openfire server)
@@ -24,6 +24,7 @@
 					//     -> array of rooms to join after connecting
 					autojoin: true
 				},
+				autojoin: {'Chatting'},
 				view: { assets: '../res/',
 					    language: 'cn' }
 			});
