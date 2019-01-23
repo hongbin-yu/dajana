@@ -1,6 +1,8 @@
 package com.filemark.sso.resources;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -14,7 +16,10 @@ import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -68,24 +73,53 @@ public class ProtectedFilter implements Filter {
   		
           } else {
             String authors[] = signingUser.split("/");
-
+			HttpSession session = httpServletRequest.getSession(true);
+			SecurityContext securityContext = (SecurityContext)session.getAttribute("SPRING_SECURITY_CONTEXT");
+			if(securityContext == null) securityContext = SecurityContextHolder.getContext();
           	if(domain.equals(authors[0])) {
-
-				User user = new User();
-				user.setHost(authors[0]);
-				user.setPort(authors[1]);
-				user.setUserName(authors[2]);
-				user.setTitle(authors[3]);
-				user.setSigningKey(authors[4]);	
-				httpServletRequest.setAttribute("usersite", authors[0]);
-				httpServletRequest.setAttribute("port", authors[1]);
-				httpServletRequest.setAttribute("username", authors[2]);
-				httpServletRequest.setAttribute("usertitle", authors[3]);
-				httpServletRequest.setAttribute("signingKey", authors[4]);	        	
+          		Authentication auth = securityContext.getAuthentication();
+       	
 	    	    //chain.doFilter(httpServletRequest, httpServletResponse);
-				logger.info("Create Cookie:"+domain);
-		        CookieUtil.create(httpServletResponse, JwtUtil.jwtTokenCookieName, JwtUtil.generateToken(JwtUtil.signingKey, signingUser), false, 86400*30, domain);
+		        if(auth == null || !auth.isAuthenticated()){
+					User user = new User();
+					user.setHost(authors[0]);
+					user.setPort(authors[1]);
+					user.setUserName(authors[2]);
+					user.setTitle(authors[3]);
+					user.setSigningKey(authors[4]);	
+					httpServletRequest.setAttribute("usersite", authors[0]);
+					httpServletRequest.setAttribute("port", authors[1]);
+					httpServletRequest.setAttribute("username", authors[2]);
+					httpServletRequest.setAttribute("usertitle", authors[3]);
+					httpServletRequest.setAttribute("signingKey", authors[4]);	 
+
+		        	Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+	
+					for(int i=4; i<authors.length; i++) {
+						authorities.add(new SimpleGrantedAuthority(this.getRolePrefix()+authors[i].toUpperCase()));
+						
+					}
+					authorities.add(new SimpleGrantedAuthority(this.getRolePrefix()+"USER"));//default role
+					
+					org.springframework.security.core.userdetails.User userdetails = new org.springframework.security.core.userdetails.User(user.getUserName(),"protected",true,true,true,true,authorities);
+					
+					auth = 
+					new UsernamePasswordAuthenticationToken(userdetails, null, authorities);
+
+					securityContext.setAuthentication(auth); 
+
+	    	        session.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);  
+	    			session.setAttribute("usersite", authors[0]);
+	    			session.setAttribute("port", authors[1]);    			
+	    			session.setAttribute("username", authors[2]);
+	    			session.setAttribute("usertitle", authors[3]);	 
+	    			session.setAttribute("signingKey", authors[4]);						
+		        	logger.info("Create Cookie:"+domain +" authenticated:"+auth.isAuthenticated());
+			        CookieUtil.create(httpServletResponse, JwtUtil.jwtTokenCookieName, JwtUtil.generateToken(JwtUtil.signingKey, signingUser), false, 86400*30, domain);
+			        CookieUtil.create(httpServletResponse, "JSESSIONID", session.getId(), true, -1, domain);
+		        }
           	}
+          	
         }
         chain.doFilter(httpServletRequest, httpServletResponse);
 
@@ -114,6 +148,9 @@ public class ProtectedFilter implements Filter {
 
 	}
 
-	
+	private String getRolePrefix() {
+		
+		return "ROLE_";
+	}      
 	
 }
