@@ -273,7 +273,7 @@ public class XMPPServiceImpl implements OtrEngineHost {
         System.out.println(message.getType()+"/"+message.getSubject()+"/ "+from+" say: " + message.getBody());
         //log.info(message.toString());
         try {
-            sendMessage(message.getBody(),from);
+            //sendMessage(message.getBody(),from);
 
         	switch(parseType(message.getBody())) {
 	        case 0:
@@ -356,7 +356,7 @@ public class XMPPServiceImpl implements OtrEngineHost {
 			String httpfileupload = importAsset(url,username.toString(),filepath);
 			log.info(httpfileupload);
 			html +="<li><a href=\""+httpfileupload+"\" title=\"\"><img src=\""+httpfileupload+"?w=4\" alt=\"\"></li>";
-			//sendMessage(httpfileupload,from);
+			sendMessage("https://"+filedomain+fileport+httpfileupload,from);
 		}
 		html +="</ul></section>";
 		String subject = message.getSubject();
@@ -447,7 +447,7 @@ public class XMPPServiceImpl implements OtrEngineHost {
 			String assetPath =  path+"/"+fileName;
 			if(jcrService.nodeExsits(path+"/"+fileName)) {
 				asset = (Asset)jcrService.getObject(path+"/"+fileName);
-				return "http://"+filedomain+fileport+"/protected/httpfileupload/"+asset.getUid()+"/"+fileName;
+				return "/protected/httpfileupload/"+asset.getUid()+"/"+fileName;
 			}else {
 				assetPath = jcrService.getUniquePath(path, fileName);
 			}
@@ -505,7 +505,7 @@ public class XMPPServiceImpl implements OtrEngineHost {
 
 		}
 		
-		return "http://"+filedomain+fileport+"/protected/httpfileupload/"+asset.getUid()+"/"+fileName;
+		return "/protected/httpfileupload/"+asset.getUid()+"/"+fileName;
 	}
 	
 	private void processCommand(EntityBareJid from, Message message, Chat chat) {
