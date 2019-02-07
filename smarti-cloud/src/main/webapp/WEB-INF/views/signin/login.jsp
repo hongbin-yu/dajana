@@ -64,24 +64,24 @@
 
 <!-- 			</summary> -->
 			<div class="btn-group btn-group-justified">
-			<a class="btn btn-default security" id='A0'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/mouse.png"></c:url>'/></a>
-			<a class="btn btn-default security" id='A1'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/cow.png"></c:url>'/></a>
-			<a class="btn btn-default security" id='A2'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/tiger.png"></c:url>'/></a>
+			<a class="btn btn-default security" id='鼠'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/mouse.png"></c:url>'/></a>
+			<a class="btn btn-default security" id='牛'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/cow.png"></c:url>'/></a>
+			<a class="btn btn-default security" id='虎'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/tiger.png"></c:url>'/></a>
 			</div>
 			<div class="btn-group btn-group-justified">
-			<a class="btn btn-default security" id='B0'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/rabit.png"></c:url>'/></a>
-			<a class="btn btn-default security" id='B1'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/dragan.png"></c:url>'/></a>
-			<a class="btn btn-default security" id='B2'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/snake.png"></c:url>'/></a>
+			<a class="btn btn-default security" id='兔'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/rabit.png"></c:url>'/></a>
+			<a class="btn btn-default security" id='龙'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/dragan.png"></c:url>'/></a>
+			<a class="btn btn-default security" id='蛇'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/snake.png"></c:url>'/></a>
 			</div>
 			<div class="btn-group btn-group-justified">
-			<a class="btn btn-default security" id='C0'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/horse.png"></c:url>'/></a>
-			<a class="btn btn-default security" id='C1'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/sheep.png"></c:url>'/></a>
-			<a class="btn btn-default security" id='C2'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/monkey.png"></c:url>'/></a>
+			<a class="btn btn-default security" id='马'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/horse.png"></c:url>'/></a>
+			<a class="btn btn-default security" id='羊'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/sheep.png"></c:url>'/></a>
+			<a class="btn btn-default security" id='猴'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/monkey.png"></c:url>'/></a>
 			</div>
 			<div class="btn-group btn-group-justified">
-			<a class="btn btn-default security" id='D0'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/chiken.png"></c:url>'/></a>
-			<a class="btn btn-default security" id='D1'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/dog.png"></c:url>'/></a>
-			<a class="btn btn-default security" id='D2'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/pig.png"></c:url>'/></a>
+			<a class="btn btn-default security" id='鸡'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/chiken.png"></c:url>'/></a>
+			<a class="btn btn-default security" id='狗'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/dog.png"></c:url>'/></a>
+			<a class="btn btn-default security" id='猪'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/pig.png"></c:url>'/></a>
 			</div>
 			<div class="checkbox-inline"><label><input type ="checkbox" name="reme" value="true" checked><spring:message code="djn.remember_password"/></label></div> 
 			<a class="pull-right" href="/forget"><spring:message code="djn.forget_password"/></a>	

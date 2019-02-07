@@ -38,7 +38,8 @@ import com.filemark.utils.ImageUtil;
 @Controller
 public class LoginController extends BaseController {
 	private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
-	
+	private static String ids[] = {"鼠","牛","虎","兔","龙","蛇","马","羊","猴","鸡","狗","猪"};
+
     public LoginController() {
     }
 
@@ -242,7 +243,7 @@ public class LoginController extends BaseController {
     @RequestMapping(value="/signup",method = RequestMethod.GET)
     public String signup(String host,Model model,HttpServletResponse httpServletResponse){
     	String imgs[] = {"shu","niu","fu","tu","long","she","ma","yang","hou","ji","gou","zhu"};
-    	String ids[] = {"A0","A1","A2","B0","B1","B2","C0","C1","C2","D0","D1","D2"};
+    	//String ids[] = {"鼠","牛","虎","兔","龙","蛇","马","羊","猴","鸡","狗","猪"};
     	Page page = new Page();
     	page.setTitle("\u6CE8\u518C ");
     	
@@ -298,7 +299,7 @@ public class LoginController extends BaseController {
     	}
 
     	String imgs[] = {"shu","niu","fu","tu","long","she","ma","yang","hou","ji","gou","zhu"};
-    	String ids[] = {"A0","A1","A2","B0","B1","B2","C0","C1","C2","D0","D1","D2"};
+    	//String ids[] = {"A0","A1","A2","B0","B1","B2","C0","C1","C2","D0","D1","D2"};
     	Page page = new Page();
     	//page.setTitle("&#27880;&#20876;");
     	page.setTitle(messageSource.getMessage("djn.signup", null,"\u6CE8\u518C", localeResolver.resolveLocale(request)));

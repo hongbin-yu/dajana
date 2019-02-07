@@ -60,6 +60,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -89,6 +90,7 @@ import com.lowagie.text.pdf.PdfReader;
 @Controller
 public class SiteController extends BaseController {
 	private static final Logger logger = LoggerFactory.getLogger(SiteController.class);
+	private static String ids[] = {"鼠","牛","虎","兔","龙","蛇","马","羊","猴","鸡","狗","猪"};
 	
 	@Inject
 	protected AssetManager assetManager;
@@ -2344,7 +2346,7 @@ public class SiteController extends BaseController {
 		File f = new File(jcrService.getBackup());
 		model.addAttribute("usage",""+f.getUsableSpace()/1000000+"MB/"+f.getTotalSpace()/1000000+"MB");
     	String imgs[] = {"shu","niu","fu","tu","long","she","ma","yang","hou","ji","gou","zhu"};
-    	String ids[] = {"A0","A1","A2","B0","B1","B2","C0","C1","C2","D0","D1","D2"};
+    	//String ids[] = {"A0","A1","A2","B0","B1","B2","C0","C1","C2","D0","D1","D2"};
     	Page page = new Page();
     	//page.setTitle("&#27880;&#20876;");
     	page.setTitle(messageSource.getMessage("djn.signup", null,"\u6CE8\u518C", localeResolver.resolveLocale(request)));
@@ -3102,6 +3104,133 @@ public class SiteController extends BaseController {
 		
 		
 	} 
+
+	@RequestMapping(value = {"/protected/httpfileupload/{uid}/*.*","/site/httpfileupload/{uid}/*.*"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
+	public @ResponseBody String httpfileupload(@PathVariable String uid,String path,Integer w,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
+		Integer width = null;
+		if(w !=null && w <= 12) {
+			width = w*100;
+			if(width==0)
+				width = 48;
+		}
+		try {
+			path = jcrService.getNodeById(uid);
+			Asset asset = (Asset)jcrService.getObject(path);
+			String devicePath = jcrService.getDevice();
+			File outFile = new File(devicePath+path);
+			if(!outFile.exists()) {
+				devicePath = jcrService.getBackup();
+				outFile = new File(devicePath+path);
+			}
+			if(outFile.exists() && outFile.isFile()) {
+		        long lastModified = outFile.lastModified();
+		        long ifModifiedSince = request.getDateHeader("If-Modified-Since");
+		        logger.debug("ifModifiedSince="+ifModifiedSince+"/"+lastModified);
+		        if (ifModifiedSince != -1 && ifModifiedSince + 1000 <= lastModified) {
+					FileInputStream in = new FileInputStream(outFile);
+					IOUtils.copy(in, response.getOutputStream());	
+					in.close();	
+					return null;
+		        }				
+				logger.debug("path is file output:"+outFile.getAbsolutePath());
+				super.serveResource(request, response, outFile, asset.getName(),null);
+				return null;					
+			}
+			String ext = asset.getExt();
+			if(ext==null && path.lastIndexOf(".")>0) ext = path.substring(path.lastIndexOf("."));
+			outFile = new File(devicePath+path+(width==null?"/origin"+ext:"/x"+width+".jpg"));
+			if(outFile.exists() && outFile.isFile()) {
+				logger.debug("output:"+outFile.getAbsolutePath());
+				super.serveResource(request, response, outFile,asset.getName(), null);
+				return null;					
+			}
+
+			if(path !=null  && jcrService.nodeExsits(path)) {
+
+				ext = asset.getExt();
+
+				if(asset.getDevice()!=null) {
+					Device device = (Device)jcrService.getObject(asset.getDevice());
+					File file = new File(device.getLocation()+asset.getPath()+"/origin"+ext);
+					if(file.exists() && asset.getWidth() == null && asset.getContentType().startsWith("image/")) {
+						jcrService.autoRoateImage(path);
+					}
+					if(width!=null && file.exists()) {
+						String iconfile = device.getLocation()+asset.getPath()+"/x"+width+".jpg";
+						File icon = new File(iconfile);
+						
+						if(!icon.exists()) {
+							jcrService.createIcon(path, width,width);
+						}
+						if(icon.exists())
+							file = icon;
+
+					}
+					if(file.exists()) {
+						//file.setReadOnly();
+						super.serveResource(request, response, file,asset.getName(), null);
+					}else  if(jcrService.nodeExsits(path+"/original")) {
+						response.setContentType(asset.getContentType());
+						if(asset.getSize()!=null)
+							response.setContentLength(asset.getSize().intValue());
+						if(asset.getOriginalDate()!=null)
+							response.setDateHeader("Last-Modified", asset.getOriginalDate().getTime());
+						
+						file = new File(getDevice().getLocation()+asset.getPath());
+						file.getParentFile().mkdirs();
+						OutputStream out = new FileOutputStream(file);
+						jcrService.readAsset(path+"/original",  out);
+						asset.setDevice(getDevice().getPath());
+						jcrService.addOrUpdate(asset);
+						
+						out.close();
+						super.serveResource(request, response, file,asset.getName(), null);
+						//jcrService.readAsset(path+"/original",  response.getOutputStream());
+
+						return null;
+						
+					}
+
+					return null;
+				}else  if(jcrService.nodeExsits(path+"/original")) {
+					response.setContentType(asset.getContentType());
+					if(asset.getSize()!=null)
+						response.setContentLength(asset.getSize().intValue());
+					if(asset.getOriginalDate()!=null)
+						response.setDateHeader("Last-Modified", asset.getOriginalDate().getTime());
+					
+					File file = new File(getDevice().getLocation()+asset.getPath());
+					file.getParentFile().mkdirs();
+					OutputStream out = new FileOutputStream(file);
+					jcrService.readAsset(path+"/original",  out);
+					asset.setDevice(getDevice().getPath());
+					jcrService.addOrUpdate(asset);
+					
+					out.close();
+					//file.setReadOnly();
+					super.serveResource(request, response, file,asset.getName(), null);
+					//jcrService.readAsset(path+"/original",  response.getOutputStream());
+
+					return null;
+				}else {
+
+					return path +" original file not found";
+				}
+			}else {
+
+				return path +" file not found";		
+			}
+
+		}catch(Exception e) {
+			//logger.error("viewFile:"+e.getMessage()+",path="+path);
+			
+			return e.getMessage();
+		}
+		
+		
+	} 
+	
+	
 	@RequestMapping(value = {"/protected/download/*.*","/site/download/*.*","/protected/download/**","/site/download/**"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public @ResponseBody String downloadFile(String uid,String path,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
 

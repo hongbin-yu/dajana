@@ -83,13 +83,7 @@
 </div>
 </div>
 </main>
-<script>
-    var splashImagePaths = "${splashImagePaths}".split(",");
-    var numImages = ${numImages};
-    var selectedImageIndex = 1;
-    document.getElementById("splash-image").src = splashImagePaths[Math.floor((Math.random() * numImages))]+"/origin.jpg";
 
-</script>
         
 
 <!--[if gte IE 9 | !IE ]><!-->
@@ -106,6 +100,48 @@
 
 <script src='<c:url value="/resources/wet-boew/js/theme.min.js"></c:url>'></script>
     </body>
+<script>
+    var splashImagePaths = "${splashImagePaths}".split(",");
+    var numImages = ${numImages};
+    var selectedImageIndex = 1;
+    document.getElementById("splash-image").src = splashImagePaths[Math.floor((Math.random() * numImages))]+"/origin.jpg";
+	$(document).ready(function() {
+		if(location.hostname.indexOf("home.dajana.ca")<0 && location.hostname.indexOf(".dajana.ca")>0);
+		$.ajax({
+	          url: 'http://home.dajana.ca',
+	          success: function(result){
+	             location.href=location.url.replace("dajana.ca","home.dajana.ca");
+	          },     
+	          error: function(result){
+	              //alert('timeout/error');
+	          },
+	          timeout: 3000
+	       });
+		}); 
+	
+	function Pinger_ping(ip, callback) {
+
+		  if(!this.inUse) {
+
+		    this.inUse = true;
+		    this.callback = callback
+		    this.ip = ip;
+
+		    var _that = this;
+
+		    this.img = new Image();
+
+		    this.img.onload = function() {_that.good();};
+		    this.img.onerror = function() {_that.good();};
+
+		    this.start = new Date().getTime();
+		    this.img.src = "http://" + ip;
+		    this.timer = setTimeout(function() { _that.bad();}, 1500);
+
+		  }
+		}
+			
+</script>    
 </html>
 
 
