@@ -60,8 +60,8 @@ import org.jivesoftware.smackx.ping.PingManager;
 import org.jxmpp.jid.EntityBareJid;
 import org.jxmpp.jid.impl.JidCreate;
 import org.jxmpp.stringprep.XmppStringprepException;
-import org.pegdown.Extensions;
-import org.pegdown.PegDownProcessor;
+//import org.pegdown.Extensions;
+//import org.pegdown.PegDownProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,8 +98,9 @@ public class XMPPServiceImpl implements OtrEngineHost {
 	private OtrCryptoEngine otrEngine;
 	
 	//private PingFailedListener pingFailedListener ;
-	private static final PegDownProcessor pegDownProcessor = new PegDownProcessor(
+	/*private static final PegDownProcessor pegDownProcessor = new PegDownProcessor(
 			Extensions.ALL | Extensions.SUPPRESS_ALL_HTML, 5000);
+			*/
 	//private IncomingChatMessageListener incomingChatMessageListener;
 	public void initialize() {
 		System.gc();
@@ -514,13 +515,13 @@ public class XMPPServiceImpl implements OtrEngineHost {
 	private void processSearch(EntityBareJid from, Message message, Chat chat) throws NotConnectedException, XmppStringprepException, XMPPException, InterruptedException {
 
 
-		String html = pegDownProcessor.markdownToHtml(message.getBody());
+		String html = message.getBody(); //pegDownProcessor.markdownToHtml(message.getBody());
 		sendMessage(html,from);
 	}
 
 	private void processChat(EntityBareJid from, Message message, Chat chat) throws NotConnectedException, XmppStringprepException, XMPPException, InterruptedException, RepositoryException {
 		String username = from.toString().split("@")[0];
-		String html = pegDownProcessor.markdownToHtml(message.getBody());
+		String html = message.getBody(); //pegDownProcessor.markdownToHtml(message.getBody());
 		String subject = message.getSubject();
 		if(subject == null) subject = username;
 		
