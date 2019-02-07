@@ -77,8 +77,8 @@ public class XMPPServiceImpl implements OtrEngineHost {
 
 	private final Logger log = LoggerFactory.getLogger(XMPPServiceImpl.class);
 	private static String host = "host ip";
-	private static String filedomain = "localhost";	
-	private static String fileport = ":8888";		
+	private static String filedomain = "tu.dajana.ca";	
+	private static String fileport = "";		
 	private static String domain = "dajana.ca";
 	private static int port = 5222;
 	@Autowired
