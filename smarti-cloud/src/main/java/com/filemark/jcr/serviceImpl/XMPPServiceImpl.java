@@ -372,7 +372,7 @@ public class XMPPServiceImpl {
 			if(contentType==null || "".equals(contentType))
 				contentType = new MimetypesFileTypeMap().getContentType(nodeName);
 			log.debug("nodeName="+nodeName);
-	    	asset.setTitle(fileName);	
+	    	asset.setTitle(nodeName);	
 	    	asset.setName(nodeName);
 			asset.setCreatedBy(username);
 			asset.setPath(assetPath);
