@@ -106,7 +106,7 @@
     var selectedImageIndex = 1;
     document.getElementById("splash-image").src = splashImagePaths[Math.floor((Math.random() * numImages))]+"/origin.jpg";
 	$(document).ready(function() {
-		if(location.hostname.indexOf("home.dajana.ca")<0 && location.hostname.indexOf(".dajana.ca")>0);
+		if(location.hostname.indexOf("home.dajana.ca")<0 && location.hostname.indexOf(".dajana.ca")>0)
 		$.ajax({
 	          url: '//home.dajana.ca',
 	          success: function(result){
