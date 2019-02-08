@@ -359,7 +359,7 @@ public class XMPPServiceImpl {
 			fileName = nodeName;
 			fileName = nodeName.replaceAll(" ", "-");
 			if(!fileName.matches("(\\w|\\.|\\-|\\s|_)+")) {
-				fileName = ""+getDateTime()+"."+ext;
+				fileName = ""+getDateTime()+ext;
 			}
 			if(!fileName.endsWith(ext)) fileName +=ext;
 			String assetPath =  path+"/"+fileName;
