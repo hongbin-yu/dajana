@@ -299,7 +299,7 @@ public class XMPPServiceImpl {
 			if(!jcrService.nodeExsits(path)) {
 				jcrService.addNodes(path, "nt:unstructured",username);		
 			}			
-	        URL url_img = new URL(URLEncoder.encode(url,"utf-8"));
+	        URL url_img = new URL(url.replace(" ", "+"));
 	    	HttpsURLConnection conn = (HttpsURLConnection) url_img.openConnection();
 	    	conn.setReadTimeout(30000);
 	    	conn.addRequestProperty("Accept-Language", "en-US,en;q=0.8");
