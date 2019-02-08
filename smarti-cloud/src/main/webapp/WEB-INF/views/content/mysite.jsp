@@ -110,7 +110,7 @@
 		$.ajax({
 	          url: '//home.dajana.ca',
 	          success: function(result){
-	             location.href=location.url.replace("dajana.ca","home.dajana.ca");
+	             location.href=location.origin.replace("dajana.ca","home.dajana.ca");
 	          },     
 	          error: function(result){
 	              //alert('timeout/error');
