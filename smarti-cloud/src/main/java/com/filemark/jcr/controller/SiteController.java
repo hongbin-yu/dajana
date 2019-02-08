@@ -1224,7 +1224,8 @@ public class SiteController extends BaseController {
 				}
 			}
 			String icon = asset.getIcon();// w!=null && w==1?asset.getIconSmall():asset.getIcon();
-			String title ="<input type=\"checkbox\" name=\"puid\" value=\""+asset.getUid()+"\"><a href=\""+asset.getLink()+"\" target=\"_blank\" title=\"打开原图\">"+(asset.getTitle().length()>25?asset.getTitle().substring(0, 25)+"...":asset.getTitle())+"</a>";
+			int length = asset.getTitle().length();
+			String title ="<input type=\"checkbox\" name=\"puid\" value=\""+asset.getUid()+"\"><a href=\""+asset.getLink()+"\" target=\"_blank\" title=\"打开原图\">"+(length>25?asset.getTitle().substring(0, 10)+"..."+asset.getTitle().substring(length-15, length):asset.getTitle())+"</a>";
 						//+"<a class=\"download btn-default btn-xs pull-right\" href=\"download/"+asset.getName()+"?path="+asset.getPath()+"\" download=\""+asset.getName()+"\" title=\""+asset.getTitle()+"\" target=\"_blank\"><span class=\"glyphicon glyphicon-download pull-right\">下载</span></a>"
 						//+"<a href=\"javascript:openImage(\'"+asset.getLink()+(asset.getWidth() != null && asset.getWidth() >1200?"&w=12":"")+"')\"><img alt=\"\" class=\"img-responsive img-rounded mrgn-rght-md"+(asset.getContentType().endsWith("pdf") && w==4?" col-md-6":"")+"\" src=\""+icon+"\">";
 			a2news.setUrl("<a href=\"javascript:openImage(\'"+asset.getLink()+(asset.getWidth() != null && asset.getWidth() >1200?"&w=12":"")+"')\"><img alt=\"\" class=\"img-responsive img-rounded mrgn-rght-md"+(asset.getContentType().endsWith("pdf") && w==4?" col-md-6":"")+"\" src=\""+icon+"\">");
@@ -1267,9 +1268,9 @@ public class SiteController extends BaseController {
 			a2news.setTitle(title);
 			a2news.setDescription(asset.getDescription()==null?"":asset.getDescription());
 			if(asset.getOriginalDate()!=null)
-				a2news.setLastPublished(sf.format(asset.getOriginalDate())+"<a class=\"download btn-default btn-xs pull-right\" href=\"download/"+asset.getName()+"?path="+asset.getPath()+"\" download=\""+asset.getName()+"\" title=\""+asset.getTitle()+"\" target=\"_blank\"><span class=\"glyphicon glyphicon-download pull-right\">下载</span></a>");
+				a2news.setLastPublished(sf.format(asset.getOriginalDate())+"<a class=\"download btn-default btn-xs pull-right\" href=\"download/"+asset.getUid()+"/"+asset.getName()+"\" download=\""+asset.getName()+"\" title=\""+asset.getTitle()+"\" target=\"_blank\"><span class=\"glyphicon glyphicon-download pull-right\">下载</span></a>");
 			if(asset.getLastModified()!=null)
-				a2news.setLastModified(sf.format(asset.getLastModified())+"<a class=\"download btn-default btn-xs pull-right\" href=\"download/"+asset.getName()+"?path="+asset.getPath()+"\" download=\""+asset.getName()+"\" title=\""+asset.getTitle()+"\" target=\"_blank\"><span class=\"glyphicon glyphicon-download pull-right\">下载</span></a>");			
+				a2news.setLastModified(sf.format(asset.getLastModified())+"<a class=\"download btn-default btn-xs pull-right\" href=\"download/"+asset.getUid()+"/"+asset.getName()+"\" download=\""+asset.getName()+"\" title=\""+asset.getTitle()+"\" target=\"_blank\"><span class=\"glyphicon glyphicon-download pull-right\">下载</span></a>");			
 			a2news.setSubjects(folder.getTitle());
 			if(asset.getPosition()!=null && !"".equals(asset.getPosition()))
 				a2news.setLocation("<a href=\"https://www.google.com/maps?q="+asset.getPosition()+"\" target=\"_blank\">拍摄地址</a>");
@@ -3105,7 +3106,141 @@ public class SiteController extends BaseController {
 		
 	} 
 
-	@RequestMapping(value = {"/protected/httpfileupload/{uid}/*.*","/site/httpfileupload/{uid}/*.*"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
+	@RequestMapping(value = {"/protected/youcloud/{uid}/**","/site/youcloud/{uid}/**"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
+	public @ResponseBody String file(@PathVariable String uid,String path,Integer w,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
+
+		Integer width = null;
+		if(w !=null && w <= 12) {
+			width = w*100;
+			if(width==0)
+				width = 48;
+		}
+		try {
+			if(uid!=null && (path==null || "".equals(path)))
+				path = jcrService.getNodeById(uid);
+			Asset asset = (Asset)jcrService.getObject(path);
+			String devicePath = jcrService.getDevice();
+			File outFile = new File(devicePath+path);
+			if(!outFile.exists()) {
+				devicePath = jcrService.getBackup();
+				outFile = new File(devicePath+path);
+			}
+			if(outFile.exists() && outFile.isFile()) {
+		        long lastModified = outFile.lastModified();
+		        long ifModifiedSince = request.getDateHeader("If-Modified-Since");
+		        logger.debug("ifModifiedSince="+ifModifiedSince+"/"+lastModified);
+		        if (ifModifiedSince != -1 && ifModifiedSince + 1000 <= lastModified) {
+					FileInputStream in = new FileInputStream(outFile);
+					IOUtils.copy(in, response.getOutputStream());	
+					in.close();	
+					return null;
+		        }				
+				logger.debug("path is file output:"+outFile.getAbsolutePath());
+				super.serveResource(request, response, outFile, asset.getName(),null);
+				return null;					
+			}
+			String ext = asset.getExt();
+			if(ext==null && path.lastIndexOf(".")>0) ext = path.substring(path.lastIndexOf("."));
+			outFile = new File(devicePath+path+(width==null?"/origin"+ext:"/x"+width+".jpg"));
+			if(outFile.exists() && outFile.isFile()) {
+				logger.debug("output:"+outFile.getAbsolutePath());
+				super.serveResource(request, response, outFile,asset.getName(), null);
+				return null;					
+			}
+
+			if(path !=null  && jcrService.nodeExsits(path)) {
+
+				ext = asset.getExt();
+/*				if(width!=null && jcrService.nodeExsits(path+"/file-"+width)) {
+					response.setContentType(asset.getContentType());
+					jcrService.readAsset(path+"/file-"+width, response.getOutputStream());
+				}else */
+				if(asset.getDevice()!=null) {
+					Device device = (Device)jcrService.getObject(asset.getDevice());
+					File file = new File(device.getLocation()+asset.getPath()+"/origin"+ext);
+					if(file.exists() && asset.getWidth() == null && asset.getContentType().startsWith("image/")) {
+						jcrService.autoRoateImage(path);
+					}
+					if(width!=null && file.exists()) {
+						String iconfile = device.getLocation()+asset.getPath()+"/x"+width+".jpg";
+						File icon = new File(iconfile);
+						
+						if(!icon.exists()) {
+							jcrService.createIcon(path, width,width);
+						}
+						if(icon.exists())
+							file = icon;
+
+					}
+					if(file.exists()) {
+						//file.setReadOnly();
+						super.serveResource(request, response, file,asset.getName(), null);
+					}else  if(jcrService.nodeExsits(path+"/original")) {
+						response.setContentType(asset.getContentType());
+						if(asset.getSize()!=null)
+							response.setContentLength(asset.getSize().intValue());
+						if(asset.getOriginalDate()!=null)
+							response.setDateHeader("Last-Modified", asset.getOriginalDate().getTime());
+						
+						file = new File(getDevice().getLocation()+asset.getPath());
+						file.getParentFile().mkdirs();
+						OutputStream out = new FileOutputStream(file);
+						jcrService.readAsset(path+"/original",  out);
+						asset.setDevice(getDevice().getPath());
+						jcrService.addOrUpdate(asset);
+						
+						out.close();
+						super.serveResource(request, response, file,asset.getName(), null);
+						//jcrService.readAsset(path+"/original",  response.getOutputStream());
+
+						return null;
+						
+					}
+/*					FileInputStream in = new FileInputStream(file);
+					response.setContentType(asset.getContentType());
+					IOUtils.copy(in, response.getOutputStream());
+					in.close();*/
+
+					return null;
+				}else  if(jcrService.nodeExsits(path+"/original")) {
+					response.setContentType(asset.getContentType());
+					if(asset.getSize()!=null)
+						response.setContentLength(asset.getSize().intValue());
+					if(asset.getOriginalDate()!=null)
+						response.setDateHeader("Last-Modified", asset.getOriginalDate().getTime());
+					
+					File file = new File(getDevice().getLocation()+asset.getPath());
+					file.getParentFile().mkdirs();
+					OutputStream out = new FileOutputStream(file);
+					jcrService.readAsset(path+"/original",  out);
+					asset.setDevice(getDevice().getPath());
+					jcrService.addOrUpdate(asset);
+					
+					out.close();
+					//file.setReadOnly();
+					super.serveResource(request, response, file,asset.getName(), null);
+					//jcrService.readAsset(path+"/original",  response.getOutputStream());
+
+					return null;
+				}else {
+
+					return path +" original file not found";
+				}
+			}else {
+
+				return path +" file not found";		
+			}
+
+		}catch(Exception e) {
+			logger.error("viewFile:"+e.getMessage()+",path="+path);
+
+			return e.getMessage();
+		}
+		
+		
+	} 
+	
+	@RequestMapping(value = {"/protected/httpfileupload/{uid}/*.*","/site/httpfileupload/{uid}/*.*","/site/file/{uid}/*.*"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public @ResponseBody String httpfileupload(@PathVariable String uid,String path,Integer w,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
 		Integer width = null;
 		if(w !=null && w <= 12) {
@@ -3231,8 +3366,8 @@ public class SiteController extends BaseController {
 	} 
 	
 	
-	@RequestMapping(value = {"/protected/download/*.*","/site/download/*.*","/protected/download/**","/site/download/**"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
-	public @ResponseBody String downloadFile(String uid,String path,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
+	@RequestMapping(value = {"/protected/download/{uid}/**","/site/download/{uid}/**"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
+	public @ResponseBody String downloadFile(@PathVariable String uid,String path,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
 
 
 		try {
@@ -3241,14 +3376,18 @@ public class SiteController extends BaseController {
 			if(path !=null  && jcrService.nodeExsits(path)) {			
 				Asset asset = (Asset)jcrService.getObject(path);
 				String ext = asset.getExt();
-
+				if(ext == null) {
+        			ext = asset.getName().substring(asset.getName().lastIndexOf("."), asset.getName().length());
+				}
 				if(asset.getDevice()!=null) {
 					Device device = (Device)jcrService.getObject(asset.getDevice());
 					File file = new File(device.getLocation()+asset.getPath()+"/origin"+ext);
 					if(file.exists()) {
 						response.setContentType(asset.getContentType());
 						if(asset.getSize()!=null)
-							response.setContentLength((int)file.length());
+							response.setContentLength(asset.getSize().intValue());
+						else 
+							response.setContentLength((new Long(file.length()).intValue()));
 						if(asset.getOriginalDate()!=null)
 							response.setDateHeader("Last-Modified", asset.getOriginalDate().getTime());
 						String fileName = asset.getName();
@@ -3256,6 +3395,7 @@ public class SiteController extends BaseController {
 						
 						FileInputStream in = new FileInputStream(file);
 						IOUtils.copy(in, response.getOutputStream());	
+						response.flushBuffer();
 						in.close();	
 						return null;
 					}else {
@@ -3465,7 +3605,22 @@ public class SiteController extends BaseController {
 		
 		return null;
 		
-	} 	
+	} 
+	@RequestMapping(value = {"/site/pdf/{uid}/*.*","/protected/pdf/{uid}/*.*"}, method = {RequestMethod.GET})
+	public @ResponseBody String pdf(@PathVariable String uid,HttpServletRequest request, HttpServletResponse response) throws IOException, RepositoryException {
+		List<Asset> assets = new ArrayList<Asset>();
+		ImageUtil.HDDOn();
+		try {
+			assets.add(jcrService.getAssetById(uid));
+			jcrService.assets2pdf(assets, response.getOutputStream());			
+		}catch(Exception e) {
+			logger.error("pdf:"+e.getMessage());
+			ImageUtil.HDDOff();
+			return "Error:"+e.getMessage();
+		}
+		ImageUtil.HDDOff();
+		return null;
+	}	
 	@RequestMapping(value = {"/viewpdf*.pdf","/site/viewpdf*","/site/viewpdf.pdf","/content/viewpdf","/content/**/viewpdf"}, method = {RequestMethod.GET})
 	public @ResponseBody String viewPdf(String uid[],HttpServletRequest request, HttpServletResponse response) throws IOException, RepositoryException {
 		List<Asset> assets = new ArrayList<Asset>();

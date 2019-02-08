@@ -294,7 +294,8 @@ public class XMPPServiceImpl {
 	
 	private String importAsset(String url, String username, String path) {
 		Asset asset= new Asset();
-		String fileName = "404.html";
+		String fileName = "error404.html";
+		String nodeName = url.substring(url.lastIndexOf("/")+1, url.length());
 		try {
 			if(!jcrService.nodeExsits(path)) {
 				jcrService.addNodes(path, "nt:unstructured",username);		
@@ -351,10 +352,10 @@ public class XMPPServiceImpl {
 			} catch (MimeTypeException e1) {
 				log.error(e1.getMessage());
 			}
-			String urlPath = url_img.getPath();
+			String urlPath = url;
 			if(ext==null || "".equals(ext))
 				ext = urlPath.replaceFirst("^.*/[^/]*(\\.[^\\./]*|)$", "$1");
-			String nodeName = urlPath.substring(urlPath.lastIndexOf("/")+1, urlPath.length());
+
 
 			fileName = nodeName;
 			fileName = nodeName.replaceAll(" ", "-");
@@ -378,7 +379,9 @@ public class XMPPServiceImpl {
 			asset.setPath(assetPath);
 			asset.setLastModified(new Date());
 			asset.setContentType(contentType);
-			asset.setDevice(devicePath);		    
+			asset.setDevice(devicePath);	
+			asset.setExt(ext);
+
 			if(asset.getDevice()!=null) {
 				Device device = (Device)jcrService.getObject(asset.getDevice());
 				log.debug("Writing device "+device.getPath() +":"+device.getLocation());
@@ -423,7 +426,7 @@ public class XMPPServiceImpl {
 
 		}
 		
-		return "/protected/httpfileupload/"+asset.getUid()+"/"+fileName;
+		return "/protected/httpfileupload/"+asset.getUid()+"/"+nodeName;
 	}
 	
 	private void processCommand(EntityBareJid from, Message message, Chat chat) {

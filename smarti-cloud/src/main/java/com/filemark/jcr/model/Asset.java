@@ -313,7 +313,7 @@ public class Asset implements SmartiNode, Serializable {
 		}else if(contentType.startsWith("video/")) {
 			return "/video.mp4?path="+path;
 		}else{
-			return "file/"+getName()+"?path="+path;
+			return "youcloud/"+getUid()+"/"+getTitle()+(getTitle() == null || getExt()==null || getTitle().endsWith(getExt())?"":getExt());//+"?path="+path;
 		}
 	}
 

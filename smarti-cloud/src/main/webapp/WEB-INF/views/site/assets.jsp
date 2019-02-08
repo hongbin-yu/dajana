@@ -145,10 +145,10 @@
 	<c:forEach items="${assets.items }" var="item" varStatus="loop">
 	<div id="${item.uid}" class="col-md-6 col-lg-4  well">
 	<div class="checkbox"><input type="checkbox" class="checkbox" name="puid" value="${item.uid }">
-	<a class="download pull-right" href="download/${item.name}?path=${item.path}" download="${item.name}" target="_blank"><span class="glyphicon glyphicon-download pull-right">下载</span></a>
+	<a class="download pull-right" href="download/${item.uid}/${item.name}" download="${item.name}" target="_blank" title="${item.title}"><span class="glyphicon glyphicon-download pull-right">下载</span></a>
 	</div>	
 		<c:if test="${item.pdf}">
-		<a title="<spring:message code="djn.open"/>PDF" href="viewpdf.pdf?uid=${item.uid}" target="_BLANK"><span class="glyphicon glyphicon-open"></span> <spring:message code="djn.open"/>PDF</a>
+		<a title="<spring:message code="djn.open"/>PDF" href="pdf/${item.uid}/${item.name}" title="${item.title}" target="_BLANK"><span class="glyphicon glyphicon-open"></span> <spring:message code="djn.open"/>PDF</a>
 		</c:if>
         <c:if test="${item.text}">
 			<a  class="wb-lbx" title="<spring:message code="djn.edit"/>" href="<c:url value="texteditor.html?uid=${item.uid}"/>"><span class="glyphicon glyphicon-pencil"></span><spring:message code="djn.onlineEdit"/></a>
@@ -183,13 +183,13 @@
 		<c:if test="${!item.mp4 && !item.doc2pdf && !item.audio}">
 				<c:if test="${item.contentType=='application/pdf'}">
 				<p>&nbsp;</p>
-				    <a href="<c:url value='${item.link}'></c:url>">
-						<img id="img${item.uid}" src="<c:url value='${item.icon }'></c:url>" class="img-responsive" draggable="true"/>
+				    <a href="<c:url value='${item.link}'></c:url>" title="${item.title}">
+						<img id="img${item.uid}" src="<c:url value='${item.icon }'></c:url>" class="img-responsive" draggable="true" alt="${item.title}"/>
 					</a>
 				</c:if>	
 				<c:if test="${item.contentType!='application/pdf'}">
 				    <a href="javascript:openImage('<c:url value='${item.link}'></c:url>')">
-						<img id="img${item.uid}" src="<c:url value='${item.icon }'></c:url>" class="img-responsive loading" draggable="true"/>
+						<img id="img${item.uid}" src="<c:url value='${item.icon }'></c:url>" class="img-responsive loading" draggable="true" alt="${item.title}"/>
 					</a><%-- <img id="loadimg${item.uid}" src="/resources/images/ui-anim_basic_16x16.gif"> --%>
 				</c:if>	
 		</c:if>
