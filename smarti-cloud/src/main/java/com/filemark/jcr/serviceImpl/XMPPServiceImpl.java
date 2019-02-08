@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -298,7 +299,7 @@ public class XMPPServiceImpl {
 			if(!jcrService.nodeExsits(path)) {
 				jcrService.addNodes(path, "nt:unstructured",username);		
 			}			
-	        URL url_img = new URL(URLDecoder.decode(url,"utf-8"));
+	        URL url_img = new URL(URLEncoder.encode(url,"utf-8"));
 	    	HttpsURLConnection conn = (HttpsURLConnection) url_img.openConnection();
 	    	conn.setReadTimeout(30000);
 	    	conn.addRequestProperty("Accept-Language", "en-US,en;q=0.8");
