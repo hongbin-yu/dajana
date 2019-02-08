@@ -108,7 +108,7 @@
 	$(document).ready(function() {
 		if(location.hostname.indexOf("home.dajana.ca")<0 && location.hostname.indexOf(".dajana.ca")>0);
 		$.ajax({
-	          url: 'https://home.dajana.ca',
+	          url: '//home.dajana.ca',
 	          success: function(result){
 	             location.href=location.url.replace("dajana.ca","home.dajana.ca");
 	          },     

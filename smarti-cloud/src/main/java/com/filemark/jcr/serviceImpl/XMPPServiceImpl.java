@@ -7,8 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.security.KeyPair;
-import java.security.PublicKey;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -19,23 +17,6 @@ import java.util.TimerTask;
 import javax.activation.MimetypesFileTypeMap;
 import javax.jcr.RepositoryException;
 import javax.net.ssl.HttpsURLConnection;
-
-import net.java.otr4j.OtrEngineHost;
-import net.java.otr4j.OtrEngineListener;
-import net.java.otr4j.OtrException;
-import net.java.otr4j.OtrKeyManagerImpl;
-import net.java.otr4j.OtrKeyManagerListener;
-import net.java.otr4j.OtrPolicy;
-import net.java.otr4j.OtrPolicyImpl;
-import net.java.otr4j.crypto.OtrCryptoEngine;
-import net.java.otr4j.crypto.OtrCryptoEngineImpl;
-import net.java.otr4j.session.FragmenterInstructions;
-import net.java.otr4j.session.InstanceTag;
-import net.java.otr4j.session.OtrSm;
-import net.java.otr4j.session.Session;
-import net.java.otr4j.session.SessionID;
-import net.java.otr4j.session.SessionImpl;
-import net.java.otr4j.session.SessionStatus;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.tika.mime.MimeType;
@@ -53,6 +34,7 @@ import org.jivesoftware.smack.chat2.Chat;
 import org.jivesoftware.smack.chat2.ChatManager;
 import org.jivesoftware.smack.chat2.IncomingChatMessageListener;
 import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import org.jivesoftware.smackx.ping.PingFailedListener;
@@ -60,7 +42,6 @@ import org.jivesoftware.smackx.ping.PingManager;
 import org.jxmpp.jid.EntityBareJid;
 import org.jxmpp.jid.impl.JidCreate;
 import org.jxmpp.stringprep.XmppStringprepException;
-import org.pegdown.Extensions;
 import org.pegdown.PegDownProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,7 +54,7 @@ import com.filemark.jcr.model.User;
 import com.filemark.jcr.service.JcrServices;
 
 
-public class XMPPServiceImpl implements OtrEngineHost {
+public class XMPPServiceImpl {
 
 	private final Logger log = LoggerFactory.getLogger(XMPPServiceImpl.class);
 	private static String host = "host ip";
@@ -87,16 +68,8 @@ public class XMPPServiceImpl implements OtrEngineHost {
 	ReconnectionManager reconnectionManager;
 	private AbstractXMPPConnection connection;
 	private ConnectionListener connectionListener;
-	
-	private String peer;
-	private XMPPConnection con;
-	private OtrKeyManagerImpl otrKeyManager;
-	private OtrPolicy otrPolicy;
-	private SessionID sessionID;
-	private Session session;
-	private OtrSm otrSm;
-	private OtrCryptoEngine otrEngine;
-	
+	private Roster roster;
+
 	//private PingFailedListener pingFailedListener ;
 	private static final PegDownProcessor pegDownProcessor = new PegDownProcessor();
 			//Extensions.ALL | Extensions.SUPPRESS_ALL_HTML, 5000);
@@ -117,7 +90,7 @@ public class XMPPServiceImpl implements OtrEngineHost {
 			XMPPTCPConnectionConfiguration conf = XMPPTCPConnectionConfiguration
 			    .builder()
 			    .setUsernameAndPassword(username, password)
-			    .setResource("youcloud")
+			    .setResource(filedomain)
 			    .setHost(domain)
 			    .setXmppDomain(domain)
 			    .setPort(port)
@@ -127,6 +100,7 @@ public class XMPPServiceImpl implements OtrEngineHost {
 			    .build();
 			    connection = new XMPPTCPConnection(conf);
 				connection.connect().login();
+				roster = Roster.getInstanceFor(connection);
 			    //connection.setReplyTimeout(10000);
 			    
 				reconnectionManager = ReconnectionManager.getInstanceFor(connection);
@@ -150,75 +124,8 @@ public class XMPPServiceImpl implements OtrEngineHost {
 		        	
 		        });
 			    
-				otrKeyManager = new OtrKeyManagerImpl("/home/sample-keystore");
-				otrKeyManager.addListener(new OtrKeyManagerListener() {
-					public void verificationStatusChanged(SessionID session) {
-						System.out.println(session + ": verification status=" + otrKeyManager.isVerified(session));
-					}
-				});
-				otrPolicy = new OtrPolicyImpl();
-				otrPolicy.setEnableAlways(true);
-				sessionID = new SessionID("default", peer, "xmpp");
-				otrEngine = new OtrCryptoEngineImpl();
-				session = new SessionImpl(sessionID,this);
-				session.addOtrEngineListener(new OtrEngineListener() {
 
-					@Override
-					public void multipleInstancesDetected(SessionID sessionID) {
-						// TODO Auto-generated method stub
-						
-					}
-
-					@Override
-					public void outgoingSessionChanged(SessionID sessionID) {
-						// TODO Auto-generated method stub
-						
-					}
-
-					@Override
-					public void sessionStatusChanged(SessionID sessionID) {
-						SessionStatus sessionStatus = session.getSessionStatus();
-						log.info(sessionID+" status:"+sessionStatus);
-						session.getRemotePublicKey();
-						if (sessionStatus == SessionStatus.ENCRYPTED) {
-							PublicKey remoteKey = session.getRemotePublicKey();
-							otrKeyManager.savePublicKey(sessionID, remoteKey);							
-						}
-						otrSm = new OtrSm(session, XMPPServiceImpl.this);
-					}
-					
-				});
-/*				otrEngine.addOtrEngineListener(new OtrEngineListener() {
-					@Override
-					public void sessionStatusChanged(SessionID sessionID) {
-						SessionStatus sessionStatus = otrEngine.getSessionStatus(sessionID);
-						System.out.println(sessionID + " : status=" + sessionStatus);
-						if (sessionStatus == SessionStatus.ENCRYPTED)
-						{
-							
-							PublicKey remoteKey = otrEngine.getRemotePublicKey(sessionID);
-							otrKeyManager.savePublicKey(sessionID, remoteKey);
-						}
-						
-						// SMP handler - make sure we only add this once per session!
-						otrSm = new OtrSm(otrEngine.getSession(sessionID), otrKeyManager, sessionID, SampleApp.this);
-						otrEngine.getSession(sessionID).addTlvHandler(otrSm);
-					}
-
-					@Override
-					public void multipleInstancesDetected(SessionID arg0) {
-						// TODO Auto-generated method stub
-						
-					}
-
-					@Override
-					public void outgoingSessionChanged(SessionID arg0) {
-						// TODO Auto-generated method stub
-						
-					}
-				});		*/		
-			    //checkConnection();
-				
+			
 	            log.info("Connection:"+connection);
 
 			} catch (SmackException e) {
@@ -297,6 +204,10 @@ public class XMPPServiceImpl implements OtrEngineHost {
 	        	sendVerifyCode(from.toString());
 
 	        	break;	
+	        case 101:
+	        	sendVerifyCode(from.toString());
+
+	        	break;		        	
 	
 	        }
 	        
@@ -317,6 +228,7 @@ public class XMPPServiceImpl implements OtrEngineHost {
 		
 	}
 	private int parseType(String body) {
+		if(body.startsWith("?OTRv23?")) return 101;
 		if(body.equals("-c")) return 100;
 		if(body.startsWith("-")) return 1;
 		if(body.indexOf("/httpfileupload/")>0) return 2;	
@@ -349,6 +261,8 @@ public class XMPPServiceImpl implements OtrEngineHost {
    			folder.setTitle("云存储");
    			folder.setName("httpfileupload");
    			folder.setPath(filepath);
+   			folder.setLastUpdated(new Date());
+   			folder.setLastModified(new Date());   			
    			jcrService.addOrUpdate(folder);
    		}
    		
@@ -367,6 +281,8 @@ public class XMPPServiceImpl implements OtrEngineHost {
    			Folder folder = new Folder();
    			folder.setName(subject);
    			folder.setPath(path);
+   			folder.setLastUpdated(new Date());
+   			folder.setLastModified(new Date());
    			jcrService.addOrUpdate(folder);
    		}	   		
 		
@@ -588,6 +504,7 @@ public class XMPPServiceImpl implements OtrEngineHost {
 				@Override
 				public void connected(XMPPConnection connection) {
 					log.info("XMPPConnection:"+connection +" connected");
+					roster = Roster.getInstanceFor(connection);
 					//installConnectionListeners(connection);
 				}
 
@@ -680,128 +597,5 @@ public class XMPPServiceImpl implements OtrEngineHost {
 	        }
 	    }
 
-	@Override
-	public void askForSecret(SessionID sessionId, InstanceTag iTag, String question) {
-		System.out.println("asked for secret with q=" + question);
-		System.out.println("enter /smpr SECRET");
-		
-	}
 
-	@Override
-	public void finishedSessionMessage(SessionID sessionId, String arg1)
-			throws OtrException {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public String getFallbackMessage(SessionID sessionId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public FragmenterInstructions getFragmenterInstructions(SessionID sessionId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public byte[] getLocalFingerprintRaw(SessionID sessionId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public KeyPair getLocalKeyPair(SessionID sessionId) throws OtrException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getReplyForUnreadableMessage(SessionID arg0) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public OtrPolicy getSessionPolicy(SessionID arg0) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void injectMessage(SessionID sessionId, String msg) throws OtrException {
-		try {
-			sendMessage(sessionID.getUserID(), msg);
-		} catch (NotConnectedException | XmppStringprepException
-				| XMPPException | InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-	}
-
-	@Override
-	public void messageFromAnotherInstanceReceived(SessionID sessionId) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void multipleInstancesDetected(SessionID sessionId) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void requireEncryptedMessage(SessionID sessionId, String message)
-			throws OtrException {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void showError(SessionID sessionID, String error) throws OtrException {
-		System.err.println(sessionID + ": error " + error);
-		
-	}
-
-	@Override
-	public void smpAborted(SessionID sessionId) throws OtrException {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void smpError(SessionID sessionId, int arg1, boolean arg2)
-			throws OtrException {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void unencryptedMessageReceived(SessionID sessionId, String arg1)
-			throws OtrException {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void unreadableMessageReceived(SessionID sessionId) throws OtrException {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void unverify(SessionID sessionId, String arg1) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void verify(SessionID sessionId, String arg1, boolean arg2) {
-		// TODO Auto-generated method stub
-		
-	}
 }
