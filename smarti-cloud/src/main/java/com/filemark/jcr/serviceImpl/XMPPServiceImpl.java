@@ -370,10 +370,10 @@ public class XMPPServiceImpl {
 				assetPath = jcrService.getUniquePath(path, fileName);
 			}
 			if(contentType==null || "".equals(contentType))
-				contentType = new MimetypesFileTypeMap().getContentType(fileName);
+				contentType = new MimetypesFileTypeMap().getContentType(nodeName);
 			log.debug("nodeName="+nodeName);
 	    	asset.setTitle(fileName);	
-	    	asset.setName(fileName);
+	    	asset.setName(nodeName);
 			asset.setCreatedBy(username);
 			asset.setPath(assetPath);
 			asset.setLastModified(new Date());
