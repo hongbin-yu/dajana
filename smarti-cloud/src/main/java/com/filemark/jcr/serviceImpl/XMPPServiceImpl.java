@@ -131,7 +131,7 @@ public class XMPPServiceImpl {
 					@Override
 					public void pingFailed() {
 						log.error("Ping failed:");
-						//checkConnection();
+						checkConnection();
 					}
 		        	
 		        });
@@ -278,7 +278,7 @@ public class XMPPServiceImpl {
 		"<body><p style='font-size:large'><a href='"+url+"' title=''><h5>"+title+"</h5><img src='data:image/jpg;base64, "+imageString+"' alt=''></a></p></body>");
 		msg.addExtension(xhtmlExtension);
 		// User1 sends the message that contains the XHTML to user2
-		log.info(imageString);
+		//log.info(imageString);
 	    sendMessage(msg,from);
 	    Thread.sleep(200);
 
@@ -623,7 +623,7 @@ public class XMPPServiceImpl {
 		                	}else {
 		                		log.info("disconnect and login again");
 		                		connection.disconnect();
-		                		connection.connect().login();
+		                		login("admin","admin");
 		                	}
 
 		                }
