@@ -22,6 +22,8 @@ public class Asset implements SmartiNode, Serializable {
 	@Field(jcrName="jcr:title")
 	protected String title;
 	@Field
+	protected String filePath;	
+	@Field
 	protected String name;
 	@Field
 	protected String alt;
@@ -387,6 +389,14 @@ public class Asset implements SmartiNode, Serializable {
 
 	public void setPosition(String position) {
 		this.position = position;
+	}
+
+	public String getFilePath() {
+		return filePath;
+	}
+
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
 	}
 
 

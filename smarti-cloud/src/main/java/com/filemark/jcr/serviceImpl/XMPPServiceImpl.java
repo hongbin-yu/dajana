@@ -3,6 +3,7 @@ package com.filemark.jcr.serviceImpl;
 
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -13,6 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
+import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -20,7 +22,13 @@ import javax.activation.MimetypesFileTypeMap;
 import javax.jcr.RepositoryException;
 import javax.net.ssl.HttpsURLConnection;
 
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.tika.mime.MimeType;
 import org.apache.tika.mime.MimeTypeException;
 import org.apache.tika.mime.MimeTypes;
@@ -41,6 +49,7 @@ import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import org.jivesoftware.smackx.ping.PingFailedListener;
 import org.jivesoftware.smackx.ping.PingManager;
+import org.jivesoftware.smackx.xhtmlim.packet.XHTMLExtension;
 import org.jxmpp.jid.EntityBareJid;
 import org.jxmpp.jid.impl.JidCreate;
 import org.jxmpp.stringprep.XmppStringprepException;
@@ -64,6 +73,7 @@ public class XMPPServiceImpl {
 	private static String fileport = "";		
 	private static String domain = "dajana.ca";
 	private static int port = 5222;
+	private static Options options = new Options();
 	@Autowired
 	private JcrServices jcrService;
 	private PingManager pingManager;
@@ -83,7 +93,7 @@ public class XMPPServiceImpl {
 			log.info("login "+domain+":"+port+" by yuhong");
 			login("admin","admin");			
 		//}
-
+		//options.addOption("-c", "验证码");
 	}
 	
 	public void login(String username,String password) {
@@ -121,7 +131,7 @@ public class XMPPServiceImpl {
 					@Override
 					public void pingFailed() {
 						log.error("Ping failed:");
-						checkConnection();
+						//checkConnection();
 					}
 		        	
 		        });
@@ -230,6 +240,7 @@ public class XMPPServiceImpl {
 		
 	}
 	private int parseType(String body) {
+		//CommandLineParser parser = new DefaultParser();
 		if(body.startsWith("?OTRv23?")) return 101;
 		if(body.equals("-c")) return 100;
 		if(body.startsWith("-")) return 1;
@@ -238,6 +249,41 @@ public class XMPPServiceImpl {
 		return 0;
 		
 	}
+	
+	private void sendHtmlLink(EntityBareJid from, String url, Asset asset) throws NotConnectedException, XMPPException, InterruptedException, XmppStringprepException {
+		// User1 creates a message to send to user2
+		String title = asset.getTitle();
+		Message msg = new Message();
+		msg.setSubject(title);
+		msg.setBody(title);
+		// Create a XHTMLExtension Package and add it to the message
+		String filePath = asset.getFilePath()+"/x100.jpg";
+		File icon = new File(filePath);
+		if(!icon.exists()) jcrService.createIcon(asset.getPath(), 100, 100);
+		String imageString = "https://"+filedomain+fileport+"/resources/images/document-icon100.png";
+		try {
+	    	InputStream is = new FileInputStream(filePath);    	
+
+			byte buffer[] = new byte[is.available()];
+			IOUtils.read(is, buffer);			
+			is.close();
+			imageString = Base64.encodeBase64String(buffer);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		XHTMLExtension xhtmlExtension = new XHTMLExtension();
+
+		xhtmlExtension.addBody(
+		"<body><p style='font-size:large'><a href='"+url+"' title=''><h5>"+title+"</h5><img src='data:image/jpg;base64, "+imageString+"' alt=''></a></p></body>");
+		msg.addExtension(xhtmlExtension);
+		// User1 sends the message that contains the XHTML to user2
+		log.info(imageString);
+	    sendMessage(msg,from);
+	    Thread.sleep(200);
+
+	}
+	
 	private void sendVerifyCode(String from) throws RepositoryException, NotConnectedException, XmppStringprepException, XMPPException, InterruptedException {
 		String username = from.toString().split("@")[0];
 		User dbuser  = (User)jcrService.getObject("/system/users/"+username);
@@ -269,10 +315,16 @@ public class XMPPServiceImpl {
    		}
    		
 		for(String url:fileupload) {
-			String httpfileupload = importAsset(url,username.toString(),filepath);
+			Asset asset = importAsset(url,username.toString(),filepath);
+			String httpfileupload = "/protected/httpfileupload/"+asset.getUid()+"/"+asset.getName();
 			log.info(httpfileupload);
 			html +="<li><a href=\""+httpfileupload+"\" title=\"\"><img src=\""+httpfileupload+"?w=4\" alt=\"\"></li>";
-			sendMessage("https://"+filedomain+fileport+httpfileupload,from);
+			//sendMessage("https://"+filedomain+fileport+httpfileupload,from);
+			try {
+				sendHtmlLink(from,"https://"+filedomain+fileport+httpfileupload,asset);
+			} catch (IOException e) {
+				log.error(e.getMessage());
+			}
 		}
 		html +="</ul></section>";
 		String subject = message.getSubject();
@@ -292,7 +344,7 @@ public class XMPPServiceImpl {
 
 	}
 	
-	private String importAsset(String url, String username, String path) {
+	private Asset importAsset(String url, String username, String path) {
 		Asset asset= new Asset();
 		String fileName = "error404.html";
 		String nodeName = url.substring(url.lastIndexOf("/")+1, url.length());
@@ -366,7 +418,12 @@ public class XMPPServiceImpl {
 			String assetPath =  path+"/"+fileName;
 			if(jcrService.nodeExsits(path+"/"+fileName)) {
 				asset = (Asset)jcrService.getObject(path+"/"+fileName);
-				return "/protected/httpfileupload/"+asset.getUid()+"/"+fileName;
+				if(asset.getFilePath()==null) {
+					Device device = (Device)jcrService.getObject(asset.getDevice());
+					asset.setFilePath(device.getLocation()+asset.getPath());
+					jcrService.updatePropertyByPath(asset.getPath(), "filePath", asset.getFilePath());
+				}
+				return asset;//"/protected/httpfileupload/"+asset.getUid()+"/"+fileName;
 			}else {
 				assetPath = jcrService.getUniquePath(path, fileName);
 			}
@@ -400,6 +457,7 @@ public class XMPPServiceImpl {
 				is.close();
 				Date end = new Date();
 				//long speed = file.length()*8/(end.getTime() - start.getTime()); 
+				asset.setFilePath(device.getLocation()+asset.getPath());
 				asset.setSize(file.length());
 				asset.setOriginalDate(new Date(file.lastModified()));
 				jcrService.addOrUpdate(asset);
@@ -417,6 +475,7 @@ public class XMPPServiceImpl {
 				jcrService.autoRoateImage(assetPath);
 				log.debug("create icon");
 				jcrService.createIcon(assetPath, 400,400);
+				jcrService.createIcon(assetPath, 100,100);				
 			}		
 			
 			log.info("Done");
@@ -426,7 +485,7 @@ public class XMPPServiceImpl {
 
 		}
 		
-		return "/protected/httpfileupload/"+asset.getUid()+"/"+nodeName;
+		return asset;//"/protected/httpfileupload/"+asset.getUid()+"/"+nodeName;
 	}
 	
 	private void processCommand(EntityBareJid from, Message message, Chat chat) {
