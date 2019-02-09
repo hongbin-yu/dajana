@@ -124,7 +124,7 @@ public class XMPPServiceImpl {
 
 				//connection.isAuthenticated();
 			    pingManager = PingManager.getInstanceFor(connection);
-			    pingManager.setPingInterval(60);
+			    pingManager.setPingInterval(30);
 			    pingManager.pingMyServer();	
 			    pingManager.registerPingFailedListener(new PingFailedListener() {
 
@@ -255,7 +255,7 @@ public class XMPPServiceImpl {
 		String title = asset.getTitle();
 		Message msg = new Message();
 		msg.setSubject(title);
-		msg.setBody(title);
+		msg.setBody(url);
 		// Create a XHTMLExtension Package and add it to the message
 		String filePath = asset.getFilePath()+"/x100.jpg";
 		File icon = new File(filePath);
@@ -279,6 +279,7 @@ public class XMPPServiceImpl {
 		msg.addExtension(xhtmlExtension);
 		// User1 sends the message that contains the XHTML to user2
 		//log.info(imageString);
+		sendMessage(url,from);
 	    sendMessage(msg,from);
 	    Thread.sleep(200);
 
