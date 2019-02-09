@@ -624,7 +624,8 @@ public class XMPPServiceImpl {
 		                	}else {
 		                		log.info("disconnect and login again");
 		                		connection.disconnect();
-		                		login("admin","admin");
+		                		connection.connect().login();
+		                		//login("admin","admin");
 		                	}
 
 		                }
