@@ -36,6 +36,7 @@ import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.ConnectionConfiguration.SecurityMode;
 import org.jivesoftware.smack.ConnectionListener;
 import org.jivesoftware.smack.ReconnectionManager;
+import org.jivesoftware.smack.ReconnectionManager.ReconnectionPolicy;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.XMPPConnection;
@@ -44,6 +45,8 @@ import org.jivesoftware.smack.chat2.Chat;
 import org.jivesoftware.smack.chat2.ChatManager;
 import org.jivesoftware.smack.chat2.IncomingChatMessageListener;
 import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.packet.Presence;
+import org.jivesoftware.smack.packet.Presence.Type;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
@@ -81,6 +84,7 @@ public class XMPPServiceImpl {
 	private AbstractXMPPConnection connection;
 	private ConnectionListener connectionListener;
 	private Roster roster;
+	private Presence presence;
 
 	//private PingFailedListener pingFailedListener ;
 	private static final PegDownProcessor pegDownProcessor = new PegDownProcessor();
@@ -108,30 +112,39 @@ public class XMPPServiceImpl {
 			    .setPort(port)
 			    .setSendPresence(true)
 			    .setCompressionEnabled(false)
-			    .setSecurityMode(SecurityMode.disabled)
+			    .setSecurityMode(SecurityMode.required)
 			    .build();
 			    connection = new XMPPTCPConnection(conf);
 				connection.connect().login();
 				roster = Roster.getInstanceFor(connection);
+				roster = Roster.getInstanceFor(connection);
+				roster.setRosterLoadedAtLogin(true);
+
+				//presence = new Presence(connection.getUser(),Type.available);
+				presence = roster.getPresence(connection.getUser().asBareJid());
 			    //connection.setReplyTimeout(10000);
-			    
+				log.info("Status:"+presence.getStatus()+"/"+presence.getType());
+				presence.setType(Type.available);
+				presence.setPriority(presence.getPriority()+1);
+				connection.sendStanza(presence);
+				connection.setReplyTimeout(60000);
 				reconnectionManager = ReconnectionManager.getInstanceFor(connection);
 				ReconnectionManager.setEnabledPerDefault(true);
 				reconnectionManager.enableAutomaticReconnection();
-				reconnectionManager.setFixedDelay(60);
+				reconnectionManager.setReconnectionPolicy(ReconnectionPolicy.RANDOM_INCREASING_DELAY);
 				installConnectionListeners(connection);
 	            installIncomingChatMessageListener(connection);
-
+	            checkConnection();
 				//connection.isAuthenticated();
 			    pingManager = PingManager.getInstanceFor(connection);
-			    pingManager.setPingInterval(30);
+			    pingManager.setPingInterval(10);
 			    pingManager.pingMyServer();	
 			    pingManager.registerPingFailedListener(new PingFailedListener() {
 
 					@Override
 					public void pingFailed() {
 						log.error("Ping failed:");
-						checkConnection();
+						//checkConnection();
 					}
 		        	
 		        });
@@ -175,6 +188,7 @@ public class XMPPServiceImpl {
 	public void sendMessage(Message message, EntityBareJid to) throws XMPPException, NotConnectedException, XmppStringprepException, InterruptedException {
 		ChatManager chatManager = ChatManager.getInstanceFor(connection);
 		Chat chat = chatManager.chatWith(to); // pass XmppClient instance as listener for received messages.
+		
 		chat.send(message);
 	}	
 
@@ -250,13 +264,19 @@ public class XMPPServiceImpl {
 		
 	}
 	
-	private void sendHtmlLink(EntityBareJid from, String url, Asset asset) throws NotConnectedException, XMPPException, InterruptedException, XmppStringprepException {
+	private void sendHtmlLink(EntityBareJid from, String url, Asset asset) throws NotConnectedException, XMPPException, InterruptedException, XmppStringprepException, RepositoryException {
 		// User1 creates a message to send to user2
 		String title = asset.getTitle();
 		Message msg = new Message();
 		msg.setSubject(title);
 		msg.setBody(url);
 		// Create a XHTMLExtension Package and add it to the message
+		if(asset.getFilePath()==null) {
+			Device device = (Device)jcrService.getObject(asset.getDevice());
+			asset.setFilePath(device.getLocation()+asset.getPath());
+			jcrService.updatePropertyByPath(asset.getPath(), "filePath", asset.getFilePath());
+			jcrService.createIcon(asset.getPath(), 100, 100);
+		}		
 		String filePath = asset.getFilePath()+"/x100.jpg";
 		File icon = new File(filePath);
 		if(!icon.exists()) jcrService.createIcon(asset.getPath(), 100, 100);
@@ -275,11 +295,11 @@ public class XMPPServiceImpl {
 		XHTMLExtension xhtmlExtension = new XHTMLExtension();
 
 		xhtmlExtension.addBody(
-		"<body><p style='font-size:large'><a href='"+url+"' title=''><h5>"+title+"</h5><img src='data:image/jpg;base64, "+imageString+"' alt=''></a></p></body>");
-		msg.addExtension(xhtmlExtension);
+		"<body><p style='font-size:large'><a href='"+url+"' title=''><h5>"+title+"</h5><img src='data:image/jpg;base64, "+imageString+"' alt=''/></a></p></body>");
+		//msg.addExtension(xhtmlExtension);
 		// User1 sends the message that contains the XHTML to user2
 		//log.info(imageString);
-		sendMessage(url,from);
+		//sendMessage(url,from);
 	    sendMessage(msg,from);
 	    Thread.sleep(200);
 
@@ -419,11 +439,7 @@ public class XMPPServiceImpl {
 			String assetPath =  path+"/"+fileName;
 			if(jcrService.nodeExsits(path+"/"+fileName)) {
 				asset = (Asset)jcrService.getObject(path+"/"+fileName);
-				if(asset.getFilePath()==null) {
-					Device device = (Device)jcrService.getObject(asset.getDevice());
-					asset.setFilePath(device.getLocation()+asset.getPath());
-					jcrService.updatePropertyByPath(asset.getPath(), "filePath", asset.getFilePath());
-				}
+
 				return asset;//"/protected/httpfileupload/"+asset.getUid()+"/"+fileName;
 			}else {
 				assetPath = jcrService.getUniquePath(path, fileName);
@@ -611,23 +627,30 @@ public class XMPPServiceImpl {
 		   TimerTask repeatedTask = new TimerTask() {
 		        public void run() {
 					try {
+						
 		                //PingManager pingManager = PingManager.getInstanceFor(getConnection());
 		                if(!pingManager.pingMyServer()) {
 		                	log.info("Ping false");
 		                	
 		                	if(!connection.isConnected()) {
-		                		connection.connect();
-		                	}
-		                	if(!connection.isAuthenticated()) {
+		                		disconnect();
+		                		//connection.connect();
+		                		//connection.disconnect();
+		                	}else if(!connection.isAuthenticated()) {
 		                		log.info("login again");
 		                		connection.login();
 		                	}else {
 		                		log.info("disconnect and login again");
-		                		connection.disconnect();
-		                		connection.connect().login();
-		                		//login("admin","admin");
+		                		
+		                		//connection.connect().login();
+		                		login("admin","admin");
 		                	}
 
+		                }else {
+		                	connection.sendStanza(presence);
+		                	Calendar calendar = Calendar.getInstance();
+		                	calendar.setTimeInMillis(connection.getLastStanzaReceived());
+		                	log.info("Last Stenza:"+calendar.getTime());
 		                }
 						//log.info("Task performed on " + new Date()+", isConnection:"+pingManager.pingMyServer());
 					} catch (NotConnectedException e) {
@@ -646,7 +669,7 @@ public class XMPPServiceImpl {
 		    Timer timer = new Timer("Timer");
 		    long delay = 1000L;
 		    long period = 60*1000L;		    
-		    timer.schedule(repeatedTask, delay);		    
+		    timer.schedule(repeatedTask, delay, period);		    
 	   }
 		protected String getDateTime() {
 			Date now = new Date();
@@ -655,13 +678,13 @@ public class XMPPServiceImpl {
 			
 			
 		}
-	   protected void finalize() throws Throwable {
+/*	   protected void finalize() throws Throwable {
 	        try {
 	            disconnect();
 	        } finally {
 	            super.finalize();
 	        }
-	    }
+	    }*/
 
 
 }
