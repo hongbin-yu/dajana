@@ -85,7 +85,7 @@ public class XMPPServiceImpl {
 	private ConnectionListener connectionListener;
 	private Roster roster;
 	private Presence presence;
-
+	private static boolean isConnected = false; 
 	//private PingFailedListener pingFailedListener ;
 	private static final PegDownProcessor pegDownProcessor = new PegDownProcessor();
 			//Extensions.ALL | Extensions.SUPPRESS_ALL_HTML, 5000);
@@ -95,7 +95,8 @@ public class XMPPServiceImpl {
 		System.gc();
 		//if(connection == null) {
 			log.info("login "+domain+":"+port+" by yuhong");
-			login("admin","admin");			
+			checkConnection();
+			//login("admin","admin");			
 		//}
 		//options.addOption("-c", "验证码");
 	}
@@ -125,7 +126,7 @@ public class XMPPServiceImpl {
 			    //connection.setReplyTimeout(10000);
 				log.info("Status:"+presence.getStatus()+"/"+presence.getType());
 				presence.setType(Type.available);
-				presence.setPriority(presence.getPriority()+1);
+				//presence.setPriority(presence.getPriority()+1);
 				connection.sendStanza(presence);
 				connection.setReplyTimeout(60000);
 				reconnectionManager = ReconnectionManager.getInstanceFor(connection);
@@ -137,20 +138,21 @@ public class XMPPServiceImpl {
 	            checkConnection();
 				//connection.isAuthenticated();
 			    pingManager = PingManager.getInstanceFor(connection);
-			    pingManager.setPingInterval(10);
+			    pingManager.setPingInterval(100);
 			    pingManager.pingMyServer();	
 			    pingManager.registerPingFailedListener(new PingFailedListener() {
 
 					@Override
 					public void pingFailed() {
 						log.error("Ping failed:");
+						disconnect();
 						//checkConnection();
 					}
 		        	
 		        });
 			    
 
-			
+			    isConnected = connection.isConnected();
 	            log.info("Connection:"+connection);
 
 			} catch (SmackException e) {
@@ -168,7 +170,8 @@ public class XMPPServiceImpl {
 	
 	
 	public void disconnect() {
-		log.debug("remove connection:"+connection);
+		isConnected = false;
+		log.info("remove connection:"+connection);
 		connection.removeConnectionListener(connectionListener);
 		connection.disconnect();
 	}
@@ -203,7 +206,7 @@ public class XMPPServiceImpl {
 	}
 
 	private void processMessage(EntityBareJid from, Message message, Chat chat) {
-        System.out.println(message.getType()+"/"+message.getSubject()+"/ "+from+" say: " + message.getBody());
+        System.out.println(message.getType()+"/"+filedomain+"/ "+from+" say: " + message.getBody());
         //log.info(message.toString());
         try {
             //sendMessage(message.getBody(),from);
@@ -296,7 +299,7 @@ public class XMPPServiceImpl {
 
 		xhtmlExtension.addBody(
 		"<body><p style='font-size:large'><a href='"+url+"' title=''><h5>"+title+"</h5><img src='data:image/jpg;base64, "+imageString+"' alt=''/></a></p></body>");
-		//msg.addExtension(xhtmlExtension);
+		msg.addExtension(xhtmlExtension);
 		// User1 sends the message that contains the XHTML to user2
 		//log.info(imageString);
 		//sendMessage(url,from);
@@ -342,7 +345,7 @@ public class XMPPServiceImpl {
 			html +="<li><a href=\""+httpfileupload+"\" title=\"\"><img src=\""+httpfileupload+"?w=4\" alt=\"\"></li>";
 			//sendMessage("https://"+filedomain+fileport+httpfileupload,from);
 			try {
-				sendHtmlLink(from,"https://"+filedomain+fileport+httpfileupload,asset);
+				sendHtmlLink(from,"http://"+filedomain+fileport+httpfileupload,asset);
 			} catch (IOException e) {
 				log.error(e.getMessage());
 			}
@@ -585,19 +588,22 @@ public class XMPPServiceImpl {
 				@Override
 				public void connected(XMPPConnection connection) {
 					log.info("XMPPConnection:"+connection +" connected");
-					roster = Roster.getInstanceFor(connection);
+					isConnected = true;
+					//roster = Roster.getInstanceFor(connection);
 					//installConnectionListeners(connection);
 				}
 
 				@Override
 				public void connectionClosed() {
 					log.info("XMPPConnection closed");
+					isConnected = false;
 					//disconnect();
 				}
 
 				@Override
 				public void connectionClosedOnError(Exception e) {
 					log.error("connection close with error:"+e.getMessage());
+					isConnected = false;
 					//disconnect();
 					
 				}
@@ -629,23 +635,10 @@ public class XMPPServiceImpl {
 					try {
 						
 		                //PingManager pingManager = PingManager.getInstanceFor(getConnection());
-		                if(!pingManager.pingMyServer()) {
-		                	log.info("Ping false");
-		                	
-		                	if(!connection.isConnected()) {
-		                		disconnect();
-		                		//connection.connect();
-		                		//connection.disconnect();
-		                	}else if(!connection.isAuthenticated()) {
-		                		log.info("login again");
-		                		connection.login();
-		                	}else {
-		                		log.info("disconnect and login again");
-		                		
-		                		//connection.connect().login();
-		                		login("admin","admin");
-		                	}
-
+		                if(isConnected && !pingManager.pingMyServer()) {
+		                	disconnect();
+		                }else if(!isConnected) {
+		                	login("admin","admin");
 		                }else {
 		                	connection.sendStanza(presence);
 		                	Calendar calendar = Calendar.getInstance();
@@ -654,15 +647,10 @@ public class XMPPServiceImpl {
 		                }
 						//log.info("Task performed on " + new Date()+", isConnection:"+pingManager.pingMyServer());
 					} catch (NotConnectedException e) {
-						log.error(e.getMessage());
+						log.error("checkConnection:"+e.getMessage());
+						disconnect();
 					} catch (InterruptedException e) {
-						log.error(e.getMessage());
-					} catch (SmackException e) {
-						log.error(e.getMessage());
-					} catch (IOException e) {
-						log.error(e.getMessage());
-					} catch (XMPPException e) {
-						log.error(e.getMessage());
+						log.error("checkConnection:"+e.getMessage());
 					}
 		        }
 		    };
