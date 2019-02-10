@@ -340,7 +340,7 @@ public class XMPPServiceImpl {
    		
 		for(String url:fileupload) {
 			Asset asset = importAsset(url,username.toString(),filepath);
-			String httpfileupload = "/protected/httpfileupload/"+asset.getUid()+"/"+asset.getName();
+			String httpfileupload = "/content/httpfileupload/"+asset.getUid()+"/"+asset.getName();
 			log.info(httpfileupload);
 			html +="<li><a href=\""+httpfileupload+"\" title=\"\"><img src=\""+httpfileupload+"?w=4\" alt=\"\"></li>";
 			//sendMessage("https://"+filedomain+fileport+httpfileupload,from);
