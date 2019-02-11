@@ -71,8 +71,8 @@ public class XMPPServiceImpl {
 	private static String fileport = "";		
 	private static String domain = "dajana.ca";
 	private static int port = 5222;
-	private String username="tester";
-	private String password="tester";
+	private String username="admin";
+	private String password="admin";
 	private static Options options = new Options();
 	@Autowired
 	private JcrServices jcrService;
