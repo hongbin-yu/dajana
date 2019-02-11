@@ -6,7 +6,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.InetAddress;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -52,6 +54,7 @@ import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import org.jivesoftware.smackx.ping.PingFailedListener;
 import org.jivesoftware.smackx.ping.PingManager;
+import org.jivesoftware.smackx.xdata.Form;
 import org.jivesoftware.smackx.xhtmlim.packet.XHTMLExtension;
 import org.jxmpp.jid.EntityBareJid;
 import org.jxmpp.jid.impl.JidCreate;
@@ -72,10 +75,12 @@ public class XMPPServiceImpl {
 
 	private final Logger log = LoggerFactory.getLogger(XMPPServiceImpl.class);
 	private static String host = "host ip";
-	private static String filedomain = "tu.dajana.ca";	
-	private static String fileport = "";		
+	private static String filedomain = "localhost";//"tu.dajana.ca";	
+	private static String fileport = ":8888";		
 	private static String domain = "dajana.ca";
 	private static int port = 5222;
+	private String username="tester";
+	private String password="tester";
 	private static Options options = new Options();
 	@Autowired
 	private JcrServices jcrService;
@@ -92,11 +97,12 @@ public class XMPPServiceImpl {
 			
 	//private IncomingChatMessageListener incomingChatMessageListener;
 	public void initialize() {
-		System.gc();
+		//System.gc();
 		//if(connection == null) {
 			log.info("login "+domain+":"+port+" by yuhong");
+			login(username,password);	
 			checkConnection();
-			//login("admin","admin");			
+		
 		//}
 		//options.addOption("-c", "验证码");
 	}
@@ -124,9 +130,10 @@ public class XMPPServiceImpl {
 				//presence = new Presence(connection.getUser(),Type.available);
 				presence = roster.getPresence(connection.getUser().asBareJid());
 			    //connection.setReplyTimeout(10000);
-				log.info("Status:"+presence.getStatus()+"/"+presence.getType());
 				presence.setType(Type.available);
-				//presence.setPriority(presence.getPriority()+1);
+				log.info("Status:"+presence.getStatus()+"/"+presence.getType()+"/"+presence);
+
+				presence.setPriority(presence.getPriority()+1);
 				connection.sendStanza(presence);
 				connection.setReplyTimeout(60000);
 				reconnectionManager = ReconnectionManager.getInstanceFor(connection);
@@ -135,7 +142,7 @@ public class XMPPServiceImpl {
 				reconnectionManager.setReconnectionPolicy(ReconnectionPolicy.RANDOM_INCREASING_DELAY);
 				installConnectionListeners(connection);
 	            installIncomingChatMessageListener(connection);
-	            checkConnection();
+	            //checkConnection();
 				//connection.isAuthenticated();
 			    pingManager = PingManager.getInstanceFor(connection);
 			    pingManager.setPingInterval(100);
@@ -153,6 +160,8 @@ public class XMPPServiceImpl {
 			    
 
 			    isConnected = connection.isConnected();
+				//InetAddress ipAddr = InetAddress.getLocalHost();
+				//filedomain = ipAddr.getHostAddress();			    
 	            log.info("Connection:"+connection);
 
 			} catch (SmackException e) {
@@ -206,12 +215,13 @@ public class XMPPServiceImpl {
 	}
 
 	private void processMessage(EntityBareJid from, Message message, Chat chat) {
-        System.out.println(message.getType()+"/"+filedomain+"/ "+from+" say: " + message.getBody());
         //log.info(message.toString());
         try {
             //sendMessage(message.getBody(),from);
+            String body = message.getBody();
+    		log.info(message.getType()+"/"+filedomain+"/ "+from+" 说: " + body);
 
-        	switch(parseType(message.getBody())) {
+        	switch(parseType(body)) {
 	        case 0:
 
 	        	processChat(from,message,chat);
@@ -278,27 +288,45 @@ public class XMPPServiceImpl {
 			Device device = (Device)jcrService.getObject(asset.getDevice());
 			asset.setFilePath(device.getLocation()+asset.getPath());
 			jcrService.updatePropertyByPath(asset.getPath(), "filePath", asset.getFilePath());
-			jcrService.createIcon(asset.getPath(), 100, 100);
-		}		
-		String filePath = asset.getFilePath()+"/x100.jpg";
-		File icon = new File(filePath);
-		if(!icon.exists()) jcrService.createIcon(asset.getPath(), 100, 100);
-		String imageString = "https://"+filedomain+fileport+"/resources/images/document-icon100.png";
-		try {
-	    	InputStream is = new FileInputStream(filePath);    	
-
-			byte buffer[] = new byte[is.available()];
-			IOUtils.read(is, buffer);			
-			is.close();
-			imageString = Base64.encodeBase64String(buffer);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			//jcrService.createIcon(asset.getPath(), 100, 100);
+		}	
+		
 		XHTMLExtension xhtmlExtension = new XHTMLExtension();
+		if(asset.getContentType().startsWith("image/")) {
+			String filePath = asset.getFilePath()+"/x100.jpg";
+			File icon = new File(filePath);
+			if(!icon.exists()) jcrService.createIcon(asset.getPath(), 100, 100);
+			String imageString = "https://"+filedomain+fileport+"/resources/images/document-icon100.png";
+			try {
+		    	InputStream is = new FileInputStream(filePath);    	
 
-		xhtmlExtension.addBody(
-		"<body><p style='font-size:large'><a href='"+url+"' title=''><h5>"+title+"</h5><img src='data:image/jpg;base64, "+imageString+"' alt=''/></a></p></body>");
+				byte buffer[] = new byte[is.available()];
+				IOUtils.read(is, buffer);			
+				is.close();
+				imageString = Base64.encodeBase64String(buffer);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			xhtmlExtension.addBody("<html xmlns='http://jabber.org/protocol/xhtml-im'>"
+					+"<body xmlns='http://www.w3.org/1999/xhtml'>"
+				    +"<p style='font-weight:bold'>"+url+"</p>"
+				    +"</body>"
+				    +"</html>");
+		}else {
+			msg.setBody("***");
+			xhtmlExtension.addBody("<x xmlns=\"jabber:x:data\" type=\"form\">"
+					+"<field label=\""+asset.getTitle()+"\" var=\"media1\">"
+					+"<media xmlns=\"urn:xmpp:media-element\" height=\"null\" width=\"null\">"
+					+"<uri type=\""+asset.getContentType()+"\" size=\""+asset.getSize()+"\" duration=\"0\">"
+					+url+"</uri></media></field></x><active xmlns=\"http://jabber.org/protocol/chatstates\"></active><request xmlns=\"urn:xmpp:receipts\"></request>");			
+			
+		}
+
+
+
+		//xhtmlExtension.addBody(
+		//"<body><p style='font-size:large'><a href='"+url+"' title=''><h5>"+title+"</h5><img src='data:image/jpg;base64, "+imageString+"' alt=''/></a></p></body>");
 		msg.addExtension(xhtmlExtension);
 		// User1 sends the message that contains the XHTML to user2
 		//log.info(imageString);
@@ -323,8 +351,8 @@ public class XMPPServiceImpl {
 		sendMessage("优云验证码："+dbuser.getCode() +"两分钟内有效",from);
 	}
 	
-	private void processAssets(EntityBareJid from, Message message, Chat chat) throws NotConnectedException, XmppStringprepException, XMPPException, InterruptedException, RepositoryException {
-		String fileupload[] = message.getBody().split("\n");
+	private void processAssets(EntityBareJid from, Message message, Chat chat) throws NotConnectedException, XmppStringprepException, XMPPException, InterruptedException, RepositoryException, UnsupportedEncodingException {
+		String fileupload[] = getUTF8(message.getBody()).split("\n");
 		String username = from.toString().split("@")[0];
 		String filepath = "/assets/"+username+"/httpfileupload";
 		String html ="<section class=\"wb-lbx lbx-hide-gal\"><ul class=\"list-inline\">";
@@ -369,6 +397,7 @@ public class XMPPServiceImpl {
 	}
 	
 	private Asset importAsset(String url, String username, String path) {
+		
 		Asset asset= new Asset();
 		String fileName = "error404.html";
 		String nodeName = url.substring(url.lastIndexOf("/")+1, url.length());
@@ -638,12 +667,13 @@ public class XMPPServiceImpl {
 		                if(isConnected && !pingManager.pingMyServer()) {
 		                	disconnect();
 		                }else if(!isConnected) {
-		                	login("admin","admin");
+		                	login(username,password);
 		                }else {
-		                	connection.sendStanza(presence);
-		                	Calendar calendar = Calendar.getInstance();
-		                	calendar.setTimeInMillis(connection.getLastStanzaReceived());
-		                	log.info("Last Stenza:"+calendar.getTime());
+		                	//presence.setType(Type.available);
+		                	//connection.sendStanza(presence);
+		                	//Calendar calendar = Calendar.getInstance();
+		                	//calendar.setTimeInMillis(connection.getLastStanzaReceived());
+		                	//log.info("Last Stenza:"+calendar.getTime());
 		                }
 						//log.info("Task performed on " + new Date()+", isConnection:"+pingManager.pingMyServer());
 					} catch (NotConnectedException e) {
@@ -666,13 +696,17 @@ public class XMPPServiceImpl {
 			
 			
 		}
-/*	   protected void finalize() throws Throwable {
+		private String getUTF8(String message) throws UnsupportedEncodingException {
+			return new String(message.getBytes("UTF-8"),"ISO-8859-1"); 
+		}
+		/*
+	   protected void finalize() throws Throwable {
 	        try {
 	            disconnect();
 	        } finally {
 	            super.finalize();
 	        }
-	    }*/
-
+	    }
+*/
 
 }
