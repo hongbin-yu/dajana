@@ -8,15 +8,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.InetAddress;
 import java.net.URL;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
-import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -24,9 +20,6 @@ import javax.activation.MimetypesFileTypeMap;
 import javax.jcr.RepositoryException;
 import javax.net.ssl.HttpsURLConnection;
 
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
@@ -54,7 +47,6 @@ import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import org.jivesoftware.smackx.ping.PingFailedListener;
 import org.jivesoftware.smackx.ping.PingManager;
-import org.jivesoftware.smackx.xdata.Form;
 import org.jivesoftware.smackx.xhtmlim.packet.XHTMLExtension;
 import org.jxmpp.jid.EntityBareJid;
 import org.jxmpp.jid.impl.JidCreate;
@@ -75,8 +67,8 @@ public class XMPPServiceImpl {
 
 	private final Logger log = LoggerFactory.getLogger(XMPPServiceImpl.class);
 	private static String host = "host ip";
-	private static String filedomain = "localhost";//"tu.dajana.ca";	
-	private static String fileport = ":8888";		
+	private static String filedomain = "tu.dajana.ca";	
+	private static String fileport = "";		
 	private static String domain = "dajana.ca";
 	private static int port = 5222;
 	private String username="tester";
@@ -290,7 +282,7 @@ public class XMPPServiceImpl {
 			jcrService.updatePropertyByPath(asset.getPath(), "filePath", asset.getFilePath());
 			//jcrService.createIcon(asset.getPath(), 100, 100);
 		}	
-		
+
 		XHTMLExtension xhtmlExtension = new XHTMLExtension();
 		if(asset.getContentType().startsWith("image/")) {
 			String filePath = asset.getFilePath()+"/x100.jpg";
