@@ -120,6 +120,7 @@ public class XMPPServiceImpl {
 		JSONParser parser = new JSONParser();
 		try {
 			Asset asset = (Asset)jcrService.getObject("/assets/home/json/yuhongyun.json");
+			
 			Device device = (Device)jcrService.getObject(asset.getDevice());
 		
 			String filePath = device.getLocation()+asset.getPath()+"/origin"+asset.getExt();
@@ -140,8 +141,9 @@ public class XMPPServiceImpl {
 		} catch (IOException | ParseException e) {
 			log.error("init error:"+e.getMessage());
 		} catch (RepositoryException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("init error:"+e.getMessage());
+		} catch(NullPointerException e) {
+			log.error("init error:"+e.getMessage());		
 		}
 
 
