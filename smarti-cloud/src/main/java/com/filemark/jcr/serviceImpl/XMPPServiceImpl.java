@@ -2,13 +2,18 @@ package com.filemark.jcr.serviceImpl;
 
 
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -19,6 +24,7 @@ import java.util.TimerTask;
 import javax.activation.MimetypesFileTypeMap;
 import javax.jcr.RepositoryException;
 import javax.net.ssl.HttpsURLConnection;
+import javax.swing.JTextField;
 
 import org.apache.commons.cli.Options;
 import org.apache.commons.codec.binary.Base64;
@@ -36,6 +42,7 @@ import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.XMPPException.XMPPErrorException;
 import org.jivesoftware.smack.chat2.Chat;
 import org.jivesoftware.smack.chat2.ChatManager;
 import org.jivesoftware.smack.chat2.IncomingChatMessageListener;
@@ -45,10 +52,23 @@ import org.jivesoftware.smack.packet.Presence.Type;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
+import org.jivesoftware.smackx.filetransfer.FileTransferListener;
+import org.jivesoftware.smackx.filetransfer.FileTransferManager;
+import org.jivesoftware.smackx.filetransfer.FileTransferRequest;
+import org.jivesoftware.smackx.filetransfer.IncomingFileTransfer;
+import org.jivesoftware.smackx.filetransfer.OutgoingFileTransfer;
+import org.jivesoftware.smackx.jingle.JingleHandler;
+import org.jivesoftware.smackx.jingle.JingleManager;
+import org.jivesoftware.smackx.jingle.JingleSession;
+import org.jivesoftware.smackx.jingle.transports.JingleTransportManager;
 import org.jivesoftware.smackx.ping.PingFailedListener;
 import org.jivesoftware.smackx.ping.PingManager;
 import org.jivesoftware.smackx.xhtmlim.packet.XHTMLExtension;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.jxmpp.jid.EntityBareJid;
+import org.jxmpp.jid.Jid;
 import org.jxmpp.jid.impl.JidCreate;
 import org.jxmpp.stringprep.XmppStringprepException;
 import org.pegdown.PegDownProcessor;
@@ -70,14 +90,21 @@ public class XMPPServiceImpl {
 	private static String filedomain = "tu.dajana.ca";	
 	private static String fileport = "";		
 	private static String domain = "dajana.ca";
-	private static int port = 5222;
-	private String username="admin";
-	private String password="admin";
+	private static Long port = new Long(5222);
+	private String username="tester";
+	private String password="tester";
 	private static Options options = new Options();
 	@Autowired
 	private JcrServices jcrService;
 	private PingManager pingManager;
-	ReconnectionManager reconnectionManager;
+	private ReconnectionManager reconnectionManager;
+	private FileTransferManager fileTransferManager ;
+	private JingleTransportManager transportManager = null;
+    private JingleManager jingleManager = null;
+    private JingleSession incoming = null;
+    private JingleSession outgoing = null;
+    private JTextField jid;	
+    
 	private AbstractXMPPConnection connection;
 	private ConnectionListener connectionListener;
 	private Roster roster;
@@ -89,14 +116,37 @@ public class XMPPServiceImpl {
 			
 	//private IncomingChatMessageListener incomingChatMessageListener;
 	public void initialize() {
-		//System.gc();
-		//if(connection == null) {
-			log.info("login "+domain+":"+port+" by yuhong");
-			login(username,password);	
-			checkConnection();
+
+		JSONParser parser = new JSONParser();
+		try {
+			Asset asset = (Asset)jcrService.getObject("/assets/home/json/yuhongyun.json");
+			Device device = (Device)jcrService.getObject(asset.getDevice());
 		
-		//}
-		//options.addOption("-c", "验证码");
+			String filePath = device.getLocation()+asset.getPath()+"/origin"+asset.getExt();
+			Object obj = parser.parse(new FileReader(filePath));
+			
+			JSONObject jsonObject = (JSONObject) obj;
+			
+			domain = (String)jsonObject.get("domain");
+			port = (Long)jsonObject.get("port");
+			username = (String)jsonObject.get("username");
+			password = (String)jsonObject.get("password");			
+			filedomain = (String)jsonObject.get("filedomain");
+			fileport = (String)jsonObject.get("fileport");
+			
+			log.info("login "+domain+":"+port+" by "+filedomain);
+			login(username,password);				
+			checkConnection();
+		} catch (IOException | ParseException e) {
+			log.error("init error:"+e.getMessage());
+		} catch (RepositoryException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+
+		
+
 	}
 	
 	public void login(String username,String password) {
@@ -108,7 +158,7 @@ public class XMPPServiceImpl {
 			    .setResource(filedomain)
 			    .setHost(domain)
 			    .setXmppDomain(domain)
-			    .setPort(port)
+			    .setPort(port.intValue())
 			    .setSendPresence(true)
 			    .setCompressionEnabled(false)
 			    .setSecurityMode(SecurityMode.required)
@@ -116,8 +166,8 @@ public class XMPPServiceImpl {
 			    connection = new XMPPTCPConnection(conf);
 				connection.connect().login();
 				roster = Roster.getInstanceFor(connection);
-				roster = Roster.getInstanceFor(connection);
-				roster.setRosterLoadedAtLogin(true);
+				//roster = Roster.getInstanceFor(connection);
+				//roster.setRosterLoadedAtLogin(true);
 
 				//presence = new Presence(connection.getUser(),Type.available);
 				presence = roster.getPresence(connection.getUser().asBareJid());
@@ -128,6 +178,8 @@ public class XMPPServiceImpl {
 				presence.setPriority(presence.getPriority()+1);
 				connection.sendStanza(presence);
 				connection.setReplyTimeout(60000);
+				fileTransferManager = FileTransferManager.getInstanceFor(connection);
+				jingleManager = JingleManager.getInstanceFor(connection);
 				reconnectionManager = ReconnectionManager.getInstanceFor(connection);
 				ReconnectionManager.setEnabledPerDefault(true);
 				reconnectionManager.enableAutomaticReconnection();
@@ -149,7 +201,64 @@ public class XMPPServiceImpl {
 					}
 		        	
 		        });
-			    
+			    fileTransferManager.addFileTransferListener(new FileTransferListener() {
+			        @Override
+			        public void fileTransferRequest(FileTransferRequest request) {
+			            IncomingFileTransfer ift = request.accept();
+			            long size = request.getFileSize();
+			            String fileName = request.getFileName();
+			            
+			            String contentType = request.getMimeType();
+			            Jid jid = request.getRequestor();
+			    		String username = jid.toString().split("@")[0];
+			    		String filepath = "/assets/"+username+"/httpfileupload";
+			            log.info("fileTransferRequestor:"+jid+",fileName="+fileName);
+			            //byte[] dataReceived = new byte[1];
+			            InputStream is = null;
+						try {
+			                is = ift.receiveFile();
+			           		if(!jcrService.nodeExsits("/assets/"+username)) {
+			           			Folder folder = new Folder();
+			           			folder.setTitle(username);
+			           			folder.setDescription(jid.toString());
+			           			folder.setName(username);
+			           			folder.setPath("/assets/"+username);
+			           			folder.setLastUpdated(new Date());
+			           			folder.setLastModified(new Date());   			
+			           			jcrService.addOrUpdate(folder);
+			           		}
+			                Asset asset = saveAsset(username,fileName,contentType,filepath,size,is);
+							sendMessage("http://"+filedomain+fileport+"/site/httpfileupload/"+asset.getUid()+"/"+URLEncoder.encode(asset.getName(), "UTF-8"),jid.toString());
+			                
+/*			                ByteArrayOutputStream os = new ByteArrayOutputStream();
+			                int nRead;
+			                byte[] buf = new byte[1024];
+			                while ((nRead = is.read(buf,  0, buf.length)) != -1) {
+			                    os.write(buf, 0, nRead);
+			                }
+			                os.flush();
+			                dataReceived = os.toByteArray();*/
+			            } catch (SmackException | IOException | XMPPErrorException e) {
+							log.error("fileTransferManager"+e.getMessage());
+			            } catch (InterruptedException e) {
+							log.error("fileTransferManager"+e.getMessage());
+						} catch (RepositoryException e) {
+							log.error("fileTransferManager"+e.getMessage());
+						} catch (XMPPException e) {
+							log.error("fileTransferManager"+e.getMessage());
+						}finally {
+							if(is !=null)
+								try {
+									is.close();
+								} catch (IOException e) {
+									log.error("fileTransferManager"+e.getMessage());
+
+								}
+						}
+			        }
+
+
+			    });
 
 			    isConnected = connection.isConnected();
 				//InetAddress ipAddr = InetAddress.getLocalHost();
@@ -287,8 +396,9 @@ public class XMPPServiceImpl {
 		if(asset.getContentType().startsWith("image/")) {
 			String filePath = asset.getFilePath()+"/x100.jpg";
 			File icon = new File(filePath);
-			if(!icon.exists()) jcrService.createIcon(asset.getPath(), 100, 100);
+			//if(!icon.exists()) jcrService.createIcon(asset.getPath(), 100, 100);
 			String imageString = "https://"+filedomain+fileport+"/resources/images/document-icon100.png";
+			/*
 			try {
 		    	InputStream is = new FileInputStream(filePath);    	
 
@@ -299,14 +409,14 @@ public class XMPPServiceImpl {
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
+			}*/
 			xhtmlExtension.addBody("<html xmlns='http://jabber.org/protocol/xhtml-im'>"
 					+"<body xmlns='http://www.w3.org/1999/xhtml'>"
 				    +"<p style='font-weight:bold'>"+url+"</p>"
 				    +"</body>"
 				    +"</html>");
 		}else {
-			msg.setBody("***");
+
 			xhtmlExtension.addBody("<x xmlns=\"jabber:x:data\" type=\"form\">"
 					+"<field label=\""+asset.getTitle()+"\" var=\"media1\">"
 					+"<media xmlns=\"urn:xmpp:media-element\" height=\"null\" width=\"null\">"
@@ -315,16 +425,15 @@ public class XMPPServiceImpl {
 			
 		}
 
-
-
 		//xhtmlExtension.addBody(
 		//"<body><p style='font-size:large'><a href='"+url+"' title=''><h5>"+title+"</h5><img src='data:image/jpg;base64, "+imageString+"' alt=''/></a></p></body>");
-		msg.addExtension(xhtmlExtension);
+		//msg.addExtension(xhtmlExtension);
 		// User1 sends the message that contains the XHTML to user2
 		//log.info(imageString);
 		//sendMessage(url,from);
 	    sendMessage(msg,from);
-	    Thread.sleep(200);
+
+	    //Thread.sleep(200);
 
 	}
 	
@@ -348,23 +457,23 @@ public class XMPPServiceImpl {
 		String username = from.toString().split("@")[0];
 		String filepath = "/assets/"+username+"/httpfileupload";
 		String html ="<section class=\"wb-lbx lbx-hide-gal\"><ul class=\"list-inline\">";
-   		if(!jcrService.nodeExsits(filepath)) {
+   		if(!jcrService.nodeExsits("/assets/"+username)) {
    			Folder folder = new Folder();
-   			folder.setTitle("云存储");
-   			folder.setName("httpfileupload");
-   			folder.setPath(filepath);
+   			folder.setTitle(username);
+   			folder.setDescription(jid.toString());
+   			folder.setName(username);
+   			folder.setPath("/assets/"+username);
    			folder.setLastUpdated(new Date());
    			folder.setLastModified(new Date());   			
    			jcrService.addOrUpdate(folder);
    		}
-   		
 		for(String url:fileupload) {
-			Asset asset = importAsset(url,username.toString(),filepath);
-			String httpfileupload = "/content/httpfileupload/"+asset.getUid()+"/"+asset.getName();
-			log.info(httpfileupload);
-			html +="<li><a href=\""+httpfileupload+"\" title=\"\"><img src=\""+httpfileupload+"?w=4\" alt=\"\"></li>";
-			//sendMessage("https://"+filedomain+fileport+httpfileupload,from);
 			try {
+				Asset asset = importAsset(url,username.toString(),filepath);
+				String httpfileupload = "/content/httpfileupload/"+asset.getUid()+"/"+asset.getName();
+				log.info(httpfileupload);
+				html +="<li><a href=\""+httpfileupload+"\" title=\"\"><img src=\""+httpfileupload+"?w=4\" alt=\"\"></li>";
+			//sendMessage("https://"+filedomain+fileport+httpfileupload,from);
 				sendHtmlLink(from,"http://"+filedomain+fileport+httpfileupload,asset);
 			} catch (IOException e) {
 				log.error(e.getMessage());
@@ -388,12 +497,12 @@ public class XMPPServiceImpl {
 
 	}
 	
-	private Asset importAsset(String url, String username, String path) {
+	private Asset importAsset(String url, String username, String path) throws RepositoryException, IOException {
 		
 		Asset asset= new Asset();
 		String fileName = "error404.html";
 		String nodeName = url.substring(url.lastIndexOf("/")+1, url.length());
-		try {
+		//try {
 			if(!jcrService.nodeExsits(path)) {
 				jcrService.addNodes(path, "nt:unstructured",username);		
 			}			
@@ -435,10 +544,13 @@ public class XMPPServiceImpl {
 	    	}        
 	        
 	    	String contentType = conn.getContentType();
-	    	String devicePath = "/system/devices/default";//jcrService.getDevice();
+	    	Long size = new Long(conn.getContentLength());
+	    	InputStream is = conn.getInputStream();
+/*	    	String devicePath = "/system/devices/default";//jcrService.getDevice();
 			if(contentType != null && contentType.startsWith("video/")) {
 				devicePath = "/system/devices/backup";//jcrService.getBackup();
 			}
+			
 		    MimeTypes allTypes = MimeTypes.getDefaultMimeTypes();
 		    log.debug("contentType="+contentType);
 		    String ext="";
@@ -450,10 +562,11 @@ public class XMPPServiceImpl {
 				log.error(e1.getMessage());
 			}
 			String urlPath = url;
-			if(ext==null || "".equals(ext))
-				ext = urlPath.replaceFirst("^.*/[^/]*(\\.[^\\./]*|)$", "$1");
+			*/
+			//if(ext==null || "".equals(ext))
+			//	ext = urlPath.replaceFirst("^.*/[^/]*(\\.[^\\./]*|)$", "$1");
 
-
+/*
 			fileName = nodeName;
 			fileName = nodeName.replaceAll(" ", "-");
 			if(!fileName.matches("(\\w|\\.|\\-|\\s|_)+")) {
@@ -487,10 +600,7 @@ public class XMPPServiceImpl {
 				File folder = new File(device.getLocation()+asset.getPath());
 				File file = new File(device.getLocation()+asset.getPath()+"/origin"+ext);
 				if(!folder.exists()) folder.mkdirs();
-	/*			if(!file.getParentFile().exists()) {
-					file.getParentFile().mkdirs();
-				}
-	*/
+
 		
 				//FileUtils.copyURLToFile(url_img, file);
 		    	InputStream is = conn.getInputStream();
@@ -516,17 +626,107 @@ public class XMPPServiceImpl {
 				jcrService.autoRoateImage(assetPath);
 				log.debug("create icon");
 				jcrService.createIcon(assetPath, 400,400);
-				jcrService.createIcon(assetPath, 100,100);				
+				//jcrService.createIcon(assetPath, 100,100);				
 			}		
 			
 			log.info("Done");
-		    
-		}catch (Exception e){
+		    */
+	    	asset = saveAsset(username,nodeName,contentType,path,size,is);
+/*		}catch (Exception e){
 			log.error("error:"+e.getMessage());
 
-		}
+		}*/
 		
 		return asset;//"/protected/httpfileupload/"+asset.getUid()+"/"+nodeName;
+	}
+	
+	private Asset saveAsset(String username,String fileName,String contentType,String path,long size,InputStream is) throws RepositoryException, IOException {
+		Asset asset= new Asset();
+		String nodeName = fileName;
+	    MimeTypes allTypes = MimeTypes.getDefaultMimeTypes();
+   		if(!jcrService.nodeExsits(path)) {
+   			Folder folder = new Folder();
+   			folder.setTitle("云存储");
+   			folder.setName("httpfileupload");
+   			folder.setPath(path);
+   			folder.setLastUpdated(new Date());
+   			folder.setLastModified(new Date());   			
+   			jcrService.addOrUpdate(folder);
+   		}
+   		
+	    String ext="";
+	    if(contentType !=null)
+		try {
+			MimeType mimeType = allTypes.forName(contentType);
+		    ext = mimeType.getExtension(); 
+		} catch (MimeTypeException e1) {
+			log.error(e1.getMessage());
+		}
+    	String devicePath = "/system/devices/default";//jcrService.getDevice();
+		if(contentType != null && contentType.startsWith("video/")) {
+			devicePath = "/system/devices/backup";//jcrService.getBackup();
+		}
+		if(ext==null || "".equals(ext))
+			ext = fileName.replaceFirst("^.*/[^/]*(\\.[^\\./]*|)$", "$1");
+		fileName = nodeName;
+		fileName = nodeName.replaceAll(" ", "-");
+		if(!fileName.matches("(\\w|\\.|\\-|\\s|_)+")) {
+			fileName = ""+getDateTime()+ext;
+		}
+		if(!fileName.endsWith(ext)) fileName +=ext;
+		String assetPath =  path+"/"+fileName;
+		if(jcrService.nodeExsits(path+"/"+fileName)) {
+			asset = (Asset)jcrService.getObject(path+"/"+fileName);
+
+			return asset;//"/protected/httpfileupload/"+asset.getUid()+"/"+fileName;
+		}else {
+			assetPath = jcrService.getUniquePath(path, fileName);
+		}
+		if(contentType==null || "".equals(contentType))
+			contentType = new MimetypesFileTypeMap().getContentType(nodeName);
+
+    	asset.setTitle(nodeName);	
+    	asset.setName(nodeName);
+		asset.setCreatedBy(username);
+		asset.setPath(assetPath);
+		asset.setLastModified(new Date());
+		asset.setContentType(contentType);
+		asset.setDevice(devicePath);	
+		asset.setExt(ext);
+
+		if(asset.getDevice()!=null) {
+			Device device = (Device)jcrService.getObject(asset.getDevice());
+			log.debug("Writing device "+device.getPath() +":"+device.getLocation());
+			
+			File folder = new File(device.getLocation()+asset.getPath());
+			File file = new File(device.getLocation()+asset.getPath()+"/origin"+ext);
+			if(!folder.exists()) folder.mkdirs();
+	
+			//FileUtils.copyURLToFile(url_img, file);
+			FileUtils.copyInputStreamToFile(is, file);
+			is.close();
+			//Date end = new Date();
+			//long speed = file.length()*8/(end.getTime() - start.getTime()); 
+			asset.setFilePath(device.getLocation()+asset.getPath());
+			asset.setSize(file.length());
+			asset.setOriginalDate(new Date(file.lastModified()));
+			jcrService.addOrUpdate(asset);
+			jcrService.updateCalendar(path,"lastModified");
+			jcrService.setProperty(path, "changed", "true");
+			//asset.setTitle(asset.getTitle() +" - "+speed+"kb/s");
+			//output.close();
+		}else {
+			log.debug("Writing jcr");
+	    	jcrService.addFile(assetPath,"original",is,contentType);
+			is.close();
+		}
+		if(contentType != null && contentType.startsWith("image/")) {
+			jcrService.autoRoateImage(assetPath);
+			log.debug("create icon");
+			jcrService.createIcon(assetPath, 400,400);
+			//jcrService.createIcon(assetPath, 100,100);				
+		}	
+		return asset;
 	}
 	
 	private void processCommand(EntityBareJid from, Message message, Chat chat) {
@@ -555,6 +755,23 @@ public class XMPPServiceImpl {
    		}	   		
 
 		addChat(html,username,path);
+	}
+	
+	private void sendFile(EntityBareJid from,Asset asset, Chat chat ) throws InterruptedException, FileNotFoundException {
+		    OutgoingFileTransfer oft = fileTransferManager.createOutgoingFileTransfer(from.asEntityFullJidIfPossible());
+		    oft.sendStream(new FileInputStream(asset.getFilePath()), asset.getTitle(), asset.getSize(), asset.getTitle());
+		    outerloop: while (!oft.isDone()) {
+		        switch (oft.getStatus()) {
+		        case error:
+		            System.out.println("Filetransfer error: " + oft.getError());
+		            break outerloop;
+		        default:
+		            System.out.println("Filetransfer status: " + oft.getStatus() + ". Progress: " + oft.getProgress());
+		            break;
+		        }
+		        Thread.sleep(1000);
+		    }
+
 	}
 	
 	private void addChat(String message, String username, String path) throws RepositoryException {
@@ -700,5 +917,53 @@ public class XMPPServiceImpl {
 	        }
 	    }
 */
+
+		public static String getFiledomain() {
+			return filedomain;
+		}
+
+		public static void setFiledomain(String filedomain) {
+			XMPPServiceImpl.filedomain = filedomain;
+		}
+
+		public static String getFileport() {
+			return fileport;
+		}
+
+		public static void setFileport(String fileport) {
+			XMPPServiceImpl.fileport = fileport;
+		}
+
+		public static String getDomain() {
+			return domain;
+		}
+
+		public static void setDomain(String domain) {
+			XMPPServiceImpl.domain = domain;
+		}
+
+		public static Long getPort() {
+			return port;
+		}
+
+		public static void setPort(int port) {
+			XMPPServiceImpl.port = new Long(port);
+		}
+
+		public String getUsername() {
+			return username;
+		}
+
+		public void setUsername(String username) {
+			this.username = username;
+		}
+
+		public String getPassword() {
+			return password;
+		}
+
+		public void setPassword(String password) {
+			this.password = password;
+		}
 
 }
