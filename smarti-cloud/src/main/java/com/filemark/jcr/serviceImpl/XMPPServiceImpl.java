@@ -53,6 +53,7 @@ import org.jivesoftware.smack.packet.Presence.Type;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
+import org.jivesoftware.smackx.filetransfer.FileTransfer;
 import org.jivesoftware.smackx.filetransfer.FileTransferListener;
 import org.jivesoftware.smackx.filetransfer.FileTransferManager;
 import org.jivesoftware.smackx.filetransfer.FileTransferRequest;
@@ -231,6 +232,7 @@ public class XMPPServiceImpl {
 								}
 							    double progress = ift.getProgress();
 							    double progressPercent = progress * 100.0;
+							    Date start=new Date();
 								while (!ift.isDone())
 								{
 								    progress = ift.getProgress();
@@ -239,6 +241,78 @@ public class XMPPServiceImpl {
 								    log.info("Transfer status is: " + ift.getStatus());
 								    log.info("File transfer is " + percComplete + "% complete");
 								    Thread.sleep(1000);
+					                Thread.sleep(2000L);
+
+					                if (ift.getStatus().equals(FileTransfer.Status.cancelled)) {
+
+					                	log.info("File transfer CANCELLED");
+
+					                }
+
+					 
+
+					                if (ift.getStatus().equals(FileTransfer.Status.complete)) {
+
+					                    log.info("File transfer COMPLETE："+(new Date().getTime() - start.getTime()));
+
+					                }
+
+					 
+
+					                if (ift.getStatus().equals(FileTransfer.Status.error)) {
+
+					                	log.info("File transfer ERROR");
+
+					                    ift.cancel();
+
+					                }
+
+					 
+
+					                if (ift.getStatus().equals(FileTransfer.Status.in_progress)) {
+
+					                	log.info("File transfer IN PROGRESS");
+
+					                }
+
+					 
+
+					                if (ift.getStatus().equals(FileTransfer.Status.negotiating_transfer)) {
+
+					                	log.info("File transfer IN NEGOTIATING");
+
+					                }
+
+					 
+
+					                if (ift.getStatus().equals(FileTransfer.Status.initial)) {
+
+					                	log.info("File now transfer INITIAL");
+
+					                }
+
+					 
+
+					                if (ift.getStatus().equals(FileTransfer.Status.negotiating_stream)) {
+
+					                	log.info("File transfer NEGOTIATING STREAM");
+
+					                }
+
+					 
+
+					                if (ift.getStatus().equals(FileTransfer.Status.refused)) {
+
+					                	log.info("File transfer REFUSED");
+
+					                }
+					                
+					                if(new Date().getTime() - start.getTime() > 60000) {
+					                	log.info("Timeout");
+					                    ift.cancel();	
+					                    sendMessage("timeout",jid.toString());
+					                    return;
+					                }
 								}
 								is = new FileInputStream(tempFile);
 						/*	}else {
