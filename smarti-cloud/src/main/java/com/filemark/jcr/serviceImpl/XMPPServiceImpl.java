@@ -219,7 +219,7 @@ public class XMPPServiceImpl {
 			            //byte[] dataReceived = new byte[1];
 			            InputStream is = null;
 						try {
-/*							if(contentType == null) {
+//							if(contentType == null) {
 								final File tempFile = File.createTempFile("temp-",fileName);
 						        tempFile.deleteOnExit();
 								ift.receiveFile(tempFile);
@@ -241,11 +241,11 @@ public class XMPPServiceImpl {
 								    Thread.sleep(1000);
 								}
 								is = new FileInputStream(tempFile);
-							}else {
+						/*	}else {
 				                is = ift.receiveFile();								
-							}*/
+							}
 							 is = ift.receiveFile();	
-
+						*/
 			           		if(!jcrService.nodeExsits("/assets/"+username)) {
 			           			Folder folder = new Folder();
 			           			folder.setTitle(username);
