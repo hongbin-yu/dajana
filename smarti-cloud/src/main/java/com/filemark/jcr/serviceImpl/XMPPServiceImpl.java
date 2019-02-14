@@ -218,7 +218,33 @@ public class XMPPServiceImpl {
 			            //byte[] dataReceived = new byte[1];
 			            InputStream is = null;
 						try {
-			                is = ift.receiveFile();
+							if(contentType == null) {
+								final File tempFile = File.createTempFile("temp-",fileName);
+						        tempFile.deleteOnExit();
+								ift.receiveFile(tempFile);
+								log.info("Incoming file transfer: " + fileName);
+								log.info("Transfer status is: " + ift.getStatus());
+								if(ift.getStatus().toString().equals("Error")) {
+									sendMessage("Transfer file error",jid.toString());
+									return;
+								}
+							    double progress = ift.getProgress();
+							    double progressPercent = progress * 100.0;
+								while (!ift.isDone())
+								{
+								    progress = ift.getProgress();
+								    progressPercent = progress * 100.0;
+								    String percComplete = String.format("%1$,.2f", progressPercent);
+								    log.info("Transfer status is: " + ift.getStatus());
+								    log.info("File transfer is " + percComplete + "% complete");
+								    Thread.sleep(1000);
+								}
+								is = new FileInputStream(tempFile);
+							}else {
+				                is = ift.receiveFile();								
+							}
+
+
 			           		if(!jcrService.nodeExsits("/assets/"+username)) {
 			           			Folder folder = new Folder();
 			           			folder.setTitle(username);
@@ -230,7 +256,7 @@ public class XMPPServiceImpl {
 			           			jcrService.addOrUpdate(folder);
 			           		}
 			                Asset asset = saveAsset(username,fileName,contentType,filepath,size,is);
-							sendMessage("http://"+filedomain+fileport+"/site/httpfileupload/"+asset.getUid()+"/"+URLEncoder.encode(asset.getName(), "UTF-8"),jid.toString());
+							sendMessage("http://"+filedomain+fileport+"/site/httpfileupload/"+asset.getUid()+"/"+asset.getName().replaceAll(" ", "+"),jid.toString());
 			                
 /*			                ByteArrayOutputStream os = new ByteArrayOutputStream();
 			                int nRead;

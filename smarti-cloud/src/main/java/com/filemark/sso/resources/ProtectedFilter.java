@@ -114,7 +114,7 @@ public class ProtectedFilter implements Filter {
 	    			session.setAttribute("username", authors[2]);
 	    			session.setAttribute("usertitle", authors[3]);	 
 	    			session.setAttribute("signingKey", authors[4]);						
-		        	logger.info("Create Cookie:"+domain +" authenticated:"+auth.isAuthenticated());
+		        	logger.debug("Create Cookie:"+domain +" authenticated:"+auth.isAuthenticated());
 			        CookieUtil.create(httpServletResponse, JwtUtil.jwtTokenCookieName, JwtUtil.generateToken(JwtUtil.signingKey, signingUser), false, 86400*30, domain);
 			        CookieUtil.create(httpServletResponse, "JSESSIONID", session.getId(), true, -1, domain);
 		        }
