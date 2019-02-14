@@ -13,6 +13,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -481,7 +482,7 @@ public class XMPPServiceImpl {
 	}
 	
 	private void processAssets(EntityBareJid from, Message message, Chat chat) throws NotConnectedException, XmppStringprepException, XMPPException, InterruptedException, RepositoryException, UnsupportedEncodingException {
-		String fileupload[] = getUTF8(message.getBody()).split("\n");
+		String fileupload[] = message.getBody().split("\n");
 		String username = from.toString().split("@")[0];
 		String filepath = "/assets/"+username+"/httpfileupload";
 		String html ="<section class=\"wb-lbx lbx-hide-gal\"><ul class=\"list-inline\">";
@@ -530,11 +531,11 @@ public class XMPPServiceImpl {
 		Asset asset= new Asset();
 		String fileName = "error404.html";
 		String nodeName = url.substring(url.lastIndexOf("/")+1, url.length());
-		//try {
+		//nodeName = URLDecoder.decode(nodeName, "UTF-8");
 			if(!jcrService.nodeExsits(path)) {
 				jcrService.addNodes(path, "nt:unstructured",username);		
 			}			
-	        URL url_img = new URL(url.replace(" ", "+"));
+	        URL url_img = new URL(getUTF8(url).replace(" ", "+"));
 	    	HttpsURLConnection conn = (HttpsURLConnection) url_img.openConnection();
 	    	conn.setReadTimeout(30000);
 	    	conn.addRequestProperty("Accept-Language", "en-US,en;q=0.8");
