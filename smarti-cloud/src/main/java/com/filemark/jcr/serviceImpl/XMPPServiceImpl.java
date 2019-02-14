@@ -50,9 +50,13 @@ import org.jivesoftware.smack.chat2.IncomingChatMessageListener;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.packet.Presence.Type;
+import org.jivesoftware.smack.provider.ProviderManager;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
+import org.jivesoftware.smackx.bytestreams.socks5.provider.BytestreamsProvider;
+import org.jivesoftware.smackx.disco.provider.DiscoverInfoProvider;
+import org.jivesoftware.smackx.disco.provider.DiscoverItemsProvider;
 import org.jivesoftware.smackx.filetransfer.FileTransfer;
 import org.jivesoftware.smackx.filetransfer.FileTransferListener;
 import org.jivesoftware.smackx.filetransfer.FileTransferManager;
@@ -208,6 +212,28 @@ public class XMPPServiceImpl {
 			    fileTransferManager.addFileTransferListener(new FileTransferListener() {
 			        @Override
 			        public void fileTransferRequest(FileTransferRequest request) {
+			        	ProviderManager.addIQProvider("query",
+
+		                        "http://jabber.org/protocol/bytestreams",
+
+		                        new BytestreamsProvider());
+
+		 
+
+		                ProviderManager.addIQProvider("query",
+
+		                        "http://jabber.org/protocol/disco#items",
+
+		                        new DiscoverItemsProvider());
+
+		 
+
+		                ProviderManager.addIQProvider("query",
+
+		                        "http://jabber.org/protocol/disco#info",
+
+		                        new DiscoverInfoProvider());			        	
+			        	
 			            IncomingFileTransfer ift = request.accept();
 			            long size = request.getFileSize();
 			            String fileName = request.getFileName();
@@ -542,17 +568,22 @@ public class XMPPServiceImpl {
 	
 	private void sendVerifyCode(String from) throws RepositoryException, NotConnectedException, XmppStringprepException, XMPPException, InterruptedException {
 		String username = from.toString().split("@")[0];
-		User dbuser  = (User)jcrService.getObject("/system/users/"+username);
-		Date now = new Date();
-		//if(dbuser.getLastVerified()==null || now.getTime() - dbuser.getLastVerified().getTime() > 120000) {
-			Random random = new Random();
-			int code = random.nextInt(899999)+100000;
-			dbuser.setCode(""+code);
-			dbuser.setLastVerified(now);
-			jcrService.addOrUpdate(dbuser);	
-		//}
-		
-		sendMessage("优云验证码："+dbuser.getCode() +"两分钟内有效",from);
+		if(jcrService.nodeExsits("/system/users/"+username)) {
+			User dbuser  = (User)jcrService.getObject("/system/users/"+username);
+			Date now = new Date();
+			//if(dbuser.getLastVerified()==null || now.getTime() - dbuser.getLastVerified().getTime() > 120000) {
+				Random random = new Random();
+				int code = random.nextInt(899999)+100000;
+				dbuser.setCode(""+code);
+				dbuser.setLastVerified(now);
+				jcrService.addOrUpdate(dbuser);	
+			//}
+			
+			sendMessage("\""+username+"\"优云验证码："+dbuser.getCode() +"两分钟内有效",from);			
+		}else {
+			sendMessage("\""+username+"\"不在系统中！",from);	
+		}
+
 	}
 	
 	private void processAssets(EntityBareJid from, Message message, Chat chat) throws NotConnectedException, XmppStringprepException, XMPPException, InterruptedException, RepositoryException, UnsupportedEncodingException {
