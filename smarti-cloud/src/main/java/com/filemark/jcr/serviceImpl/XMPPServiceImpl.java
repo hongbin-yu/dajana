@@ -878,7 +878,7 @@ public class XMPPServiceImpl {
 		if(contentType != null && contentType.startsWith("image/")) {
 			jcrService.autoRoateImage(assetPath);
 			log.debug("create icon");
-			jcrService.createIcon(assetPath, 400,400);
+			//jcrService.createIcon(assetPath, 400,400);
 			//jcrService.createIcon(assetPath, 100,100);				
 		}	
 		return asset;
