@@ -55,11 +55,15 @@ import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import org.jivesoftware.smackx.bytestreams.socks5.provider.BytestreamsProvider;
+import org.jivesoftware.smackx.disco.ServiceDiscoveryManager;
 import org.jivesoftware.smackx.disco.provider.DiscoverInfoProvider;
 import org.jivesoftware.smackx.disco.provider.DiscoverItemsProvider;
 import org.jivesoftware.smackx.filetransfer.FileTransfer;
+import org.jivesoftware.smackx.filetransfer.FileTransferException.NoAcceptableTransferMechanisms;
+import org.jivesoftware.smackx.filetransfer.FileTransferException.NoStreamMethodsOfferedException;
 import org.jivesoftware.smackx.filetransfer.FileTransferListener;
 import org.jivesoftware.smackx.filetransfer.FileTransferManager;
+import org.jivesoftware.smackx.filetransfer.FileTransferNegotiator;
 import org.jivesoftware.smackx.filetransfer.FileTransferRequest;
 import org.jivesoftware.smackx.filetransfer.IncomingFileTransfer;
 import org.jivesoftware.smackx.filetransfer.OutgoingFileTransfer;
@@ -209,10 +213,13 @@ public class XMPPServiceImpl {
 					}
 		        	
 		        });
+
+			    //FileTransferNegotiator.getInstanceFor(connection)    
+			    
 			    fileTransferManager.addFileTransferListener(new FileTransferListener() {
 			        @Override
 			        public void fileTransferRequest(FileTransferRequest request) {
-			        	ProviderManager.addIQProvider("query",
+/*			        	ProviderManager.addIQProvider("query",
 
 		                        "http://jabber.org/protocol/bytestreams",
 
@@ -233,7 +240,15 @@ public class XMPPServiceImpl {
 		                        "http://jabber.org/protocol/disco#info",
 
 		                        new DiscoverInfoProvider());			        	
-			        	
+		                FileTransferNegotiator fileTransferNegotiator = FileTransferNegotiator.getInstanceFor(connection);
+		                try {
+							fileTransferNegotiator.selectStreamNegotiator(request);
+						} catch (NoStreamMethodsOfferedException
+								| NoAcceptableTransferMechanisms
+								| NotConnectedException | InterruptedException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}*/
 			            IncomingFileTransfer ift = request.accept();
 			            long size = request.getFileSize();
 			            String fileName = request.getFileName();
@@ -254,6 +269,7 @@ public class XMPPServiceImpl {
 								log.info("Transfer status is: " + ift.getStatus());
 								if(ift.getStatus().toString().equals("Error")) {
 									sendMessage("Transfer file error",jid.toString());
+									ift.cancel();
 									return;
 								}
 							    double progress = ift.getProgress();
@@ -261,13 +277,14 @@ public class XMPPServiceImpl {
 							    Date start=new Date();
 								while (!ift.isDone())
 								{
-								    progress = ift.getProgress();
+								    Thread.sleep(1000);
+									progress = ift.getProgress();
 								    progressPercent = progress * 100.0;
 								    String percComplete = String.format("%1$,.2f", progressPercent);
 								    log.info("Transfer status is: " + ift.getStatus());
 								    log.info("File transfer is " + percComplete + "% complete");
-								    Thread.sleep(1000);
-					                Thread.sleep(2000L);
+
+					                //Thread.sleep(2000L);
 
 					                if (ift.getStatus().equals(FileTransfer.Status.cancelled)) {
 
@@ -290,6 +307,8 @@ public class XMPPServiceImpl {
 					                	log.info("File transfer ERROR");
 
 					                    ift.cancel();
+					                    sendMessage("ERROR",jid.toString());
+					                    return;
 
 					                }
 
@@ -339,6 +358,8 @@ public class XMPPServiceImpl {
 					                    sendMessage("timeout",jid.toString());
 					                    return;
 					                }
+				                
+
 								}
 								is = new FileInputStream(tempFile);
 						/*	}else {
@@ -807,7 +828,7 @@ public class XMPPServiceImpl {
 		if(!fileName.matches("(\\w|\\.|\\-|\\s|_)+")) {
 			fileName = ""+getDateTime()+ext;
 		}
-		if(!fileName.endsWith(ext)) fileName +=ext;
+		if(!fileName.toLowerCase().endsWith(ext.toLowerCase())) fileName +=ext;
 		String assetPath =  path+"/"+fileName;
 		if(jcrService.nodeExsits(path+"/"+fileName)) {
 			asset = (Asset)jcrService.getObject(path+"/"+fileName);

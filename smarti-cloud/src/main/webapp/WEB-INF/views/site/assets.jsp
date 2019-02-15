@@ -148,7 +148,7 @@
 	<a class="download pull-right" href="download/${item.uid}/${item.name}" download="${item.name}" target="_blank" title="${item.title}"><span class="glyphicon glyphicon-download pull-right">下载</span></a>
 	</div>	
 		<c:if test="${item.pdf}">
-		<a title="<spring:message code="djn.open"/>PDF" href="pdf/${item.uid}/${item.name}" title="${item.title}" target="_BLANK"><span class="glyphicon glyphicon-open"></span> <spring:message code="djn.open"/>PDF</a>
+		<a title="<spring:message code="djn.open"/>PDF" href="pdf/${item.uid}/${item.name}.pdf" title="${item.title}" target="_BLANK"><span class="glyphicon glyphicon-open"></span> <spring:message code="djn.open"/>PDF</a>
 		</c:if>
         <c:if test="${item.text}">
 			<a  class="wb-lbx" title="<spring:message code="djn.edit"/>" href="<c:url value="texteditor.html?uid=${item.uid}"/>"><span class="glyphicon glyphicon-pencil"></span><spring:message code="djn.onlineEdit"/></a>

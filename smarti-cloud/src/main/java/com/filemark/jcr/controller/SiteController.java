@@ -3606,16 +3606,16 @@ public class SiteController extends BaseController {
 		return null;
 		
 	} 
-	@RequestMapping(value = {"/site/pdf/{uid}/*.*","/protected/pdf/{uid}/*.*"}, method = {RequestMethod.GET})
+	@RequestMapping(value = {"/site/pdf/{uid}/*.pdf","/protected/pdf/{uid}/*.pdf"}, method = {RequestMethod.GET})
 	public @ResponseBody String pdf(@PathVariable String uid,HttpServletRequest request, HttpServletResponse response) throws IOException, RepositoryException {
 		List<Asset> assets = new ArrayList<Asset>();
-		ImageUtil.HDDOn();
+		//ImageUtil.HDDOn();
 		try {
 			assets.add(jcrService.getAssetById(uid));
 			jcrService.assets2pdf(assets, response.getOutputStream());			
 		}catch(Exception e) {
 			logger.error("pdf:"+e.getMessage());
-			ImageUtil.HDDOff();
+			//ImageUtil.HDDOff();
 			return "Error:"+e.getMessage();
 		}
 		ImageUtil.HDDOff();
