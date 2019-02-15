@@ -379,7 +379,7 @@ public class XMPPServiceImpl {
 			           		}
 			                Asset asset = saveAsset(username,fileName,contentType,filepath,size,is);
 							sendMessage("http://"+filedomain+fileport+"/site/httpfileupload/"+asset.getUid()+"/"+asset.getName().replaceAll(" ", "+"),jid.toString());
-			                
+			                is.close();
 /*			                ByteArrayOutputStream os = new ByteArrayOutputStream();
 			                int nRead;
 			                byte[] buf = new byte[1024];
@@ -787,6 +787,7 @@ public class XMPPServiceImpl {
 			log.info("Done");
 		    */
 	    	asset = saveAsset(username,nodeName,contentType,path,size,is);
+	    	is.close();
 /*		}catch (Exception e){
 			log.error("error:"+e.getMessage());
 
@@ -859,7 +860,7 @@ public class XMPPServiceImpl {
 	
 			//FileUtils.copyURLToFile(url_img, file);
 			FileUtils.copyInputStreamToFile(is, file);
-			is.close();
+			//is.close();
 			//Date end = new Date();
 			//long speed = file.length()*8/(end.getTime() - start.getTime()); 
 			asset.setFilePath(device.getLocation()+asset.getPath());
@@ -873,14 +874,14 @@ public class XMPPServiceImpl {
 		}else {
 			log.debug("Writing jcr");
 	    	jcrService.addFile(assetPath,"original",is,contentType);
-			is.close();
-		}
+			//is.close();
+		}/*
 		if(contentType != null && contentType.startsWith("image/")) {
 			jcrService.autoRoateImage(assetPath);
 			log.debug("create icon");
 			//jcrService.createIcon(assetPath, 400,400);
 			//jcrService.createIcon(assetPath, 100,100);				
-		}	
+		}	*/
 		return asset;
 	}
 	
