@@ -380,6 +380,12 @@ public class XMPPServiceImpl {
 			                Asset asset = saveAsset(username,fileName,contentType,filepath,size,is);
 							sendMessage("http://"+filedomain+fileport+"/site/httpfileupload/"+asset.getUid()+"/"+asset.getName().replaceAll(" ", "+"),jid.toString());
 			                is.close();
+			                
+			    			if(asset.getContentType() != null && asset.getContentType().startsWith("image/")) {
+			    				jcrService.autoRoateImage(asset.getPath());
+			    				//jcrService.createIcon(assetPath, 400,400);
+			    				//jcrService.createIcon(assetPath, 100,100);				
+			    			}				                
 /*			                ByteArrayOutputStream os = new ByteArrayOutputStream();
 			                int nRead;
 			                byte[] buf = new byte[1024];
@@ -788,6 +794,11 @@ public class XMPPServiceImpl {
 		    */
 	    	asset = saveAsset(username,nodeName,contentType,path,size,is);
 	    	is.close();
+			if(contentType != null && contentType.startsWith("image/")) {
+				jcrService.autoRoateImage(asset.getPath());
+				//jcrService.createIcon(assetPath, 400,400);
+				//jcrService.createIcon(assetPath, 100,100);				
+			}		    	
 /*		}catch (Exception e){
 			log.error("error:"+e.getMessage());
 
@@ -824,12 +835,12 @@ public class XMPPServiceImpl {
 		}
 		if(ext==null || "".equals(ext))
 			ext = fileName.replaceFirst("^.*/[^/]*(\\.[^\\./]*|)$", "$1");
-		fileName = nodeName;
+		fileName = nodeName.toLowerCase();
 		fileName = nodeName.replaceAll(" ", "-");
 		if(!fileName.matches("(\\w|\\.|\\-|\\s|_)+")) {
 			fileName = ""+getDateTime()+ext;
 		}
-		if(!fileName.toLowerCase().endsWith(ext.toLowerCase())) fileName +=ext;
+		if(!fileName.endsWith(ext)) fileName +=ext;
 		String assetPath =  path+"/"+fileName;
 		if(jcrService.nodeExsits(path+"/"+fileName)) {
 			asset = (Asset)jcrService.getObject(path+"/"+fileName);
@@ -875,13 +886,8 @@ public class XMPPServiceImpl {
 			log.debug("Writing jcr");
 	    	jcrService.addFile(assetPath,"original",is,contentType);
 			//is.close();
-		}/*
-		if(contentType != null && contentType.startsWith("image/")) {
-			jcrService.autoRoateImage(assetPath);
-			log.debug("create icon");
-			//jcrService.createIcon(assetPath, 400,400);
-			//jcrService.createIcon(assetPath, 100,100);				
-		}	*/
+		}
+
 		return asset;
 	}
 	
