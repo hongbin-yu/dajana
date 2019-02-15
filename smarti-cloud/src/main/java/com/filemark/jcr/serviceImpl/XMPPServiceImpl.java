@@ -16,6 +16,7 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
@@ -47,6 +48,8 @@ import org.jivesoftware.smack.XMPPException.XMPPErrorException;
 import org.jivesoftware.smack.chat2.Chat;
 import org.jivesoftware.smack.chat2.ChatManager;
 import org.jivesoftware.smack.chat2.IncomingChatMessageListener;
+import org.jivesoftware.smack.packet.DefaultExtensionElement;
+import org.jivesoftware.smack.packet.ExtensionElement;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.packet.Presence.Type;
@@ -54,6 +57,7 @@ import org.jivesoftware.smack.provider.ProviderManager;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
+import org.jivesoftware.smack.util.XmlStringBuilder;
 import org.jivesoftware.smackx.bytestreams.socks5.provider.BytestreamsProvider;
 import org.jivesoftware.smackx.disco.ServiceDiscoveryManager;
 import org.jivesoftware.smackx.disco.provider.DiscoverInfoProvider;
@@ -73,6 +77,11 @@ import org.jivesoftware.smackx.jingle.JingleSession;
 import org.jivesoftware.smackx.jingle.transports.JingleTransportManager;
 import org.jivesoftware.smackx.ping.PingFailedListener;
 import org.jivesoftware.smackx.ping.PingManager;
+import org.jivesoftware.smackx.xdata.FormField;
+import org.jivesoftware.smackx.xdata.FormField.Option;
+import org.jivesoftware.smackx.xdata.packet.DataForm;
+import org.jivesoftware.smackx.xdatalayout.XDataLayoutManager;
+import org.jivesoftware.smackx.xdatavalidation.packet.ValidateElement;
 import org.jivesoftware.smackx.xhtmlim.packet.XHTMLExtension;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -378,9 +387,16 @@ public class XMPPServiceImpl {
 			           			jcrService.addOrUpdate(folder);
 			           		}
 			                Asset asset = saveAsset(username,fileName,contentType,filepath,size,is);
-							sendMessage("http://"+filedomain+fileport+"/site/httpfileupload/"+asset.getUid()+"/"+asset.getName().replaceAll(" ", "+"),jid.toString());
+							//sendMessage("http://"+filedomain+fileport+"/site/httpfileupload/"+asset.getUid()+"/"+asset.getName().replaceAll(" ", "+"),jid.toString());
 			                is.close();
-			                
+			                ShareFileForm shareFileForm = new ShareFileForm(DataForm.Type.form);
+			                shareFileForm.addAsset(asset);
+			        		Message msg = new Message();
+			        		msg.setSubject(asset.getTitle());
+			        		String url = "http://"+filedomain+fileport+"/content/httpfileupload/"+asset.getUid()+"/"+asset.getName();
+			        		msg.setBody(url);	
+			        		msg.addExtension(shareFileForm);
+			        		sendMessage(msg,jid.asEntityBareJidIfPossible());
 			    			if(asset.getContentType() != null && asset.getContentType().startsWith("image/")) {
 			    				jcrService.autoRoateImage(asset.getPath());
 			    				//jcrService.createIcon(assetPath, 400,400);
@@ -476,8 +492,8 @@ public class XMPPServiceImpl {
         try {
             //sendMessage(message.getBody(),from);
             String body = message.getBody();
-    		log.info(message.getType()+"/"+filedomain+"/ "+from+" 说: " + body);
-
+    		//log.info(message.getType()+"/"+filedomain+"/ "+from+" 说: " + body);
+            log.info(message.toXML("x").toString());
         	switch(parseType(body)) {
 	        case 0:
 
@@ -573,20 +589,12 @@ public class XMPPServiceImpl {
 				    +"</html>");
 		}else {
 
-			xhtmlExtension.addBody("<x xmlns=\"jabber:x:data\" type=\"form\">"
-					+"<field label=\""+asset.getTitle()+"\" var=\"media1\">"
-					+"<media xmlns=\"urn:xmpp:media-element\" height=\"null\" width=\"null\">"
-					+"<uri type=\""+asset.getContentType()+"\" size=\""+asset.getSize()+"\" duration=\"0\">"
-					+url+"</uri></media></field></x><active xmlns=\"http://jabber.org/protocol/chatstates\"></active><request xmlns=\"urn:xmpp:receipts\"></request>");			
-			
+			ShareFileForm shareFileForm = new ShareFileForm(DataForm.Type.form);
+			msg.addExtension(shareFileForm);
+			msg.addExtension(new DefaultExtensionElement("active","http://jabber.org/protocol/chatstates"));
 		}
+		log.info(msg.toXML("x").toString());
 
-		//xhtmlExtension.addBody(
-		//"<body><p style='font-size:large'><a href='"+url+"' title=''><h5>"+title+"</h5><img src='data:image/jpg;base64, "+imageString+"' alt=''/></a></p></body>");
-		//msg.addExtension(xhtmlExtension);
-		// User1 sends the message that contains the XHTML to user2
-		//log.info(imageString);
-		//sendMessage(url,from);
 	    sendMessage(msg,from);
 
 	    //Thread.sleep(200);
@@ -628,14 +636,22 @@ public class XMPPServiceImpl {
    			folder.setLastModified(new Date());   			
    			jcrService.addOrUpdate(folder);
    		}
+        ShareFileForm shareFileForm = new ShareFileForm(DataForm.Type.form);
+		Message msg = new Message();
+
 		for(String url:fileupload) {
 			try {
+		
 				Asset asset = importAsset(url,username.toString(),filepath);
-				String httpfileupload = "/content/httpfileupload/"+asset.getUid()+"/"+asset.getName();
-				log.info(httpfileupload);
+		        shareFileForm.addAsset(asset);
+				String link = "http://"+filedomain+fileport+"/content/httpfileupload/"+asset.getUid()+"/"+asset.getName();
+				msg.setBody(link);	
+				//msg.setSubject(asset.getTitle());
+		        String httpfileupload = "/content/httpfileupload/"+asset.getUid()+"/"+asset.getName();
+				//log.info(httpfileupload);
 				html +="<li><a href=\""+httpfileupload+"\" title=\"\"><img src=\""+httpfileupload+"?w=4\" alt=\"\"></li>";
 			//sendMessage("https://"+filedomain+fileport+httpfileupload,from);
-				sendHtmlLink(from,"http://"+filedomain+fileport+httpfileupload,asset);
+				//sendHtmlLink(from,"http://"+filedomain+fileport+httpfileupload,asset);
 			} catch (IOException e) {
 				log.error(e.getMessage());
 			}
@@ -655,7 +671,8 @@ public class XMPPServiceImpl {
    		}	   		
 		
 		addChat(html,username,path);
-
+		msg.addExtension(shareFileForm);
+		sendMessage(msg,from);
 	}
 	
 	private Asset importAsset(String url, String username, String path) throws RepositoryException, IOException {
@@ -1127,5 +1144,34 @@ public class XMPPServiceImpl {
 		public void setPassword(String password) {
 			this.password = password;
 		}
+		
+		public class ShareFileForm extends DataForm {
+			private ArrayList<Asset> assets = new ArrayList<Asset>();
+			
+		    public ShareFileForm(Type type) {
+				super(type);
+			}
 
+			@Override
+			public XmlStringBuilder toXML(String arg0) {
+		        XmlStringBuilder xml = new XmlStringBuilder(this);
+		        xml.append(" type=\"form\">");
+		        for(int i=0; i<assets.size();i++) {
+		        	Asset asset = assets.get(i);
+					String url = "http://"+filedomain+fileport+"/content/httpfileupload/"+asset.getUid()+"/"+asset.getName();
+			        xml.append("<field label=\""+asset.getTitle()+"\" var=\"media"+i+"\">");
+			        xml.append("<media xmlns=\"urn:xmpp:media-element\" height=\""+asset.getHeight()+"\" width=\""+asset.getWidth()+"\">");
+			        xml.append("<uri type=\""+asset.getContentType()+"\" size=\""+asset.getSize()+"\" duration=\"0\">");
+			        xml.append(url+"</uri></media></field>");
+		        }
+		        xml.closeElement("x");
+		        return xml;
+			}
+
+
+
+			public void addAsset(Asset asset) {
+				assets.add(asset);
+			}
+		}
 }
