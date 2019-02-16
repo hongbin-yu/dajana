@@ -3108,7 +3108,8 @@ public class SiteController extends BaseController {
 
 	@RequestMapping(value = {"/protected/youcloud/{uid}/**","/site/youcloud/{uid}/**"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public @ResponseBody String file(@PathVariable String uid,String path,Integer w,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
-
+		return viewFile(uid,null,w,request,response);
+		/*
 		Integer width = null;
 		if(w !=null && w <= 12) {
 			width = w*100;
@@ -3151,11 +3152,12 @@ public class SiteController extends BaseController {
 			if(path !=null  && jcrService.nodeExsits(path)) {
 
 				ext = asset.getExt();
+*/				
 /*				if(width!=null && jcrService.nodeExsits(path+"/file-"+width)) {
 					response.setContentType(asset.getContentType());
 					jcrService.readAsset(path+"/file-"+width, response.getOutputStream());
 				}else */
-				if(asset.getDevice()!=null) {
+/*				if(asset.getDevice()!=null) {
 					Device device = (Device)jcrService.getObject(asset.getDevice());
 					File file = new File(device.getLocation()+asset.getPath()+"/origin"+ext);
 					if(file.exists() && asset.getWidth() == null && asset.getContentType().startsWith("image/")) {
@@ -3196,11 +3198,12 @@ public class SiteController extends BaseController {
 						return null;
 						
 					}
+					*/
 /*					FileInputStream in = new FileInputStream(file);
 					response.setContentType(asset.getContentType());
 					IOUtils.copy(in, response.getOutputStream());
 					in.close();*/
-
+/*
 					return null;
 				}else  if(jcrService.nodeExsits(path+"/original")) {
 					response.setContentType(asset.getContentType());
@@ -3236,12 +3239,15 @@ public class SiteController extends BaseController {
 
 			return e.getMessage();
 		}
-		
+		*/
 		
 	} 
 	
 	@RequestMapping(value = {"/protected/httpfileupload/{uid}/*.*","/site/httpfileupload/{uid}/*.*","/content/httpfileupload/{uid}/*.*"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public @ResponseBody String httpfileupload(@PathVariable String uid,String path,Integer w,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
+		
+		return viewFile(uid,null,w,request,response);
+		/*
 		Integer width = null;
 		if(w !=null && w <= 12) {
 			width = w*100;
@@ -3362,11 +3368,11 @@ public class SiteController extends BaseController {
 			return e.getMessage();
 		}
 		
-		
+		*/
 	} 
 	
 	
-	@RequestMapping(value = {"/protected/download/{uid}/**","/site/download/{uid}/**"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
+	@RequestMapping(value = {"/protected/download/{uid}/**","/site/download/{uid}/**","/content/download/{uid}/**"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public @ResponseBody String downloadFile(@PathVariable String uid,String path,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
 
 
