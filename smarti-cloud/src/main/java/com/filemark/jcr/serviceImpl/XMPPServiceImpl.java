@@ -625,7 +625,7 @@ public class XMPPServiceImpl {
 				//msg.setSubject(asset.getTitle());
 		        String httpfileupload = "/content/httpfileupload/"+asset.getUid()+"/"+asset.getName();
 				//log.info(httpfileupload);
-				html +="<li><a href=\""+httpfileupload+"\" title=\"\"><img src=\""+httpfileupload+"?w=4\" alt=\"\"></li>";
+				html +="<li><a href=\""+httpfileupload+"\" title=\"\"><img src=\""+httpfileupload+"?w=4\" class=\"img-resposive\" alt=\"\"></li>";
 			//sendMessage("https://"+filedomain+fileport+httpfileupload,from);
 				//sendHtmlLink(from,"http://"+filedomain+fileport+httpfileupload,asset);
 			} catch (IOException e) {
@@ -1051,7 +1051,7 @@ public class XMPPServiceImpl {
 		        xml.append(" type=\"form\">");
 		        for(int i=0; i<assets.size();i++) {
 		        	Asset asset = assets.get(i);
-					String url = "http://"+filedomain+fileport+"/content/"+(asset.getContentType().startsWith("image/")?"httpfileupload":"download")+"/"+asset.getUid()+"/"+asset.getName();
+					String url = "http://"+filedomain+fileport+"/publish/"+(asset.getContentType().startsWith("image/")?"httpfileupload":"download")+"/"+asset.getUid()+"/"+asset.getName();
 			        xml.append("<field label=\""+asset.getTitle()+"\" var=\"media"+i+"\">");
 			        xml.append("<media xmlns=\"urn:xmpp:media-element\" height=\""+asset.getHeight()+"\" width=\""+asset.getWidth()+"\">");
 			        xml.append("<uri type=\""+asset.getContentType()+"\" size=\""+asset.getSize()+"\" duration=\"0\">");
