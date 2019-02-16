@@ -3106,7 +3106,7 @@ public class SiteController extends BaseController {
 		
 	} 
 
-	@RequestMapping(value = {"/protected/youcloud/{uid}/**","/site/youcloud/{uid}/**"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
+	@RequestMapping(value = {"/protected/youcloud/{uid}/**","/site/youcloud/{uid}/**","/publish/youcloud/{uid}/**"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public @ResponseBody String file(@PathVariable String uid,String path,Integer w,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
 		return viewFile(uid,null,w,request,response);
 		/*
@@ -3243,7 +3243,7 @@ public class SiteController extends BaseController {
 		
 	} 
 	
-	@RequestMapping(value = {"/protected/httpfileupload/{uid}/*.*","/site/httpfileupload/{uid}/*.*","/content/httpfileupload/{uid}/*.*"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
+	@RequestMapping(value = {"/protected/httpfileupload/{uid}/*.*","/site/httpfileupload/{uid}/*.*","/content/httpfileupload/{uid}/*.*","/publish/httpfileupload/{uid}/*.*"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public @ResponseBody String httpfileupload(@PathVariable String uid,String path,Integer w,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
 		
 		return viewFile(uid,null,w,request,response);
@@ -3372,7 +3372,7 @@ public class SiteController extends BaseController {
 	} 
 	
 	
-	@RequestMapping(value = {"/protected/download/{uid}/**","/site/download/{uid}/**","/content/download/{uid}/**"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
+	@RequestMapping(value = {"/protected/download/{uid}/**","/site/download/{uid}/**","/content/download/{uid}/**","/publish/download/{uid}/**"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public @ResponseBody String downloadFile(@PathVariable String uid,String path,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
 
 
