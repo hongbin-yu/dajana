@@ -15,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -77,6 +78,7 @@ import com.filemark.jcr.model.Device;
 import com.filemark.jcr.model.Folder;
 import com.filemark.jcr.model.User;
 import com.filemark.jcr.service.JcrServices;
+import com.filemark.utils.WebPage;
 
 
 @SuppressWarnings("deprecation")
@@ -360,7 +362,7 @@ public class XMPPServiceImpl {
 			           			folder.setLastModified(new Date());   			
 			           			jcrService.addOrUpdate(folder);
 			           		}
-			                Asset asset = saveAsset(username,fileName,contentType,filepath,size,is);
+			                Asset asset = saveAsset(null,username,fileName,contentType,filepath,size,is);
 							//sendMessage("http://"+filedomain+fileport+"/site/httpfileupload/"+asset.getUid()+"/"+asset.getName().replaceAll(" ", "+"),jid.toString());
 			                is.close();
 			                ShareFileForm shareFileForm = new ShareFileForm(DataForm.Type.form);
@@ -477,7 +479,7 @@ public class XMPPServiceImpl {
 
 	        	break;
 	        case 1:
-	        	processSearch(from,message,chat);
+	        	processCommand(from,message,chat);
 	        	sendMessage("收到",from);
 	        	break;
 	        case 2:
@@ -485,15 +487,15 @@ public class XMPPServiceImpl {
 
 	        	break;
 	        case 3:
-	        	processCommand(from,message,chat);
-	        	sendMessage("结果:",from);
+	        	processSearch(from,message,chat);
+	        	//sendMessage("结果:",from);
 	        	break;
 	        case 100:
-	        	sendVerifyCode(from.toString());
+	        	sendVerifyCode(from);
 
 	        	break;	
 	        case 101:
-	        	sendVerifyCode(from.toString());
+	        	sendVerifyCode(from);
 
 	        	break;		        	
 	
@@ -516,7 +518,7 @@ public class XMPPServiceImpl {
 		
 	}
 	private int parseType(String body) {
-		//CommandLineParser parser = new DefaultParser();
+		//CommandLineParser parser = new DefautParser();
 		if(body.startsWith("?OTRv23?")) return 101;
 		if(body.equals("-c")) return 100;
 		if(body.startsWith("-")) return 1;
@@ -577,7 +579,7 @@ public class XMPPServiceImpl {
 
 	}
 	
-	private void sendVerifyCode(String from) throws RepositoryException, NotConnectedException, XmppStringprepException, XMPPException, InterruptedException {
+	private void sendVerifyCode(EntityBareJid from) throws RepositoryException, NotConnectedException, XmppStringprepException, XMPPException, InterruptedException {
 		String username = from.toString().split("@")[0];
 		if(jcrService.nodeExsits("/system/users/"+username)) {
 			User dbuser  = (User)jcrService.getObject("/system/users/"+username);
@@ -589,7 +591,18 @@ public class XMPPServiceImpl {
 				dbuser.setLastVerified(now);
 				jcrService.addOrUpdate(dbuser);	
 			//}
+			Asset asset = new Asset();
+			asset.setTitle("\""+username+"\"优云验证码："+dbuser.getCode() +"两分钟内有效");
+			asset.setContentType("text/html");
+			asset.setUrl("https://dajana.ca");
+			asset.setSize(new Long(1000));
+			ShareFileForm shareFileForm = new ShareFileForm(DataForm.Type.form);
+			shareFileForm.addAsset(asset);
+			Message msg = new Message();
+			msg.setBody(asset.getTitle());
 			
+			msg.addExtension(shareFileForm);
+			//sendMessage(msg,from);
 			sendMessage("\""+username+"\"优云验证码："+dbuser.getCode() +"两分钟内有效",from);			
 		}else {
 			sendMessage("\""+username+"\"不在系统中！",from);	
@@ -702,7 +715,7 @@ public class XMPPServiceImpl {
 	    	Long size = new Long(conn.getContentLength());
 	    	InputStream is = conn.getInputStream();
 
-	    	asset = saveAsset(username,nodeName,contentType,path,size,is);
+	    	asset = saveAsset(url,username,nodeName,contentType,path,size,is);
 	    	is.close();
 			if(contentType != null && contentType.startsWith("image/")) {
 				jcrService.autoRoateImage(asset.getPath());
@@ -717,7 +730,7 @@ public class XMPPServiceImpl {
 		return asset;//"/protected/httpfileupload/"+asset.getUid()+"/"+nodeName;
 	}
 	
-	private Asset saveAsset(String username,String fileName,String contentType,String path,long size,InputStream is) throws RepositoryException, IOException {
+	private Asset saveAsset(String url ,String username,String fileName,String contentType,String path,long size,InputStream is) throws RepositoryException, IOException {
 		Asset asset= new Asset();
 		String nodeName = fileName;
 	    MimeTypes allTypes = MimeTypes.getDefaultMimeTypes();
@@ -770,6 +783,7 @@ public class XMPPServiceImpl {
 		asset.setContentType(contentType);
 		asset.setDevice(devicePath);	
 		asset.setExt(ext);
+		asset.setUrl(url);
 
 		if(asset.getDevice()!=null) {
 			Device device = (Device)jcrService.getObject(asset.getDevice());
@@ -806,10 +820,21 @@ public class XMPPServiceImpl {
 	}	
 	
 	private void processSearch(EntityBareJid from, Message message, Chat chat) throws NotConnectedException, XmppStringprepException, XMPPException, InterruptedException {
-
-
-		String html = pegDownProcessor.markdownToHtml(message.getBody());
-		sendMessage(html,from);
+		String query = message.getBody().replace("?", "").replace("？", "");
+		String keywords =" and contains(s.*,'"+ query+"')";
+		String username = from.toString().split("@")[0];
+		String ISDESCENDANTNODE = "ISDESCENDANTNODE";
+		String orderby = "[lastModified] desc";
+		String path = "/assets/"+username+"/httpfileupload";
+		String assetsQuery = "select s.* from [nt:base] AS s INNER JOIN [nt:base] AS f ON ISCHILDNODE(s, f) WHERE "+ISDESCENDANTNODE+"(s,["+path+"])" +keywords+" and s.[delete] not like 'true' and s.ocm_classname='com.filemark.jcr.model.Asset' order by s."+orderby+", s.[name]";
+		WebPage<Asset> assets = jcrService.searchAssets(assetsQuery, 12, 0);
+		ShareFileForm shareFileForm = new ShareFileForm(DataForm.Type.form);
+		shareFileForm.addAssets(assets.getItems());
+		Message msg = new Message();
+		msg.setBody(query+ " : "+assets.getPageSize());
+		msg.addExtension(shareFileForm);
+		//String html = pegDownProcessor.markdownToHtml(message.getBody());
+		sendMessage(msg,from);
 	}
 
 	private void processChat(EntityBareJid from, Message message, Chat chat) throws NotConnectedException, XmppStringprepException, XMPPException, InterruptedException, RepositoryException {
@@ -1065,6 +1090,9 @@ public class XMPPServiceImpl {
 
 			public void addAsset(Asset asset) {
 				assets.add(asset);
+			}
+			public void addAssets(List<Asset> assets) {
+				assets.addAll(assets);
 			}
 		}
 }
