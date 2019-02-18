@@ -713,7 +713,7 @@ public class XMPPServiceImpl {
 	    				|| status == HttpURLConnection.HTTP_SEE_OTHER)
 	    		redirect = true;
 	    	}
-	    	log.info("Status:"+status);
+	    	log.info("Status:"+status +",contentType:"+conn.getContentType());
 	    	if (redirect) {
 	
 	    		// get redirect url from "location" header field
@@ -800,9 +800,10 @@ public class XMPPServiceImpl {
 		}else {
 			assetPath = jcrService.getUniquePath(path, fileName);
 		}
-		if(contentType==null || "".equals(contentType))
+		if(contentType==null || "".equals(contentType) || "application/x-ole-storage".equals(contentType))
 			contentType = new MimetypesFileTypeMap().getContentType(nodeName);
 		if(ext.equals(".xls") || ext.equals(".xlsx")) contentType= "application/vnd.ms-excel";
+		else if(ext.equals(".doc") || ext.equals(".docx")) contentType= "application/msword";
     	asset.setTitle(nodeName);	
     	asset.setName(nodeName);
 		asset.setCreatedBy(username);
