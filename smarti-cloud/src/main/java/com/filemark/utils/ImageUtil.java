@@ -454,7 +454,7 @@ public class ImageUtil
 	                    log.debug("line: " + s);
 	                }
 	        	log.error(shellCommand);
-	        	log.error("convert exit: " + exit);
+	        	log.error("convert exit: " + pb.toString());
 	        	
 	        }
 	        p.destroy();
@@ -799,7 +799,7 @@ public class ImageUtil
 	                while ((s = br.readLine()) != null) {
 	                    log.debug("line: " + s);
 	                }
-	        	log.error("convert exit: " + exit);
+	        	log.error("convert exit: " + pb.toString());
 	        	
 	        }
 	        p.destroy();
