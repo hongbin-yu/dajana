@@ -78,6 +78,7 @@ import com.filemark.jcr.model.Device;
 import com.filemark.jcr.model.Folder;
 import com.filemark.jcr.model.User;
 import com.filemark.jcr.service.JcrServices;
+import com.filemark.utils.ImageUtil;
 import com.filemark.utils.WebPage;
 
 
@@ -833,6 +834,42 @@ public class XMPPServiceImpl {
 			jcrService.setProperty(path, "changed", "true");
 			//asset.setTitle(asset.getTitle() +" - "+speed+"kb/s");
 			//output.close();
+			try {
+	   			if("application/vnd.ms-powerpoint".equals(contentType) || contentType.startsWith("application/vnd.ms-excel") || contentType.startsWith("application/vnd.openformats-officedocument")  || contentType.startsWith("application/vnd.openxmlformats-officedocument")) {
+	  				 log.debug("xls2pdf:"+file.getAbsolutePath());
+					 ImageUtil.xls2pdf(file.getAbsolutePath(), file.getParentFile().getAbsolutePath());
+	
+	  			}else if("application/vnd.ms-powerpoint".equals(contentType) || "application/vnd.ms-word".equals(contentType) || "application/vnd.ms-excel".equals(contentType) || "application/msword".equals(contentType) || assetPath.endsWith(".doc") || assetPath.endsWith(".docx")) {	
+	  				 log.debug("doc2pdf:"+file.getAbsolutePath());
+					 ImageUtil.doc2pdf(file.getAbsolutePath(), file.getParentFile().getAbsolutePath());
+				}
+       			if(contentType!=null && contentType.startsWith("video/")) {	
+      				 log.debug("video2mp4:"+file.getAbsolutePath());
+      				 Folder currentFolder = jcrService.getFolder(path);
+      				 String resolution = "540x360";
+      				 if(currentFolder.getResolution()!=null) {
+      					 resolution = currentFolder.getResolution();
+      				 }
+      				 if("1080x720".equals(resolution) && contentType.equals("video/mp4")) {
+      					 asset.setWidth(1080l);
+      					 asset.setHeight(720l);		           					 
+      				 }else if("720x540".equals(resolution)) {
+      					 asset.setWidth(720l);
+      					 asset.setHeight(540l);
+      				 }else if("540x360".equals(resolution)) {
+      					 asset.setWidth(540l);
+      					 asset.setHeight(360l);	           					 
+      				 }else {
+      					 asset.setWidth(360l);
+      					 asset.setHeight(280l);		           					 
+      				 }
+      				jcrService.addOrUpdate(asset);
+      				if(!"1080x720".equals(resolution) && !contentType.equals("video/mp4"))
+      					ImageUtil.video2mp4(file.getAbsolutePath(),resolution);
+   			} 	   			
+			} catch(IOException | InterruptedException e) {
+   				log.error(e.toString());
+   			}
 		}else {
 			log.debug("Writing jcr");
 	    	jcrService.addFile(assetPath,"original",is,contentType);
