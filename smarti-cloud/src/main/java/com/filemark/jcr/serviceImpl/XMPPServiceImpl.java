@@ -801,7 +801,7 @@ public class XMPPServiceImpl {
 		}
 		if(contentType==null || "".equals(contentType))
 			contentType = new MimetypesFileTypeMap().getContentType(nodeName);
-
+		if(ext.equals(".xls") || ext.equals(".xlsx")) contentType= "application/vnd.ms-excel";
     	asset.setTitle(nodeName);	
     	asset.setName(nodeName);
 		asset.setCreatedBy(username);
