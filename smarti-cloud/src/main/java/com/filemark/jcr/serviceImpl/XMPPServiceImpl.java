@@ -633,10 +633,10 @@ public class XMPPServiceImpl {
 		
 				Asset asset = importAsset(url,username.toString(),filepath);
 		        shareFileForm.addAsset(asset);
-				String link = "http://"+filedomain+fileport+"/content/httpfileupload/"+asset.getUid()+"/"+asset.getName();
+				String link = "http://"+filedomain+fileport+"/publish/httpfileupload/"+asset.getUid()+"/"+asset.getName();
 				msg.setBody(link);	
 				//msg.setSubject(asset.getTitle());
-		        String httpfileupload = "/content/httpfileupload/"+asset.getUid()+"/"+asset.getName();
+		        String httpfileupload = "/publish/httpfileupload/"+asset.getUid()+"/"+asset.getName();
 				//log.info(httpfileupload);
 				html +="<li><a href=\""+httpfileupload+"\" title=\"\"><img src=\""+httpfileupload+"?w=4\" class=\"img-resposive\" alt=\"\"></li>";
 			//sendMessage("https://"+filedomain+fileport+httpfileupload,from);
