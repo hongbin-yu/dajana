@@ -1575,7 +1575,8 @@ public class SiteController extends BaseController {
 		
 		String urlPath = url_img.getPath();
 		if(ext==null || "".equals(ext))
-			ext = urlPath.replaceFirst("^.*/[^/]*(\\.[^\\./]*|)$", "$1");
+			ext = urlPath.substring(urlPath.lastIndexOf("."), urlPath.length());
+			//ext = urlPath.replaceFirst("^.*/[^/]*(\\.[^\\./]*|)$", "$1");
 		String nodeName = urlPath.substring(urlPath.lastIndexOf("/")+1, urlPath.length());
 
 		String fileName = nodeName;

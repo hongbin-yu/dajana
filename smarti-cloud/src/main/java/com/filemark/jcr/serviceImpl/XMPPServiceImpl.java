@@ -712,7 +712,7 @@ public class XMPPServiceImpl {
 	    				|| status == HttpURLConnection.HTTP_SEE_OTHER)
 	    		redirect = true;
 	    	}
-	    	//log.info("Status:"+status);
+	    	log.info("Status:"+status);
 	    	if (redirect) {
 	
 	    		// get redirect url from "location" header field
@@ -784,7 +784,7 @@ public class XMPPServiceImpl {
 			devicePath = "/system/devices/backup";//jcrService.getBackup();
 		}
 		if(ext==null || "".equals(ext))
-			ext = fileName.replaceFirst("^.*/[^/]*(\\.[^\\./]*|)$", "$1");
+			ext = fileName.substring(fileName.lastIndexOf("."), fileName.length());
 		fileName = nodeName.toLowerCase();
 		fileName = nodeName.replaceAll(" ", "-");
 		if(!fileName.matches("(\\w|\\.|\\-|\\s|_)+")) {
@@ -1128,7 +1128,7 @@ public class XMPPServiceImpl {
 		        	Asset asset = assets.get(i);
 					String url = "http://"+filedomain+fileport+"/publish/"+(asset.getContentType().startsWith("image/")?"httpfileupload":"download")+"/"+asset.getUid()+"/"+asset.getName();
 			        xml.append("<field label=\""+asset.getTitle()+"\" var=\"media"+i+"\">");
-			        xml.append("<media xmlns=\"urn:xmpp:media-element\" height=\""+asset.getHeight()+"\" width=\""+asset.getWidth()+"\">");
+			        xml.append("<media xmlns=\"urn:xmpp:media-element\" height=\""+(asset.getHeight()==null?0:asset.getHeight())+"\" width=\""+(asset.getWidth()==null?0:asset.getWidth())+"\">");
 			        xml.append("<uri type=\""+asset.getContentType()+"\" size=\""+asset.getSize()+"\" duration=\"0\">");
 			        xml.append(url+"</uri></media></field>");
 		        }
