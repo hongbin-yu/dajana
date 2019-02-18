@@ -3246,8 +3246,8 @@ public class SiteController extends BaseController {
 	@RequestMapping(value = {"/protected/httpfileupload/{uid}/*.*","/site/httpfileupload/{uid}/*.*","/content/httpfileupload/{uid}/*.*","/publish/httpfileupload/{uid}/*.*"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public @ResponseBody String httpfileupload(@PathVariable String uid,String path,Integer w,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
 		
-		return viewFile(uid,null,w,request,response);
-		/*
+		//return viewFile(uid,null,w,request,response);
+		
 		Integer width = null;
 		if(w !=null && w <= 12) {
 			width = w*100;
@@ -3308,8 +3308,22 @@ public class SiteController extends BaseController {
 
 					}
 					if(file.exists()) {
-						//file.setReadOnly();
-						super.serveResource(request, response, file,asset.getName(), null);
+							response.setContentType(asset.getContentType());
+							if(asset.getSize()!=null)
+								response.setContentLength(asset.getSize().intValue());
+							else 
+								response.setContentLength((new Long(file.length()).intValue()));
+							if(asset.getOriginalDate()!=null)
+								response.setDateHeader("Last-Modified", asset.getOriginalDate().getTime());
+							String fileName = asset.getName();
+					        //response.setHeader("Content-Disposition", "attachement;filename=\"" + new String (fileName.getBytes("UTF-8"),"ISO-8859-1") + "\"");
+							
+							FileInputStream in = new FileInputStream(file);
+							IOUtils.copy(in, response.getOutputStream());	
+							response.flushBuffer();
+							in.close();	
+							return null;
+						//super.serveResource(request, response, file,asset.getName(), null);
 					}else  if(jcrService.nodeExsits(path+"/original")) {
 						response.setContentType(asset.getContentType());
 						if(asset.getSize()!=null)
@@ -3368,7 +3382,7 @@ public class SiteController extends BaseController {
 			return e.getMessage();
 		}
 		
-		*/
+		
 	} 
 	
 	

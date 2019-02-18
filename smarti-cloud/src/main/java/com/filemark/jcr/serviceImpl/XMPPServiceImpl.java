@@ -765,10 +765,10 @@ public class XMPPServiceImpl {
 		}
 		if(!fileName.endsWith(ext)) fileName +=ext;
 		String assetPath =  path+"/"+fileName;
-		if(jcrService.nodeExsits(path+"/"+fileName)) {
-			asset = (Asset)jcrService.getObject(path+"/"+fileName);
-
-			return asset;//"/protected/httpfileupload/"+asset.getUid()+"/"+fileName;
+		Asset ex_asset = findAsset(path,nodeName,size);
+		if(ex_asset!=null) {
+			log.info("File exists:"+nodeName);
+			return ex_asset;//"/protected/httpfileupload/"+asset.getUid()+"/"+fileName;
 		}else {
 			assetPath = jcrService.getUniquePath(path, fileName);
 		}
@@ -1075,7 +1075,17 @@ public class XMPPServiceImpl {
 		public void setPassword(String password) {
 			this.password = password;
 		}
-		
+		private Asset findAsset(String path,String title,long size) {
+			Asset asset = null;
+			String ISDESCENDANTNODE = "ISCHILDNODE";
+			String orderby = "[lastModified] desc";
+			String assetsQuery = "select s.* from [nt:base] AS s INNER JOIN [nt:base] AS f ON ISCHILDNODE(s, f) WHERE "+ISDESCENDANTNODE+"(s,["+path+"]) and s.[name] like '"+title +"' and s.size = "+size+" and s.[delete] not like 'true' and s.ocm_classname='com.filemark.jcr.model.Asset' order by s."+orderby+", s.[name]";
+			WebPage<Asset> assets = jcrService.searchAssets(assetsQuery, 1, 0);
+			if(assets.getPageCount()>0) {
+				asset = assets.getItems().get(0);
+			}
+			return asset;
+		}
 		public class ShareFileForm extends DataForm {
 			private ArrayList<Asset> assets = new ArrayList<Asset>();
 			
