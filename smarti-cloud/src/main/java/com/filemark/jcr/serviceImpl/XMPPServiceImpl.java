@@ -684,7 +684,7 @@ public class XMPPServiceImpl {
 		addChat(html,username,path);
 		msg.addExtension(shareFileForm);
 		//msg.addExtension(new StandardExtensionElement("active","http://jabber.org/protocol/chatstates"));
-
+		log.info(msg.toXML("x").toString());
 		sendMessage(msg,from);
 	}
 	
