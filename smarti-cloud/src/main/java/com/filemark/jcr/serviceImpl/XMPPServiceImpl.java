@@ -237,12 +237,18 @@ public class XMPPServiceImpl {
 			            IncomingFileTransfer ift = request.accept();
 			            long size = request.getFileSize();
 			            String fileName = request.getFileName();
-			            
 			            String contentType = request.getMimeType();
+
 			            Jid jid = request.getRequestor();
 			    		String username = jid.toString().split("@")[0];
 			    		String filepath = "/assets/"+username+"/httpfileupload";
-			            log.info("fileTransferRequestor:"+jid+",fileName="+fileName);
+			            Asset ex_asset = findAsset(filepath,fileName,size);
+			            if(ex_asset!=null) {
+			            	ift.cancel();
+			            	sendAsset(ex_asset,jid.asEntityBareJidIfPossible());
+			            	return;
+			            }
+			    		log.info("fileTransferRequestor:"+jid+",fileName="+fileName);
 			            //byte[] dataReceived = new byte[1];
 			            InputStream is = null;
 						try {
@@ -454,7 +460,23 @@ public class XMPPServiceImpl {
 		
 		chat.send(message);
 	}	
+	private void sendAsset(Asset asset, EntityBareJid to) {
+        ShareFileForm shareFileForm = new ShareFileForm(DataForm.Type.form);
+        shareFileForm.addAsset(asset);
+		Message msg = new Message();
+		msg.setSubject(asset.getTitle());
+		String url = "http://"+filedomain+fileport+"/content/httpfileupload/"+asset.getUid()+"/"+asset.getName();
+		msg.setBody(url);	
+		msg.addExtension(shareFileForm);
+		msg.addExtension(new StandardExtensionElement("active","http://jabber.org/protocol/chatstates"));
 
+		try {
+			sendMessage(msg,to);
+		} catch (NotConnectedException | XmppStringprepException
+				| XMPPException | InterruptedException e) {
+			log.error(e.getMessage());;
+		}			
+	}
 	private void installIncomingChatMessageListener(final AbstractXMPPConnection connection) {
         ChatManager chatManager = ChatManager.getInstanceFor(connection);  
 
@@ -690,7 +712,7 @@ public class XMPPServiceImpl {
 	    				|| status == HttpURLConnection.HTTP_SEE_OTHER)
 	    		redirect = true;
 	    	}
-	    	log.info("Status:"+status);
+	    	//log.info("Status:"+status);
 	    	if (redirect) {
 	
 	    		// get redirect url from "location" header field
@@ -713,6 +735,11 @@ public class XMPPServiceImpl {
 	        
 	    	String contentType = conn.getContentType();
 	    	Long size = new Long(conn.getContentLength());
+	    	Asset ex_asset = findAsset(path,nodeName,size);
+	    	if(ex_asset!=null) {
+	    		log.info("File exists:"+nodeName);
+	    		return ex_asset;
+	    	}
 	    	InputStream is = conn.getInputStream();
 
 	    	asset = saveAsset(url,username,nodeName,contentType,path,size,is);
