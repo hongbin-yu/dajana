@@ -829,11 +829,24 @@ public class XMPPServiceImpl {
 		String assetsQuery = "select s.* from [nt:base] AS s INNER JOIN [nt:base] AS f ON ISCHILDNODE(s, f) WHERE "+ISDESCENDANTNODE+"(s,["+path+"])" +keywords+" and s.[delete] not like 'true' and s.ocm_classname='com.filemark.jcr.model.Asset' order by s."+orderby+", s.[name]";
 		WebPage<Asset> assets = jcrService.searchAssets(assetsQuery, 12, 0);
 		ShareFileForm shareFileForm = new ShareFileForm(DataForm.Type.form);
-		shareFileForm.addAssets(assets.getItems());
+		for(Asset asset:assets.getItems()) {
+			if(asset.getContentType().startsWith("image/")) {
+				shareFileForm.addAsset(asset);
+			}else {
+				ShareFileForm fileForm = new ShareFileForm(DataForm.Type.form);
+				fileForm.addAsset(asset);
+				Message msg = new Message();
+				msg.setBody(asset.getTitle());
+				msg.addExtension(fileForm);
+				sendMessage(msg,from);
+			}
+		}
+		//shareFileForm.addAssets(assets.getItems());
 		Message msg = new Message();
-		msg.setBody(query+ " : "+assets.getPageSize());
+		msg.setBody(query+ " : "+assets.getItems().size()+"/"+assets.getPageCount());
 		msg.addExtension(shareFileForm);
 		//String html = pegDownProcessor.markdownToHtml(message.getBody());
+		log.info(msg.toXML("x").toString());
 		sendMessage(msg,from);
 	}
 
@@ -1092,7 +1105,10 @@ public class XMPPServiceImpl {
 				assets.add(asset);
 			}
 			public void addAssets(List<Asset> assets) {
-				assets.addAll(assets);
+				for(Asset asset:assets) {
+					assets.add(asset);
+				}
+				//this.assets.addAll(assets);
 			}
 		}
 }
