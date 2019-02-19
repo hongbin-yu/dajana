@@ -381,7 +381,11 @@ public class XMPPServiceImpl {
 			        		msg.setBody(url);	
 			        		msg.addExtension(shareFileForm);
 			    			msg.addExtension(new StandardExtensionElement("active","http://jabber.org/protocol/chatstates"));
-
+			    			XHTMLExtension xhtmlExtension = new XHTMLExtension();
+			    			xhtmlExtension.addBody("<body xmlns='http://www.w3.org/1999/xhtml'>"
+			    				    +"<p style='font-weight:bold'>welcome:"+url+"</p>"
+			    				    +"</body>");
+			    			msg.addExtension(xhtmlExtension);
 			        		sendMessage(msg,jid.asEntityBareJidIfPossible());
 			    			if(asset.getContentType() != null && asset.getContentType().startsWith("image/")) {
 			    				jcrService.autoRoateImage(asset.getPath());
