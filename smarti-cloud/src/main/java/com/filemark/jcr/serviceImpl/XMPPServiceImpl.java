@@ -487,11 +487,11 @@ public class XMPPServiceImpl {
 		Message msg = new Message();
 		msg.setSubject(asset.getTitle());
 		shareFileForm.addAsset(asset);
-		if(n>1) {
+		if(n>0) {
 			for (int i=0;i<n;i++) {
 	        	Asset a = new Asset();
 	        	a.setContentType("image/jpg");
-	    		String url = "http://"+filedomain+fileport+"/publish/doc2pdf.jpj?uid="+asset.getUid()+"&p="+i;
+	    		String url = "http://"+filedomain+fileport+"/publish/doc2pdf.jpj?path="+asset.getPath()+"&p="+i;
 	    		msg.setBody(url);
 	    		a.setUrl(url);        	
 	            shareFileForm.addAsset(a);
@@ -502,7 +502,7 @@ public class XMPPServiceImpl {
 
 		try {
 			sendMessage(msg,to);
-			log.info(msg.toXML("x").toString());
+			log.info("pages:"+n+","+msg.toXML("x").toString());
 		} catch (NotConnectedException | XmppStringprepException
 				| XMPPException | InterruptedException e) {
 			log.error(e.getMessage());;
