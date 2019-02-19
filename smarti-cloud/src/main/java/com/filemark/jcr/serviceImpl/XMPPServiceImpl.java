@@ -486,19 +486,23 @@ public class XMPPServiceImpl {
         long n = getNumberOfPage(asset);
 		Message msg = new Message();
 		msg.setSubject(asset.getTitle());
-		for (int i=0;i<n;i++) {
-        	Asset a = new Asset();
-        	a.setContentType("image/jpg");
-    		String url = "http://"+filedomain+fileport+"/publish/doc2pdf.jpj?uid="+asset.getUid()+"&p="+i;
-    		msg.setBody(url);
-    		a.setUrl(url);        	
-            shareFileForm.addAsset(a);
-       	
-        }
+		shareFileForm.addAsset(asset);
+		if(n>1) {
+			for (int i=0;i<n;i++) {
+	        	Asset a = new Asset();
+	        	a.setContentType("image/jpg");
+	    		String url = "http://"+filedomain+fileport+"/publish/doc2pdf.jpj?uid="+asset.getUid()+"&p="+i;
+	    		msg.setBody(url);
+	    		a.setUrl(url);        	
+	            shareFileForm.addAsset(a);
+	       	
+	        }			
+		}
 		msg.addExtension(shareFileForm);
 
 		try {
 			sendMessage(msg,to);
+			log.info(msg.toXML("x").toString());
 		} catch (NotConnectedException | XmppStringprepException
 				| XMPPException | InterruptedException e) {
 			log.error(e.getMessage());;
@@ -698,6 +702,7 @@ public class XMPPServiceImpl {
 				log.error(e.getMessage());
 			}
 		}
+		if(shareFileForm.getSize()==0) return;
 		html +="</ul></section>";
 		String subject = message.getSubject();
 		if(subject == null) subject = username;
@@ -1077,7 +1082,7 @@ public class XMPPServiceImpl {
 	        return this.connection;
 	    }
 		public long getNumberOfPage(Asset asset) {
-			long numberOfPage = 1;
+			long numberOfPage = 0;
 			if(asset.getTotal()!=null) return asset.getTotal();
 			try {
 				File file = jcrService.getFile(asset.getPath());
@@ -1237,6 +1242,9 @@ public class XMPPServiceImpl {
 					assets.add(asset);
 				}
 				//this.assets.addAll(assets);
+			}
+			public int getSize() {
+				return assets.size();
 			}
 		}
 }
