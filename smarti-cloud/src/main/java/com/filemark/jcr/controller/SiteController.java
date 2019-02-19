@@ -2524,7 +2524,7 @@ public class SiteController extends BaseController {
 		return null;
 	}
 	
-	@RequestMapping(value = {"/site/doc2pdf.jpg","/protected/doc2pdf.jpg"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
+	@RequestMapping(value = {"/site/doc2pdf.jpg","/protected/doc2pdf.jpg","/publish/doc2pdf.jpg"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public @ResponseBody String doc2pdf2jpg(String path,Integer p,Integer w,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
 
 		try {
@@ -4127,7 +4127,7 @@ public class SiteController extends BaseController {
 			return filename+ext;
 	}
 	
-	private long getNumberOfPage(Asset asset) {
+	public long getNumberOfPage(Asset asset) {
 		long numberOfPage = 1;
 		if(asset.getTotal()!=null) return asset.getTotal();
 		try {

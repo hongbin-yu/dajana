@@ -80,6 +80,7 @@ import com.filemark.jcr.model.User;
 import com.filemark.jcr.service.JcrServices;
 import com.filemark.utils.ImageUtil;
 import com.filemark.utils.WebPage;
+import com.lowagie.text.pdf.PdfReader;
 
 
 @SuppressWarnings("deprecation")
@@ -467,9 +468,34 @@ public class XMPPServiceImpl {
 		Message msg = new Message();
 		msg.setSubject(asset.getTitle());
 		String url = "http://"+filedomain+fileport+"/content/httpfileupload/"+asset.getUid()+"/"+asset.getName();
+		asset.setUrl(url);
 		msg.setBody(url);	
 		msg.addExtension(shareFileForm);
 		msg.addExtension(new StandardExtensionElement("active","http://jabber.org/protocol/chatstates"));
+
+		try {
+			sendMessage(msg,to);
+		} catch (NotConnectedException | XmppStringprepException
+				| XMPPException | InterruptedException e) {
+			log.error(e.getMessage());;
+		}			
+	}
+
+	private void sendDoc(Asset asset, EntityBareJid to) {
+        ShareFileForm shareFileForm = new ShareFileForm(DataForm.Type.form);
+        long n = getNumberOfPage(asset);
+		Message msg = new Message();
+		msg.setSubject(asset.getTitle());
+		for (int i=0;i<n;i++) {
+        	Asset a = new Asset();
+        	a.setContentType("image/jpg");
+    		String url = "http://"+filedomain+fileport+"/publish/doc2pdf.jpj?uid="+asset.getUid()+"&p="+i;
+    		msg.setBody(url);
+    		a.setUrl(url);        	
+            shareFileForm.addAsset(a);
+       	
+        }
+		msg.addExtension(shareFileForm);
 
 		try {
 			sendMessage(msg,to);
@@ -655,7 +681,11 @@ public class XMPPServiceImpl {
 			try {
 		
 				Asset asset = importAsset(url,username.toString(),filepath);
-		        shareFileForm.addAsset(asset);
+		        if(asset.getExt().endsWith(".doc") || asset.getExt().endsWith(".docx"))  {
+		        	sendDoc(asset,from);
+		        	continue;
+		        }
+				shareFileForm.addAsset(asset);
 				String link = "http://"+filedomain+fileport+"/publish/httpfileupload/"+asset.getUid()+"/"+asset.getName();
 				msg.setBody(link);	
 				//msg.setSubject(asset.getTitle());
@@ -1046,7 +1076,25 @@ public class XMPPServiceImpl {
 	        }
 	        return this.connection;
 	    }
-	    
+		public long getNumberOfPage(Asset asset) {
+			long numberOfPage = 1;
+			if(asset.getTotal()!=null) return asset.getTotal();
+			try {
+				File file = jcrService.getFile(asset.getPath());
+				File pdf = new File(file,"origin.pdf");
+				if(pdf.exists()) {
+					PdfReader reader = new PdfReader(pdf.getAbsolutePath());
+					reader.close();
+					jcrService.setProperty(asset.getPath(), "total", (long)reader.getNumberOfPages());
+					numberOfPage = reader.getNumberOfPages();				
+				}
+			} catch (RepositoryException e) {
+				log.error(e.getMessage());
+			} catch (IOException e) {
+				log.error(e.getMessage());
+			}
+			return numberOfPage;
+		}	    
 	   private void checkConnection() {
 		   TimerTask repeatedTask = new TimerTask() {
 		        public void run() {
@@ -1169,7 +1217,7 @@ public class XMPPServiceImpl {
 		        xml.append(" type=\"form\">");
 		        for(int i=0; i<assets.size();i++) {
 		        	Asset asset = assets.get(i);
-					String url = "http://"+filedomain+fileport+"/publish/"+(asset.getContentType().startsWith("image/")?"httpfileupload":"download")+"/"+asset.getUid()+"/"+asset.getName();
+					String url = asset.getUrl()==null?"http://"+filedomain+fileport+"/publish/"+(asset.getContentType().startsWith("image/")?"httpfileupload":"download")+"/"+asset.getUid()+"/"+asset.getName():asset.getUrl();
 			        xml.append("<field label=\""+asset.getTitle()+"\" var=\"media"+i+"\">");
 			        xml.append("<media xmlns=\"urn:xmpp:media-element\" height=\""+(asset.getHeight()==null?0:asset.getHeight())+"\" width=\""+(asset.getWidth()==null?0:asset.getWidth())+"\">");
 			        xml.append("<uri type=\""+asset.getContentType()+"\" size=\""+asset.getSize()+"\" duration=\"0\">");
