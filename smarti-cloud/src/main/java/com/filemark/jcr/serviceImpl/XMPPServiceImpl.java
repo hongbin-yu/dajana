@@ -377,7 +377,7 @@ public class XMPPServiceImpl {
 			                shareFileForm.addAsset(asset);
 			        		Message msg = new Message();
 			        		msg.setSubject(asset.getTitle());
-			        		String url = "http://"+filedomain+fileport+"/content/httpfileupload/"+asset.getUid()+"/"+asset.getName();
+			        		String url = "http://"+filedomain+fileport+"/content/httpfileupload/"+asset.getUid()+"/"+asset.getName().toLowerCase();
 			        		msg.setBody(url);	
 			        		msg.addExtension(shareFileForm);
 			    			msg.addExtension(new StandardExtensionElement("active","http://jabber.org/protocol/chatstates"));
@@ -693,7 +693,7 @@ public class XMPPServiceImpl {
 				String link = "http://"+filedomain+fileport+"/publish/httpfileupload/"+asset.getUid()+"/"+asset.getName();
 				msg.setBody(link);	
 				//msg.setSubject(asset.getTitle());
-		        String httpfileupload = "/publish/httpfileupload/"+asset.getUid()+"/"+asset.getName();
+		        String httpfileupload = "/publish/httpfileupload/"+asset.getUid()+"/"+asset.getName().toLowerCase();
 				//log.info(httpfileupload);
 				html +="<li><a href=\""+httpfileupload+"\" title=\"\"><img src=\""+httpfileupload+"?w=4\" class=\"img-resposive\" alt=\"\"></li>";
 			//sendMessage("https://"+filedomain+fileport+httpfileupload,from);
@@ -1222,7 +1222,7 @@ public class XMPPServiceImpl {
 		        xml.append(" type=\"form\">");
 		        for(int i=0; i<assets.size();i++) {
 		        	Asset asset = assets.get(i);
-					String url = asset.getUrl()==null?"http://"+filedomain+fileport+"/publish/"+(asset.getContentType().startsWith("image/")?"httpfileupload":"download")+"/"+asset.getUid()+"/"+asset.getName():asset.getUrl();
+					String url = asset.getUrl()==null?"http://"+filedomain+fileport+"/publish/"+(asset.getContentType().startsWith("image/")?"httpfileupload":"download")+"/"+asset.getUid()+"/"+asset.getName().toLowerCase():asset.getUrl();
 			        xml.append("<field label=\""+asset.getTitle()+"\" var=\"media"+i+"\">");
 			        xml.append("<media xmlns=\"urn:xmpp:media-element\" height=\""+(asset.getHeight()==null?0:asset.getHeight())+"\" width=\""+(asset.getWidth()==null?0:asset.getWidth())+"\">");
 			        xml.append("<uri type=\""+asset.getContentType()+"\" size=\""+asset.getSize()+"\" duration=\"0\">");
