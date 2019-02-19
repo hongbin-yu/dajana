@@ -910,6 +910,11 @@ public class XMPPServiceImpl {
 		Message msg = new Message();
 		msg.setBody(query+ " : "+assets.getItems().size()+"/"+assets.getPageCount());
 		msg.addExtension(shareFileForm);
+		XHTMLExtension xhtmlExtension = new XHTMLExtension();
+		xhtmlExtension.addBody("<body xmlns='http://www.w3.org/1999/xhtml'>"
+			    +"<p style='font-weight:bold'>"+query+"</p>"
+			    +"</body>");
+		msg.addExtension(xhtmlExtension);
 		//String html = pegDownProcessor.markdownToHtml(message.getBody());
 		log.info(msg.toXML("x").toString());
 		sendMessage(msg,from);
