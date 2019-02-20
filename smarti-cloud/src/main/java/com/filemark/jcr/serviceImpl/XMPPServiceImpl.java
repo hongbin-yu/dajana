@@ -695,6 +695,7 @@ public class XMPPServiceImpl {
 		        }
 				shareFileForm.addAsset(asset);
 				String link = "http://"+filedomain+fileport+"/publish/httpfileupload/"+asset.getUid()+"/"+asset.getName();
+				asset.setUrl(link);
 				msg.setBody(link);	
 				//msg.setSubject(asset.getTitle());
 		        String httpfileupload = "/publish/httpfileupload/"+asset.getUid()+"/"+asset.getName().toLowerCase();
