@@ -471,7 +471,7 @@ public class XMPPServiceImpl {
         shareFileForm.addAsset(asset);
 		Message msg = new Message();
 		msg.setSubject(asset.getTitle());
-		String url = "http://"+filedomain+fileport+"/content/httpfileupload/"+asset.getUid()+"/"+asset.getName();
+		String url = "http://"+filedomain+fileport+"/content/httpfileupload/"+asset.getUid()+"/"+asset.getName().toLowerCase();
 		asset.setUrl(url);
 		msg.setBody(url);	
 		msg.addExtension(shareFileForm);
@@ -490,6 +490,7 @@ public class XMPPServiceImpl {
         long n = getNumberOfPage(asset);
 		Message msg = new Message();
 		msg.setSubject(asset.getTitle());
+		asset.setUrl( "http://"+filedomain+fileport+"/content/httpfileupload/"+asset.getUid()+"/"+asset.getName().toLowerCase());
 		shareFileForm.addAsset(asset);
 		if(n>0) {
 			for (int i=0;i<n;i++) {
