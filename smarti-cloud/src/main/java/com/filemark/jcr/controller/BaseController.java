@@ -47,6 +47,7 @@ import com.filemark.jcr.model.Folder;
 import com.filemark.jcr.model.Role;
 import com.filemark.jcr.model.User;
 import com.filemark.jcr.service.JcrServices;
+import com.filemark.jcr.service.XMPPService;
 import com.filemark.utils.ImageUtil;
 import com.filemark.utils.QueryCustomSetting;
 
@@ -63,6 +64,8 @@ public class BaseController {
 	private static final Logger logger = LoggerFactory.getLogger(BaseController.class);
 	@Inject
 	protected JcrServices jcrService;
+	@Inject
+	protected XMPPService XMPPService;	
 	@Inject	
 	protected QueryCustomSetting queryCustomSetting;	
 	@Autowired

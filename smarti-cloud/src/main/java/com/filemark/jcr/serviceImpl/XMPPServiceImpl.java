@@ -78,13 +78,14 @@ import com.filemark.jcr.model.Device;
 import com.filemark.jcr.model.Folder;
 import com.filemark.jcr.model.User;
 import com.filemark.jcr.service.JcrServices;
+import com.filemark.jcr.service.XMPPService;
 import com.filemark.utils.ImageUtil;
 import com.filemark.utils.WebPage;
 import com.lowagie.text.pdf.PdfReader;
 
 
 @SuppressWarnings("deprecation")
-public class XMPPServiceImpl {
+public class XMPPServiceImpl implements XMPPService{
 
 	private final Logger log = LoggerFactory.getLogger(XMPPServiceImpl.class);
 	//private static String host = "host ip";
@@ -527,6 +528,15 @@ public class XMPPServiceImpl {
         //log.info(message.toString());
         try {
             //sendMessage(message.getBody(),from);
+        	String xmppid = from.toString();
+        	String username = xmppid.split("@")[0];
+        	if(jcrService.nodeExsits("/system/users/"+username)) {
+        		User user = (User)jcrService.getObject("/system/users/"+username);
+        		if(!xmppid.equals(user.getXmppid())) {
+        			user.setXmppid(xmppid);
+        			jcrService.addOrUpdate(user);
+        		}
+        	}
             String body = message.getBody();
     		//log.info(message.getType()+"/"+filedomain+"/ "+from+" 说: " + body);
             log.info(message.toXML("x").toString());
@@ -549,11 +559,11 @@ public class XMPPServiceImpl {
 	        	//sendMessage("结果:",from);
 	        	break;
 	        case 100:
-	        	sendVerifyCode(from);
+	        	sendVerifyCode(from.toString());
 
 	        	break;	
 	        case 101:
-	        	sendVerifyCode(from);
+	        	sendVerifyCode(from.toString());
 
 	        	break;		        	
 	
@@ -636,9 +646,9 @@ public class XMPPServiceImpl {
 	    //Thread.sleep(200);
 
 	}
-	
-	private void sendVerifyCode(EntityBareJid from) throws RepositoryException, NotConnectedException, XmppStringprepException, XMPPException, InterruptedException {
-		String username = from.toString().split("@")[0];
+	@Override
+	public void sendVerifyCode(String from) throws RepositoryException, NotConnectedException, XmppStringprepException, XMPPException, InterruptedException {
+		String username = from.split("@")[0];
 		if(jcrService.nodeExsits("/system/users/"+username)) {
 			User dbuser  = (User)jcrService.getObject("/system/users/"+username);
 			Date now = new Date();
@@ -788,6 +798,7 @@ public class XMPPServiceImpl {
 	    	is.close();
 			if(contentType != null && contentType.startsWith("image/")) {
 				jcrService.autoRoateImage(asset.getPath());
+				asset = (Asset)jcrService.getObject(asset.getPath());
 				//jcrService.createIcon(assetPath, 400,400);
 				//jcrService.createIcon(assetPath, 100,100);				
 			}		    	
@@ -795,7 +806,7 @@ public class XMPPServiceImpl {
 			log.error("error:"+e.getMessage());
 
 		}*/
-		
+
 		return asset;//"/protected/httpfileupload/"+asset.getUid()+"/"+nodeName;
 	}
 	
@@ -1253,4 +1264,5 @@ public class XMPPServiceImpl {
 				return assets.size();
 			}
 		}
+
 }

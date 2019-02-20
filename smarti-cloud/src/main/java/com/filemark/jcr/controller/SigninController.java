@@ -36,9 +36,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jxmpp.stringprep.XmppStringprepException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -168,6 +171,22 @@ public class SigninController extends BaseController{
         		
         	}
         	if(!user.getSigningKey().equals(j_password)) {
+        		if(user.getXmppid()!=null) {
+        			try {
+						XMPPService.sendVerifyCode(user.getXmppid());
+					} catch (NotConnectedException e) {
+						logger.error(e.getMessage());
+					} catch (XmppStringprepException e) {
+						logger.error(e.getMessage());
+					} catch (XMPPException e) {
+						logger.error(e.getMessage());
+					} catch (InterruptedException e) {
+						logger.error(e.getMessage());
+					}
+        			model.addAttribute("j_username", j_username);
+        			model.addAttribute("error", "验证码已发到："+user.getXmppid());
+        			return "forget";  
+        		}
             	String login_error = messageSource.getMessage("login_error", null,"&#29992;&#25143;&#21517;&#25110;&#23494;&#30721;&#26080;&#25928;", localeResolver.resolveLocale(request));
                 model.addAttribute("error", login_error);
                 return "signin";        		
