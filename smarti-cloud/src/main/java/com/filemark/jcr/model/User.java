@@ -285,9 +285,9 @@ public class User implements SmartiNode {
 	}
 	
 	public String getIcon() {
-			//if (icon==null)
+			if (icon==null)
 				return "/protected/file/icon.jpg?path="+"/assets/"+userName+"/icon/x48.jpg";
-			//return icon;
+			else return icon;
 	}
 
 	public void setIcon(String icon) {

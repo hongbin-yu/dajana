@@ -280,7 +280,7 @@ public class SigninController extends BaseController{
 	}	
 	
     @RequestMapping(value = {"/forget"}, method ={ RequestMethod.GET})
-   	public String forgetpassword(String j,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
+   	public String forgetpassword( String j_username,String j,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
 
     	if(j!=null) {
 	        String domain = request.getServerName();
@@ -352,6 +352,7 @@ public class SigninController extends BaseController{
     			return "redirect:http://"+domain+"/forget?error="+e.getMessage();
     		}
     	}
+		model.addAttribute("j_username", j_username);
     	return "forget";
     }
     @RequestMapping(value = {"/forget","/uploadAsset.html"}, method ={ RequestMethod.POST}) 

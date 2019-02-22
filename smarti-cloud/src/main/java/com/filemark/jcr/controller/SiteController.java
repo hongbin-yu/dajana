@@ -31,6 +31,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -1496,9 +1497,9 @@ public class SiteController extends BaseController {
 				jcrService.addOrUpdate(asset);
 				jcrService.autoRoateImage(asset.getPath());
 				jcrService.createIcon(asset.getPath(), 48,48);
-				jcrService.createIcon(asset.getPath(), 120,120);
+				jcrService.createIcon(asset.getPath(), 100,100);
 				jcrService.createIcon(asset.getPath(), 400,400);
-				jcrService.updatePropertyByPath(assetPath, "icon", "/protected/file/icon.jpg?path="+assetPath+"/x120.jpg");
+				jcrService.updatePropertyByPath("/system/users/"+username, "icon", "/protected/httpfileupload/"+asset.getUid()+"/icon.jpg?w=0");
 			}
 
 		}catch (Exception e){
@@ -1507,7 +1508,7 @@ public class SiteController extends BaseController {
 			
 		}
 		ImageUtil.HDDOff();
-		return "/site/file/icon.jpg?path="+asset.getPath()+"/x120.jpg&time="+new Date().getTime();
+		return "/site/httpfileupload/"+asset.getUid()+"/icon.jpg?w=0&time="+new Date().getTime();
 	}	
 	
 	@RequestMapping(value = {"/site/importAsset.html"}, method = {RequestMethod.GET,RequestMethod.POST})
@@ -2977,7 +2978,15 @@ public class SiteController extends BaseController {
 	}
 	@RequestMapping(value = {"/protected/file/*.*","/site/file/*.*","/protected/file/**","/site/file/**","/site/viewimage","/content/viewimage","/content/**/viewimage","/protected/viewimage","/protected/**/viewimage","/protected/file","/site/file","/site/file*.*","/content/file","/content/file*.*","/content/**/file","/content/**/file*.*"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public @ResponseBody String viewFile(String uid,String path,Integer w,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
-
+		logger.info("Request from:"+request.getRemoteAddr());
+/*		Enumeration<String> headerNames = request.getHeaderNames();
+		while (headerNames.hasMoreElements()) {
+			String headerName = headerNames.nextElement();
+			logger.info("Header Name: <em>" + headerName);
+			String headerValue = request.getHeader(headerName);
+			logger.info("</em>, Header Value: <em>" + headerValue);
+			logger.info("</em><br/>");
+		}		*/
 		Integer width = null;
 		if(w !=null && w <= 12) {
 			width = w*100;
@@ -2987,8 +2996,7 @@ public class SiteController extends BaseController {
 		try {
 			if(uid!=null && (path==null || "".equals(path)))
 				path = jcrService.getNodeById(uid);
-			Asset asset = (Asset)jcrService.getObject(path);
-			String devicePath = jcrService.getDevice();
+/*			String devicePath = jcrService.getHome();
 			File outFile = new File(devicePath+path);
 			if(!outFile.exists()) {
 				devicePath = jcrService.getBackup();
@@ -3004,10 +3012,12 @@ public class SiteController extends BaseController {
 					in.close();	
 					return null;
 		        }				
-				logger.debug("path is file output:"+outFile.getAbsolutePath());
-				super.serveResource(request, response, outFile, asset.getName(),null);
+				//logger.debug("path is file output:"+outFile.getAbsolutePath());
+				//super.serveResource(request, response, outFile, asset.getName(),null);
 				return null;					
 			}
+			Asset asset = (Asset)jcrService.getObject(path);
+			devicePath = jcrService.getDevice();			
 			String ext = asset.getExt();
 			if(ext==null && path.lastIndexOf(".")>0) ext = path.substring(path.lastIndexOf("."));
 			outFile = new File(devicePath+path+(width==null?"/origin"+ext:"/x"+width+".jpg"));
@@ -3015,10 +3025,11 @@ public class SiteController extends BaseController {
 				logger.debug("output:"+outFile.getAbsolutePath());
 				super.serveResource(request, response, outFile,asset.getName(), null);
 				return null;					
-			}
+			}*/
 
 			if(path !=null  && jcrService.nodeExsits(path)) {
-
+				Asset asset = (Asset)jcrService.getObject(path);
+				String ext = asset.getExt();
 				ext = asset.getExt();
 /*				if(width!=null && jcrService.nodeExsits(path+"/file-"+width)) {
 					response.setContentType(asset.getContentType());
@@ -3245,12 +3256,24 @@ public class SiteController extends BaseController {
 		*/
 		
 	} 
-	
+	@RequestMapping(value = {"/protected/icon/{username}/icon.jpg","/site/icon/{username}/icon.jpg","/content/icon/{username}/icon.jpg","/publish/icon/{username}/icon.jpg"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
+	public @ResponseBody String icon(@PathVariable String username,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
+		if(jcrService.nodeExsits("/assets/"+username+"/icon")) 
+			return viewFile(null,"/assets/"+username+"/icon",0,request,response);
+		else {
+			try {
+				response.sendRedirect("/resources/images/usericon.png");
+			} catch (IOException e) {
+				logger.error(e.getMessage());
+			}
+			return null;
+		}
+	}
 	@RequestMapping(value = {"/protected/httpfileupload/{uid}/*.*","/site/httpfileupload/{uid}/*.*","/content/httpfileupload/{uid}/*.*","/publish/httpfileupload/{uid}/*.*"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public @ResponseBody String httpfileupload(@PathVariable String uid,String path,Integer w,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
 		
-		//return viewFile(uid,null,w,request,response);
-		
+		return viewFile(uid,null,w,request,response);
+	/*	
 		Integer width = null;
 		if(w !=null && w <= 12) {
 			width = w*100;
@@ -3385,7 +3408,7 @@ public class SiteController extends BaseController {
 			return e.getMessage();
 		}
 		
-		
+		*/
 	} 
 	
 	

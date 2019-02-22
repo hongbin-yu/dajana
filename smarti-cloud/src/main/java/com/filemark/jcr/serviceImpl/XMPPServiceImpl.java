@@ -14,6 +14,7 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -48,6 +49,7 @@ import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.packet.Presence.Type;
 import org.jivesoftware.smack.packet.StandardExtensionElement;
 import org.jivesoftware.smack.roster.Roster;
+import org.jivesoftware.smack.roster.RosterEntry;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import org.jivesoftware.smack.util.XmlStringBuilder;
@@ -166,7 +168,25 @@ public class XMPPServiceImpl implements XMPPService{
 			    connection = new XMPPTCPConnection(conf);
 				connection.connect().login();
 				roster = Roster.getInstanceFor(connection);
-				//roster = Roster.getInstanceFor(connection);
+				roster.setRosterLoadedAtLogin(true);
+				roster = Roster.getInstanceFor(connection);
+				if (!roster.isLoaded())
+					  try {
+					            roster.reloadAndWait();
+					        } catch (SmackException.NotLoggedInException |        SmackException.NotConnectedException | InterruptedException e) {
+					            e.printStackTrace();
+					        }
+				Collection<RosterEntry> entries = roster.getEntries();
+				for (RosterEntry entry : entries) {
+					//example: get presence, type, mode, status
+					        Presence entryPresence = roster.getPresence(entry.getJid());
+
+					        Presence.Type userType = entryPresence.getType();
+					        Presence.Mode mode = entryPresence.getMode();
+					        String status = entryPresence.getStatus();
+
+					        log.info("####User status"+"...."+entry.getJid()+"....."+entryPresence.getStatus()+"....."+entryPresence +" \ntype: "+"\n"+userType + "\nmode: " +mode + "\nstatus: " + status);// + "\nType: " + status.getType());
+					    }
 				//roster.setRosterLoadedAtLogin(true);
 
 				//presence = new Presence(connection.getUser(),Type.available);
@@ -347,9 +367,8 @@ public class XMPPServiceImpl implements XMPPService{
 					                }
 					                
 					                if(new Date().getTime() - start.getTime() > 60000) {
-					                	log.info("Timeout");
 					                    ift.cancel();	
-					                    sendMessage("timeout",jid.toString());
+										sendMessage("文件传输超时,请用以下网站上载文件： http://"+filedomain+fileport+"/site/assets.html",jid.asEntityBareJidIfPossible());
 					                    return;
 					                }
 				                
@@ -378,7 +397,7 @@ public class XMPPServiceImpl implements XMPPService{
 			                shareFileForm.addAsset(asset);
 			        		Message msg = new Message();
 			        		msg.setSubject(asset.getTitle());
-			        		String url = "http://"+filedomain+fileport+"/content/httpfileupload/"+asset.getUid()+"/"+asset.getName().toLowerCase();
+			        		String url = "http://"+filedomain+fileport+"/protected/httpfileupload/"+asset.getUid()+"/"+asset.getName().toLowerCase();
 			        		msg.setBody(url);	
 			        		msg.addExtension(shareFileForm);
 			    			msg.addExtension(new StandardExtensionElement("active","http://jabber.org/protocol/chatstates"));
@@ -387,13 +406,15 @@ public class XMPPServiceImpl implements XMPPService{
 			    				    +"<p style='font-weight:bold'>welcome:"+url+"</p>"
 			    				    +"</body>");
 			    			msg.addExtension(xhtmlExtension);
-			        		sendMessage(msg,jid.asEntityBareJidIfPossible());
 			    			if(asset.getContentType() != null && asset.getContentType().startsWith("image/")) {
 			    				jcrService.autoRoateImage(asset.getPath());
+			    				asset = (Asset)jcrService.getObject(asset.getPath());
 			    				//jcrService.createIcon(assetPath, 400,400);
 			    				//jcrService.createIcon(assetPath, 100,100);				
 			    			}				                
-/*			                ByteArrayOutputStream os = new ByteArrayOutputStream();
+			        		sendMessage(msg,jid.asEntityBareJidIfPossible());
+
+			    			/*			                ByteArrayOutputStream os = new ByteArrayOutputStream();
 			                int nRead;
 			                byte[] buf = new byte[1024];
 			                while ((nRead = is.read(buf,  0, buf.length)) != -1) {
@@ -543,7 +564,7 @@ public class XMPPServiceImpl implements XMPPService{
         	switch(parseType(body)) {
 	        case 0:
 
-	        	processChat(from,message,chat);
+	        	processSearch(from,message,chat);
 
 	        	break;
 	        case 1:
@@ -558,6 +579,10 @@ public class XMPPServiceImpl implements XMPPService{
 	        	processSearch(from,message,chat);
 	        	//sendMessage("结果:",from);
 	        	break;
+	        case 4:
+
+	        	sendMessage("优云现在不支持Astrachat,请用以下网站上载文件： http://"+filedomain+fileport+"/site/assets.html",from);
+	        	break;	        	
 	        case 100:
 	        	sendVerifyCode(from.toString());
 
@@ -592,6 +617,7 @@ public class XMPPServiceImpl implements XMPPService{
 		if(body.startsWith("-")) return 1;
 		if(body.indexOf("/httpfileupload/")>0) return 2;	
 		if(body.endsWith("?") || body.endsWith("？")) return 3;
+		if(body.indexOf("Astrachat")>=0) return 4;
 		return 0;
 		
 	}
@@ -671,7 +697,7 @@ public class XMPPServiceImpl implements XMPPService{
 			
 			msg.addExtension(shareFileForm);
 			//sendMessage(msg,from);
-			sendMessage("\""+username+"\"优云验证码："+dbuser.getCode() +"两分钟内有效",from);			
+			sendMessage("\""+username+"\"优云验证码："+dbuser.getCode() +"两分钟内有效 : http://"+filedomain+fileport+"/forget?j_username="+username,from);			
 		}else {
 			sendMessage("\""+username+"\"不在系统中！",from);	
 		}
@@ -1025,7 +1051,7 @@ public class XMPPServiceImpl implements XMPPService{
 	   		chat.setLastModified(calendar);
 	   		chat.setContent(message);
 	   		chat.setTitle(username);
-   	   		chat.setPath(path+"/"+username+"/"+getDateTime());
+   	   		chat.setPath(path+"/"+getDateTime());
 	   		//chat.setPath(path+"/"+username+"/"+calendar.getTime().getTime());
 	   		chat.setCreatedBy(username);
 	   		//chat.setTimer(timer);
