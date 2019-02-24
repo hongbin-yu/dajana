@@ -313,7 +313,7 @@ public class BaseController {
 	}
 	protected String getDateTime() {
 		Date now = new Date();
-		SimpleDateFormat sf = new SimpleDateFormat("yyMMddHHmmss");
+		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd.HHmmss");
 		return sf.format(now);
 		
 		

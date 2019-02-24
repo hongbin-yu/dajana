@@ -2,6 +2,7 @@ package com.filemark.jcr.serviceImpl;
 
 
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -25,6 +26,7 @@ import javax.activation.MimetypesFileTypeMap;
 import javax.jcr.RepositoryException;
 import javax.net.ssl.HttpsURLConnection;
 import javax.swing.JTextField;
+import javax.xml.bind.DatatypeConverter;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.tika.mime.MimeType;
@@ -43,6 +45,7 @@ import org.jivesoftware.smack.XMPPException.XMPPErrorException;
 import org.jivesoftware.smack.chat2.Chat;
 import org.jivesoftware.smack.chat2.ChatManager;
 import org.jivesoftware.smack.chat2.IncomingChatMessageListener;
+import org.jivesoftware.smack.packet.ExtensionElement;
 //import org.jivesoftware.smack.packet.DefaultExtensionElement;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
@@ -52,6 +55,7 @@ import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
+import org.jivesoftware.smack.util.PacketParserUtils;
 import org.jivesoftware.smack.util.XmlStringBuilder;
 import org.jivesoftware.smackx.filetransfer.FileTransfer;
 import org.jivesoftware.smackx.filetransfer.FileTransferListener;
@@ -70,10 +74,14 @@ import org.jxmpp.jid.EntityBareJid;
 import org.jxmpp.jid.Jid;
 import org.jxmpp.jid.impl.JidCreate;
 import org.jxmpp.stringprep.XmppStringprepException;
+import org.jxmpp.xml.splitter.XmlSplitter;
 import org.pegdown.PegDownProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.w3c.tools.codec.Base64Decoder;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
 
 import com.filemark.jcr.model.Asset;
 import com.filemark.jcr.model.Device;
@@ -169,7 +177,7 @@ public class XMPPServiceImpl implements XMPPService{
 				connection.connect().login();
 				roster = Roster.getInstanceFor(connection);
 				roster.setRosterLoadedAtLogin(true);
-				roster = Roster.getInstanceFor(connection);
+/*				roster = Roster.getInstanceFor(connection);
 				if (!roster.isLoaded())
 					  try {
 					            roster.reloadAndWait();
@@ -186,7 +194,7 @@ public class XMPPServiceImpl implements XMPPService{
 					        String status = entryPresence.getStatus();
 
 					        log.info("####User status"+"...."+entry.getJid()+"....."+entryPresence.getStatus()+"....."+entryPresence +" \ntype: "+"\n"+userType + "\nmode: " +mode + "\nstatus: " + status);// + "\nType: " + status.getType());
-					    }
+					    }*/
 				//roster.setRosterLoadedAtLogin(true);
 
 				//presence = new Presence(connection.getUser(),Type.available);
@@ -493,13 +501,14 @@ public class XMPPServiceImpl implements XMPPService{
         shareFileForm.addAsset(asset);
 		Message msg = new Message();
 		msg.setSubject(asset.getTitle());
-		String url = "http://"+filedomain+fileport+"/content/httpfileupload/"+asset.getUid()+"/"+asset.getName().toLowerCase();
+		String url = "http://"+filedomain+fileport+"/publish/httpfileupload/"+asset.getUid()+"/"+asset.getName().toLowerCase();
 		asset.setUrl(url);
 		msg.setBody(url);	
 		msg.addExtension(shareFileForm);
 		msg.addExtension(new StandardExtensionElement("active","http://jabber.org/protocol/chatstates"));
 
 		try {
+			log.info(url);
 			sendMessage(msg,to);
 		} catch (NotConnectedException | XmppStringprepException
 				| XMPPException | InterruptedException e) {
@@ -580,8 +589,7 @@ public class XMPPServiceImpl implements XMPPService{
 	        	//sendMessage("结果:",from);
 	        	break;
 	        case 4:
-
-	        	sendMessage("优云现在不支持Astrachat,请用以下网站上载文件： http://"+filedomain+fileport+"/site/assets.html",from);
+	        	proccessAstraChat(from,message,chat);
 	        	break;	        	
 	        case 100:
 	        	sendVerifyCode(from.toString());
@@ -610,6 +618,77 @@ public class XMPPServiceImpl implements XMPPService{
         }
 		
 	}
+	
+	private void proccessAstraChat(EntityBareJid from, Message message, Chat chat) {
+		String username = from.toString().split("@")[0];
+		String path = "/assets/"+username+"/httpfileupload";
+		try {
+	
+			XmlPullParser parser = PacketParserUtils.getParserFor(message.toXML("x").toString());
+			boolean done = false;
+			String name = parser.getName();
+			//ExtensionElement	image_element = null;
+			while(!done) {
+				int eventType = parser.next();
+				if(eventType == XmlPullParser.START_TAG) {
+					
+					if(parser.getName().equals("image")) {
+						String contentType = parser.getAttributeValue(null, "type");
+					    String ext=".jpeg";
+						//log.info("contentType="+contentType);
+					    if(contentType !=null) {
+							try {
+								MimeType mimeType = MimeTypes.getDefaultMimeTypes().forName(contentType);
+							    ext = mimeType.getExtension(); 
+							} catch (MimeTypeException e1) {
+								log.error(e1.getMessage());
+							}
+					    }
+						//log.info("ext="+ext);
+					    String filename = getDateTime()+ext;
+						String imageBinary = parser.nextText();
+						//log.info("image="+imageBinary);
+						byte data[] = DatatypeConverter.parseBase64Binary(imageBinary); 
+						InputStream is = new ByteArrayInputStream(data);
+						//log.info("path="+path);
+						if(!jcrService.nodeExsits("/assets/"+username)) {
+				   			Folder folder = new Folder();
+				   			folder.setTitle(username);
+				   			//folder.setDescription(jid.toString());
+				   			folder.setName(username);
+				   			folder.setPath("/assets/"+username);
+				   			folder.setLastUpdated(new Date());
+				   			folder.setLastModified(new Date());   			
+				   			jcrService.addOrUpdate(folder);
+				   		}	
+						//log.info("filename="+filename);
+						Asset asset = saveAsset(null,username,filename,contentType,path,0,is);
+						is.close();
+						sendAsset(asset,from);
+					}
+				}else if(eventType == XmlPullParser.END_TAG) {
+					if(parser.getName().equals(name)) {
+						done = true;
+					}
+
+				}
+			}
+        	//sendMessage("优云现在不支持Astrachat,请用以下网站上载文件： http://"+filedomain+fileport+"/site/assets.html",from);
+
+			//log.info(PacketParserUtils.parseContent(parser).toString());
+			//log.info(PacketParserUtils.parseElementText(parser).toString());
+			
+		} catch (XmlPullParserException e) {
+			log.error(e.getMessage());
+		} catch (IOException e) {
+			log.error(e.getMessage());
+		}/* catch (Exception e) {
+			log.error(e.getMessage());
+		}*/ catch (RepositoryException e) {
+			log.error("RepositoryException:"+e.getMessage());
+		} 
+	}
+	
 	private int parseType(String body) {
 		//CommandLineParser parser = new DefautParser();
 		if(body.startsWith("?OTRv23?")) return 101;
@@ -617,7 +696,7 @@ public class XMPPServiceImpl implements XMPPService{
 		if(body.startsWith("-")) return 1;
 		if(body.indexOf("/httpfileupload/")>0) return 2;	
 		if(body.endsWith("?") || body.endsWith("？")) return 3;
-		if(body.indexOf("Astrachat")>=0) return 4;
+		if(body.indexOf("AstraChat")>=0) return 4;
 		return 0;
 		
 	}
@@ -902,7 +981,7 @@ public class XMPPServiceImpl implements XMPPService{
 	
 			//FileUtils.copyURLToFile(url_img, file);
 			FileUtils.copyInputStreamToFile(is, file);
-			//is.close();
+			is.close();
 			//Date end = new Date();
 			//long speed = file.length()*8/(end.getTime() - start.getTime()); 
 			asset.setFilePath(device.getLocation()+asset.getPath());
@@ -1176,7 +1255,7 @@ public class XMPPServiceImpl implements XMPPService{
 	   }
 		protected String getDateTime() {
 			Date now = new Date();
-			SimpleDateFormat sf = new SimpleDateFormat("yyMMddHHmmss");
+			SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd.HHmmss");
 			return sf.format(now);
 			
 			
