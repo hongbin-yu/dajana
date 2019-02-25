@@ -9,4 +9,6 @@ import org.jxmpp.stringprep.XmppStringprepException;
 public interface XMPPService {
 	public void initialize();
 	public void sendVerifyCode(String to) throws RepositoryException, NotConnectedException, XmppStringprepException, XMPPException, InterruptedException;
+	public void sendMessage(String message, String to) throws XMPPException, NotConnectedException, XmppStringprepException, InterruptedException;
+
 }

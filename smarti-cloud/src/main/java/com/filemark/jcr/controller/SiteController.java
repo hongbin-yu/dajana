@@ -79,6 +79,7 @@ import com.filemark.jcr.model.News;
 import com.filemark.jcr.model.Page;
 import com.filemark.jcr.model.User;
 import com.filemark.jcr.service.AssetManager;
+import com.filemark.sso.CookieUtil;
 import com.filemark.sso.JwtUtil;
 import com.filemark.utils.CacheFileFromResponse;
 import com.filemark.utils.ImageUtil;
@@ -319,9 +320,14 @@ public class SiteController extends BaseController {
  	
 	@RequestMapping(value = {"/site/assets.html","/site/assets"}, method = {RequestMethod.GET,RequestMethod.POST},produces = "text/plain;charset=UTF-8")
 	public String assets(String path,String type, String input,String kw,Integer p,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
-		ImageUtil.HDDOn();
-		String assetFolder = "/assets"+"/"+getUsername();
-		String oldFolder = "/"+getUsername()+"/assets";
+		//ImageUtil.HDDOn();
+		String username = getUsername();
+		String assetFolder = "/assets"+"/"+username;
+		String oldFolder = "/"+username+"/assets";
+		User user = (User)jcrService.getObject("/system/users/"+username);
+		if("locked".equals(user.getStatus())) {
+			response.sendRedirect("/forget");
+		}
 		if(!jcrService.nodeExsits(assetFolder)) {
 			jcrService.addNodes(assetFolder, "nt:unstructured",getUsername());		
 		}		
@@ -395,15 +401,30 @@ public class SiteController extends BaseController {
 		model.addAttribute("kw", kw);	
 		model.addAttribute("breadcrumb", jcrService.getBreadcrumbNodes(path));
 		model.addAttribute("leftmenu", getLeftmenuJson(path,type,model,request,response));
-		ImageUtil.HDDOff();
+		//ImageUtil.HDDOff();
 		return "site/asset";
 	}
 
 	@RequestMapping(value = {"/site/view.html","/site/view"}, method = {RequestMethod.GET,RequestMethod.POST},produces = "text/plain;charset=UTF-8")
 	public String view(String path,String type, String input,String kw,Integer p,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
-		
-		String assetFolder = "/assets"+"/"+getUsername();
-		String oldFolder = "/"+getUsername()+"/assets";
+		String username = getUsername();
+		String assetFolder = "/assets"+"/"+username;
+		String oldFolder = "/"+username+"/assets";
+		User user = (User)jcrService.getObject("/system/users/"+username);
+		if("locked".equals(user.getStatus())) {
+			String domain = request.getServerName();
+	        CookieUtil.clear(response, JwtUtil.jwtTokenCookieName,domain);
+	        Cookie[] cookies = request.getCookies();
+	        if (cookies != null)
+	            for (Cookie cookie : cookies) {
+	                cookie.setValue("");
+	                cookie.setPath("/");
+	                cookie.setMaxAge(0);
+	                response.addCookie(cookie);
+	            }       
+	        request.getSession().invalidate();
+			response.sendRedirect("/forget");
+		}
 		if(!jcrService.nodeExsits(assetFolder)) {
 			jcrService.addNodes(assetFolder, "nt:unstructured",getUsername());		
 		}		
@@ -499,7 +520,7 @@ public class SiteController extends BaseController {
 	
 	@RequestMapping(value = {"/site/createPage.html"}, method = RequestMethod.POST)
 	public @ResponseBody String createPage(String path,String templatePath,Integer p,Page page,Model model,HttpServletRequest request, HttpServletResponse response) {
-		ImageUtil.HDDOn();
+		//ImageUtil.HDDOn();
 		Page currentPage = null;
 		if(path==null) return "error:path is null";
 		page.setParent(path);
@@ -523,10 +544,10 @@ public class SiteController extends BaseController {
 			}
 			currentPage = jcrService.getPage(page.getPath());
 		} catch (Exception e) {
-			ImageUtil.HDDOff();
+			//ImageUtil.HDDOff();
 			return "error:"+e.getMessage();
 		}
-		ImageUtil.HDDOff();
+		//ImageUtil.HDDOff();
 		return currentPage.getPath();
 	}
 	@RequestMapping(value = {"/site/createFolder.html"}, method = RequestMethod.POST)
@@ -566,7 +587,7 @@ public class SiteController extends BaseController {
 	
 	@RequestMapping(value = {"/site/editpp.html","/editpp.html/**","/editpp.html/**/*.*"}, method = {RequestMethod.GET})
 	public String getPageProperties(String uid,String path,Page page, Model model,HttpServletRequest request, HttpServletResponse response) {
-		ImageUtil.HDDOn();
+		//ImageUtil.HDDOn();
 		Page currentpage = new Page();
 		try {
 			if(uid!=null) path = jcrService.getNodeById(uid);
@@ -578,13 +599,13 @@ public class SiteController extends BaseController {
 		}
 		
 		model.addAttribute("page", currentpage); 
-		ImageUtil.HDDOff();
+		//ImageUtil.HDDOff();
 		return "site/pproperties";
 	}
 	@RequestMapping(value = {"/site/editpp.html"}, method = {RequestMethod.POST})
 	public String editPageProperties(String uid,String path,Page page, Model model,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
 		Page currentpage = new Page();
-		ImageUtil.HDDOn();
+		//ImageUtil.HDDOn();
 		try {
 			if(uid!=null) path = jcrService.getNodeById(uid);
 			currentpage = jcrService.getPage(path);
@@ -600,10 +621,10 @@ public class SiteController extends BaseController {
 			}
 
 		} catch (RepositoryException e) {
-			ImageUtil.HDDOff();
+			//ImageUtil.HDDOff();
 			model.addAttribute("error", "<h3>&#22833;&#36133;</h3><p>"+e.getMessage()+"</p>");
 		}
-		ImageUtil.HDDOff();
+		//ImageUtil.HDDOff();
 		model.addAttribute("page", currentpage); 
 
 		return "redirect:/site/editor.html?uid="+currentpage.getUid();
@@ -615,7 +636,7 @@ public class SiteController extends BaseController {
 		String content = "/content/"+getUsername();
    		User user = (User)jcrService.getObject("/system/users/"+username);
 		Page currentpage = new Page();
-		ImageUtil.HDDOn();
+		//ImageUtil.HDDOn();
 		if(!jcrService.nodeExsits(content)) {//create root
 			if(!jcrService.nodeExsits("/content")) {
 				Page djn = new Page();
@@ -644,10 +665,10 @@ public class SiteController extends BaseController {
 		}
 		if(!currentpage.getPath().startsWith(content)) {
 			if(getUsername()==null) {
-				ImageUtil.HDDOff();
+				//ImageUtil.HDDOff();
 				return "redirect:/mysite";
 			} else	{		
-				ImageUtil.HDDOff();
+				//ImageUtil.HDDOff();
 				return "redirect:/site/editor.html?path="+content;
 			}
 		}		
@@ -680,10 +701,10 @@ public class SiteController extends BaseController {
 		model.addAttribute("user", user);
 		model.addAttribute("origin", request.getRequestURL()+"?"+request.getQueryString());
 		if(currentpage.getPath().startsWith("/content/templates")) {
-			ImageUtil.HDDOff();
+			//ImageUtil.HDDOff();
 			return "site/template";
 		}
-		ImageUtil.HDDOff();
+		//ImageUtil.HDDOff();
 		return "site/editor";
 	}
 
@@ -756,7 +777,7 @@ public class SiteController extends BaseController {
 	}
 	@RequestMapping(value = {"/site/menu.html"}, method = RequestMethod.GET)
 	public String menu(String uid,String path,String input,String kw,Integer p,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
-		ImageUtil.HDDOff();
+		//ImageUtil.HDDOff();
 		String menu="";
 		String content = "/content/"+getUsername();
 		Page currentpage = new Page();
@@ -775,13 +796,13 @@ public class SiteController extends BaseController {
 		if(!request.getContextPath().equals("/")) {
 			menu = menu.replaceAll("/content/", request.getContextPath()+"/content/");
 		}
-		ImageUtil.HDDOff();
+		//ImageUtil.HDDOff();
 		model.addAttribute("navigation", menu);
 		return "site/navmenu";
 	}
 	@RequestMapping(value = {"/site/preview.html"}, method = RequestMethod.GET)
 	public String previewPage(String uid,String path,String input,String kw,Integer p,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
-		ImageUtil.HDDOn();
+		//ImageUtil.HDDOn();
 		String content = "/content/"+getUsername();
 		Page currentpage = new Page();
 
@@ -818,13 +839,13 @@ public class SiteController extends BaseController {
 		model.addAttribute("content",currentpage.getContent());
 		model.addAttribute("origin", request.getRequestURL()+"?"+request.getQueryString());
 
-		ImageUtil.HDDOff();	
+		//ImageUtil.HDDOff();	
 		return "content/page";
 	}
 
 	@RequestMapping(value = {"/site/leftmenu.html","/leftmenu.html"}, method = RequestMethod.GET)
 	public String leftmenu(String uid,String path,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
-		ImageUtil.HDDOn();
+		//ImageUtil.HDDOn();
 		String content = "/content/"+getUsername();		
 		Page currentpage = new Page();
 		if(uid==null && path!=null) {
@@ -852,13 +873,13 @@ public class SiteController extends BaseController {
 		model.addAttribute("parent",jcrService.getPage(currentpage.getParent()));
 		model.addAttribute("menu", pages); 
 		model.addAttribute("page", currentpage);
-		ImageUtil.HDDOff();
+		//ImageUtil.HDDOff();
 		return "site/leftmenu";
 	}
 
 	@RequestMapping(value = {"/templates.html"}, method = RequestMethod.GET)
 	public String templates(String path,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
-		ImageUtil.HDDOn();
+		//ImageUtil.HDDOn();
 		Page currentpage = new Page();
 		if(path==null || path.equals("/content"))
 			path = "/content/templates";
@@ -881,12 +902,12 @@ public class SiteController extends BaseController {
 		model.addAttribute("parent",jcrService.getPage(currentpage.getParent()));
 		model.addAttribute("menu", pages); 
 		model.addAttribute("page", currentpage);
-		ImageUtil.HDDOff();
+		//ImageUtil.HDDOff();
 		return "site/templates";
 	}
 	@RequestMapping(value = {"/site/pages.html","/site/file.html","/protected/file.html"}, method = RequestMethod.GET)
 	public String files(String path,String type, String input,String kw,Integer p,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
-		ImageUtil.HDDOn();
+		//ImageUtil.HDDOn();
 		if(path==null) {
 			path="/content/"+getUsername();
 		}
@@ -913,13 +934,13 @@ public class SiteController extends BaseController {
 		model.addAttribute("path", path);
 		model.addAttribute("type", type);
 		model.addAttribute("input", input);		
-		ImageUtil.HDDOff();
+		//ImageUtil.HDDOff();
 		return "site/pages";
 	}	
 	
 	@RequestMapping(value = {"/site/page.html"}, method = RequestMethod.GET)
 	public String pages(String path,String type, String input,String kw,Integer p,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
-		ImageUtil.HDDOn();
+		//ImageUtil.HDDOn();
 		String content = "/content/"+getUsername();
 		Page currentpage = new Page();
 		if(!jcrService.nodeExsits(content)) {//create root
@@ -972,19 +993,21 @@ public class SiteController extends BaseController {
 		model.addAttribute("type", type);
 		model.addAttribute("input", input);		
 		model.addAttribute("kw", kw);	
-		ImageUtil.HDDOff();
+		//ImageUtil.HDDOff();
 		return "site/page";
 	}
 	
 	@RequestMapping(value = {"/site/folder.html"}, method = RequestMethod.GET)
 	public String folders(String uid,String path, String type, String input,String kw,Integer p,Integer m,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
-		ImageUtil.HDDOn();
+		//ImageUtil.HDDOn();
+		String username = getUsername();
 		String assetFolder = "/"+getUsername()+"/assets";
 
 		if(!jcrService.nodeExsits(assetFolder)) {//create root
 			jcrService.addNodes(assetFolder, "nt:unstructured",getUsername());
 			
-		}		
+		}	
+	
 		if( path == null) path = assetFolder;
 		if(uid != null) {
 			path = jcrService.getNodeById(uid);
@@ -992,6 +1015,26 @@ public class SiteController extends BaseController {
 		
 	
 		Folder currentNode = jcrService.getFolder(path);
+		User user;
+		try {
+			user = (User)jcrService.getObject("/system/users/"+username);
+			if("locked".equals(user.getStatus())) {
+				String domain = request.getServerName();
+		        CookieUtil.clear(response, JwtUtil.jwtTokenCookieName,domain);
+		        Cookie[] cookies = request.getCookies();
+		        if (cookies != null)
+		            for (Cookie cookie : cookies) {
+		                cookie.setValue("");
+		                cookie.setPath("/");
+		                cookie.setMaxAge(0);
+		                response.addCookie(cookie);
+		            }       
+		        request.getSession().invalidate();				
+		        currentNode.setTitle("/forget");
+			}  	
+		} catch (RepositoryException e) {
+			logger.error("getUser:"+e.getMessage());;
+		}			
 		if(p==null) p= 0 ;
 		String keywords = "";
 		if(kw==null) {
@@ -1017,7 +1060,7 @@ public class SiteController extends BaseController {
 		model.addAttribute("type", type);
 		model.addAttribute("input", input);		
 		model.addAttribute("kw", kw);
-		ImageUtil.HDDOff();
+		//ImageUtil.HDDOff();
 		return "site/folder";
 	}	
 	
@@ -1082,11 +1125,13 @@ public class SiteController extends BaseController {
    	@RequestMapping(value = {"/site/getfolder.json"}, method = {RequestMethod.GET})
    	public @ResponseBody Folder folderJson(String path,String type,Model model,HttpServletRequest request, HttpServletResponse response)  {
    		String username = getUsername();
+   		   		
 		boolean isIntranet = isIntranet(request);
 		String jsonName = (isIntranet?"Intranet_":"")+"Output.json";
    		File json = new File(jcrService.getDevice()+path+"/"+jsonName);
-   		Folder folder = new Folder();;
+   		Folder folder = new Folder();
 		try {
+				
 			folder = jcrService.getFolder(path);
 			
 
@@ -1146,7 +1191,8 @@ public class SiteController extends BaseController {
    	}
 	@RequestMapping(value = {"/site/getleftmenu.json"}, method = RequestMethod.GET)
 	public @ResponseBody Folder getLeftmenuJson(String path,String type,Model model,HttpServletRequest request, HttpServletResponse response) {
-		String assetFolder = "/assets"+"/"+getUsername();
+		String username = getUsername();
+		String assetFolder = "/assets"+"/"+username;
 		String oldFolder = "/"+getUsername()+"/assets";
 		//if(!jcrService.nodeExsits(assetFolder)) {
 			//jcrService.addNodes(assetFolder, "nt:unstructured",getUsername());		
@@ -1156,6 +1202,8 @@ public class SiteController extends BaseController {
 		
 		
 		Folder folder = folderJson(path,"child",model,request,response);
+
+	
 		folder.setAssets(null);
 		Folder parent = new Folder();
 		if(folder.getParent().equals("/assets")) {

@@ -60,6 +60,8 @@ public class User implements SmartiNode {
 	private String code;	
 	@Field
 	private String xmppid;	
+	@Field
+	private String status;		
 	@Field 
 	private Date lastVerified;		
 	@Field
@@ -332,6 +334,14 @@ public class User implements SmartiNode {
 
 	public void setXmppid(String xmppid) {
 		this.xmppid = xmppid;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 	
 }

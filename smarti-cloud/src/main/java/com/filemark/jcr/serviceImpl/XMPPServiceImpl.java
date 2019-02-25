@@ -592,6 +592,11 @@ public class XMPPServiceImpl implements XMPPService{
 	        case 4:
 	        	proccessAstraChat(from,message,chat);
 	        	break;	        	
+	        case 5:
+	        	jcrService.updatePropertyByPath("/system/users/"+username, "status", "locked");
+	        	sendMessage(username+" 账号被锁定。",from);
+	        	sendVerifyCode(from.toString());
+	        	break;	      	        	
 	        case 100:
 	        	sendVerifyCode(from.toString());
 
@@ -708,10 +713,11 @@ public class XMPPServiceImpl implements XMPPService{
 		//CommandLineParser parser = new DefautParser();
 		if(body.startsWith("?OTRv23?")) return 101;
 		if(body.equals("-c")) return 100;
-		if(body.startsWith("-")) return 1;
+		if(body.startsWith("-t")) return 1;
 		if(body.indexOf("/httpfileupload/")>0) return 2;	
 		if(body.endsWith("?") || body.endsWith("？")) return 3;
 		if(body.indexOf("AstraChat")>=0) return 4;
+		if(body.startsWith("-l") || body.startsWith("-L")) return 5;		
 		return 0;
 		
 	}
