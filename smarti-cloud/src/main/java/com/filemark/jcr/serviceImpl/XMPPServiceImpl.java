@@ -28,6 +28,7 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.swing.JTextField;
 import javax.xml.bind.DatatypeConverter;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.tika.mime.MimeType;
 import org.apache.tika.mime.MimeTypeException;
@@ -538,7 +539,7 @@ public class XMPPServiceImpl implements XMPPService{
 
 		try {
 			sendMessage(msg,to);
-			log.info("pages:"+n+","+msg.toXML("x").toString());
+			//log.info("pages:"+n+","+msg.toXML("x").toString());
 		} catch (NotConnectedException | XmppStringprepException
 				| XMPPException | InterruptedException e) {
 			log.error(e.getMessage());;
@@ -664,7 +665,15 @@ public class XMPPServiceImpl implements XMPPService{
 						//log.info("filename="+filename);
 						Asset asset = saveAsset(null,username,filename,contentType,path,0,is);
 						is.close();
-						sendAsset(asset,from);
+						Message msg = new Message();
+						msg.setSubject(asset.getTitle());
+						String url = "http://"+filedomain+fileport+"/publish/httpfileupload/"+asset.getUid()+"/"+asset.getName().toLowerCase();
+						asset.setUrl(url);
+						msg.setBody(url);
+						ImageExtension extension = new ImageExtension(asset.getContentType(),imageBinary); 
+						msg.addExtension(extension);
+						sendMessage(msg,from);
+						//sendAsset(asset,from);
 					}
 				}else if(eventType == XmlPullParser.END_TAG) {
 					if(parser.getName().equals(name)) {
@@ -686,6 +695,12 @@ public class XMPPServiceImpl implements XMPPService{
 			log.error(e.getMessage());
 		}*/ catch (RepositoryException e) {
 			log.error("RepositoryException:"+e.getMessage());
+		} catch (NotConnectedException e) {
+			log.error(e.getMessage());
+		} catch (XMPPException e) {
+			log.error(e.getMessage());
+		} catch (InterruptedException e) {
+			log.error(e.getMessage());
 		} 
 	}
 	
@@ -708,49 +723,69 @@ public class XMPPServiceImpl implements XMPPService{
 		msg.setSubject(title);
 		msg.setBody(url);
 		// Create a XHTMLExtension Package and add it to the message
-		if(asset.getFilePath()==null) {
-			Device device = (Device)jcrService.getObject(asset.getDevice());
-			asset.setFilePath(device.getLocation()+asset.getPath());
-			jcrService.updatePropertyByPath(asset.getPath(), "filePath", asset.getFilePath());
-			//jcrService.createIcon(asset.getPath(), 100, 100);
-		}	
 
 		XHTMLExtension xhtmlExtension = new XHTMLExtension();
-		if(asset.getContentType().startsWith("image/")) {
-			String filePath = asset.getFilePath()+"/x100.jpg";
-			File icon = new File(filePath);
-			//if(!icon.exists()) jcrService.createIcon(asset.getPath(), 100, 100);
-			//String imageString = "https://"+filedomain+fileport+"/resources/images/document-icon100.png";
-			/*
-			try {
-		    	InputStream is = new FileInputStream(filePath);    	
 
-				byte buffer[] = new byte[is.available()];
-				IOUtils.read(is, buffer);			
-				is.close();
-				imageString = Base64.encodeBase64String(buffer);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}*/
 			xhtmlExtension.addBody("<html xmlns='http://jabber.org/protocol/xhtml-im'>"
 					+"<body xmlns='http://www.w3.org/1999/xhtml'>"
 				    +"<p style='font-weight:bold'>"+url+"</p>"
 				    +"</body>"
 				    +"</html>");
-		}else {
 
 			ShareFileForm shareFileForm = new ShareFileForm(DataForm.Type.form);
 			msg.addExtension(shareFileForm);
 			msg.addExtension(new StandardExtensionElement("active","http://jabber.org/protocol/chatstates"));
-		}
-		log.info(msg.toXML("x").toString());
 
 	    sendMessage(msg,from);
 
 	    //Thread.sleep(200);
 
 	}
+
+	private void sendHLink(EntityBareJid from, String url, Asset asset) throws NotConnectedException, XMPPException, InterruptedException, XmppStringprepException, RepositoryException {
+		// User1 creates a message to send to user2
+		String title = asset.getTitle();
+		Message msg = new Message();
+		msg.setSubject(title);
+		msg.setBody(url);
+		// Create a XHTMLExtension Package and add it to the message
+
+		XHTMLExtension xhtmlExtension = new XHTMLExtension();
+
+			xhtmlExtension.addBody("<html xmlns='http://jabber.org/protocol/xhtml-im'>"
+					+"<body xmlns='http://www.w3.org/1999/xhtml'>"
+				    +"<p style='font-weight:bold'>"+url+"</p>"
+				    +"</body>"
+				    +"</html>");
+
+			ShareFileForm shareFileForm = new ShareFileForm(DataForm.Type.form);
+			msg.addExtension(shareFileForm);
+			msg.addExtension(new StandardExtensionElement("active","http://jabber.org/protocol/chatstates"));
+
+	    sendMessage(msg,from);
+
+	    //Thread.sleep(200);
+
+	}	
+	
+	private void sendBinaryImage(EntityBareJid from, String url, Asset asset) throws NotConnectedException, XMPPException, InterruptedException, RepositoryException, IOException {
+		// User1 creates a message to send to user2
+		String title = asset.getTitle();
+		Message msg = new Message();
+		msg.setSubject(title);
+		msg.setBody(url);
+		File origin = new File(asset.getFilePath()+"/origin"+asset.getExt());
+        FileInputStream fileInputStreamReader = new FileInputStream(origin);
+        byte[] bytes = new byte[(int)origin.length()];
+        fileInputStreamReader.read(bytes);
+        fileInputStreamReader.close();
+        String encodedfile = new String(Base64.encodeBase64(bytes), "UTF-8");
+		ImageExtension imageExtendsion = new ImageExtension(asset.getContentType(),encodedfile);
+		msg.addExtension(imageExtendsion);
+	    sendMessage(msg,from);
+
+	}
+	
 	@Override
 	public void sendVerifyCode(String from) throws RepositoryException, NotConnectedException, XmppStringprepException, XMPPException, InterruptedException {
 		String username = from.split("@")[0];
@@ -1041,7 +1076,8 @@ public class XMPPServiceImpl implements XMPPService{
 		
 	}	
 	
-	private void processSearch(EntityBareJid from, Message message, Chat chat) throws NotConnectedException, XmppStringprepException, XMPPException, InterruptedException {
+	private void processSearch(EntityBareJid from, Message message, Chat chat) throws NotConnectedException, XMPPException, InterruptedException, RepositoryException, IOException {
+		String resource = message.getFrom().toString();
 		String query = message.getBody().replace("?", "").replace("？", "");
 		String keywords =" and contains(s.*,'"+ query+"')";
 		String username = from.toString().split("@")[0];
@@ -1051,9 +1087,17 @@ public class XMPPServiceImpl implements XMPPService{
 		String assetsQuery = "select s.* from [nt:base] AS s INNER JOIN [nt:base] AS f ON ISCHILDNODE(s, f) WHERE "+ISDESCENDANTNODE+"(s,["+path+"])" +keywords+" and s.[delete] not like 'true' and s.ocm_classname='com.filemark.jcr.model.Asset' order by s."+orderby+", s.[name]";
 		WebPage<Asset> assets = jcrService.searchAssets(assetsQuery, 12, 0);
 		ShareFileForm shareFileForm = new ShareFileForm(DataForm.Type.form);
+		log.info("resource="+resource);
 		for(Asset asset:assets.getItems()) {
 			if(asset.getContentType().startsWith("image/")) {
-				shareFileForm.addAsset(asset);
+				if(resource.indexOf("AstraChat")>0) {
+					String url = "http://"+filedomain+fileport+"/publish/httpfileupload/"+asset.getUid()+"/"+asset.getName().toLowerCase();
+					sendBinaryImage(from, url,asset);
+				}else if (resource.startsWith("Spark")) {
+					sendAsset(asset,from);					
+				}else {
+					shareFileForm.addAsset(asset);
+				}
 			}else {
 				ShareFileForm fileForm = new ShareFileForm(DataForm.Type.form);
 				fileForm.addAsset(asset);
@@ -1067,13 +1111,13 @@ public class XMPPServiceImpl implements XMPPService{
 		Message msg = new Message();
 		msg.setBody(query+ " : "+assets.getItems().size()+"/"+assets.getPageCount());
 		msg.addExtension(shareFileForm);
-		XHTMLExtension xhtmlExtension = new XHTMLExtension();
+/*		XHTMLExtension xhtmlExtension = new XHTMLExtension();
 		xhtmlExtension.addBody("<body xmlns='http://www.w3.org/1999/xhtml'>"
 			    +"<p style='font-weight:bold'>"+query+"</p>"
 			    +"</body>");
-		msg.addExtension(xhtmlExtension);
+		msg.addExtension(xhtmlExtension);*/
 		//String html = pegDownProcessor.markdownToHtml(message.getBody());
-		log.info(msg.toXML("x").toString());
+		//log.info(msg.toXML("x").toString());
 		sendMessage(msg,from);
 	}
 
@@ -1368,6 +1412,35 @@ public class XMPPServiceImpl implements XMPPService{
 			public int getSize() {
 				return assets.size();
 			}
+		}
+		
+		public class ImageExtension implements ExtensionElement {
+			private String contentType;
+			private String imageString;
+			public ImageExtension(String contentType,String imageString) {
+				this.contentType = contentType;
+				this.imageString = imageString;
+			}
+			@Override
+			public String getElementName() {
+				
+				return "image";
+			}
+
+			@Override
+			public CharSequence toXML(String arg0) {
+				XmlStringBuilder xml = new XmlStringBuilder(this);
+		        xml.append("xmlns:stream='http://etherx.jabber.org/streams' type='"+contentType+"'>");				
+		        xml.append(imageString);
+		        xml.closeElement("image");
+		        return xml;
+			}
+
+			@Override
+			public String getNamespace() {
+				return "http://mangga.me/protocol/image";
+			}
+			
 		}
 
 }
