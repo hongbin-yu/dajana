@@ -411,20 +411,7 @@ public class SiteController extends BaseController {
 		String assetFolder = "/assets"+"/"+username;
 		String oldFolder = "/"+username+"/assets";
 		User user = (User)jcrService.getObject("/system/users/"+username);
-		if("locked".equals(user.getStatus())) {
-			String domain = request.getServerName();
-	        CookieUtil.clear(response, JwtUtil.jwtTokenCookieName,domain);
-	        Cookie[] cookies = request.getCookies();
-	        if (cookies != null)
-	            for (Cookie cookie : cookies) {
-	                cookie.setValue("");
-	                cookie.setPath("/");
-	                cookie.setMaxAge(0);
-	                response.addCookie(cookie);
-	            }       
-	        request.getSession().invalidate();
-			response.sendRedirect("/forget");
-		}
+
 		if(!jcrService.nodeExsits(assetFolder)) {
 			jcrService.addNodes(assetFolder, "nt:unstructured",getUsername());		
 		}		
@@ -448,7 +435,20 @@ public class SiteController extends BaseController {
 		model.addAttribute("sorting", sort);
 		try {
 			model.addAttribute("leftmenu", getLeftmenuJson(path,type,model,request,response));
-			
+			if("locked".equals(user.getStatus())) {
+				String domain = request.getServerName();
+		        CookieUtil.clear(response, JwtUtil.jwtTokenCookieName,domain);
+		        Cookie[] cookies = request.getCookies();
+		        if (cookies != null)
+		            for (Cookie cookie : cookies) {
+		                cookie.setValue("");
+		                cookie.setPath("/");
+		                cookie.setMaxAge(0);
+		                response.addCookie(cookie);
+		            }       
+		        request.getSession().invalidate();
+				response.sendRedirect("/forget");
+			}			
 		}catch(Exception e) {
 	   		File json = new File(jcrService.getDevice()+path+"/Output.json");
 	   		json.delete();
