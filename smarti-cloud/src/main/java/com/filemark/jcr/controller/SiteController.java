@@ -98,6 +98,7 @@ public class SiteController extends BaseController {
 	
 	@Inject
 	protected AssetManager assetManager;
+
 	
     @ExceptionHandler(Exception.class)
     public ModelAndView  handleException(Exception ex,HttpServletRequest request) throws UnsupportedEncodingException {
@@ -433,7 +434,9 @@ public class SiteController extends BaseController {
 		model.addAttribute("type", type);
 		model.addAttribute("ncolumn", ncolumn);
 		model.addAttribute("sorting", sort);
+
 		try {
+
 			model.addAttribute("leftmenu", getLeftmenuJson(path,type,model,request,response));
 			if("locked".equals(user.getStatus())) {
 				String domain = request.getServerName();
@@ -448,7 +451,8 @@ public class SiteController extends BaseController {
 		            }       
 		        request.getSession().invalidate();
 				response.sendRedirect("/forget");
-			}			
+			}	
+			model.addAttribute("presences", XMPPService.getPresences());
 		}catch(Exception e) {
 	   		File json = new File(jcrService.getDevice()+path+"/Output.json");
 	   		json.delete();
@@ -1264,7 +1268,7 @@ public class SiteController extends BaseController {
 	}
 	
 	private void getAsset2News(Folder folder,List<News>newsList,Integer w,String type) {
-		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
 		
 		for(Asset asset:folder.getAssets()) {
 			News a2news = new News();
@@ -1319,9 +1323,9 @@ public class SiteController extends BaseController {
 			a2news.setTitle(title);
 			a2news.setDescription(asset.getDescription()==null?"":asset.getDescription());
 			if(asset.getOriginalDate()!=null)
-				a2news.setLastPublished(sf.format(asset.getOriginalDate())+"<a class=\"download btn-default btn-xs pull-right\" href=\"download/"+asset.getUid()+"/"+asset.getName()+"\" download=\""+asset.getName()+"\" title=\""+asset.getTitle()+"\" target=\"_blank\"><span class=\"glyphicon glyphicon-download pull-right\">下载</span></a>");
+				a2news.setLastPublished("<a class=\"btn-default btn-xs  text-center\" href=\"\" title=\""+asset.getTitle()+"\"><span class=\"glyphicon glyphicon-"+asset.getStatus()+"\"></span></a>"+sf.format(asset.getOriginalDate())+"<a class=\"wb-lbx lbx-modal btn-default btn-xs  text-center\" href=\"#inline_content_modal\" title=\"发送:"+asset.getTitle()+"\" onclick=\"javascript:setUid('"+asset.getUid()+"')\"><span class=\"glyphicon glyphicon-send\">发送</span></a>"+"<a class=\"download btn-default btn-xs pull-right\" href=\"download/"+asset.getUid()+"/"+asset.getName()+"\" download=\""+asset.getName()+"\" title=\""+asset.getTitle()+"\" target=\"_blank\"><span class=\"glyphicon glyphicon-download pull-right\">下载</span></a>");
 			if(asset.getLastModified()!=null)
-				a2news.setLastModified(sf.format(asset.getLastModified())+"<a class=\"download btn-default btn-xs pull-right\" href=\"download/"+asset.getUid()+"/"+asset.getName()+"\" download=\""+asset.getName()+"\" title=\""+asset.getTitle()+"\" target=\"_blank\"><span class=\"glyphicon glyphicon-download pull-right\">下载</span></a>");			
+				a2news.setLastModified("<a class=\"btn-default btn-xs  text-center\" href=\"\" title=\""+asset.getTitle()+"\"><span class=\"glyphicon glyphicon-"+asset.getStatus()+"\"></span></a>"+sf.format(asset.getLastModified())+"<a class=\"download btn-default btn-xs pull-right\" href=\"download/"+asset.getUid()+"/"+asset.getName()+"\" download=\""+asset.getName()+"\" title=\""+asset.getTitle()+"\" target=\"_blank\"><span class=\"glyphicon glyphicon-download pull-right\">下载</span></a>");			
 			a2news.setSubjects(folder.getTitle());
 			if(asset.getPosition()!=null && !"".equals(asset.getPosition()))
 				a2news.setLocation("<a href=\"https://www.google.com/maps?q="+asset.getPosition()+"\" target=\"_blank\">拍摄地址</a>");

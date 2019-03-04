@@ -178,7 +178,7 @@ public class XMPPServiceImpl implements XMPPService{
 				connection.connect().login();
 				roster = Roster.getInstanceFor(connection);
 				roster.setRosterLoadedAtLogin(true);
-/*				roster = Roster.getInstanceFor(connection);
+				roster = Roster.getInstanceFor(connection);
 				if (!roster.isLoaded())
 					  try {
 					            roster.reloadAndWait();
@@ -186,7 +186,7 @@ public class XMPPServiceImpl implements XMPPService{
 					            e.printStackTrace();
 					        }
 				Collection<RosterEntry> entries = roster.getEntries();
-				for (RosterEntry entry : entries) {
+/*				for (RosterEntry entry : entries) {
 					//example: get presence, type, mode, status
 					        Presence entryPresence = roster.getPresence(entry.getJid());
 
@@ -277,7 +277,7 @@ public class XMPPServiceImpl implements XMPPService{
 			            Asset ex_asset = findAsset(filepath,fileName,size);
 			            if(ex_asset!=null) {
 			            	ift.cancel();
-			            	sendAsset(ex_asset,jid.asEntityBareJidIfPossible());
+			            	sendAsset(ex_asset,jid.asEntityBareJidIfPossible().toString());
 			            	return;
 			            }
 			    		log.info("fileTransferRequestor:"+jid+",fileName="+fileName);
@@ -497,7 +497,15 @@ public class XMPPServiceImpl implements XMPPService{
 		
 		chat.send(message);
 	}	
-	private void sendAsset(Asset asset, EntityBareJid to) {
+	
+	public void sendMessage(Message message, String to) throws XMPPException, NotConnectedException, XmppStringprepException, InterruptedException {
+		ChatManager chatManager = ChatManager.getInstanceFor(connection);
+		Chat chat = chatManager.chatWith(JidCreate.entityBareFrom(to)); // pass XmppClient instance as listener for received messages.
+		
+		chat.send(message);
+	}
+	
+	public void sendAsset(Asset asset, String to) {
         ShareFileForm shareFileForm = new ShareFileForm(DataForm.Type.form);
         shareFileForm.addAsset(asset);
 		Message msg = new Message();
@@ -511,8 +519,9 @@ public class XMPPServiceImpl implements XMPPService{
 		try {
 			log.info(url);
 			sendMessage(msg,to);
+			jcrService.updatePropertyByPath(asset.getPath(), "status", "bullhorn");
 		} catch (NotConnectedException | XmppStringprepException
-				| XMPPException | InterruptedException e) {
+				| XMPPException | InterruptedException | RepositoryException e) {
 			log.error(e.getMessage());;
 		}			
 	}
@@ -608,20 +617,20 @@ public class XMPPServiceImpl implements XMPPService{
 	
 	        }
 	        
-        }catch(Exception e) {
-        	log.error(e.getMessage());
-        	try {
-				sendMessage(e.getMessage(),from);
-			} catch (NotConnectedException e1) {
-				log.error(e1.getMessage());
-			} catch (XmppStringprepException e1) {
-				log.error(e1.getMessage());
-			} catch (XMPPException e1) {
-				log.error(e1.getMessage());;
-			} catch (InterruptedException e1) {
-				log.error(e1.getMessage());
-			}
-        }
+		} catch (NotConnectedException e1) {
+			disconnect();
+			log.error(e1.getMessage());
+		} catch (XmppStringprepException e) {
+			log.error(e.getMessage());
+		} catch (XMPPException e) {
+			log.error(e.getMessage());;
+		} catch (InterruptedException e) {
+			log.error(e.getMessage());
+		} catch (RepositoryException e) {
+			log.error(e.getMessage());
+		} catch (IOException e) {
+			log.error(e.getMessage());
+		}
 		
 	}
 	
@@ -846,6 +855,8 @@ public class XMPPServiceImpl implements XMPPService{
 			try {
 		
 				Asset asset = importAsset(url,username.toString(),filepath);
+				jcrService.updatePropertyByPath(asset.getPath(), "status", "bullhorn");
+
 		        if(asset.getExt().endsWith(".doc") || asset.getExt().endsWith(".docx"))  {
 		        	sendDoc(asset,from);
 		        	continue;
@@ -1095,14 +1106,17 @@ public class XMPPServiceImpl implements XMPPService{
 		ShareFileForm shareFileForm = new ShareFileForm(DataForm.Type.form);
 		log.info("resource="+resource);
 		for(Asset asset:assets.getItems()) {
+			jcrService.updatePropertyByPath(asset.getPath(), "status", "bullhorn");
+
 			if(asset.getContentType().startsWith("image/")) {
 				if(resource.indexOf("AstraChat")>0) {
 					String url = "http://"+filedomain+fileport+"/publish/httpfileupload/"+asset.getUid()+"/"+asset.getName().toLowerCase();
 					sendBinaryImage(from, url,asset);
 				}else if (resource.startsWith("Spark")) {
-					sendAsset(asset,from);					
+					sendAsset(asset,from.toString());					
 				}else {
 					shareFileForm.addAsset(asset);
+
 				}
 			}else {
 				ShareFileForm fileForm = new ShareFileForm(DataForm.Type.form);
@@ -1370,6 +1384,47 @@ public class XMPPServiceImpl implements XMPPService{
 		public void setPassword(String password) {
 			this.password = password;
 		}
+		
+		
+		public Roster getRoster() {
+		  try {
+	            roster.reloadAndWait();
+	        } catch (SmackException.NotLoggedInException |        SmackException.NotConnectedException | InterruptedException e) {
+	            e.printStackTrace();
+	        }			
+			return roster;
+		}
+
+		public Collection<RosterEntry> getEntries() {
+			  try {
+		            roster.reloadAndWait();
+		        } catch (SmackException.NotLoggedInException |        SmackException.NotConnectedException | InterruptedException e) {
+		            e.printStackTrace();
+		        }
+
+				return roster.getEntries();
+			}	
+		
+		public Collection<Presence> getPresences() {
+			Collection<Presence> presences = new ArrayList<Presence>();
+			  if(!roster.isLoaded()) 	
+			  try {
+		            roster.reloadAndWait();
+		        } catch (SmackException.NotLoggedInException | SmackException.NotConnectedException | InterruptedException e) {
+		            e.printStackTrace();
+		        }
+			   for (RosterEntry entry : roster.getEntries()) {
+				   //if(entry.isApproved()) {
+				        Presence entryPresence = roster.getPresence(entry.getJid());
+				        presences.add(entryPresence);					   
+				   //}
+
+			   }
+				return presences;
+			}	
+		
+
+
 		private Asset findAsset(String path,String title,long size) {
 			Asset asset = null;
 			String ISDESCENDANTNODE = "ISCHILDNODE";

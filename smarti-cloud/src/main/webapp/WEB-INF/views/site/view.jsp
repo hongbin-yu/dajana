@@ -77,8 +77,8 @@
         <ul id="leftmenu_ul" class="list-group menu list-unstyled">
         <c:forEach items="${leftmenu.subfolders}" var="item" varStatus="loop">
             <li>
-<%--             <a  class="list-group-item" href='<c:url value="view.html?path=${item.path }&type=${type }"></c:url>'><c:if test="${item.path==folder.path }"><span class="glyphicon glyphicon-folder-open"></span></c:if><c:if test="${item.path!=folder.path }"><span class="glyphicon glyphicon-folder-close"></span></c:if> ${item.title}</a>      --%>
-   	    	    <a class="list-group-item" href='javascript:view("${item.path}","${type }","${param.w}")'><c:if test="${item.path == path }"><span class="glyphicon glyphicon-folder-open"></span></c:if><c:if test="${item.path != path }"><span class="glyphicon glyphicon-folder-close"></span></c:if> ${item.title}</a>
+             <a  class="list-group-item" href='<c:url value="view.html?path=${item.path }&type=${type }"></c:url>'><c:if test="${item.path==folder.path }"><span class="glyphicon glyphicon-folder-open"></span></c:if><c:if test="${item.path!=folder.path }"><span class="glyphicon glyphicon-folder-close"></span></c:if> ${item.title}</a>
+<%--    	    <a class="list-group-item" href='javascript:view("${item.path}","${type }","${param.w}")'><c:if test="${item.path == path }"><span class="glyphicon glyphicon-folder-open"></span></c:if><c:if test="${item.path != path }"><span class="glyphicon glyphicon-folder-close"></span></c:if> ${item.title}</a>--%>
                 <ul class="list-group menu list-unstyled">
                     <c:forEach items="${item.subfolders}" var="child" varStatus="loop">
                     	<li>
@@ -96,3 +96,28 @@
 </nav>
 </div>
 </main>
+		<section id="inline_content_modal" class="mfp-hide modal-dialog modal-content overlay-def">
+			<header class="modal-header">
+				<h2 class="modal-title">通讯目录</h2>
+			</header>
+			<div class="modal-body">
+                <ul class="list-group menu list-unstyled">
+                    <c:forEach items="${presences}" var="presence" varStatus="loop">
+                    	<li>
+                    	<a class="list-group-item" href="javascript:sendAsset('${presence.from}')"><span class="glyphicon glyphicon-user"></span> ${presence.from} (${presence.mode})</a>
+						</li>
+                    </c:forEach>
+                </ul>	
+                <button class="btn btn-primary popup-modal-dismiss" type="button">关闭</button>			
+			</div>
+		</section>
+		<script type="text/javascript">
+			var selected_uid = "";
+			function setUid(uid) {
+				selected_uid = uid;
+				}
+			function sendAsset(to) {
+				
+				alert(to +"/"+selected_uid);
+				};
+		</script>

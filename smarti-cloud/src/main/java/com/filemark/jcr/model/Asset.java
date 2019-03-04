@@ -59,6 +59,8 @@ public class Asset implements SmartiNode, Serializable {
 	private String icon;
 	@Field
 	private String position;
+	@Field
+	private String status="lock";
 	
 	private String ocm_classname;
 	private String nodeName;
@@ -397,6 +399,15 @@ public class Asset implements SmartiNode, Serializable {
 
 	public void setFilePath(String filePath) {
 		this.filePath = filePath;
+	}
+
+	public String getStatus() {
+		if(status==null) return "lock";
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 

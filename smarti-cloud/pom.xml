@@ -760,7 +760,14 @@
 		        <groupId>org.igniterealtime.smack</groupId>
 		        <artifactId>smack-extensions</artifactId>
 		        <version>4.3.0</version>
-		</dependency>											
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.igniterealtime.smack/smack-experimental -->
+		<dependency>
+		    <groupId>org.igniterealtime.smack</groupId>
+		    <artifactId>smack-experimental</artifactId>
+		    <version>4.3.0</version>
+		</dependency>
+															
 		<!-- https://mvnrepository.com/artifact/org.pegdown/pegdown -->
 		<dependency>
 		    <groupId>org.pegdown</groupId>
