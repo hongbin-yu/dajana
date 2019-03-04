@@ -1014,6 +1014,9 @@ public class XMPPServiceImpl implements XMPPService{
 		if(ex_asset!=null) {
 			log.info("File exists:"+nodeName);
 			return ex_asset;//"/protected/httpfileupload/"+asset.getUid()+"/"+fileName;
+		}else if(jcrService.nodeExsits(assetPath)) {
+			ex_asset = (Asset)jcrService.getObject(assetPath);
+			return ex_asset;
 		}else {
 			assetPath = jcrService.getUniquePath(path, fileName);
 		}
