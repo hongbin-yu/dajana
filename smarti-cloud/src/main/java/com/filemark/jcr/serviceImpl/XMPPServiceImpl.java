@@ -498,11 +498,19 @@ public class XMPPServiceImpl implements XMPPService{
 		chat.send(message);
 	}	
 	
-	public void sendMessage(Message message, String to) throws XMPPException, NotConnectedException, XmppStringprepException, InterruptedException {
+	public void sendMessage(Message message, String to) {
 		ChatManager chatManager = ChatManager.getInstanceFor(connection);
-		Chat chat = chatManager.chatWith(JidCreate.entityBareFrom(to)); // pass XmppClient instance as listener for received messages.
-		
-		chat.send(message);
+		Chat chat;
+		try {
+			chat = chatManager.chatWith(JidCreate.entityBareFrom(to));
+			chat.send(message);
+		} catch (XmppStringprepException | InterruptedException e) {
+			log.error(e.getMessage());
+		} catch (NotConnectedException e) {
+			log.error(e.getMessage());
+			reconnect(message,to);
+		} 
+
 	}
 	
 	public void sendAsset(Asset asset, String to) {
@@ -518,10 +526,10 @@ public class XMPPServiceImpl implements XMPPService{
 
 		try {
 			log.info(url);
-			sendMessage(msg,to);
 			jcrService.updatePropertyByPath(asset.getPath(), "status", "bullhorn");
-		} catch (NotConnectedException | XmppStringprepException
-				| XMPPException | InterruptedException | RepositoryException e) {
+
+			sendMessage(msg,to);
+		} catch (RepositoryException e) {
 			log.error(e.getMessage());;
 		}			
 	}
@@ -618,8 +626,8 @@ public class XMPPServiceImpl implements XMPPService{
 	        }
 	        
 		} catch (NotConnectedException e1) {
-			disconnect();
 			log.error(e1.getMessage());
+			reconnect(message,from.toString());
 		} catch (XmppStringprepException e) {
 			log.error(e.getMessage());
 		} catch (XMPPException e) {
@@ -1285,7 +1293,14 @@ public class XMPPServiceImpl implements XMPPService{
 				log.error(e.getMessage());
 			}
 			return numberOfPage;
-		}	    
+		}	  
+		
+	   private void reconnect(Message message,String to) {
+		   disconnect();
+		   login(username,password);
+		   sendMessage(message,to);
+	   }
+	   
 	   private void checkConnection() {
 		   TimerTask repeatedTask = new TimerTask() {
 		        public void run() {
