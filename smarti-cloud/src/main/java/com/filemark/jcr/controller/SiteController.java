@@ -3174,7 +3174,7 @@ public class SiteController extends BaseController {
 			return e.getMessage();
 		}
 		
-		
+		return null;
 	} 
 
 	@RequestMapping(value = {"/protected/youcloud/{uid}/**","/site/youcloud/{uid}/**","/publish/youcloud/{uid}/**"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
