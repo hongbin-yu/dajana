@@ -17,8 +17,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.StringTokenizer;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -28,6 +31,12 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.swing.JTextField;
 import javax.xml.bind.DatatypeConverter;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.tika.mime.MimeType;
@@ -75,12 +84,10 @@ import org.jxmpp.jid.EntityBareJid;
 import org.jxmpp.jid.Jid;
 import org.jxmpp.jid.impl.JidCreate;
 import org.jxmpp.stringprep.XmppStringprepException;
-import org.jxmpp.xml.splitter.XmlSplitter;
 import org.pegdown.PegDownProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.w3c.tools.codec.Base64Decoder;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -122,7 +129,7 @@ public class XMPPServiceImpl implements XMPPService{
 	//private PingFailedListener pingFailedListener ;
 	private static final PegDownProcessor pegDownProcessor = new PegDownProcessor();
 			//Extensions.ALL | Extensions.SUPPRESS_ALL_HTML, 5000);
-			
+	Map<String,WebPage<Asset>> lastQueries = new HashMap<String,WebPage<Asset>>();		
 	//private IncomingChatMessageListener incomingChatMessageListener;
 	public void initialize() {
 
@@ -586,8 +593,78 @@ public class XMPPServiceImpl implements XMPPService{
         		}
         	}
             String body = message.getBody();
+    		CommandLineParser parser = new DefaultParser();
+    		String commands[] = translateCommandline(body);
+    		Options options = new Options();
+    		options.addOption(new Option("n", "next", false, "下一组"));     		
+    		options.addOption(new Option("q", "query", false, "关键词"));    		
+    		options.addOption(new Option("p", "page", true, "输入起始页"));
+    		options.addOption(new Option("L", "lock", false, "锁定账户"));
+    		options.addOption(new Option("c", "code", false, "获取验证码"));		
+    		CommandLine commandLine;        
+			commandLine = parser.parse(options, commands);    		
     		//log.info(message.getType()+"/"+filedomain+"/ "+from+" 说: " + body);
             log.info(message.toXML("x").toString());
+            if(commandLine.hasOption("c")) {
+            	sendVerifyCode(from.toString());
+
+            }else if(commandLine.hasOption("L")) {
+	        	jcrService.updatePropertyByPath("/system/users/"+username, "status", "locked");
+	        	sendMessage(username+" 账号被锁定。",from);
+	        	sendVerifyCode(from.toString());
+            }else if(commandLine.hasOption("n")) {
+            	
+        		WebPage<Asset> assets = lastQueries.get(message.getFrom().toString());
+        		if(assets!=null) {
+        			String query = assets.getAction();
+
+        			long p = assets.getPageNumber()+1;
+    	       	
+        			processSearch(message.getFrom().toString(),query,chat,p);             		
+            	}
+           	
+            }else if(body.indexOf("AstraChat")>=0) {
+	        	proccessAstraChat(from,message,chat);
+
+            }else if(body.indexOf("/httpfileupload/")>0) {
+            	processAssets(from,message,chat);
+            }else {
+            	long p = 0;
+            	String query = body;
+            	String p_value = null;
+            	if(commandLine.hasOption('p')) {
+            		p_value = commandLine.getOptionValue('p');
+
+            		if(p_value!=null) {
+                		p = Long.parseLong(p_value);            			
+            		}
+            		
+            		String q[] = commandLine.getArgs();
+/*            		query = "";
+            		for(String s:q) {
+            			if(!s.equals(p_value)){
+            				if("".endsWith(query))
+            					query = s;
+            				else
+            					query+=" "+s;
+            			}
+            		}*/
+            		query = String.join(" ", q);
+            		log.info("p="+p_value +",q="+query);
+            	}
+            	//HelpFormatter formatter = new HelpFormatter();
+            	//formatter.printHelp("Help", options);
+        		if("".equals(query)) {
+        			WebPage<Asset> assets = lastQueries.get(message.getFrom().toString());
+        			query = assets.getAction();
+        			if(p_value ==null) {
+        				p = assets.getPageNumber()+1;
+        			}
+        		}            	
+            	processSearch(message.getFrom().toString(),query,chat,p);
+
+            }
+/*            
         	switch(parseType(body)) {
 	        case 0:
 
@@ -624,7 +701,7 @@ public class XMPPServiceImpl implements XMPPService{
 	        	break;		        	
 	
 	        }
-	        
+	*/        
 		} catch (NotConnectedException e1) {
 			log.error(e1.getMessage());
 			reconnect(message,from.toString());
@@ -638,7 +715,11 @@ public class XMPPServiceImpl implements XMPPService{
 			log.error(e.getMessage());
 		} catch (IOException e) {
 			log.error(e.getMessage());
+		} catch (org.apache.commons.cli.ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+        
 		
 	}
 	
@@ -727,14 +808,29 @@ public class XMPPServiceImpl implements XMPPService{
 	}
 	
 	private int parseType(String body) {
-		//CommandLineParser parser = new DefautParser();
-		if(body.startsWith("?OTRv23?")) return 101;
-		if(body.equals("-c")) return 100;
-		if(body.startsWith("-t")) return 1;
-		if(body.indexOf("/httpfileupload/")>0) return 2;	
-		if(body.endsWith("?") || body.endsWith("？")) return 3;
-		if(body.indexOf("AstraChat")>=0) return 4;
-		if(body.startsWith("-l") || body.startsWith("-L")) return 5;		
+		CommandLineParser parser = new DefaultParser();
+		String commands[] = translateCommandline(body);
+		Options options = new Options();
+		
+		options.addOption(new Option("p", "page", false, "输入起始页"));
+		options.addOption(new Option("l", "lock", false, "锁定账户"));
+		options.addOption(new Option("c", "code", false, "获取验证码"));		
+		CommandLine commandLine;
+		try {
+			commandLine = parser.parse(options, commands);
+			if(body.startsWith("?OTRv23?")) return 101;
+			if(commandLine.hasOption("c")) /*if(body.equals("-c"))*/ return 100;
+			if(body.startsWith("-t")) return 1;
+			if(body.indexOf("/httpfileupload/")>0) return 2;	
+			if(body.endsWith("?") || body.endsWith("？")) return 3;
+			if(body.indexOf("AstraChat")>=0) return 4;
+			if(commandLine.hasOption("l")) /*if(body.startsWith("-l") || body.startsWith("-L"))*/ return 5;
+
+		} catch (org.apache.commons.cli.ParseException e) {
+			log.error(e.getMessage());
+		}
+	
+
 		return 0;
 		
 	}
@@ -791,7 +887,7 @@ public class XMPPServiceImpl implements XMPPService{
 
 	}	
 	
-	private void sendBinaryImage(EntityBareJid from, String url, Asset asset) throws NotConnectedException, XMPPException, InterruptedException, RepositoryException, IOException {
+	private void sendBinaryImage(String to, String url, Asset asset) throws NotConnectedException, XMPPException, InterruptedException, RepositoryException, IOException {
 		// User1 creates a message to send to user2
 		String title = asset.getTitle();
 		Message msg = new Message();
@@ -805,7 +901,7 @@ public class XMPPServiceImpl implements XMPPService{
         String encodedfile = new String(Base64.encodeBase64(bytes), "UTF-8");
 		ImageExtension imageExtendsion = new ImageExtension(asset.getContentType(),encodedfile);
 		msg.addExtension(imageExtendsion);
-	    sendMessage(msg,from);
+	    sendMessage(msg,to);
 
 	}
 	
@@ -1016,7 +1112,10 @@ public class XMPPServiceImpl implements XMPPService{
 			return ex_asset;//"/protected/httpfileupload/"+asset.getUid()+"/"+fileName;
 		}else if(jcrService.nodeExsits(assetPath)) {
 			ex_asset = (Asset)jcrService.getObject(assetPath);
-			return ex_asset;
+			if(ex_asset.getSize() == size)
+				return ex_asset;
+			else
+				fileName = ""+getDateTime()+ext;
 		}else {
 			assetPath = jcrService.getUniquePath(path, fileName);
 		}
@@ -1104,27 +1203,26 @@ public class XMPPServiceImpl implements XMPPService{
 		
 	}	
 	
-	private void processSearch(EntityBareJid from, Message message, Chat chat) throws NotConnectedException, XMPPException, InterruptedException, RepositoryException, IOException {
-		String resource = message.getFrom().toString();
-		String query = message.getBody().replace("?", "").replace("？", "");
+	private void processSearch(String to, String query, Chat chat,long p) throws NotConnectedException, XMPPException, InterruptedException, RepositoryException, IOException {
+		
 		String keywords =" and contains(s.*,'"+ query+"')";
-		String username = from.toString().split("@")[0];
+		String username = to.split("@")[0];
 		String ISDESCENDANTNODE = "ISDESCENDANTNODE";
 		String orderby = "[lastModified] desc";
 		String path = "/assets/"+username+"/httpfileupload";
 		String assetsQuery = "select s.* from [nt:base] AS s INNER JOIN [nt:base] AS f ON ISCHILDNODE(s, f) WHERE "+ISDESCENDANTNODE+"(s,["+path+"])" +keywords+" and s.[delete] not like 'true' and s.ocm_classname='com.filemark.jcr.model.Asset' order by s."+orderby+", s.[name]";
-		WebPage<Asset> assets = jcrService.searchAssets(assetsQuery, 12, 0);
+		WebPage<Asset> assets = jcrService.searchAssets(assetsQuery, 6, p);
 		ShareFileForm shareFileForm = new ShareFileForm(DataForm.Type.form);
-		log.info("resource="+resource);
+		log.info("resource="+to);
 		for(Asset asset:assets.getItems()) {
 			jcrService.updatePropertyByPath(asset.getPath(), "status", "bullhorn");
 
 			if(asset.getContentType().startsWith("image/")) {
-				if(resource.indexOf("AstraChat")>0) {
+				if(to.indexOf("AstraChat")>0) {
 					String url = "http://"+filedomain+fileport+"/publish/httpfileupload/"+asset.getUid()+"/"+asset.getName().toLowerCase();
-					sendBinaryImage(from, url,asset);
-				}else if (resource.startsWith("Spark")) {
-					sendAsset(asset,from.toString());					
+					sendBinaryImage(to, url,asset);
+				}else if (to.indexOf("Spark")>0) {
+					sendAsset(asset,to);					
 				}else {
 					shareFileForm.addAsset(asset);
 
@@ -1135,7 +1233,7 @@ public class XMPPServiceImpl implements XMPPService{
 				Message msg = new Message();
 				msg.setBody(asset.getTitle());
 				msg.addExtension(fileForm);
-				sendMessage(msg,from);
+				sendMessage(msg,to);
 			}
 		}
 		//shareFileForm.addAssets(assets.getItems());
@@ -1149,7 +1247,14 @@ public class XMPPServiceImpl implements XMPPService{
 		msg.addExtension(xhtmlExtension);*/
 		//String html = pegDownProcessor.markdownToHtml(message.getBody());
 		//log.info(msg.toXML("x").toString());
-		sendMessage(msg,from);
+		sendMessage(msg,to);
+		//if(to.indexOf("Xabber")>0)
+		assets.setAction(query);
+		lastQueries.put(to, assets);
+		long start_page = (assets.getPageNumber())*assets.getPageSize();
+		if(assets.getPageCount()>0) start_page +=1;
+			sendMessage(query+ " : "+start_page+"-"+(start_page+assets.getItems().size()-1)+ "/"+assets.getPageCount(),to);
+		
 	}
 
 	private void processChat(EntityBareJid from, Message message, Chat chat) throws NotConnectedException, XmppStringprepException, XMPPException, InterruptedException, RepositoryException {
@@ -1521,5 +1626,76 @@ public class XMPPServiceImpl implements XMPPService{
 			}
 			
 		}
+
+
+/**
+ * [code borrowed from ant.jar]
+ * Crack a command line.
+ * @param toProcess the command line to process.
+ * @return the command line broken into strings.
+ * An empty or null toProcess parameter results in a zero sized array.
+ */
+		
+public static String[] translateCommandline(String toProcess) {
+    if (toProcess == null || toProcess.length() == 0) {
+        //no command? no string
+        return new String[0];
+    }
+    // parse with a simple finite state machine
+
+    final int normal = 0;
+    final int inQuote = 1;
+    final int inDoubleQuote = 2;
+    int state = normal;
+    final StringTokenizer tok = new StringTokenizer(toProcess, "\"\' ", true);
+    final ArrayList<String> result = new ArrayList<String>();
+    final StringBuilder current = new StringBuilder();
+    boolean lastTokenHasBeenQuoted = false;
+
+    while (tok.hasMoreTokens()) {
+        String nextTok = tok.nextToken();
+        switch (state) {
+        case inQuote:
+            if ("\'".equals(nextTok)) {
+                lastTokenHasBeenQuoted = true;
+                state = normal;
+            } else {
+                current.append(nextTok);
+            }
+            break;
+        case inDoubleQuote:
+            if ("\"".equals(nextTok)) {
+                lastTokenHasBeenQuoted = true;
+                state = normal;
+            } else {
+                current.append(nextTok);
+            }
+            break;
+        default:
+            if ("\'".equals(nextTok)) {
+                state = inQuote;
+            } else if ("\"".equals(nextTok)) {
+                state = inDoubleQuote;
+            } else if (" ".equals(nextTok)) {
+                if (lastTokenHasBeenQuoted || current.length() != 0) {
+                    result.add(current.toString());
+                    current.setLength(0);
+                }
+            } else {
+                current.append(nextTok);
+            }
+            lastTokenHasBeenQuoted = false;
+            break;
+        }
+    }
+    if (lastTokenHasBeenQuoted || current.length() != 0) {
+        result.add(current.toString());
+    }
+    if (state == inQuote || state == inDoubleQuote) {
+        throw new RuntimeException("unbalanced quotes in " + toProcess);
+    }
+    return result.toArray(new String[result.size()]);
+}
+
 
 }
