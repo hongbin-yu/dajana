@@ -3030,7 +3030,7 @@ public class SiteController extends BaseController {
 	}
 	@RequestMapping(value = {"/protected/file/*.*","/site/file/*.*","/protected/file/**","/site/file/**","/site/viewimage","/content/viewimage","/content/**/viewimage","/protected/viewimage","/protected/**/viewimage","/protected/file","/site/file","/site/file*.*","/content/file","/content/file*.*","/content/**/file","/content/**/file*.*"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public @ResponseBody String viewFile(String uid,String path,Integer w,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
-		//logger.info("Request from:"+request.getRemoteAddr());
+		logger.info("Request from:"+request.getRemoteAddr()+" for "+request.getRequestURI());
 /*		Enumeration<String> headerNames = request.getHeaderNames();
 		while (headerNames.hasMoreElements()) {
 			String headerName = headerNames.nextElement();
@@ -3082,7 +3082,7 @@ public class SiteController extends BaseController {
 			if(path !=null  && jcrService.nodeExsits(path)) {
 				Asset asset = (Asset)jcrService.getObject(path);
 				String ext = asset.getExt();
-				ext = asset.getExt();
+				//ext = asset.getExt();
 /*				if(width!=null && jcrService.nodeExsits(path+"/file-"+width)) {
 					response.setContentType(asset.getContentType());
 					jcrService.readAsset(path+"/file-"+width, response.getOutputStream());
@@ -3106,8 +3106,10 @@ public class SiteController extends BaseController {
 					}
 					if(file.exists()) {
 						//file.setReadOnly();
-						super.serveResource(request, response, file,asset.getName(), null);
+						logger.info("file exists:"+file.getAbsolutePath());
+						super.serveResource(request, response, file,asset.getName(), asset.getContentType());
 					}else  if(jcrService.nodeExsits(path+"/original")) {
+				
 						response.setContentType(asset.getContentType());
 						if(asset.getSize()!=null)
 							response.setContentLength(asset.getSize().intValue());
@@ -3135,6 +3137,7 @@ public class SiteController extends BaseController {
 
 					return null;
 				}else  if(jcrService.nodeExsits(path+"/original")) {
+					logger.info("device == null");
 					response.setContentType(asset.getContentType());
 					if(asset.getSize()!=null)
 						response.setContentLength(asset.getSize().intValue());
@@ -3162,9 +3165,11 @@ public class SiteController extends BaseController {
 
 				return path +" file not found";		
 			}
-
-		}catch(Exception e) {
-			logger.error("viewFile:"+e.getMessage()+",path="+path);
+		}catch(IOException e) {
+			logger.error("viewFile IOException:"+e.getMessage()+",path="+path+" for "+request.getRequestURI());
+			
+		}catch(RepositoryException e) {
+			logger.error("viewFile RepositoryException:"+e.getMessage()+",path="+path+" for "+request.getRequestURI());
 
 			return e.getMessage();
 		}
@@ -3323,7 +3328,7 @@ public class SiteController extends BaseController {
 	}
 	@RequestMapping(value = {"/protected/httpfileupload/{uid}/*.*","/site/httpfileupload/{uid}/*.*","/content/httpfileupload/{uid}/*.*","/publish/httpfileupload/{uid}/*.*"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public @ResponseBody String httpfileupload(@PathVariable String uid,String path,Integer w,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
-		
+	
 		return viewFile(uid,null,w,request,response);
 	/*	
 		Integer width = null;
@@ -3573,7 +3578,7 @@ public class SiteController extends BaseController {
 
 
 		}catch(Exception e) {
-			logger.error("viewFile:"+e.getMessage()+",path="+path);
+			logger.error("cache viewimage:"+e.getMessage()+",path="+path);
 
 			return e.getMessage();
 		}

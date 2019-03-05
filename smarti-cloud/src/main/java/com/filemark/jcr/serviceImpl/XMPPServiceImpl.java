@@ -621,6 +621,9 @@ public class XMPPServiceImpl implements XMPPService{
         			long p = assets.getPageNumber()+1;
     	       	
         			processSearch(message.getFrom().toString(),query,chat,p);             		
+            	}else {
+    				sendMessage("上次查询没找到！",from);
+    				return;
             	}
            	
             }else if(body.indexOf("AstraChat")>=0) {
@@ -656,10 +659,16 @@ public class XMPPServiceImpl implements XMPPService{
             	//formatter.printHelp("Help", options);
         		if("".equals(query)) {
         			WebPage<Asset> assets = lastQueries.get(message.getFrom().toString());
-        			query = assets.getAction();
-        			if(p_value ==null) {
-        				p = assets.getPageNumber()+1;
+        			if(assets == null) {
+        				sendMessage("上次查询没找到！",from);
+        				return;
+        			}else {
+            			query = assets.getAction();
+            			if(p_value ==null) {
+            				p = assets.getPageNumber()+1;
+            			}        				
         			}
+
         		}            	
             	processSearch(message.getFrom().toString(),query,chat,p);
 

@@ -359,7 +359,7 @@ public class BaseController {
 	public void setLocaleResolver(SessionLocaleResolver localeResolver) {
 		this.localeResolver = localeResolver;
 	}
-    public void serveResource(HttpServletRequest request,HttpServletResponse response, File file,String original,String contentType) throws Exception {
+    public void serveResource(HttpServletRequest request,HttpServletResponse response, File file,String original,String contentType) throws IOException {
         
     	if (response == null || request == null) {
             return;
@@ -375,14 +375,14 @@ public class BaseController {
         // Get content type by file name and set content disposition.
         String disposition = "inline";
         Long length = file.length();
-        String fileName = file.getParent()+"/"+file.getName();
+        String fileName = file.getParent()+"\\"+file.getName();
         long lastModified = file.lastModified();
         if(contentType==null) {
         	Path path = FileSystems.getDefault().getPath(file.getParentFile().getAbsolutePath(), fileName);
         	contentType = Files.probeContentType(path);
         }
         // Validate request headers for caching ---------------------------------------------------
-
+        logger.debug("Filename:"+fileName);
         // If-None-Match header should contain "*" or ETag. If so, then return 304.
         String ifNoneMatch = request.getHeader("If-None-Match");
         if (ifNoneMatch != null && HttpUtils.matches(ifNoneMatch, fileName)) {
@@ -390,7 +390,7 @@ public class BaseController {
             response.sendError(HttpServletResponse.SC_NOT_MODIFIED);
             return;
         }
-
+        logger.debug("ifNoneMatch:"+ifNoneMatch);
         // If-Modified-Since header should be greater than LastModified. If so, then return 304.
         // This header is ignored if any If-None-Match header is specified.
         long ifModifiedSince = request.getDateHeader("If-Modified-Since");
@@ -402,21 +402,21 @@ public class BaseController {
         }
 
         // Validate request headers for resume ----------------------------------------------------
-
+        logger.debug("ifModifiedSince:"+ifModifiedSince);
         // If-Match header should contain "*" or ETag. If not, then return 412.
         String ifMatch = request.getHeader("If-Match");
         if (ifMatch != null && !HttpUtils.matches(ifMatch, fileName)) {
             response.sendError(HttpServletResponse.SC_PRECONDITION_FAILED);
             return;
         }
-
+        logger.debug("ifMatch:"+ifMatch);
         // If-Unmodified-Since header should be greater than LastModified. If not, then return 412.
         long ifUnmodifiedSince = request.getDateHeader("If-Unmodified-Since");
         if (ifUnmodifiedSince != -1 && ifUnmodifiedSince + 1000 <= lastModified) {
             response.sendError(HttpServletResponse.SC_PRECONDITION_FAILED);
             return;
         }
-
+        logger.debug("ifUnmodifiedSince:"+ifUnmodifiedSince);
         // Validate and process range -------------------------------------------------------------
 
         // Prepare some variables. The full Range represents the complete file.
@@ -425,6 +425,8 @@ public class BaseController {
 
         // Validate and process Range and If-Range headers.
         String range = request.getHeader("Range");
+        
+        logger.debug("range:"+range);    
         if (range != null) {
 
             // Range header should match format "bytes=n-n,n-n,n-n...". If not, then return 416.
@@ -533,7 +535,7 @@ public class BaseController {
 
             } else {
 
-                // Return multiple parts of file.
+            	logger.debug("Return multiple parts of file.");
                 response.setContentType("multipart/byteranges; boundary=" + MULTIPART_BOUNDARY);
                 response.setHeader("Content-Disposition", disposition + ";filename=\"" + original + "\"");                
                 response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT); // 206.
@@ -559,8 +561,10 @@ public class BaseController {
                 sos.println("--" + MULTIPART_BOUNDARY + "--");
             }
         }finally{
-        	input.close();
-        	output.close();
+        	if(input !=null)
+        		input.close();
+        	if(output!=null)
+        		output.close();
     		//ImageUtil.HDDOff();
         }
 
