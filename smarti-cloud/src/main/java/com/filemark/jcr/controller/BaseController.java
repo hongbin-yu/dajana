@@ -513,10 +513,11 @@ public class BaseController {
             if (ranges.isEmpty() || ranges.get(0) == full) {
 
                 // Return full file.
-                logger.debug("Return full file");
+                logger.debug("Return full file contentType="+contentType);
                 response.setContentType(contentType);
                 response.setHeader("Content-Range", "bytes " + full.start + "-" + full.end + "/" + full.total);
                 response.setHeader("Content-Length", String.valueOf(full.length));
+                
                 Range.copy(input, output, length, full.start, full.length);
 
             } else if (ranges.size() == 1) {

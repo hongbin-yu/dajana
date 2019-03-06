@@ -120,7 +120,7 @@ public class XMPPServiceImpl implements XMPPService{
 	private ReconnectionManager reconnectionManager;
 	private FileTransferManager fileTransferManager ;
     private JTextField jid;	
-    
+    private Options options = new Options();
 	private AbstractXMPPConnection connection;
 	private ConnectionListener connectionListener;
 	private Roster roster;
@@ -154,6 +154,14 @@ public class XMPPServiceImpl implements XMPPService{
 			log.info("login "+domain+":"+port+" by "+filedomain);
 			login(username,password);				
 			checkConnection();
+			
+			
+			options.addOption(new Option("n", "next", false, "下一组"));   
+			options.addOption(new Option("m", "MaxSize", true, "每页最多文件"));       		
+			options.addOption(new Option("q", "query", false, "关键词"));    		
+			options.addOption(new Option("p", "page", true, "输入起始页"));
+			options.addOption(new Option("L", "lock", false, "锁定账户"));
+			options.addOption(new Option("c", "code", false, "获取验证码"));				
 		} catch (IOException | ParseException e) {
 			log.error("init error:"+e.getMessage());
 		} catch (RepositoryException e) {
@@ -463,7 +471,7 @@ public class XMPPServiceImpl implements XMPPService{
 			    isConnected = connection.isConnected();
 				//InetAddress ipAddr = InetAddress.getLocalHost();
 				//filedomain = ipAddr.getHostAddress();			    
-	            log.info("Connection:"+connection);
+	            log.debug("Connection:"+connection);
 
 			} catch (SmackException e) {
 				log.error(e.getMessage());
@@ -486,10 +494,17 @@ public class XMPPServiceImpl implements XMPPService{
 		connection.disconnect();
 	}
 
-	public void sendMessage(String message, String to) throws XMPPException, NotConnectedException, XmppStringprepException, InterruptedException {
-		ChatManager chatManager = ChatManager.getInstanceFor(connection);
-		Chat chat = chatManager.chatWith(JidCreate.entityBareFrom(to)); // pass XmppClient instance as listener for received messages.
-		chat.send(message);
+	public void sendMessage(String message, String to) {
+		try {
+			ChatManager chatManager = ChatManager.getInstanceFor(connection);
+			Chat chat = chatManager.chatWith(JidCreate.entityBareFrom(to)); // pass XmppClient instance as listener for received messages.
+			chat.send(message);
+		} catch (XmppStringprepException | InterruptedException e) {
+			log.error(e.getMessage());
+		} catch (NotConnectedException e) {
+			log.error(e.getMessage());
+			//reconnect(message,to);
+		} 		
 	}
 	
 	public void sendMessage(String message, EntityBareJid to) throws XMPPException, NotConnectedException, XmppStringprepException, InterruptedException {
@@ -581,8 +596,12 @@ public class XMPPServiceImpl implements XMPPService{
 
 	private void processMessage(EntityBareJid from, Message message, Chat chat) {
         //log.info(message.toString());
+		
         try {
             //sendMessage(message.getBody(),from);
+            String body = message.getBody();
+        	long p = 0,m=6;
+        	String query = body;
         	String xmppid = from.toString();
         	String username = xmppid.split("@")[0];
         	if(jcrService.nodeExsits("/system/users/"+username)) {
@@ -592,19 +611,14 @@ public class XMPPServiceImpl implements XMPPService{
         			jcrService.addOrUpdate(user);
         		}
         	}
-            String body = message.getBody();
+
     		CommandLineParser parser = new DefaultParser();
     		String commands[] = translateCommandline(body);
-    		Options options = new Options();
-    		options.addOption(new Option("n", "next", false, "下一组"));     		
-    		options.addOption(new Option("q", "query", false, "关键词"));    		
-    		options.addOption(new Option("p", "page", true, "输入起始页"));
-    		options.addOption(new Option("L", "lock", false, "锁定账户"));
-    		options.addOption(new Option("c", "code", false, "获取验证码"));		
+
     		CommandLine commandLine;        
 			commandLine = parser.parse(options, commands);    		
     		//log.info(message.getType()+"/"+filedomain+"/ "+from+" 说: " + body);
-            log.info(message.toXML("x").toString());
+            log.debug(message.toXML("x").toString());
             if(commandLine.hasOption("c")) {
             	sendVerifyCode(from.toString());
 
@@ -616,45 +630,38 @@ public class XMPPServiceImpl implements XMPPService{
             	
         		WebPage<Asset> assets = lastQueries.get(message.getFrom().toString());
         		if(assets!=null) {
-        			String query = assets.getAction();
+        			query = assets.getAction();
 
-        			long p = assets.getPageNumber()+1;
-    	       	
-        			processSearch(message.getFrom().toString(),query,chat,p);             		
+        			p = assets.getPageNumber()+1;
+        			m = assets.getPageSize();
+        			processSearch(message.getFrom().toString(),query,chat,p,m);             		
             	}else {
     				sendMessage("上次查询没找到！",from);
     				return;
             	}
-           	
+            }else if(commandLine.hasOption('m')) {
+            		String m_value = commandLine.getOptionValue('m');
+
+            		if(m_value!=null) {
+                		m = Long.parseLong(m_value);            			
+            		}
+            }else     if(commandLine.hasOption('p')) {
+        		String p_value = commandLine.getOptionValue('p');
+
+        		if(p_value!=null) {
+            		p = Long.parseLong(p_value);            			
+        		}
+        		log.debug("p="+p_value +",q="+query);
+            	
             }else if(body.indexOf("AstraChat")>=0) {
 	        	proccessAstraChat(from,message,chat);
 
             }else if(body.indexOf("/httpfileupload/")>0) {
             	processAssets(from,message,chat);
             }else {
-            	long p = 0;
-            	String query = body;
-            	String p_value = null;
-            	if(commandLine.hasOption('p')) {
-            		p_value = commandLine.getOptionValue('p');
-
-            		if(p_value!=null) {
-                		p = Long.parseLong(p_value);            			
-            		}
-            		
-            		String q[] = commandLine.getArgs();
-/*            		query = "";
-            		for(String s:q) {
-            			if(!s.equals(p_value)){
-            				if("".endsWith(query))
-            					query = s;
-            				else
-            					query+=" "+s;
-            			}
-            		}*/
-            		query = String.join(" ", q);
-            		log.info("p="+p_value +",q="+query);
-            	}
+        		String q[] = commandLine.getArgs();
+        		query = String.join(" ", q);            	
+        	
             	//HelpFormatter formatter = new HelpFormatter();
             	//formatter.printHelp("Help", options);
         		if("".equals(query)) {
@@ -664,53 +671,15 @@ public class XMPPServiceImpl implements XMPPService{
         				return;
         			}else {
             			query = assets.getAction();
-            			if(p_value ==null) {
+            			if(p==0)
             				p = assets.getPageNumber()+1;
-            			}        				
         			}
 
         		}            	
-            	processSearch(message.getFrom().toString(),query,chat,p);
+            	processSearch(message.getFrom().toString(),query,chat,p,m);
 
             }
-/*            
-        	switch(parseType(body)) {
-	        case 0:
-
-	        	processSearch(from,message,chat);
-
-	        	break;
-	        case 1:
-	        	processCommand(from,message,chat);
-	        	sendMessage("收到",from);
-	        	break;
-	        case 2:
-	        	processAssets(from,message,chat);
-
-	        	break;
-	        case 3:
-	        	processSearch(from,message,chat);
-	        	//sendMessage("结果:",from);
-	        	break;
-	        case 4:
-	        	proccessAstraChat(from,message,chat);
-	        	break;	        	
-	        case 5:
-	        	jcrService.updatePropertyByPath("/system/users/"+username, "status", "locked");
-	        	sendMessage(username+" 账号被锁定。",from);
-	        	sendVerifyCode(from.toString());
-	        	break;	      	        	
-	        case 100:
-	        	sendVerifyCode(from.toString());
-
-	        	break;	
-	        case 101:
-	        	sendVerifyCode(from.toString());
-
-	        	break;		        	
-	
-	        }
-	*/        
+     
 		} catch (NotConnectedException e1) {
 			log.error(e1.getMessage());
 			reconnect(message,from.toString());
@@ -726,7 +695,9 @@ public class XMPPServiceImpl implements XMPPService{
 			log.error(e.getMessage());
 		} catch (org.apache.commons.cli.ParseException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
+			String error = e.getMessage().replaceFirst("Missing argument for option:", "选项{")+" }缺少参数\r";
+			sendHelp(options,from.toString(),error);
 		}
         
 		
@@ -816,29 +787,26 @@ public class XMPPServiceImpl implements XMPPService{
 		} 
 	}
 	
-	private int parseType(String body) {
-		CommandLineParser parser = new DefaultParser();
-		String commands[] = translateCommandline(body);
-		Options options = new Options();
-		
-		options.addOption(new Option("p", "page", false, "输入起始页"));
-		options.addOption(new Option("l", "lock", false, "锁定账户"));
-		options.addOption(new Option("c", "code", false, "获取验证码"));		
-		CommandLine commandLine;
-		try {
-			commandLine = parser.parse(options, commands);
-			if(body.startsWith("?OTRv23?")) return 101;
-			if(commandLine.hasOption("c")) /*if(body.equals("-c"))*/ return 100;
-			if(body.startsWith("-t")) return 1;
-			if(body.indexOf("/httpfileupload/")>0) return 2;	
-			if(body.endsWith("?") || body.endsWith("？")) return 3;
-			if(body.indexOf("AstraChat")>=0) return 4;
-			if(commandLine.hasOption("l")) /*if(body.startsWith("-l") || body.startsWith("-L"))*/ return 5;
-
-		} catch (org.apache.commons.cli.ParseException e) {
-			log.error(e.getMessage());
+	private void sendHelp(Options options, String to,String error) {
+		String help=error;
+		for(Option o:options.getOptions()) {
+			help += "-"+o.getOpt()+" "+ (o.hasArg()?"{"+o.getLongOpt()+"}":"")+" : "+o.getDescription()+"\r";
 		}
+		sendMessage(help,to);
+	}
 	
+	private int parseType(String body) {
+
+
+		if(body.startsWith("?OTRv23?")) return 101;
+		if(body.equals("-c")) return 100;
+		if(body.startsWith("-t")) return 1;
+		if(body.indexOf("/httpfileupload/")>0) return 2;	
+		if(body.endsWith("?") || body.endsWith("？")) return 3;
+		if(body.indexOf("AstraChat")>=0) return 4;
+		if(body.startsWith("-l") || body.startsWith("-L")) return 5;
+
+
 
 		return 0;
 		
@@ -1006,7 +974,7 @@ public class XMPPServiceImpl implements XMPPService{
 		addChat(html,username,path);
 		msg.addExtension(shareFileForm);
 		//msg.addExtension(new StandardExtensionElement("active","http://jabber.org/protocol/chatstates"));
-		log.info(msg.toXML("x").toString());
+		log.debug(msg.toXML("x").toString());
 		sendMessage(msg,from);
 	}
 	
@@ -1034,7 +1002,7 @@ public class XMPPServiceImpl implements XMPPService{
 	    				|| status == HttpURLConnection.HTTP_SEE_OTHER)
 	    		redirect = true;
 	    	}
-	    	log.info("Status:"+status +",contentType:"+conn.getContentType());
+	    	log.debug("Status:"+status +",contentType:"+conn.getContentType());
 	    	if (redirect) {
 	
 	    		// get redirect url from "location" header field
@@ -1212,7 +1180,7 @@ public class XMPPServiceImpl implements XMPPService{
 		
 	}	
 	
-	private void processSearch(String to, String query, Chat chat,long p) throws NotConnectedException, XMPPException, InterruptedException, RepositoryException, IOException {
+	private void processSearch(String to, String query, Chat chat,long p, long m) throws NotConnectedException, XMPPException, InterruptedException, RepositoryException, IOException {
 		
 		String keywords =" and contains(s.*,'"+ query+"')";
 		String username = to.split("@")[0];
@@ -1220,7 +1188,7 @@ public class XMPPServiceImpl implements XMPPService{
 		String orderby = "[lastModified] desc";
 		String path = "/assets/"+username+"/httpfileupload";
 		String assetsQuery = "select s.* from [nt:base] AS s INNER JOIN [nt:base] AS f ON ISCHILDNODE(s, f) WHERE "+ISDESCENDANTNODE+"(s,["+path+"])" +keywords+" and s.[delete] not like 'true' and s.ocm_classname='com.filemark.jcr.model.Asset' order by s."+orderby+", s.[name]";
-		WebPage<Asset> assets = jcrService.searchAssets(assetsQuery, 6, p);
+		WebPage<Asset> assets = jcrService.searchAssets(assetsQuery, m, p);
 		ShareFileForm shareFileForm = new ShareFileForm(DataForm.Type.form);
 		log.info("resource="+to);
 		for(Asset asset:assets.getItems()) {
