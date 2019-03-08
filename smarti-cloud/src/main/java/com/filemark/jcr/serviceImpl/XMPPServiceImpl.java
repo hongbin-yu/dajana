@@ -161,7 +161,12 @@ public class XMPPServiceImpl implements XMPPService{
 			options.addOption(new Option("q", "query", false, "关键词"));    		
 			options.addOption(new Option("p", "page", true, "输入起始页"));
 			options.addOption(new Option("L", "lock", false, "锁定账户"));
-			options.addOption(new Option("c", "code", false, "获取验证码"));				
+			options.addOption(new Option("c", "code", false, "获取验证码"));		
+			options.addOption(new Option("t", "title", false, "更新题目"));				
+			options.addOption(new Option("d", "description", false, "更新描述"));				
+			options.addOption(new Option("s", "stop", false, "停止转发"));				
+			options.addOption(new Option("z", "start", false, "开始转发"));				
+
 		} catch (IOException | ParseException e) {
 			log.error("init error:"+e.getMessage());
 		} catch (RepositoryException e) {

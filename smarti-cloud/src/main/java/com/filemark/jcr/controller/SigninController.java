@@ -52,6 +52,7 @@ import com.filemark.jcr.model.Role;
 import com.filemark.jcr.model.User;
 import com.filemark.sso.CookieUtil;
 import com.filemark.sso.JwtUtil;
+import com.filemark.utils.ImageUtil;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -170,7 +171,7 @@ public class SigninController extends BaseController{
 	                return "signin";        		
 	        	}else {
 	        		if(user.getXmppid()!=null) {
-	        				XMPPService.sendMessage(user.getXmppid()+" 从 "+request.getRemoteAddr() +" 登入。 发送‘-L’锁定账号",user.getXmppid());
+	        				XMPPService.sendMessage(user.getXmppid()+" 从 "+lastIp+ "("+ImageUtil.geoip(lastIp)+")" +" 登入。 发送‘-L’锁定账号",user.getXmppid());
 	        		}     		
 	        	}
 			} catch (NotConnectedException e) {
@@ -182,6 +183,7 @@ public class SigninController extends BaseController{
 			} catch (InterruptedException e) {
 				logger.error(e.getMessage());
 			}
+			/*
 			try {
 
 	        	Connection con = Jsoup.connect("http://ns2."+jcrService.getDomain()+":8888/myip/home").timeout(5000);
@@ -202,7 +204,7 @@ public class SigninController extends BaseController{
 			} catch (Exception e) {
 				logger.error("sigin error:"+e.getMessage());
 			}
-
+			*/
     		jcrService.updatePropertyByPath(user.getPath(), "lastIp", lastIp);
         }
 		Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
