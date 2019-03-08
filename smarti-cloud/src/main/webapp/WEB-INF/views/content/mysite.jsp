@@ -111,7 +111,7 @@
 
   <script>
     UpUp.start({
-      'content-url': '/index.html',
+      'content-url': '/resources/offline.html',
       'assets' : ['/resources/wet-boew/css/wet-boew.min.css',
                   '/resources/wet-boew/js/wet-boew.min.js'
                   ]
