@@ -393,6 +393,7 @@ public class SiteController extends BaseController {
 		WebPage<Asset> assets = jcrService.searchAssets(assetsQuery, 12, p);
 		Page page = new Page();
 		page.setTitle("\u4E91\u7AD9");
+		model.addAttribute("user", user);
 		model.addAttribute("page", page);
 		model.addAttribute("folder", currentNode);
 		model.addAttribute("assets", assets);
@@ -1344,6 +1345,8 @@ public class SiteController extends BaseController {
 	public @ResponseBody Asset  assetsUpload(String path,String lastModified,String proccess,Integer total,String override,ScanUploadForm uploadForm,Model model,HttpServletRequest request, HttpServletResponse response) {
 		Asset asset= new Asset();
 		String username = getUsername();
+
+
 		if(username == null) {
 			asset.setTitle("error:Login again");
 			return asset;
@@ -1390,7 +1393,8 @@ public class SiteController extends BaseController {
         				if("true".equals(override) ) {
 	        				assetPath = path+"/"+fileName;
         				}else {
-        					ImageUtil.HDDOff();
+        					//ImageUtil.HDDOff();
+        					logger.debug("File exists:"+path+"/"+fileName);
         					return asset;
         					//assetPath = path+"/"+getDateTime()+ext;
         				}
@@ -1489,7 +1493,7 @@ public class SiteController extends BaseController {
            				   jcrService.addOrUpdate(asset);
            				}*/
            				//if(asset.getContentType().startsWith("image/")) {
-           				//	jcrService.autoRoateImage(path);
+           				//	jcrService.autoRoateImage();
            				//	jcrService.createIcon(path, 400, 400);
            				//}
 
@@ -1500,7 +1504,14 @@ public class SiteController extends BaseController {
         			//logger.debug("Done");
         			asset = (Asset)jcrService.getObject(asset.getPath());
         			asset.setTitle(asset.getTitle() +" - "+(new Date().getTime() - start.getTime()));
-
+        			User user = (User)jcrService.getObject("/system/users/"+username);	
+        			Folder folder = (Folder)jcrService.getObject(path);
+    				logger.debug("转发："+folder.getNotice()+" to " +user.getXmppid());
+        			if("true".equals(folder.getNotice())) {
+        				jcrService.autoRoateImage(asset.getPath());
+        				asset = (Asset)jcrService.getObject(asset.getPath());
+        				XMPPService.sendAsset(asset, user.getXmppid());
+        			}
 
         		}catch(Exception ej) {
         			logger.error(ej.getMessage());

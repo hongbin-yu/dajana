@@ -547,7 +547,7 @@ public class XMPPServiceImpl implements XMPPService{
 		msg.addExtension(new StandardExtensionElement("active","http://jabber.org/protocol/chatstates"));
 
 		try {
-			log.info(url);
+			log.debug(msg.toXML("").toString());
 			jcrService.updatePropertyByPath(asset.getPath(), "status", "bullhorn");
 
 			sendMessage(msg,to);
@@ -696,7 +696,7 @@ public class XMPPServiceImpl implements XMPPService{
 		} catch (org.apache.commons.cli.ParseException e) {
 			// TODO Auto-generated catch block
 			//e.printStackTrace();
-			String error = e.getMessage().replaceFirst("Missing argument for option:", "选项{")+" }缺少参数\r";
+			String error = e.getMessage().replaceFirst("Unrecognized option:", "不认识选项:{").replaceFirst("Missing argument for option:", "选项缺少参数:{")+" }\r";
 			sendHelp(options,from.toString(),error);
 		}
         
@@ -1215,7 +1215,7 @@ public class XMPPServiceImpl implements XMPPService{
 		}
 		//shareFileForm.addAssets(assets.getItems());
 		Message msg = new Message();
-		msg.setBody(query+ " : "+assets.getItems().size()+"/"+assets.getPageCount());
+		//msg.setBody(query+ " : "+assets.getItems().size()+"/"+assets.getPageCount());
 		msg.addExtension(shareFileForm);
 /*		XHTMLExtension xhtmlExtension = new XHTMLExtension();
 		xhtmlExtension.addBody("<body xmlns='http://www.w3.org/1999/xhtml'>"
@@ -1229,8 +1229,12 @@ public class XMPPServiceImpl implements XMPPService{
 		assets.setAction(query);
 		lastQueries.put(to, assets);
 		long start_page = (assets.getPageNumber())*assets.getPageSize();
-		if(assets.getPageCount()>0) start_page +=1;
+		if(assets.getPageCount()>0) {
+			start_page +=1;
 			sendMessage(query+ " : "+start_page+"-"+(start_page+assets.getItems().size()-1)+ "/"+assets.getPageCount(),to);
+		}else {
+			sendMessage(query+ " : "+start_page+"-"+(start_page+assets.getItems().size())+ "/"+assets.getPageCount(),to);
+		}
 		
 	}
 

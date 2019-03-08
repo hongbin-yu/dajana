@@ -129,7 +129,9 @@
 				<div class="checkbox">
 				<label for="intranet"><input type="checkbox" name="intranet" value="true" id="intranetfolder" <c:if test="${folder.intranet=='true' }">checked</c:if> size="35"  uid="${folder.uid }" onchange="updateProperty(this)"> 内部网（外网不能访问目录下文件）</label>
 				</div>	
-												  
+				<div class="checkbox">
+				<label for="notice"><input type="checkbox" name="notice" value="true" id="noticefolder" <c:if test="${folder.notice=='true' }">checked</c:if> size="35"  uid="${folder.uid }" onchange="updateProperty(this)"> 转发到（${user.xmppid}）</label>
+				</div>												  
             </details>	
     </div>
 	<span id="top_folder">	

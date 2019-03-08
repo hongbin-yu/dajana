@@ -50,6 +50,8 @@ public class Folder implements SmartiNode, Serializable {
 	@Field
 	protected String intranet;	
 	@Field
+	protected String notice;		
+	@Field
 	protected String resolution;		
 	private Date lastUpdated;	
 	private String limit;
@@ -321,5 +323,16 @@ public class Folder implements SmartiNode, Serializable {
 	public void setBreadcrum(List<JcrNode> breadcrum) {
 		this.breadcrum = breadcrum;
 	}
+
+	public String getNotice() {
+		return notice;
+	}
+
+	public void setNotice(String notice) {
+		this.notice = notice;
+	}
+
+
+	
 	
 }

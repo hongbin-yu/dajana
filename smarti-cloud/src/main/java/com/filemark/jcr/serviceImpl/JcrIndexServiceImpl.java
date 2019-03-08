@@ -120,7 +120,7 @@ public class JcrIndexServiceImpl implements JcrIndexService {
 			log.error(e.getMessage());
 		}*/
 		
-		dydns();
+		//dydns();
 	}
 	
 	private void Device2Backup() throws RepositoryException {
