@@ -15,12 +15,19 @@
 <title><spring:message code="djn.dajana"/></title>
 <meta content="width=device-width,initial-scale=1" name="viewport">
 <meta name="description" content="DAJANA">
-<link href='<c:url value="/resources/images/favicon.ico"></c:url>' rel="icon" type="image/x-icon">
+<link href='<c:url value="/resources/favicon.ico"></c:url>' rel="icon" type="image/x-icon">
 <link rel="stylesheet" href='<c:url value="/resources/wet-boew/css/wet-boew.min.css"></c:url>'/>
 
 <link rel="stylesheet" href='<c:url value="/resources/wet-boew/css/theme.css"></c:url>'/>
 <link rel="stylesheet" href='<c:url value="/resources/wet-boew/css/messages.min.css"></c:url>'/>
 
+<link rel="apple-touch-icon" sizes="180x180" href="/resources/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/resources/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/resources/favicon-16x16.png">
+<link rel="manifest" href="/resources/site.webmanifest">
+<link rel="mask-icon" href="/resources/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
 
 <script>dataLayer = []; dataLayer1 = [];</script>
     </head>
@@ -99,7 +106,17 @@
 <![endif]-->
 
 <script src='<c:url value="/resources/wet-boew/js/theme.min.js"></c:url>'></script>
+<script src="/resources/js/upup.min.js"></script>
     </body>
+
+  <script>
+    UpUp.start({
+      'content-url': '/index.html',
+      'assets' : ['/resources/wet-boew/css/wet-boew.min.css',
+                  '/resources/wet-boew/js/wet-boew.min.js'
+                  ]
+    });
+  </script>    
 <script>
     var splashImagePaths = "${splashImagePaths}".split(",");
     var numImages = ${numImages};
