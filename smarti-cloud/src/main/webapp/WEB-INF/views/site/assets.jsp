@@ -217,6 +217,9 @@
 		</select>
 		<a class="btn btn-default btn-sm" href="javascript:rotate('${item.uid }')"><spring:message code="djn.rotate"/><img class="wb-inv" id="rotate_running${item.uid }" src='<c:url value="/resources/images/ui-anim_basic_16x16.gif"></c:url>' alt="<spring:message code="djn.rotate"/>"/></a>		
 		</div>
+		<div class="checkbox">
+		<label for="status${item.uid }""><input type="checkbox" name="status${item.uid }"" value="true" id="status${item.uid }" <c:if test="${item.status=='lock' }">checked</c:if> size="35"  uid="${item.uid }" onchange="updateProperty(this)"> 锁定（其他用户不能访问）</label>
+		</div>			
 		<div class="form-group">
 		<label for="contentType${item.uid }"><spring:message code="djn.content_type"/>&nbsp;</label><input class="form-control" id="contentType${item.uid }" name="contentType" value="${item.contentType}" size="24" uid="${item.uid}" disabled/>
 		</div>

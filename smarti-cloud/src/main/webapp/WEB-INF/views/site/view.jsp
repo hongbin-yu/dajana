@@ -103,11 +103,12 @@
 			<div class="modal-body">
                 <ul class="list-group menu list-unstyled">
                     <c:forEach items="${presences}" var="presence" varStatus="loop">
-                    	<li>
-                    	<a class="list-group-item" href="javascript:sendAsset('${presence.from}')"><span class="glyphicon glyphicon-user"></span> ${presence.from} (${presence.mode})</a>
+                    	<li class="list-group-item" >
+                    	<a class="bnt bnt-default" href="javascript:sendAsset('${presence.from}')" title="发送到：${presence.from}"><span class="glyphicon glyphicon-user"></span> ${presence.from} (${presence.mode})</a>
 						</li>
                     </c:forEach>
                 </ul>	
+
                 <button class="btn btn-primary popup-modal-dismiss" type="button">关闭</button>			
 			</div>
 		</section>
@@ -115,9 +116,17 @@
 			var selected_uid = "";
 			function setUid(uid) {
 				selected_uid = uid;
+				$( document ).trigger( "open.wb-lbx", [
+				                                   	[
+				                                   		{
+				                                   			src: "#inline_content_modal"
+				                                   		}
+				                                   	]
+				                                   ]);
 				}
 			function sendAsset(to) {
 				
 				alert(to +"/"+selected_uid);
 				};
+	
 		</script>

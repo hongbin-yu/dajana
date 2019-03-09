@@ -166,7 +166,8 @@ public class XMPPServiceImpl implements XMPPService{
 			options.addOption(new Option("d", "description", false, "更新描述"));				
 			options.addOption(new Option("s", "stop", false, "停止转发"));				
 			options.addOption(new Option("z", "start", false, "开始转发"));				
-
+			options.addOption(new Option("u", "start", false, "解锁"));	
+			options.addOption(new Option("h", "help", false, "求助"));				
 		} catch (IOException | ParseException e) {
 			log.error("init error:"+e.getMessage());
 		} catch (RepositoryException e) {
@@ -650,14 +651,20 @@ public class XMPPServiceImpl implements XMPPService{
             		if(m_value!=null) {
                 		m = Long.parseLong(m_value);            			
             		}
-            }else     if(commandLine.hasOption('p')) {
+            }else if(commandLine.hasOption('p')) {
         		String p_value = commandLine.getOptionValue('p');
 
         		if(p_value!=null) {
             		p = Long.parseLong(p_value);            			
         		}
         		log.debug("p="+p_value +",q="+query);
-            	
+            }else if(commandLine.hasOption('t')) {	
+            }else if(commandLine.hasOption('d')) {	
+            }else if(commandLine.hasOption('s')) {	
+            }else if(commandLine.hasOption('z')) {	
+            }else if(commandLine.hasOption('u')) {	
+            }else if(commandLine.hasOption('h')) {	
+    			sendHelp(options,from.toString(),"求助");
             }else if(body.indexOf("AstraChat")>=0) {
 	        	proccessAstraChat(from,message,chat);
 
