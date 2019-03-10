@@ -58,6 +58,10 @@ public class User implements SmartiNode {
 	private String role;
 	@Field
 	private String code;	
+	@Field
+	private String xmppid;	
+	@Field
+	private String status;		
 	@Field 
 	private Date lastVerified;		
 	@Field
@@ -283,9 +287,9 @@ public class User implements SmartiNode {
 	}
 	
 	public String getIcon() {
-			//if (icon==null)
+			if (icon==null)
 				return "/protected/file/icon.jpg?path="+"/assets/"+userName+"/icon/x48.jpg";
-			//return icon;
+			else return icon;
 	}
 
 	public void setIcon(String icon) {
@@ -322,6 +326,22 @@ public class User implements SmartiNode {
 
 	public void setLastVerified(Date lastVerified) {
 		this.lastVerified = lastVerified;
+	}
+
+	public String getXmppid() {
+		return xmppid;
+	}
+
+	public void setXmppid(String xmppid) {
+		this.xmppid = xmppid;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 	
 }

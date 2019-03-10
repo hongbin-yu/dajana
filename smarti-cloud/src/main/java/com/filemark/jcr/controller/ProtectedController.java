@@ -34,7 +34,8 @@ public class ProtectedController extends BaseController {
 
 	private static final Logger logger = LoggerFactory.getLogger(ProtectedController.class);
 	private static String replacement[]  = {"习近平","习大大","习主席","共产","阿共","老毛","六四","6.4","特殊服务","小姐","真主","圣战","共妻"};
-    
+	private static String ids[] = {"鼠","牛","虎","兔","龙","蛇","马","羊","猴","鸡","狗","猪"};
+
     @ExceptionHandler(Exception.class)
     public ModelAndView  handleException(Exception ex,HttpServletRequest request) {
 	  String path = request.getRequestURI();
@@ -265,7 +266,7 @@ public class ProtectedController extends BaseController {
 		File f = new File(jcrService.getBackup());
 		model.addAttribute("usage",""+f.getUsableSpace()/1000000+"MB/"+f.getTotalSpace()/1000000+"MB");
     	String imgs[] = {"shu","niu","fu","tu","long","she","ma","yang","hou","ji","gou","zhu"};
-    	String ids[] = {"A0","A1","A2","B0","B1","B2","C0","C1","C2","D0","D1","D2"};
+    	//String ids[] = {"A0","A1","A2","B0","B1","B2","C0","C1","C2","D0","D1","D2"};
     	Page page = new Page();
     	//page.setTitle("&#27880;&#20876;");
     	page.setTitle(messageSource.getMessage("djn.signup", null,"\u6CE8\u518C", localeResolver.resolveLocale(request)));

@@ -1337,7 +1337,9 @@ public class JcrServicesImpl implements JcrServices {
 	        			
 	                    InputStream inputStream = null;
 	                    File file =getFile(asset.getPath());
-	                    if(file.isDirectory()) file = new File(file,"/origin"+asset.getExt());
+	                    String ext = asset.getExt();
+	                    if(ext == null) ext = asset.getName().substring(asset.getName().lastIndexOf("."));
+	                    if(file.isDirectory()) file = new File(file,"/origin"+ext);
 	                    if(file != null && file.exists()) {
 	                    	inputStream = new FileInputStream(file);
 	                    }else if(nodeExsits(asset.getPath()+"/original")){

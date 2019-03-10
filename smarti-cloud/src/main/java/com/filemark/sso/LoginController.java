@@ -12,9 +12,12 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.jfree.util.Log;
+import org.jivesoftware.smack.SmackException.NotConnectedException;
+import org.jivesoftware.smack.XMPPException;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jxmpp.stringprep.XmppStringprepException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -38,6 +41,7 @@ import com.filemark.utils.ImageUtil;
 @Controller
 public class LoginController extends BaseController {
 	private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
+	private static String ids[] = {"鼠","牛","虎","兔","龙","蛇","马","羊","猴","鸡","狗","猪"};
 	
     public LoginController() {
     }
@@ -158,7 +162,22 @@ public class LoginController extends BaseController {
         	
         	if(!user.getPassword().equals(j_password)) {
             	String login_error = messageSource.getMessage("login_error", null,"&#29992;&#25143;&#21517;&#25110;&#23494;&#30721;&#26080;&#25928;", localeResolver.resolveLocale(request));
-        		
+        		if(user.getXmppid()!=null) {
+        			try {
+						XMPPService.sendVerifyCode(user.getXmppid());
+					} catch (NotConnectedException e) {
+						logger.error(e.getMessage());
+					} catch (XmppStringprepException e) {
+						logger.error(e.getMessage());
+					} catch (XMPPException e) {
+						logger.error(e.getMessage());
+					} catch (InterruptedException e) {
+						logger.error(e.getMessage());
+					}
+        			model.addAttribute("j_username", j_username);
+        			model.addAttribute("error", "验证码已发到："+user.getXmppid());
+        			return "forget";  
+        		}
                 model.addAttribute("error", login_error);
                 return "login";        		
         	}
@@ -242,7 +261,7 @@ public class LoginController extends BaseController {
     @RequestMapping(value="/signup",method = RequestMethod.GET)
     public String signup(String host,Model model,HttpServletResponse httpServletResponse){
     	String imgs[] = {"shu","niu","fu","tu","long","she","ma","yang","hou","ji","gou","zhu"};
-    	String ids[] = {"A0","A1","A2","B0","B1","B2","C0","C1","C2","D0","D1","D2"};
+    	//String ids[] = {"鼠","牛","虎","兔","龙","蛇","马","羊","猴","鸡","狗","猪"};
     	Page page = new Page();
     	page.setTitle("\u6CE8\u518C ");
     	
@@ -298,7 +317,7 @@ public class LoginController extends BaseController {
     	}
 
     	String imgs[] = {"shu","niu","fu","tu","long","she","ma","yang","hou","ji","gou","zhu"};
-    	String ids[] = {"A0","A1","A2","B0","B1","B2","C0","C1","C2","D0","D1","D2"};
+    	//String ids[] = {"A0","A1","A2","B0","B1","B2","C0","C1","C2","D0","D1","D2"};
     	Page page = new Page();
     	//page.setTitle("&#27880;&#20876;");
     	page.setTitle(messageSource.getMessage("djn.signup", null,"\u6CE8\u518C", localeResolver.resolveLocale(request)));

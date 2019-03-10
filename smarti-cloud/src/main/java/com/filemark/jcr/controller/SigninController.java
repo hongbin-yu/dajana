@@ -17,28 +17,23 @@ package com.filemark.jcr.controller;
 
 
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Random;
 
-import javax.imageio.ImageIO;
 import javax.jcr.RepositoryException;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.jivesoftware.smack.SmackException.NotConnectedException;
+import org.jivesoftware.smack.XMPPException;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jxmpp.stringprep.XmppStringprepException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -51,22 +46,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.filemark.jcr.model.Page;
 import com.filemark.jcr.model.Role;
 import com.filemark.jcr.model.User;
 import com.filemark.sso.CookieUtil;
 import com.filemark.sso.JwtUtil;
-import com.filemark.utils.ScanUploadForm;
+import com.filemark.utils.ImageUtil;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.zxing.BinaryBitmap;
-import com.google.zxing.LuminanceSource;
-import com.google.zxing.MultiFormatReader;
-import com.google.zxing.Result;
-import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
-import com.google.zxing.common.HybridBinarizer;
 
 @Controller
 public class SigninController extends BaseController{
@@ -167,11 +155,35 @@ public class SigninController extends BaseController{
         	if(!serverName.startsWith("local.home") && !serverName.startsWith("home")) {
         		
         	}
-        	if(!user.getSigningKey().equals(j_password)) {
-            	String login_error = messageSource.getMessage("login_error", null,"&#29992;&#25143;&#21517;&#25110;&#23494;&#30721;&#26080;&#25928;", localeResolver.resolveLocale(request));
-                model.addAttribute("error", login_error);
-                return "signin";        		
-        	}
+			try {
+	        	if(!user.getSigningKey().equals(j_password) || "locked".equals(user.getStatus())) {
+	        		if(user.getXmppid()!=null) {
+	
+						XMPPService.sendVerifyCode(user.getXmppid());
+	
+	        			model.addAttribute("j_username", j_username);
+	        			model.addAttribute("error", "验证码已发到："+user.getXmppid());
+	        			return "forget";  
+	        		}
+	        		
+	            	String login_error = messageSource.getMessage("login_error", null,"&#29992;&#25143;&#21517;&#25110;&#23494;&#30721;&#26080;&#25928;", localeResolver.resolveLocale(request));
+	                model.addAttribute("error", login_error);
+	                return "signin";        		
+	        	}else {
+	        		if(user.getXmppid()!=null) {
+	        				XMPPService.sendMessage(user.getXmppid()+" 从 "+lastIp+ "("+ImageUtil.geoip(lastIp)+")" +" 登入。 发送‘-L’锁定账号",user.getXmppid());
+	        		}     		
+	        	}
+			} catch (NotConnectedException e) {
+				logger.error(e.getMessage());
+			} catch (XmppStringprepException e) {
+				logger.error(e.getMessage());
+			} catch (XMPPException e) {
+				logger.error(e.getMessage());
+			} catch (InterruptedException e) {
+				logger.error(e.getMessage());
+			}
+			/*
 			try {
 
 	        	Connection con = Jsoup.connect("http://ns2."+jcrService.getDomain()+":8888/myip/home").timeout(5000);
@@ -192,7 +204,7 @@ public class SigninController extends BaseController{
 			} catch (Exception e) {
 				logger.error("sigin error:"+e.getMessage());
 			}
-
+			*/
     		jcrService.updatePropertyByPath(user.getPath(), "lastIp", lastIp);
         }
 		Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
@@ -248,6 +260,7 @@ public class SigninController extends BaseController{
         }*/
         
         CookieUtil.create(httpServletResponse, JwtUtil.jwtTokenCookieName, token, false, maxAge, domain);
+
         //if(user.getHost()!=null && !domain.equals(user.getHost()))
         	//CookieUtil.create(httpServletResponse, JwtUtil.jwtTokenCookieName, token, false, -1, user.getHost());
         if(redirect==null || "".equals(redirect) || "signin".equals(redirect)) {
@@ -261,7 +274,7 @@ public class SigninController extends BaseController{
 	}	
 	
     @RequestMapping(value = {"/forget"}, method ={ RequestMethod.GET})
-   	public String forgetpassword(String j,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
+   	public String forgetpassword( String j_username,String j,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
 
     	if(j!=null) {
 	        String domain = request.getServerName();
@@ -333,6 +346,7 @@ public class SigninController extends BaseController{
     			return "redirect:http://"+domain+"/forget?error="+e.getMessage();
     		}
     	}
+		model.addAttribute("j_username", j_username);
     	return "forget";
     }
     @RequestMapping(value = {"/forget","/uploadAsset.html"}, method ={ RequestMethod.POST}) 
@@ -350,7 +364,9 @@ public class SigninController extends BaseController{
                     return "forget";        		
             	}    			
     		//}
-            	return signinPost(request,response,user.getUserName(),user.getSigningKey(),redirect,1,model);
+            jcrService.updatePropertyByPath("/system/users/"+j_username, "status", "unlocked");	
+
+            return signinPost(request,response,user.getUserName(),user.getSigningKey(),redirect,1,model);
 /*    		for (MultipartFile multipartFile : uploadForm.getFile()) {
 		    	final ByteArrayOutputStream os = new ByteArrayOutputStream();	
 	    		InputStream in = multipartFile.getInputStream();

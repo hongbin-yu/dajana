@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+
+<tiles-definitions>
+        
+	<definition name="contentpage" templateExpression="/WEB-INF/views/wet/page.jsp">
+	    <put-attribute name="header" value="/WEB-INF/views/wet/header.jsp" />
+	    <put-attribute name="topmenu" value="/WEB-INF/views/wet/topmenu.jsp" />
+	    <put-attribute name="footer" value="/WEB-INF/views/wet/footer.jsp" />
+	</definition>
+
+	<definition name="sitepage" templateExpression="/WEB-INF/views/wet/sitepage.jsp">
+	    <put-attribute name="header" value="/WEB-INF/views/site/header.jsp" />
+	    <put-attribute name="topmenu" value="/WEB-INF/views/wet/sitemenu.jsp" />
+		<put-attribute name="footer" value="/WEB-INF/views/site/footer.jsp" />
+   </definition>
+	
+	<definition name="error404" extends="contentpage">
+	    <put-attribute name="topmenu" value="/WEB-INF/views/wet/defaultmenu.jsp" />
+		<put-attribute name="content" value="/WEB-INF/views/wet/error.jsp" />
+	</definition>
+		
+</tiles-definitions>

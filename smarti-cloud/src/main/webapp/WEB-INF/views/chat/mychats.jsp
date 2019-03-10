@@ -7,13 +7,13 @@
 <div class="container">
 <div class="row">
         <main role="main" property="mainContentOfPage" class="col-md-8 col-md-push-4">
-        <h1>优信<c:if test="${folder.title != null}"> - ${folder.title }</c:if><a href="#" title="${user.title }" onclick="ftrClose('/protected/profile.html')"><img id="uploadIcon" class="img-responsive pull-right" src="${user.icon}" alt="图标"/></a></h1>
+        <h1>优信<c:if test="${folder.title != null}"> - ${folder.title }</c:if></h1>
 	<c:if test="${folder==null || folder.path == '/youchat'}"><div data-ajax-replace="/assets/templates/html/youchat.html"></div></c:if>        
 	<c:if test="${folder.title != null && folder.path != '/youchat'}">
         <div class="row text-center"><img id="online_chat_loading" width="120" height="120" class="wb-inv" src="/resources/images/loadingx400.gif" alt="下载"/></div>
         <div id="online_chat">
 		</div>
-			<div class="panel panel-primary"><header class="panel-heading">${folder.title }<img class="wb-inv" id="online_chat_running" src="/resources/images/loading16x16.gif" alt=""/><a href="#" title="${user.title }"><img id="uploadIcon" class="img-responsive pull-right" src="/protected/file/icon.jpg?path=/assets/${username }/icon/x48.jpg" alt="图标"/></a>
+			<div class="panel panel-primary"><header class="panel-heading">${folder.title }<img class="wb-inv" id="online_chat_running" src="/resources/images/loading16x16.gif" alt=""/><a href="#" title="${user.title }"><img id="uploadIcon" class="img-responsive pull-right" src="/protected/icon/${user.userName}/icon.jpg" alt="图标"/></a>
 			</header>
 				<div id="uploadBox" class="panel-body" ondrop="drop(event)" ondragover="allowDrop(event)" style="border:1px solid #aaaaaa;">
 <%-- 				<div id="video-iframe"><c:if test="${video }"><img src="${video_url}/?action=stream" class="img-responsive"></c:if></div>				  

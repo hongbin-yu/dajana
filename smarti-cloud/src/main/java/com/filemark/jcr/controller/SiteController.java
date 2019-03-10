@@ -31,6 +31,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -40,6 +41,7 @@ import java.util.Random;
 import javax.activation.MimetypesFileTypeMap;
 import javax.inject.Inject;
 import javax.jcr.RepositoryException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -49,6 +51,7 @@ import org.apache.poi.util.IOUtils;
 import org.apache.tika.mime.MimeType;
 import org.apache.tika.mime.MimeTypeException;
 import org.apache.tika.mime.MimeTypes;
+import org.jfree.util.Log;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -60,6 +63,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -75,6 +79,7 @@ import com.filemark.jcr.model.News;
 import com.filemark.jcr.model.Page;
 import com.filemark.jcr.model.User;
 import com.filemark.jcr.service.AssetManager;
+import com.filemark.sso.CookieUtil;
 import com.filemark.sso.JwtUtil;
 import com.filemark.utils.CacheFileFromResponse;
 import com.filemark.utils.ImageUtil;
@@ -89,9 +94,11 @@ import com.lowagie.text.pdf.PdfReader;
 @Controller
 public class SiteController extends BaseController {
 	private static final Logger logger = LoggerFactory.getLogger(SiteController.class);
+	private static String ids[] = {"鼠","牛","虎","兔","龙","蛇","马","羊","猴","鸡","狗","猪"};
 	
 	@Inject
 	protected AssetManager assetManager;
+
 	
     @ExceptionHandler(Exception.class)
     public ModelAndView  handleException(Exception ex,HttpServletRequest request) throws UnsupportedEncodingException {
@@ -314,9 +321,14 @@ public class SiteController extends BaseController {
  	
 	@RequestMapping(value = {"/site/assets.html","/site/assets"}, method = {RequestMethod.GET,RequestMethod.POST},produces = "text/plain;charset=UTF-8")
 	public String assets(String path,String type, String input,String kw,Integer p,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
-		ImageUtil.HDDOn();
-		String assetFolder = "/assets"+"/"+getUsername();
-		String oldFolder = "/"+getUsername()+"/assets";
+		//ImageUtil.HDDOn();
+		String username = getUsername();
+		String assetFolder = "/assets"+"/"+username;
+		String oldFolder = "/"+username+"/assets";
+		User user = (User)jcrService.getObject("/system/users/"+username);
+		if("locked".equals(user.getStatus())) {
+			response.sendRedirect("/forget");
+		}
 		if(!jcrService.nodeExsits(assetFolder)) {
 			jcrService.addNodes(assetFolder, "nt:unstructured",getUsername());		
 		}		
@@ -381,6 +393,7 @@ public class SiteController extends BaseController {
 		WebPage<Asset> assets = jcrService.searchAssets(assetsQuery, 12, p);
 		Page page = new Page();
 		page.setTitle("\u4E91\u7AD9");
+		model.addAttribute("user", user);
 		model.addAttribute("page", page);
 		model.addAttribute("folder", currentNode);
 		model.addAttribute("assets", assets);
@@ -390,15 +403,17 @@ public class SiteController extends BaseController {
 		model.addAttribute("kw", kw);	
 		model.addAttribute("breadcrumb", jcrService.getBreadcrumbNodes(path));
 		model.addAttribute("leftmenu", getLeftmenuJson(path,type,model,request,response));
-		ImageUtil.HDDOff();
+		//ImageUtil.HDDOff();
 		return "site/asset";
 	}
 
 	@RequestMapping(value = {"/site/view.html","/site/view"}, method = {RequestMethod.GET,RequestMethod.POST},produces = "text/plain;charset=UTF-8")
 	public String view(String path,String type, String input,String kw,Integer p,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
-		
-		String assetFolder = "/assets"+"/"+getUsername();
-		String oldFolder = "/"+getUsername()+"/assets";
+		String username = getUsername();
+		String assetFolder = "/assets"+"/"+username;
+		String oldFolder = "/"+username+"/assets";
+		User user = (User)jcrService.getObject("/system/users/"+username);
+
 		if(!jcrService.nodeExsits(assetFolder)) {
 			jcrService.addNodes(assetFolder, "nt:unstructured",getUsername());		
 		}		
@@ -420,9 +435,25 @@ public class SiteController extends BaseController {
 		model.addAttribute("type", type);
 		model.addAttribute("ncolumn", ncolumn);
 		model.addAttribute("sorting", sort);
+
 		try {
+
 			model.addAttribute("leftmenu", getLeftmenuJson(path,type,model,request,response));
-			
+			if("locked".equals(user.getStatus())) {
+				String domain = request.getServerName();
+		        CookieUtil.clear(response, JwtUtil.jwtTokenCookieName,domain);
+		        Cookie[] cookies = request.getCookies();
+		        if (cookies != null)
+		            for (Cookie cookie : cookies) {
+		                cookie.setValue("");
+		                cookie.setPath("/");
+		                cookie.setMaxAge(0);
+		                response.addCookie(cookie);
+		            }       
+		        request.getSession().invalidate();
+				response.sendRedirect("/forget");
+			}	
+			model.addAttribute("presences", XMPPService.getPresences());
 		}catch(Exception e) {
 	   		File json = new File(jcrService.getDevice()+path+"/Output.json");
 	   		json.delete();
@@ -494,7 +525,7 @@ public class SiteController extends BaseController {
 	
 	@RequestMapping(value = {"/site/createPage.html"}, method = RequestMethod.POST)
 	public @ResponseBody String createPage(String path,String templatePath,Integer p,Page page,Model model,HttpServletRequest request, HttpServletResponse response) {
-		ImageUtil.HDDOn();
+		//ImageUtil.HDDOn();
 		Page currentPage = null;
 		if(path==null) return "error:path is null";
 		page.setParent(path);
@@ -518,10 +549,10 @@ public class SiteController extends BaseController {
 			}
 			currentPage = jcrService.getPage(page.getPath());
 		} catch (Exception e) {
-			ImageUtil.HDDOff();
+			//ImageUtil.HDDOff();
 			return "error:"+e.getMessage();
 		}
-		ImageUtil.HDDOff();
+		//ImageUtil.HDDOff();
 		return currentPage.getPath();
 	}
 	@RequestMapping(value = {"/site/createFolder.html"}, method = RequestMethod.POST)
@@ -561,7 +592,7 @@ public class SiteController extends BaseController {
 	
 	@RequestMapping(value = {"/site/editpp.html","/editpp.html/**","/editpp.html/**/*.*"}, method = {RequestMethod.GET})
 	public String getPageProperties(String uid,String path,Page page, Model model,HttpServletRequest request, HttpServletResponse response) {
-		ImageUtil.HDDOn();
+		//ImageUtil.HDDOn();
 		Page currentpage = new Page();
 		try {
 			if(uid!=null) path = jcrService.getNodeById(uid);
@@ -573,13 +604,13 @@ public class SiteController extends BaseController {
 		}
 		
 		model.addAttribute("page", currentpage); 
-		ImageUtil.HDDOff();
+		//ImageUtil.HDDOff();
 		return "site/pproperties";
 	}
 	@RequestMapping(value = {"/site/editpp.html"}, method = {RequestMethod.POST})
 	public String editPageProperties(String uid,String path,Page page, Model model,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
 		Page currentpage = new Page();
-		ImageUtil.HDDOn();
+		//ImageUtil.HDDOn();
 		try {
 			if(uid!=null) path = jcrService.getNodeById(uid);
 			currentpage = jcrService.getPage(path);
@@ -595,10 +626,10 @@ public class SiteController extends BaseController {
 			}
 
 		} catch (RepositoryException e) {
-			ImageUtil.HDDOff();
+			//ImageUtil.HDDOff();
 			model.addAttribute("error", "<h3>&#22833;&#36133;</h3><p>"+e.getMessage()+"</p>");
 		}
-		ImageUtil.HDDOff();
+		//ImageUtil.HDDOff();
 		model.addAttribute("page", currentpage); 
 
 		return "redirect:/site/editor.html?uid="+currentpage.getUid();
@@ -610,7 +641,7 @@ public class SiteController extends BaseController {
 		String content = "/content/"+getUsername();
    		User user = (User)jcrService.getObject("/system/users/"+username);
 		Page currentpage = new Page();
-		ImageUtil.HDDOn();
+		//ImageUtil.HDDOn();
 		if(!jcrService.nodeExsits(content)) {//create root
 			if(!jcrService.nodeExsits("/content")) {
 				Page djn = new Page();
@@ -639,10 +670,10 @@ public class SiteController extends BaseController {
 		}
 		if(!currentpage.getPath().startsWith(content)) {
 			if(getUsername()==null) {
-				ImageUtil.HDDOff();
+				//ImageUtil.HDDOff();
 				return "redirect:/mysite";
 			} else	{		
-				ImageUtil.HDDOff();
+				//ImageUtil.HDDOff();
 				return "redirect:/site/editor.html?path="+content;
 			}
 		}		
@@ -675,10 +706,10 @@ public class SiteController extends BaseController {
 		model.addAttribute("user", user);
 		model.addAttribute("origin", request.getRequestURL()+"?"+request.getQueryString());
 		if(currentpage.getPath().startsWith("/content/templates")) {
-			ImageUtil.HDDOff();
+			//ImageUtil.HDDOff();
 			return "site/template";
 		}
-		ImageUtil.HDDOff();
+		//ImageUtil.HDDOff();
 		return "site/editor";
 	}
 
@@ -751,7 +782,7 @@ public class SiteController extends BaseController {
 	}
 	@RequestMapping(value = {"/site/menu.html"}, method = RequestMethod.GET)
 	public String menu(String uid,String path,String input,String kw,Integer p,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
-		ImageUtil.HDDOff();
+		//ImageUtil.HDDOff();
 		String menu="";
 		String content = "/content/"+getUsername();
 		Page currentpage = new Page();
@@ -770,13 +801,13 @@ public class SiteController extends BaseController {
 		if(!request.getContextPath().equals("/")) {
 			menu = menu.replaceAll("/content/", request.getContextPath()+"/content/");
 		}
-		ImageUtil.HDDOff();
+		//ImageUtil.HDDOff();
 		model.addAttribute("navigation", menu);
 		return "site/navmenu";
 	}
 	@RequestMapping(value = {"/site/preview.html"}, method = RequestMethod.GET)
 	public String previewPage(String uid,String path,String input,String kw,Integer p,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
-		ImageUtil.HDDOn();
+		//ImageUtil.HDDOn();
 		String content = "/content/"+getUsername();
 		Page currentpage = new Page();
 
@@ -813,13 +844,13 @@ public class SiteController extends BaseController {
 		model.addAttribute("content",currentpage.getContent());
 		model.addAttribute("origin", request.getRequestURL()+"?"+request.getQueryString());
 
-		ImageUtil.HDDOff();	
+		//ImageUtil.HDDOff();	
 		return "content/page";
 	}
 
 	@RequestMapping(value = {"/site/leftmenu.html","/leftmenu.html"}, method = RequestMethod.GET)
 	public String leftmenu(String uid,String path,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
-		ImageUtil.HDDOn();
+		//ImageUtil.HDDOn();
 		String content = "/content/"+getUsername();		
 		Page currentpage = new Page();
 		if(uid==null && path!=null) {
@@ -847,13 +878,13 @@ public class SiteController extends BaseController {
 		model.addAttribute("parent",jcrService.getPage(currentpage.getParent()));
 		model.addAttribute("menu", pages); 
 		model.addAttribute("page", currentpage);
-		ImageUtil.HDDOff();
+		//ImageUtil.HDDOff();
 		return "site/leftmenu";
 	}
 
 	@RequestMapping(value = {"/templates.html"}, method = RequestMethod.GET)
 	public String templates(String path,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
-		ImageUtil.HDDOn();
+		//ImageUtil.HDDOn();
 		Page currentpage = new Page();
 		if(path==null || path.equals("/content"))
 			path = "/content/templates";
@@ -876,12 +907,12 @@ public class SiteController extends BaseController {
 		model.addAttribute("parent",jcrService.getPage(currentpage.getParent()));
 		model.addAttribute("menu", pages); 
 		model.addAttribute("page", currentpage);
-		ImageUtil.HDDOff();
+		//ImageUtil.HDDOff();
 		return "site/templates";
 	}
 	@RequestMapping(value = {"/site/pages.html","/site/file.html","/protected/file.html"}, method = RequestMethod.GET)
 	public String files(String path,String type, String input,String kw,Integer p,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
-		ImageUtil.HDDOn();
+		//ImageUtil.HDDOn();
 		if(path==null) {
 			path="/content/"+getUsername();
 		}
@@ -908,13 +939,13 @@ public class SiteController extends BaseController {
 		model.addAttribute("path", path);
 		model.addAttribute("type", type);
 		model.addAttribute("input", input);		
-		ImageUtil.HDDOff();
+		//ImageUtil.HDDOff();
 		return "site/pages";
 	}	
 	
 	@RequestMapping(value = {"/site/page.html"}, method = RequestMethod.GET)
 	public String pages(String path,String type, String input,String kw,Integer p,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
-		ImageUtil.HDDOn();
+		//ImageUtil.HDDOn();
 		String content = "/content/"+getUsername();
 		Page currentpage = new Page();
 		if(!jcrService.nodeExsits(content)) {//create root
@@ -967,19 +998,21 @@ public class SiteController extends BaseController {
 		model.addAttribute("type", type);
 		model.addAttribute("input", input);		
 		model.addAttribute("kw", kw);	
-		ImageUtil.HDDOff();
+		//ImageUtil.HDDOff();
 		return "site/page";
 	}
 	
 	@RequestMapping(value = {"/site/folder.html"}, method = RequestMethod.GET)
 	public String folders(String uid,String path, String type, String input,String kw,Integer p,Integer m,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
-		ImageUtil.HDDOn();
+		//ImageUtil.HDDOn();
+		String username = getUsername();
 		String assetFolder = "/"+getUsername()+"/assets";
 
 		if(!jcrService.nodeExsits(assetFolder)) {//create root
 			jcrService.addNodes(assetFolder, "nt:unstructured",getUsername());
 			
-		}		
+		}	
+	
 		if( path == null) path = assetFolder;
 		if(uid != null) {
 			path = jcrService.getNodeById(uid);
@@ -987,6 +1020,26 @@ public class SiteController extends BaseController {
 		
 	
 		Folder currentNode = jcrService.getFolder(path);
+		User user;
+		try {
+			user = (User)jcrService.getObject("/system/users/"+username);
+			if("locked".equals(user.getStatus())) {
+				String domain = request.getServerName();
+		        CookieUtil.clear(response, JwtUtil.jwtTokenCookieName,domain);
+		        Cookie[] cookies = request.getCookies();
+		        if (cookies != null)
+		            for (Cookie cookie : cookies) {
+		                cookie.setValue("");
+		                cookie.setPath("/");
+		                cookie.setMaxAge(0);
+		                response.addCookie(cookie);
+		            }       
+		        request.getSession().invalidate();				
+		        currentNode.setTitle("/forget");
+			}  	
+		} catch (RepositoryException e) {
+			logger.error("getUser:"+e.getMessage());;
+		}			
 		if(p==null) p= 0 ;
 		String keywords = "";
 		if(kw==null) {
@@ -1012,7 +1065,7 @@ public class SiteController extends BaseController {
 		model.addAttribute("type", type);
 		model.addAttribute("input", input);		
 		model.addAttribute("kw", kw);
-		ImageUtil.HDDOff();
+		//ImageUtil.HDDOff();
 		return "site/folder";
 	}	
 	
@@ -1077,11 +1130,13 @@ public class SiteController extends BaseController {
    	@RequestMapping(value = {"/site/getfolder.json"}, method = {RequestMethod.GET})
    	public @ResponseBody Folder folderJson(String path,String type,Model model,HttpServletRequest request, HttpServletResponse response)  {
    		String username = getUsername();
+   		   		
 		boolean isIntranet = isIntranet(request);
 		String jsonName = (isIntranet?"Intranet_":"")+"Output.json";
    		File json = new File(jcrService.getDevice()+path+"/"+jsonName);
-   		Folder folder = new Folder();;
+   		Folder folder = new Folder();
 		try {
+				
 			folder = jcrService.getFolder(path);
 			
 
@@ -1141,7 +1196,8 @@ public class SiteController extends BaseController {
    	}
 	@RequestMapping(value = {"/site/getleftmenu.json"}, method = RequestMethod.GET)
 	public @ResponseBody Folder getLeftmenuJson(String path,String type,Model model,HttpServletRequest request, HttpServletResponse response) {
-		String assetFolder = "/assets"+"/"+getUsername();
+		String username = getUsername();
+		String assetFolder = "/assets"+"/"+username;
 		String oldFolder = "/"+getUsername()+"/assets";
 		//if(!jcrService.nodeExsits(assetFolder)) {
 			//jcrService.addNodes(assetFolder, "nt:unstructured",getUsername());		
@@ -1151,6 +1207,8 @@ public class SiteController extends BaseController {
 		
 		
 		Folder folder = folderJson(path,"child",model,request,response);
+
+	
 		folder.setAssets(null);
 		Folder parent = new Folder();
 		if(folder.getParent().equals("/assets")) {
@@ -1211,7 +1269,7 @@ public class SiteController extends BaseController {
 	}
 	
 	private void getAsset2News(Folder folder,List<News>newsList,Integer w,String type) {
-		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
 		
 		for(Asset asset:folder.getAssets()) {
 			News a2news = new News();
@@ -1222,7 +1280,8 @@ public class SiteController extends BaseController {
 				}
 			}
 			String icon = asset.getIcon();// w!=null && w==1?asset.getIconSmall():asset.getIcon();
-			String title ="<input type=\"checkbox\" name=\"puid\" value=\""+asset.getUid()+"\"><a href=\""+asset.getLink()+"\" target=\"_blank\" title=\"打开原图\">"+(asset.getTitle().length()>25?asset.getTitle().substring(0, 25)+"...":asset.getTitle())+"</a>";
+			int length = asset.getTitle().length();
+			String title ="<input type=\"checkbox\" name=\"puid\" value=\""+asset.getUid()+"\"><a href=\""+asset.getLink()+"\" target=\"_blank\" title=\"打开原图\">"+(length>25?asset.getTitle().substring(0, 10)+"..."+asset.getTitle().substring(length-15, length):asset.getTitle())+"</a>";
 						//+"<a class=\"download btn-default btn-xs pull-right\" href=\"download/"+asset.getName()+"?path="+asset.getPath()+"\" download=\""+asset.getName()+"\" title=\""+asset.getTitle()+"\" target=\"_blank\"><span class=\"glyphicon glyphicon-download pull-right\">下载</span></a>"
 						//+"<a href=\"javascript:openImage(\'"+asset.getLink()+(asset.getWidth() != null && asset.getWidth() >1200?"&w=12":"")+"')\"><img alt=\"\" class=\"img-responsive img-rounded mrgn-rght-md"+(asset.getContentType().endsWith("pdf") && w==4?" col-md-6":"")+"\" src=\""+icon+"\">";
 			a2news.setUrl("<a href=\"javascript:openImage(\'"+asset.getLink()+(asset.getWidth() != null && asset.getWidth() >1200?"&w=12":"")+"')\"><img alt=\"\" class=\"img-responsive img-rounded mrgn-rght-md"+(asset.getContentType().endsWith("pdf") && w==4?" col-md-6":"")+"\" src=\""+icon+"\">");
@@ -1249,9 +1308,9 @@ public class SiteController extends BaseController {
 			}
 			
 	        if(asset.getDoc2pdf()) {
-	        	title = "<a class=\""+asset.getCssClass()+"\" href=\"doc2pdf.pdf?path="+asset.getPath()+" title=\"DOC2PDF\""+"\" target=\"_BLANK\">"+asset.getTitle()+"</a>"//+"<a class=\"download pull-right\" href=\"download/"+asset.getName()+"?path="+asset.getPath()+"\" download=\""+asset.getName()+"\"><span class=\"glyphicon glyphicon-download\">下载</span></a>"
-	        			+"<a href=\"javascript:openDocGallery('"+asset.getPath()+"',"+getNumberOfPage(asset)+")\">";
-	        	a2news.setUrl("<img id=\"img"+asset.getUid()+"\" src=\""+icon+"\" class=\"img-responsive img-rounded mrgn-rght-md "+"\" draggable=\"true\"/></a>");
+	        	title = "<a class=\""+asset.getCssClass()+"\" href=\"doc2pdf.pdf?path="+asset.getPath()+"\" title=\"DOC2PDF\""+" target=\"_BLANK\">"+asset.getTitle()+"</a>";//+"<a class=\"download pull-right\" href=\"download/"+asset.getName()+"?path="+asset.getPath()+"\" download=\""+asset.getName()+"\"><span class=\"glyphicon glyphicon-download\">下载</span></a>"
+	        			
+	        	a2news.setUrl("<a class=\""+asset.getCssClass()+"\" href=\"doc2pdf.pdf?path="+asset.getPath()+"\" title=\"DOC2PDF\""+" target=\"_BLANK\">"+"<img id=\"img"+asset.getUid()+"\" src=\""+icon+"\" class=\"img-responsive img-rounded mrgn-rght-md "+"\" draggable=\"true\"/></a>");
 			    		//+"<img id=\"img"+asset.getUid()+"\" src=\""+icon+"\" class=\"img-responsive img-rounded mrgn-rght-md "+(w==4?" col-md-6":"")+"\" draggable=\"true\"/></a>";
 					    //+"<a class=\""+asset.getCssClass()+"\" href=\"doc2pdf.pdf?path="+asset.getPath()+" title=\"DOC2PDF\""+"\" target=\"_BLANK\">"+asset.getTitle()+"</a>";
 	        }	
@@ -1265,9 +1324,9 @@ public class SiteController extends BaseController {
 			a2news.setTitle(title);
 			a2news.setDescription(asset.getDescription()==null?"":asset.getDescription());
 			if(asset.getOriginalDate()!=null)
-				a2news.setLastPublished(sf.format(asset.getOriginalDate())+"<a class=\"download btn-default btn-xs pull-right\" href=\"download/"+asset.getName()+"?path="+asset.getPath()+"\" download=\""+asset.getName()+"\" title=\""+asset.getTitle()+"\" target=\"_blank\"><span class=\"glyphicon glyphicon-download pull-right\">下载</span></a>");
+				a2news.setLastPublished("<a class=\"btn-default btn-xs  text-center\" href=\"\" title=\""+asset.getTitle()+"\"><span class=\"glyphicon glyphicon-"+asset.getStatus()+"\"></span></a>"+sf.format(asset.getOriginalDate())+"<a class=\"wb-lbx lbx-modal btn-default btn-xs  text-center\" href=\"#inline_content_modal\" title=\"发送:"+asset.getTitle()+"\" onclick=\"javascript:setUid('"+asset.getUid()+"')\"><span class=\"glyphicon glyphicon-send\">发送</span></a>"+"<a class=\"download btn-default btn-xs pull-right\" href=\"download/"+asset.getUid()+"/"+asset.getName()+"\" download=\""+asset.getName()+"\" title=\""+asset.getTitle()+"\" target=\"_blank\"><span class=\"glyphicon glyphicon-download pull-right\">下载</span></a>");
 			if(asset.getLastModified()!=null)
-				a2news.setLastModified(sf.format(asset.getLastModified())+"<a class=\"download btn-default btn-xs pull-right\" href=\"download/"+asset.getName()+"?path="+asset.getPath()+"\" download=\""+asset.getName()+"\" title=\""+asset.getTitle()+"\" target=\"_blank\"><span class=\"glyphicon glyphicon-download pull-right\">下载</span></a>");			
+				a2news.setLastModified("<a class=\"btn-default btn-xs  text-center\" href=\"\" title=\""+asset.getTitle()+"\"><span class=\"glyphicon glyphicon-"+asset.getStatus()+"\"></span></a>"+sf.format(asset.getLastModified())+"<a class=\"download btn-default btn-xs pull-right\" href=\"download/"+asset.getUid()+"/"+asset.getName()+"\" download=\""+asset.getName()+"\" title=\""+asset.getTitle()+"\" target=\"_blank\"><span class=\"glyphicon glyphicon-download pull-right\">下载</span></a>");			
 			a2news.setSubjects(folder.getTitle());
 			if(asset.getPosition()!=null && !"".equals(asset.getPosition()))
 				a2news.setLocation("<a href=\"https://www.google.com/maps?q="+asset.getPosition()+"\" target=\"_blank\">拍摄地址</a>");
@@ -1286,6 +1345,8 @@ public class SiteController extends BaseController {
 	public @ResponseBody Asset  assetsUpload(String path,String lastModified,String proccess,Integer total,String override,ScanUploadForm uploadForm,Model model,HttpServletRequest request, HttpServletResponse response) {
 		Asset asset= new Asset();
 		String username = getUsername();
+
+
 		if(username == null) {
 			asset.setTitle("error:Login again");
 			return asset;
@@ -1332,7 +1393,8 @@ public class SiteController extends BaseController {
         				if("true".equals(override) ) {
 	        				assetPath = path+"/"+fileName;
         				}else {
-        					ImageUtil.HDDOff();
+        					//ImageUtil.HDDOff();
+        					logger.debug("File exists:"+path+"/"+fileName);
         					return asset;
         					//assetPath = path+"/"+getDateTime()+ext;
         				}
@@ -1431,7 +1493,7 @@ public class SiteController extends BaseController {
            				   jcrService.addOrUpdate(asset);
            				}*/
            				//if(asset.getContentType().startsWith("image/")) {
-           				//	jcrService.autoRoateImage(path);
+           				//	jcrService.autoRoateImage();
            				//	jcrService.createIcon(path, 400, 400);
            				//}
 
@@ -1442,7 +1504,14 @@ public class SiteController extends BaseController {
         			//logger.debug("Done");
         			asset = (Asset)jcrService.getObject(asset.getPath());
         			asset.setTitle(asset.getTitle() +" - "+(new Date().getTime() - start.getTime()));
-
+        			User user = (User)jcrService.getObject("/system/users/"+username);	
+        			Folder folder = (Folder)jcrService.getObject(path);
+    				logger.debug("转发："+folder.getNotice()+" to " +user.getXmppid());
+        			if("true".equals(folder.getNotice())) {
+        				jcrService.autoRoateImage(asset.getPath());
+        				asset = (Asset)jcrService.getObject(asset.getPath());
+        				XMPPService.sendAsset(asset, user.getXmppid());
+        			}
 
         		}catch(Exception ej) {
         			logger.error(ej.getMessage());
@@ -1491,9 +1560,9 @@ public class SiteController extends BaseController {
 				jcrService.addOrUpdate(asset);
 				jcrService.autoRoateImage(asset.getPath());
 				jcrService.createIcon(asset.getPath(), 48,48);
-				jcrService.createIcon(asset.getPath(), 120,120);
+				jcrService.createIcon(asset.getPath(), 100,100);
 				jcrService.createIcon(asset.getPath(), 400,400);
-				jcrService.updatePropertyByPath(assetPath, "icon", "/protected/file/icon.jpg?path="+assetPath+"/x120.jpg");
+				jcrService.updatePropertyByPath("/system/users/"+username, "icon", "/protected/httpfileupload/"+asset.getUid()+"/icon.jpg?w=0");
 			}
 
 		}catch (Exception e){
@@ -1502,7 +1571,7 @@ public class SiteController extends BaseController {
 			
 		}
 		ImageUtil.HDDOff();
-		return "/site/file/icon.jpg?path="+asset.getPath()+"/x120.jpg&time="+new Date().getTime();
+		return "/site/httpfileupload/"+asset.getUid()+"/icon.jpg?w=0&time="+new Date().getTime();
 	}	
 	
 	@RequestMapping(value = {"/site/importAsset.html"}, method = {RequestMethod.GET,RequestMethod.POST})
@@ -1572,7 +1641,8 @@ public class SiteController extends BaseController {
 		
 		String urlPath = url_img.getPath();
 		if(ext==null || "".equals(ext))
-			ext = urlPath.replaceFirst("^.*/[^/]*(\\.[^\\./]*|)$", "$1");
+			ext = urlPath.substring(urlPath.lastIndexOf("."), urlPath.length());
+			//ext = urlPath.replaceFirst("^.*/[^/]*(\\.[^\\./]*|)$", "$1");
 		String nodeName = urlPath.substring(urlPath.lastIndexOf("/")+1, urlPath.length());
 
 		String fileName = nodeName;
@@ -2344,7 +2414,7 @@ public class SiteController extends BaseController {
 		File f = new File(jcrService.getBackup());
 		model.addAttribute("usage",""+f.getUsableSpace()/1000000+"MB/"+f.getTotalSpace()/1000000+"MB");
     	String imgs[] = {"shu","niu","fu","tu","long","she","ma","yang","hou","ji","gou","zhu"};
-    	String ids[] = {"A0","A1","A2","B0","B1","B2","C0","C1","C2","D0","D1","D2"};
+    	//String ids[] = {"A0","A1","A2","B0","B1","B2","C0","C1","C2","D0","D1","D2"};
     	Page page = new Page();
     	//page.setTitle("&#27880;&#20876;");
     	page.setTitle(messageSource.getMessage("djn.signup", null,"\u6CE8\u518C", localeResolver.resolveLocale(request)));
@@ -2520,7 +2590,7 @@ public class SiteController extends BaseController {
 		return null;
 	}
 	
-	@RequestMapping(value = {"/site/doc2pdf.jpg","/protected/doc2pdf.jpg"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
+	@RequestMapping(value = {"/site/doc2pdf.jpg","/protected/doc2pdf.jpg","/publish/doc2pdf.jpg"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public @ResponseBody String doc2pdf2jpg(String path,Integer p,Integer w,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
 
 		try {
@@ -2971,7 +3041,157 @@ public class SiteController extends BaseController {
 	}
 	@RequestMapping(value = {"/protected/file/*.*","/site/file/*.*","/protected/file/**","/site/file/**","/site/viewimage","/content/viewimage","/content/**/viewimage","/protected/viewimage","/protected/**/viewimage","/protected/file","/site/file","/site/file*.*","/content/file","/content/file*.*","/content/**/file","/content/**/file*.*"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public @ResponseBody String viewFile(String uid,String path,Integer w,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
+		logger.info("Request from:"+request.getRemoteAddr()+" for "+request.getRequestURI());
+/*		Enumeration<String> headerNames = request.getHeaderNames();
+		while (headerNames.hasMoreElements()) {
+			String headerName = headerNames.nextElement();
+			logger.info("Header Name: <em>" + headerName);
+			String headerValue = request.getHeader(headerName);
+			logger.info("</em>, Header Value: <em>" + headerValue);
+			logger.info("</em><br/>");
+		}		*/
+		Integer width = null;
+		if(w !=null && w <= 12) {
+			width = w*100;
+			if(width==0)
+				width = 48;
+		}
+		try {
+			if(uid!=null && (path==null || "".equals(path)))
+				path = jcrService.getNodeById(uid);
+/*			String devicePath = jcrService.getHome();
+			File outFile = new File(devicePath+path);
+			if(!outFile.exists()) {
+				devicePath = jcrService.getBackup();
+				outFile = new File(devicePath+path);
+			}
+			if(outFile.exists() && outFile.isFile()) {
+		        long lastModified = outFile.lastModified();
+		        long ifModifiedSince = request.getDateHeader("If-Modified-Since");
+		        logger.debug("ifModifiedSince="+ifModifiedSince+"/"+lastModified);
+		        if (ifModifiedSince != -1 && ifModifiedSince + 1000 <= lastModified) {
+					FileInputStream in = new FileInputStream(outFile);
+					IOUtils.copy(in, response.getOutputStream());	
+					in.close();	
+					return null;
+		        }				
+				//logger.debug("path is file output:"+outFile.getAbsolutePath());
+				//super.serveResource(request, response, outFile, asset.getName(),null);
+				return null;					
+			}
+			Asset asset = (Asset)jcrService.getObject(path);
+			devicePath = jcrService.getDevice();			
+			String ext = asset.getExt();
+			if(ext==null && path.lastIndexOf(".")>0) ext = path.substring(path.lastIndexOf("."));
+			outFile = new File(devicePath+path+(width==null?"/origin"+ext:"/x"+width+".jpg"));
+			if(outFile.exists() && outFile.isFile()) {
+				logger.debug("output:"+outFile.getAbsolutePath());
+				super.serveResource(request, response, outFile,asset.getName(), null);
+				return null;					
+			}*/
 
+			if(path !=null  && jcrService.nodeExsits(path)) {
+				Asset asset = (Asset)jcrService.getObject(path);
+				String ext = asset.getExt();
+				//ext = asset.getExt();
+/*				if(width!=null && jcrService.nodeExsits(path+"/file-"+width)) {
+					response.setContentType(asset.getContentType());
+					jcrService.readAsset(path+"/file-"+width, response.getOutputStream());
+				}else */
+				if(asset.getDevice()!=null) {
+					Device device = (Device)jcrService.getObject(asset.getDevice());
+					File file = new File(device.getLocation()+asset.getPath()+"/origin"+ext);
+					if(file.exists() && asset.getWidth() == null && asset.getContentType().startsWith("image/")) {
+						jcrService.autoRoateImage(path);
+					}
+					if(width!=null && file.exists()) {
+						String iconfile = device.getLocation()+asset.getPath()+"/x"+width+".jpg";
+						File icon = new File(iconfile);
+						
+						if(!icon.exists()) {
+							jcrService.createIcon(path, width,width);
+						}
+						if(icon.exists())
+							file = icon;
+
+					}
+					if(file.exists()) {
+						//file.setReadOnly();
+						logger.info("file exists:"+file.getAbsolutePath());
+						super.serveResource(request, response, file,asset.getName(), asset.getContentType());
+					}else  if(jcrService.nodeExsits(path+"/original")) {
+				
+						response.setContentType(asset.getContentType());
+						if(asset.getSize()!=null)
+							response.setContentLength(asset.getSize().intValue());
+						if(asset.getOriginalDate()!=null)
+							response.setDateHeader("Last-Modified", asset.getOriginalDate().getTime());
+						
+						file = new File(getDevice().getLocation()+asset.getPath());
+						file.getParentFile().mkdirs();
+						OutputStream out = new FileOutputStream(file);
+						jcrService.readAsset(path+"/original",  out);
+						asset.setDevice(getDevice().getPath());
+						jcrService.addOrUpdate(asset);
+						
+						out.close();
+						super.serveResource(request, response, file,asset.getName(), null);
+						//jcrService.readAsset(path+"/original",  response.getOutputStream());
+
+						return null;
+						
+					}
+/*					FileInputStream in = new FileInputStream(file);
+					response.setContentType(asset.getContentType());
+					IOUtils.copy(in, response.getOutputStream());
+					in.close();*/
+
+					return null;
+				}else  if(jcrService.nodeExsits(path+"/original")) {
+					logger.info("device == null");
+					response.setContentType(asset.getContentType());
+					if(asset.getSize()!=null)
+						response.setContentLength(asset.getSize().intValue());
+					if(asset.getOriginalDate()!=null)
+						response.setDateHeader("Last-Modified", asset.getOriginalDate().getTime());
+					
+					File file = new File(getDevice().getLocation()+asset.getPath());
+					file.getParentFile().mkdirs();
+					OutputStream out = new FileOutputStream(file);
+					jcrService.readAsset(path+"/original",  out);
+					asset.setDevice(getDevice().getPath());
+					jcrService.addOrUpdate(asset);
+					
+					out.close();
+					//file.setReadOnly();
+					super.serveResource(request, response, file,asset.getName(), null);
+					//jcrService.readAsset(path+"/original",  response.getOutputStream());
+
+					return null;
+				}else {
+
+					return path +" original file not found";
+				}
+			}else {
+
+				return path +" file not found";		
+			}
+		}catch(IOException e) {
+			logger.error("viewFile IOException:"+e.getMessage()+",path="+path+" for "+request.getRequestURI());
+			
+		}catch(RepositoryException e) {
+			logger.error("viewFile RepositoryException:"+e.getMessage()+",path="+path+" for "+request.getRequestURI());
+
+			return e.getMessage();
+		}
+		
+		return null;
+	} 
+
+	@RequestMapping(value = {"/protected/youcloud/{uid}/**","/site/youcloud/{uid}/**","/publish/youcloud/{uid}/**"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
+	public @ResponseBody String file(@PathVariable String uid,String path,Integer w,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
+		return viewFile(uid,null,w,request,response);
+		/*
 		Integer width = null;
 		if(w !=null && w <= 12) {
 			width = w*100;
@@ -3014,11 +3234,12 @@ public class SiteController extends BaseController {
 			if(path !=null  && jcrService.nodeExsits(path)) {
 
 				ext = asset.getExt();
+*/				
 /*				if(width!=null && jcrService.nodeExsits(path+"/file-"+width)) {
 					response.setContentType(asset.getContentType());
 					jcrService.readAsset(path+"/file-"+width, response.getOutputStream());
 				}else */
-				if(asset.getDevice()!=null) {
+/*				if(asset.getDevice()!=null) {
 					Device device = (Device)jcrService.getObject(asset.getDevice());
 					File file = new File(device.getLocation()+asset.getPath()+"/origin"+ext);
 					if(file.exists() && asset.getWidth() == null && asset.getContentType().startsWith("image/")) {
@@ -3059,11 +3280,12 @@ public class SiteController extends BaseController {
 						return null;
 						
 					}
+					*/
 /*					FileInputStream in = new FileInputStream(file);
 					response.setContentType(asset.getContentType());
 					IOUtils.copy(in, response.getOutputStream());
 					in.close();*/
-
+/*
 					return null;
 				}else  if(jcrService.nodeExsits(path+"/original")) {
 					response.setContentType(asset.getContentType());
@@ -3099,11 +3321,167 @@ public class SiteController extends BaseController {
 
 			return e.getMessage();
 		}
-		
+		*/
 		
 	} 
-	@RequestMapping(value = {"/protected/download/*.*","/site/download/*.*","/protected/download/**","/site/download/**"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
-	public @ResponseBody String downloadFile(String uid,String path,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
+	@RequestMapping(value = {"/protected/icon/{username}/icon.jpg","/site/icon/{username}/icon.jpg","/content/icon/{username}/icon.jpg","/publish/icon/{username}/icon.jpg"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
+	public @ResponseBody String icon(@PathVariable String username,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
+		if(jcrService.nodeExsits("/assets/"+username+"/icon")) 
+			return viewFile(null,"/assets/"+username+"/icon",0,request,response);
+		else {
+			try {
+				response.sendRedirect("/resources/images/usericon.png");
+			} catch (IOException e) {
+				logger.error(e.getMessage());
+			}
+			return null;
+		}
+	}
+	@RequestMapping(value = {"/protected/httpfileupload/{uid}/*.*","/site/httpfileupload/{uid}/*.*","/content/httpfileupload/{uid}/*.*","/publish/httpfileupload/{uid}/*.*"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
+	public @ResponseBody String httpfileupload(@PathVariable String uid,String path,Integer w,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
+	
+		return viewFile(uid,null,w,request,response);
+	/*	
+		Integer width = null;
+		if(w !=null && w <= 12) {
+			width = w*100;
+			if(width==0)
+				width = 48;
+		}
+		try {
+			path = jcrService.getNodeById(uid);
+			Asset asset = (Asset)jcrService.getObject(path);
+			String devicePath = jcrService.getDevice();
+			File outFile = new File(devicePath+path);
+			if(!outFile.exists()) {
+				devicePath = jcrService.getBackup();
+				outFile = new File(devicePath+path);
+			}
+			if(outFile.exists() && outFile.isFile()) {
+		        long lastModified = outFile.lastModified();
+		        long ifModifiedSince = request.getDateHeader("If-Modified-Since");
+		        logger.debug("ifModifiedSince="+ifModifiedSince+"/"+lastModified);
+		        if (ifModifiedSince != -1 && ifModifiedSince + 1000 <= lastModified) {
+					FileInputStream in = new FileInputStream(outFile);
+					IOUtils.copy(in, response.getOutputStream());	
+					in.close();	
+					return null;
+		        }				
+				logger.debug("path is file output:"+outFile.getAbsolutePath());
+				super.serveResource(request, response, outFile, asset.getName(),null);
+				return null;					
+			}
+			String ext = asset.getExt();
+			if(ext==null && path.lastIndexOf(".")>0) ext = path.substring(path.lastIndexOf("."));
+			outFile = new File(devicePath+path+(width==null?"/origin"+ext:"/x"+width+".jpg"));
+			if(outFile.exists() && outFile.isFile()) {
+				logger.debug("output:"+outFile.getAbsolutePath());
+				super.serveResource(request, response, outFile,asset.getName(), null);
+				return null;					
+			}
+
+			if(path !=null  && jcrService.nodeExsits(path)) {
+
+				ext = asset.getExt();
+
+				if(asset.getDevice()!=null) {
+					Device device = (Device)jcrService.getObject(asset.getDevice());
+					File file = new File(device.getLocation()+asset.getPath()+"/origin"+ext);
+					if(file.exists() && asset.getWidth() == null && asset.getContentType().startsWith("image/")) {
+						jcrService.autoRoateImage(path);
+					}
+					if(width!=null && file.exists()) {
+						String iconfile = device.getLocation()+asset.getPath()+"/x"+width+".jpg";
+						File icon = new File(iconfile);
+						
+						if(!icon.exists()) {
+							jcrService.createIcon(path, width,width);
+						}
+						if(icon.exists())
+							file = icon;
+
+					}
+					if(file.exists()) {
+							response.setContentType(asset.getContentType());
+							if(asset.getSize()!=null)
+								response.setContentLength(asset.getSize().intValue());
+							else 
+								response.setContentLength((new Long(file.length()).intValue()));
+							if(asset.getOriginalDate()!=null)
+								response.setDateHeader("Last-Modified", asset.getOriginalDate().getTime());
+							String fileName = asset.getName();
+					        //response.setHeader("Content-Disposition", "attachement;filename=\"" + new String (fileName.getBytes("UTF-8"),"ISO-8859-1") + "\"");
+							
+							FileInputStream in = new FileInputStream(file);
+							IOUtils.copy(in, response.getOutputStream());	
+							response.flushBuffer();
+							in.close();	
+							return null;
+						//super.serveResource(request, response, file,asset.getName(), null);
+					}else  if(jcrService.nodeExsits(path+"/original")) {
+						response.setContentType(asset.getContentType());
+						if(asset.getSize()!=null)
+							response.setContentLength(asset.getSize().intValue());
+						if(asset.getOriginalDate()!=null)
+							response.setDateHeader("Last-Modified", asset.getOriginalDate().getTime());
+						
+						file = new File(getDevice().getLocation()+asset.getPath());
+						file.getParentFile().mkdirs();
+						OutputStream out = new FileOutputStream(file);
+						jcrService.readAsset(path+"/original",  out);
+						asset.setDevice(getDevice().getPath());
+						jcrService.addOrUpdate(asset);
+						
+						out.close();
+						super.serveResource(request, response, file,asset.getName(), null);
+						//jcrService.readAsset(path+"/original",  response.getOutputStream());
+
+						return null;
+						
+					}
+
+					return null;
+				}else  if(jcrService.nodeExsits(path+"/original")) {
+					response.setContentType(asset.getContentType());
+					if(asset.getSize()!=null)
+						response.setContentLength(asset.getSize().intValue());
+					if(asset.getOriginalDate()!=null)
+						response.setDateHeader("Last-Modified", asset.getOriginalDate().getTime());
+					
+					File file = new File(getDevice().getLocation()+asset.getPath());
+					file.getParentFile().mkdirs();
+					OutputStream out = new FileOutputStream(file);
+					jcrService.readAsset(path+"/original",  out);
+					asset.setDevice(getDevice().getPath());
+					jcrService.addOrUpdate(asset);
+					
+					out.close();
+					//file.setReadOnly();
+					super.serveResource(request, response, file,asset.getName(), null);
+					//jcrService.readAsset(path+"/original",  response.getOutputStream());
+
+					return null;
+				}else {
+
+					return path +" original file not found";
+				}
+			}else {
+
+				return path +" file not found";		
+			}
+
+		}catch(Exception e) {
+			//logger.error("viewFile:"+e.getMessage()+",path="+path);
+			
+			return e.getMessage();
+		}
+		
+		*/
+	} 
+	
+	
+	@RequestMapping(value = {"/protected/download/{uid}/**","/site/download/{uid}/**","/content/download/{uid}/**","/publish/download/{uid}/**"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
+	public @ResponseBody String downloadFile(@PathVariable String uid,String path,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
 
 
 		try {
@@ -3112,14 +3490,18 @@ public class SiteController extends BaseController {
 			if(path !=null  && jcrService.nodeExsits(path)) {			
 				Asset asset = (Asset)jcrService.getObject(path);
 				String ext = asset.getExt();
-
+				if(ext == null) {
+        			ext = asset.getName().substring(asset.getName().lastIndexOf("."), asset.getName().length());
+				}
 				if(asset.getDevice()!=null) {
 					Device device = (Device)jcrService.getObject(asset.getDevice());
 					File file = new File(device.getLocation()+asset.getPath()+"/origin"+ext);
 					if(file.exists()) {
 						response.setContentType(asset.getContentType());
 						if(asset.getSize()!=null)
-							response.setContentLength((int)file.length());
+							response.setContentLength(asset.getSize().intValue());
+						else 
+							response.setContentLength((new Long(file.length()).intValue()));
 						if(asset.getOriginalDate()!=null)
 							response.setDateHeader("Last-Modified", asset.getOriginalDate().getTime());
 						String fileName = asset.getName();
@@ -3127,6 +3509,7 @@ public class SiteController extends BaseController {
 						
 						FileInputStream in = new FileInputStream(file);
 						IOUtils.copy(in, response.getOutputStream());	
+						response.flushBuffer();
 						in.close();	
 						return null;
 					}else {
@@ -3206,7 +3589,7 @@ public class SiteController extends BaseController {
 
 
 		}catch(Exception e) {
-			logger.error("viewFile:"+e.getMessage()+",path="+path);
+			logger.error("cache viewimage:"+e.getMessage()+",path="+path);
 
 			return e.getMessage();
 		}
@@ -3336,7 +3719,22 @@ public class SiteController extends BaseController {
 		
 		return null;
 		
-	} 	
+	} 
+	@RequestMapping(value = {"/site/pdf/{uid}/*.pdf","/protected/pdf/{uid}/*.pdf"}, method = {RequestMethod.GET})
+	public @ResponseBody String pdf(@PathVariable String uid,HttpServletRequest request, HttpServletResponse response) throws IOException, RepositoryException {
+		List<Asset> assets = new ArrayList<Asset>();
+		//ImageUtil.HDDOn();
+		try {
+			assets.add(jcrService.getAssetById(uid));
+			jcrService.assets2pdf(assets, response.getOutputStream());			
+		}catch(Exception e) {
+			logger.error("pdf:"+e.getMessage());
+			//ImageUtil.HDDOff();
+			return "Error:"+e.getMessage();
+		}
+		ImageUtil.HDDOff();
+		return null;
+	}	
 	@RequestMapping(value = {"/viewpdf*.pdf","/site/viewpdf*","/site/viewpdf.pdf","/content/viewpdf","/content/**/viewpdf"}, method = {RequestMethod.GET})
 	public @ResponseBody String viewPdf(String uid[],HttpServletRequest request, HttpServletResponse response) throws IOException, RepositoryException {
 		List<Asset> assets = new ArrayList<Asset>();
@@ -3822,7 +4220,7 @@ public class SiteController extends BaseController {
 			return filename+ext;
 	}
 	
-	private long getNumberOfPage(Asset asset) {
+	public long getNumberOfPage(Asset asset) {
 		long numberOfPage = 1;
 		if(asset.getTotal()!=null) return asset.getTotal();
 		try {

@@ -874,8 +874,9 @@ public class ContentController extends BaseController {
 		File cacheFile =new File(cachPath);
 	    File analysis = new File(analysisPath);
 	    //analysis = new File(analysis.getParentFile(),"analysis.josn");
-		URL url = new URL("http://local."+serverName+":8888"+paths.replaceFirst("/cache", "/content")+(request.getQueryString()==null?"":"?"+request.getQueryString()));
-		if(!analysis.exists()) {
+		//URL url = new URL("http://local."+serverName+":8888"+paths.replaceFirst("/cache", "/content")+(request.getQueryString()==null?"":"?"+request.getQueryString()));
+	    URL url = new URL("http://local."+serverName+":8888"+request.getRequestURI().replaceFirst("/cache", "/content")+(request.getQueryString()==null?"":"?"+request.getQueryString()));
+	    if(!analysis.exists()) {
 			analysis.getParentFile().mkdirs();
 			analysis.createNewFile();
 			Files.setPosixFilePermissions(analysis.toPath(), PosixFilePermissions.fromString("rw-r--r--"));

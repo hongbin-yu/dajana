@@ -1,0 +1,3 @@
+     # proxy
+     RewriteCond  %{host}  ^(.*)\.dajana\.ca
+     RewriteRule  /(.*)$  http://%{host}/$1  [P]

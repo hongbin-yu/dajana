@@ -17,7 +17,7 @@
 <meta name="description" content="">
 <!-- Meta data-->
 <!--[if gte IE 9 | !IE ]><!-->
-<link href="<c:url value='/resources/images/favicon.ico'/>" rel="icon" type="image/x-icon">
+<link href="<c:url value='/resources/favicon.ico'/>" rel="icon" type="image/x-icon">
 <link rel="stylesheet" href="<c:url value='/resources/wet-boew/css/wet-boew.min.css'/>">
 <!--<![endif]-->
 
@@ -28,6 +28,8 @@
 <script src="<c:url value='/resources/wet-boew/js/jquery/1.11.1/jquery.min.js'/>"></script>
 <script src="<c:url value='/resources/wet-boew/js/ie8-wet-boew.min.js'/>"></script>
 <![endif]-->
+
+
 <noscript><link rel="stylesheet" href="<c:url value='/resources/wet-boew/js/noscript.min.css'/>"/></noscript>
 <script>dataLayer1=[];</script>
 </head>

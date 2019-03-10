@@ -164,14 +164,14 @@
 			<beans:property name="repeatInterval" value="300000"></beans:property>
 	  </beans:bean>
 	  
-		<beans:bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">  
+	  <beans:bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">  
 		<beans:property name="waitForJobsToCompleteOnShutdown" value="true"></beans:property>
 		<beans:property name="triggers">
 			<beans:list>
 				<beans:ref bean="simpleTrigger"/>
 			</beans:list>
 		</beans:property>
-		</beans:bean>  
+	  </beans:bean>  
 
 	  
 </beans:beans>

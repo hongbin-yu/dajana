@@ -41,14 +41,14 @@ public class JcrIndexServiceImpl implements JcrIndexService {
 	private static final Logger log = LoggerFactory.getLogger(JcrIndexServiceImpl.class);
 
 	public void runScheduledQueue() {
-		log.debug("Jcr runScheduledQueue at "+new Date());
+/*		log.debug("Jcr runScheduledQueue at "+new Date());
 		try {
 			//backup2Device("/templates");
 			//backup2Device("/home");
 			Device2Backup();
 		} catch (RepositoryException e1) {
 			log.error("Device2Backup"+e1.getMessage());;
-		}
+		}*/
 /*		Date start = new Date();
 		String assetsQuery = "select * from [nt:base] AS s WHERE ISDESCENDANTNODE([/]) and s.delete not like 'true' and s.ocm_classname='com.filemark.jcr.model.Asset' and s.contentType like 'image%' and s.updated not like 'true'  order by s.path";
 		WebPage<Asset> assets = jcrService.searchAssets(assetsQuery, 500, 0);
@@ -120,7 +120,7 @@ public class JcrIndexServiceImpl implements JcrIndexService {
 			log.error(e.getMessage());
 		}*/
 		
-		dydns();
+		//dydns();
 	}
 	
 	private void Device2Backup() throws RepositoryException {

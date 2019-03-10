@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+    <!DOCTYPE urlrewrite
+        PUBLIC "-//tuckey.org//DTD UrlRewrite 4.0//EN"
+        "http://www.tuckey.org/res/dtds/urlrewrite4.0.dtd">
+
+    <urlrewrite>
+
+<!--         <rule enabled="true">
+           <condition name="host" operator="notequal">dajana.ca</condition>
+           <condition name="host" operator="notequal">home.dajana.ca</condition>    
+           <condition name="host" operator="notequal">localhost</condition>                     
+           <from>^/resources/(.*)$</from>
+           <to type="proxy">http://localhost/resources/$1</to>
+        </rule> -->
+
+        <rule enabled="true">
+<!--            <condition name="host" operator="notequal">^dajana.ca</condition>
+           <condition name="host" operator="notequal">^home.dajana.ca</condition>    
+           <condition name="request-uri" operator="notequal">^/resources/(.*)$</condition> -->
+           <from>/publish/(.*)$</from>
+           <to type="forward">/content/$1</to>
+        </rule>
+       
+    </urlrewrite>

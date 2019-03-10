@@ -1398,6 +1398,10 @@ function view(path,type,w) {
 		    	$("#leftmenu_h3").html(title);
 		    	var html = "";
 		    	$.each(json.subfolders,function(i,f){
+		    		if(f.title == '/forget') {
+		    			window.location.ref= "/forget";
+		    			return;
+		    		}
 		    			if(f.path == path) {
 		    				title = f.title 
 		    		        +"<a class=\"btn btn-default pull-right\" href=\"javascript:downloadAll()\" title=\"下载本页全部文件\"><span id=\"downloadIcon\" class=\"glyphicon glyphicon-download\"></span></a>"	
