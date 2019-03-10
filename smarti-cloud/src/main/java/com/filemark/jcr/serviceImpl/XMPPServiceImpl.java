@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.InetAddress;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -61,6 +62,7 @@ import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.packet.Presence.Type;
 import org.jivesoftware.smack.packet.StandardExtensionElement;
+import org.jivesoftware.smack.provider.ProviderManager;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
@@ -75,6 +77,9 @@ import org.jivesoftware.smackx.filetransfer.IncomingFileTransfer;
 import org.jivesoftware.smackx.filetransfer.OutgoingFileTransfer;
 import org.jivesoftware.smackx.ping.PingFailedListener;
 import org.jivesoftware.smackx.ping.PingManager;
+import org.jivesoftware.smackx.vcardtemp.VCardManager;
+import org.jivesoftware.smackx.vcardtemp.packet.VCard;
+import org.jivesoftware.smackx.vcardtemp.provider.VCardProvider;
 import org.jivesoftware.smackx.xdata.packet.DataForm;
 import org.jivesoftware.smackx.xhtmlim.packet.XHTMLExtension;
 import org.json.simple.JSONObject;
@@ -113,10 +118,12 @@ public class XMPPServiceImpl implements XMPPService{
 	private static Long port = new Long(5222);
 	private String username="tester";
 	private String password="tester";
-
+	private String iconpath="/var/www/html/resources/images/favicon-mobile.png";
+	
 	@Autowired
 	private JcrServices jcrService;
 	private PingManager pingManager;
+	private VCardManager vCardManager;
 	private ReconnectionManager reconnectionManager;
 	private FileTransferManager fileTransferManager ;
     private JTextField jid;	
@@ -150,7 +157,11 @@ public class XMPPServiceImpl implements XMPPService{
 			password = (String)jsonObject.get("password");			
 			filedomain = (String)jsonObject.get("filedomain");
 			fileport = (String)jsonObject.get("fileport");
-			
+			if(jsonObject.get("iconpath")!=null) {
+				iconpath = (String)jsonObject.get("iconpath");				
+			}
+
+			ProviderManager.addIQProvider("vCard", "vcard-temp", new VCardProvider());			
 			log.info("login "+domain+":"+port+" by "+filedomain);
 			login(username,password);				
 			checkConnection();
@@ -184,6 +195,12 @@ public class XMPPServiceImpl implements XMPPService{
 	public void login(String username,String password) {
 		
 		try {
+			if(filedomain.startsWith("192.")) {
+				InetAddress ipAddr = InetAddress.getLocalHost();
+				filedomain = ipAddr.getHostAddress();					
+			}
+			InetAddress ipAddr = InetAddress.getLocalHost();
+			filedomain = ipAddr.getHostAddress();				
 			XMPPTCPConnectionConfiguration conf = XMPPTCPConnectionConfiguration
 			    .builder()
 			    .setUsernameAndPassword(username, password)
@@ -238,6 +255,7 @@ public class XMPPServiceImpl implements XMPPService{
 	            installIncomingChatMessageListener(connection);
 	            //checkConnection();
 				//connection.isAuthenticated();
+	            vCardManager = VCardManager.getInstanceFor(connection);
 			    pingManager = PingManager.getInstanceFor(connection);
 			    pingManager.setPingInterval(100);
 			    pingManager.pingMyServer();	
@@ -475,10 +493,68 @@ public class XMPPServiceImpl implements XMPPService{
 			    });
 
 			    isConnected = connection.isConnected();
-				//InetAddress ipAddr = InetAddress.getLocalHost();
-				//filedomain = ipAddr.getHostAddress();			    
+		    
 	            log.debug("Connection:"+connection);
+			    VCard vCard = getVCard(JidCreate.entityBareFrom(username+"@"+domain));
+			    if(vCard !=null/*  && vCard.getAvatar() == null*/ ) {
+			    	log.debug("vCard:"+vCard);
+			    	//URL url = new URL(iconurl);
+			    	/*
+			    	HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
+			    	//HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
+			    	conn.setReadTimeout(30000);
+			    	conn.addRequestProperty("Accept-Language", "en-US,en;q=0.8");
+			    	conn.addRequestProperty("User-Agent", "Mozilla");
+			    	conn.addRequestProperty("Referer", "dajana.cn");
+			    	boolean redirect = false;
+			
+			    	// normally, 3xx is redirect
+			    	int status = conn.getResponseCode();
+			    	if (status != HttpURLConnection.HTTP_OK) {
+			    		if (status == HttpURLConnection.HTTP_MOVED_TEMP
+			    			|| status == HttpURLConnection.HTTP_MOVED_PERM
+			    				|| status == HttpURLConnection.HTTP_SEE_OTHER)
+			    		redirect = true;
+			    	}
+			    	if (redirect) {
+			    		
+			    		// get redirect url from "location" header field
+			    		String newUrl = conn.getHeaderField("Location");
+			
+			    		// get the cookie if need, for login
+			    		String cookies = conn.getHeaderField("Set-Cookie");
+			
+			    		// open the new connnection again
+			    		url = new URL(newUrl);
+			    		conn = (HttpsURLConnection) url.openConnection();
+			    		conn.setRequestProperty("Cookie", cookies);
+			    		conn.addRequestProperty("Accept-Language", "en-US,en;q=0.8");
+			    		conn.addRequestProperty("User-Agent", "Mozilla");
+			    		conn.addRequestProperty("Referer", "dajana.cn");
+			
+			    		log.debug("Redirect to:"+newUrl);
+			
+			    	}        
+			        
+			    	String contentType = conn.getContentType();
+			    	Long size = new Long(conn.getContentLength());
+					*/
+			    	
+			    	File icon = new File(iconpath);
+			    	log.debug("icon file path="+icon.getAbsolutePath());
+			    	InputStream is = new FileInputStream(icon);//conn.getInputStream();		    	
+			    	byte bytes[] = new byte[is.available()];
+			    	is.read(bytes);
+			    	vCard.setAvatar(bytes);
+
+			    	//vCard.setAvatar(url);
+
+			    	vCard.setNickName("优鸿云");
+			    	vCardManager.saveVCard(vCard);
+			    }else {
+			    	log.debug("vCard not found!");
+			    }
 			} catch (SmackException e) {
 				log.error(e.getMessage());
 			} catch (IOException e) {
@@ -1376,6 +1452,32 @@ public class XMPPServiceImpl implements XMPPService{
 	        }
 	        return this.connection;
 	    }
+	    
+	    public VCard getVCard(EntityBareJid userJid) {
+	        VCard vCard = null;
+	        boolean isSupported;
+	        try {
+	            //remove resource name if necessary
+	            isSupported = vCardManager.isSupported(userJid);
+	            if (isSupported)  // return true
+	                vCard = vCardManager.loadVCard(userJid);
+	            
+	        } catch (SmackException.NoResponseException e) {
+	            e.printStackTrace();
+	        } catch (XMPPException.XMPPErrorException e) {
+	            e.printStackTrace();
+	        } catch (SmackException.NotConnectedException e) {
+	            e.printStackTrace();
+	        } catch (IllegalArgumentException iAE) {
+	            iAE.printStackTrace();
+	        } catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+	        return vCard;
+	    }
+	    
 		public long getNumberOfPage(Asset asset) {
 			long numberOfPage = 0;
 			if(asset.getTotal()!=null) return asset.getTotal();

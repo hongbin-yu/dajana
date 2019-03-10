@@ -104,7 +104,7 @@
                 <ul class="list-group menu list-unstyled">
                     <c:forEach items="${presences}" var="presence" varStatus="loop">
                     	<li class="list-group-item" >
-                    	<a class="bnt bnt-default" href="javascript:sendAsset('${presence.from}')" title="发送到：${presence.from}"><span class="glyphicon glyphicon-user"></span> ${presence.from} (${presence.mode})</a>
+                    	<a class="bnt bnt-default" href="javascript:sendAsset('${presence.from}')" title="发送到：${presence.from}"><span class="glyphicon glyphicon-user"></span> ${presence.from}</a>
 						</li>
                     </c:forEach>
                 </ul>	
