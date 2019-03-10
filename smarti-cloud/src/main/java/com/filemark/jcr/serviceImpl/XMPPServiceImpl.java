@@ -119,7 +119,9 @@ public class XMPPServiceImpl implements XMPPService{
 	private String username="tester";
 	private String password="tester";
 	private String iconpath="/var/www/html/resources/images/favicon-mobile.png";
-	
+	private String organization ="优鸿网络科技有限公司";
+	private String phone ="";
+	private String email ="";	
 	@Autowired
 	private JcrServices jcrService;
 	private PingManager pingManager;
@@ -160,7 +162,15 @@ public class XMPPServiceImpl implements XMPPService{
 			if(jsonObject.get("iconpath")!=null) {
 				iconpath = (String)jsonObject.get("iconpath");				
 			}
-
+			if(jsonObject.get("organization")!=null) {
+				organization = (String)jsonObject.get("organization");				
+			}
+			if(jsonObject.get("phone")!=null) {
+				phone = (String)jsonObject.get("phone");				
+			}	
+			if(jsonObject.get("email")!=null) {
+				email = (String)jsonObject.get("email");				
+			}				
 			ProviderManager.addIQProvider("vCard", "vcard-temp", new VCardProvider());			
 			log.info("login "+domain+":"+port+" by "+filedomain);
 			login(username,password);				
@@ -498,49 +508,7 @@ public class XMPPServiceImpl implements XMPPService{
 			    VCard vCard = getVCard(JidCreate.entityBareFrom(username+"@"+domain));
 			    if(vCard !=null/*  && vCard.getAvatar() == null*/ ) {
 			    	log.debug("vCard:"+vCard);
-			    	//URL url = new URL(iconurl);
-			    	/*
-			    	HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
-			    	//HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
-			    	conn.setReadTimeout(30000);
-			    	conn.addRequestProperty("Accept-Language", "en-US,en;q=0.8");
-			    	conn.addRequestProperty("User-Agent", "Mozilla");
-			    	conn.addRequestProperty("Referer", "dajana.cn");
-			    	boolean redirect = false;
-			
-			    	// normally, 3xx is redirect
-			    	int status = conn.getResponseCode();
-			    	if (status != HttpURLConnection.HTTP_OK) {
-			    		if (status == HttpURLConnection.HTTP_MOVED_TEMP
-			    			|| status == HttpURLConnection.HTTP_MOVED_PERM
-			    				|| status == HttpURLConnection.HTTP_SEE_OTHER)
-			    		redirect = true;
-			    	}
-			    	if (redirect) {
-			    		
-			    		// get redirect url from "location" header field
-			    		String newUrl = conn.getHeaderField("Location");
-			
-			    		// get the cookie if need, for login
-			    		String cookies = conn.getHeaderField("Set-Cookie");
-			
-			    		// open the new connnection again
-			    		url = new URL(newUrl);
-			    		conn = (HttpsURLConnection) url.openConnection();
-			    		conn.setRequestProperty("Cookie", cookies);
-			    		conn.addRequestProperty("Accept-Language", "en-US,en;q=0.8");
-			    		conn.addRequestProperty("User-Agent", "Mozilla");
-			    		conn.addRequestProperty("Referer", "dajana.cn");
-			
-			    		log.debug("Redirect to:"+newUrl);
-			
-			    	}        
-			        
-			    	String contentType = conn.getContentType();
-			    	Long size = new Long(conn.getContentLength());
-					*/
-			    	
+		    	
 			    	File icon = new File(iconpath);
 			    	log.debug("icon file path="+icon.getAbsolutePath());
 			    	InputStream is = new FileInputStream(icon);//conn.getInputStream();		    	
@@ -549,7 +517,9 @@ public class XMPPServiceImpl implements XMPPService{
 			    	vCard.setAvatar(bytes);
 
 			    	//vCard.setAvatar(url);
-
+			    	vCard.setOrganization(organization);
+			    	vCard.getPhoneWork(phone);
+			    	vCard.setEmailWork(email);
 			    	vCard.setNickName("优鸿云");
 			    	vCardManager.saveVCard(vCard);
 			    }else {
