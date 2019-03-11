@@ -209,8 +209,7 @@ public class XMPPServiceImpl implements XMPPService{
 				InetAddress ipAddr = InetAddress.getLocalHost();
 				filedomain = ipAddr.getHostAddress();					
 			}
-			InetAddress ipAddr = InetAddress.getLocalHost();
-			filedomain = ipAddr.getHostAddress();				
+			
 			XMPPTCPConnectionConfiguration conf = XMPPTCPConnectionConfiguration
 			    .builder()
 			    .setUsernameAndPassword(username, password)
