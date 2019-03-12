@@ -31,3 +31,9 @@ crontab -e
 */5 * * * * /home/device/workingDir/cron2mp4.sh
 
 copy /home/device/dajana/smarti-cloud/cron2mp4.sh /home/device/workingDir
+
+cd /home/device/dajana/smarti-cloud
+java InstallCert dajana.net:443
+keytool -exportcert -alias dajana.net-1 -keystore jssecacerts -storepass changeit -file dajana.net.cer
+
+keytool -importcert -alias dajana.net -keystore /usr/lib/jvm/java-1.8.0.jdk/jre/lib/security/cacerts -storepass changeit -file dajana.net.cer

@@ -112,17 +112,34 @@
                 <button class="btn btn-primary popup-modal-dismiss" type="button">关闭</button>			
 			</div>
 		</section>
+		
+<section id="left-bar" class="wb-overlay modal-content overlay-def wb-panel-l col-md-4 col-xs-12">
+			<header class="modal-header">
+				<h2 class="modal-title">通讯目录</h2>
+			</header>
+			<div class="modal-body">
+                <ul class="list-group menu list-unstyled">
+                    <c:forEach items="${presences}" var="presence" varStatus="loop">
+                    	<li class="list-group-item" >
+                    	<a class="bnt bnt-default" href="javascript:sendAsset('${presence.from}')" title="发送到：${presence.from}"><span class="glyphicon glyphicon-user"></span> ${presence.from}</a>
+						</li>
+                    </c:forEach>
+                </ul>	
+           </div>     
+</section> 		
 		<script type="text/javascript">
 			var selected_uid = "";
 			function setUid(uid) {
+				
 				selected_uid = uid;
-				$( document ).trigger( "open.wb-lbx", [
+				$( "#left-bar" ).trigger( "open.wb-overlaylbx" );
+/* 				$( document ).trigger( "open.wb-overlaylbx", [
 				                                   	[
 				                                   		{
-				                                   			src: "#inline_content_modal"
+				                                   			src: "#left-bar"
 				                                   		}
 				                                   	]
-				                                   ]);
+				                                   ]); */
 				}
 			function sendAsset(to) {
 				

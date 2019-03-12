@@ -112,9 +112,9 @@ public class XMPPServiceImpl implements XMPPService{
 
 	private final Logger log = LoggerFactory.getLogger(XMPPServiceImpl.class);
 	//private static String host = "host ip";
-	private static String filedomain = "tu.dajana.ca";	
+	private static String filedomain = "tu.dajana.net";	
 	private static String fileport = "";		
-	private static String domain = "dajana.ca";
+	private static String domain = "dajana.net";
 	private static Long port = new Long(5222);
 	private String username="tester";
 	private String password="tester";
@@ -205,10 +205,10 @@ public class XMPPServiceImpl implements XMPPService{
 	public void login(String username,String password) {
 		
 		try {
-			if(filedomain.startsWith("192.")) {
+/*			if(filedomain.startsWith("192.")) {
 				InetAddress ipAddr = InetAddress.getLocalHost();
 				filedomain = ipAddr.getHostAddress();					
-			}
+			}*/
 			
 			XMPPTCPConnectionConfiguration conf = XMPPTCPConnectionConfiguration
 			    .builder()

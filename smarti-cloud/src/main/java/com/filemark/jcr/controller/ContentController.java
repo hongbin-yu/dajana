@@ -131,7 +131,7 @@ public class ContentController extends BaseController {
 		String contextPath = request.getContextPath();
 		if(contextPath.equals("/")) contextPath = "";
 		for(Asset asset:assets.getItems()) {
-			splashImagePaths += contextPath+asset.getPath()+",";
+			splashImagePaths += ("".equals(splashImagePaths)?"":",")+contextPath+asset.getPath();
 		}
     	model.addAttribute("splashImagePaths", splashImagePaths);
     	model.addAttribute("numImages", new Integer(assets.getItems().size()));
