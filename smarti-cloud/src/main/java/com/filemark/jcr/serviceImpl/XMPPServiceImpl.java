@@ -580,7 +580,9 @@ public class XMPPServiceImpl implements XMPPService{
 		Chat chat;
 		try {
 			chat = chatManager.chatWith(JidCreate.entityBareFrom(to));
+			
 			chat.send(message);
+			log.debug(message.toXML("").toString());
 		} catch (XmppStringprepException | InterruptedException e) {
 			log.error(e.getMessage());
 		} catch (NotConnectedException e) {
@@ -1251,7 +1253,8 @@ public class XMPPServiceImpl implements XMPPService{
 		String assetsQuery = "select s.* from [nt:base] AS s INNER JOIN [nt:base] AS f ON ISCHILDNODE(s, f) WHERE "+ISDESCENDANTNODE+"(s,["+path+"])" +keywords+" and s.[delete] not like 'true' and s.ocm_classname='com.filemark.jcr.model.Asset' order by s."+orderby+", s.[name]";
 		WebPage<Asset> assets = jcrService.searchAssets(assetsQuery, m, p);
 		ShareFileForm shareFileForm = new ShareFileForm(DataForm.Type.form);
-		log.info("resource="+to);
+		log.debug("resource="+to);
+		Message msg = new Message();
 		for(Asset asset:assets.getItems()) {
 			jcrService.updatePropertyByPath(asset.getPath(), "status", "bullhorn");
 
@@ -1263,19 +1266,20 @@ public class XMPPServiceImpl implements XMPPService{
 					sendAsset(asset,to);					
 				}else {
 					shareFileForm.addAsset(asset);
-
+					String url = protocol+"//"+filedomain+fileport+"/publish/httpfileupload/"+asset.getUid()+"/"+asset.getName().toLowerCase();
+					msg.setBody(url);
 				}
 			}else {
 				ShareFileForm fileForm = new ShareFileForm(DataForm.Type.form);
 				fileForm.addAsset(asset);
-				Message msg = new Message();
-				msg.setBody(asset.getTitle());
-				msg.addExtension(fileForm);
-				sendMessage(msg,to);
+				Message msg_doc = new Message();
+				msg_doc.setBody(asset.getTitle());
+				msg_doc.addExtension(fileForm);
+				sendMessage(msg_doc,to);
 			}
 		}
 		//shareFileForm.addAssets(assets.getItems());
-		Message msg = new Message();
+
 		//msg.setBody(query+ " : "+assets.getItems().size()+"/"+assets.getPageCount());
 		msg.addExtension(shareFileForm);
 /*		XHTMLExtension xhtmlExtension = new XHTMLExtension();
