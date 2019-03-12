@@ -116,6 +116,7 @@ public class XMPPServiceImpl implements XMPPService{
 	private static String fileport = "";		
 	private static String domain = "dajana.net";
 	private static Long port = new Long(5222);
+	private static String protocol ="http:";
 	private String username="tester";
 	private String password="tester";
 	private String iconpath="/var/www/html/resources/images/favicon-mobile.png";
@@ -170,6 +171,9 @@ public class XMPPServiceImpl implements XMPPService{
 			}	
 			if(jsonObject.get("email")!=null) {
 				email = (String)jsonObject.get("email");				
+			}	
+			if(jsonObject.get("protocol")!=null) {
+				protocol = (String)jsonObject.get("protocol");				
 			}				
 			ProviderManager.addIQProvider("vCard", "vcard-temp", new VCardProvider());			
 			log.info("login "+domain+":"+port+" by "+filedomain);
@@ -205,10 +209,10 @@ public class XMPPServiceImpl implements XMPPService{
 	public void login(String username,String password) {
 		
 		try {
-/*			if(filedomain.startsWith("192.")) {
+			if(filedomain.startsWith("192.")) {
 				InetAddress ipAddr = InetAddress.getLocalHost();
 				filedomain = ipAddr.getHostAddress();					
-			}*/
+			}
 			
 			XMPPTCPConnectionConfiguration conf = XMPPTCPConnectionConfiguration
 			    .builder()
@@ -454,7 +458,7 @@ public class XMPPServiceImpl implements XMPPService{
 			                shareFileForm.addAsset(asset);
 			        		Message msg = new Message();
 			        		msg.setSubject(asset.getTitle());
-			        		String url = "https://"+filedomain+fileport+"/protected/httpfileupload/"+asset.getUid()+"/"+asset.getName().toLowerCase();
+			        		String url = protocol+"//"+filedomain+fileport+"/protected/httpfileupload/"+asset.getUid()+"/"+asset.getName().toLowerCase();
 			        		msg.setBody(url);	
 			        		msg.addExtension(shareFileForm);
 			    			msg.addExtension(new StandardExtensionElement("active","http://jabber.org/protocol/chatstates"));
@@ -591,7 +595,7 @@ public class XMPPServiceImpl implements XMPPService{
         shareFileForm.addAsset(asset);
 		Message msg = new Message();
 		msg.setSubject(asset.getTitle());
-		String url = "https://"+filedomain+fileport+"/publish/httpfileupload/"+asset.getUid()+"/"+asset.getName().toLowerCase();
+		String url = protocol+"//"+filedomain+fileport+"/publish/httpfileupload/"+asset.getUid()+"/"+asset.getName().toLowerCase();
 		asset.setUrl(url);
 		msg.setBody(url);	
 		msg.addExtension(shareFileForm);
@@ -612,13 +616,13 @@ public class XMPPServiceImpl implements XMPPService{
         long n = getNumberOfPage(asset);
 		Message msg = new Message();
 		msg.setSubject(asset.getTitle());
-		asset.setUrl( "https://"+filedomain+fileport+"/content/httpfileupload/"+asset.getUid()+"/"+asset.getName().toLowerCase());
+		asset.setUrl( protocol+"//"+filedomain+fileport+"/content/httpfileupload/"+asset.getUid()+"/"+asset.getName().toLowerCase());
 		shareFileForm.addAsset(asset);
 		if(n>0) {
 			for (int i=0;i<n;i++) {
 	        	Asset a = new Asset();
 	        	a.setContentType("image/jpg");
-	    		String url = "https://"+filedomain+fileport+"/publish/doc2pdf.jpj?path="+asset.getPath()+"&p="+i;
+	    		String url = protocol+"//"+filedomain+fileport+"/publish/doc2pdf.jpj?path="+asset.getPath()+"&p="+i;
 	    		msg.setBody(url);
 	    		a.setUrl(url);        	
 	            shareFileForm.addAsset(a);
@@ -807,7 +811,7 @@ public class XMPPServiceImpl implements XMPPService{
 						is.close();
 						Message msg = new Message();
 						msg.setSubject(asset.getTitle());
-						String url = "https://"+filedomain+fileport+"/publish/httpfileupload/"+asset.getUid()+"/"+asset.getName().toLowerCase();
+						String url = protocol+"//"+filedomain+fileport+"/publish/httpfileupload/"+asset.getUid()+"/"+asset.getName().toLowerCase();
 						asset.setUrl(url);
 						msg.setBody(url);
 						ImageExtension extension = new ImageExtension(asset.getContentType(),imageBinary); 
@@ -955,7 +959,7 @@ public class XMPPServiceImpl implements XMPPService{
 			Asset asset = new Asset();
 			asset.setTitle("\""+username+"\"优云验证码："+dbuser.getCode() +"两分钟内有效");
 			asset.setContentType("text/html");
-			asset.setUrl("https://"+filedomain);
+			asset.setUrl(protocol+"//"+filedomain);
 			asset.setSize(new Long(1000));
 			ShareFileForm shareFileForm = new ShareFileForm(DataForm.Type.form);
 			shareFileForm.addAsset(asset);
@@ -1000,14 +1004,14 @@ public class XMPPServiceImpl implements XMPPService{
 		        	continue;
 		        }
 				shareFileForm.addAsset(asset);
-				String link = "https://"+filedomain+fileport+"/publish/httpfileupload/"+asset.getUid()+"/"+asset.getName();
+				String link = protocol+"//"+filedomain+fileport+"/publish/httpfileupload/"+asset.getUid()+"/"+asset.getName();
 				asset.setUrl(link);
 				msg.setBody(link);	
 				//msg.setSubject(asset.getTitle());
 		        String httpfileupload = "/publish/httpfileupload/"+asset.getUid()+"/"+asset.getName().toLowerCase();
 				//log.info(httpfileupload);
 				html +="<li><a href=\""+httpfileupload+"\" title=\"\"><img src=\""+httpfileupload+"?w=4\" class=\"img-resposive\" alt=\"\"></li>";
-			//sendMessage("https://"+filedomain+fileport+httpfileupload,from);
+			//sendMessage(protocol+"//"+filedomain+fileport+httpfileupload,from);
 				//sendHtmlLink(from,"http://"+filedomain+fileport+httpfileupload,asset);
 			} catch (IOException e) {
 				log.error(e.getMessage());
@@ -1253,7 +1257,7 @@ public class XMPPServiceImpl implements XMPPService{
 
 			if(asset.getContentType().startsWith("image/")) {
 				if(to.indexOf("AstraChat")>0) {
-					String url = "https://"+filedomain+fileport+"/publish/httpfileupload/"+asset.getUid()+"/"+asset.getName().toLowerCase();
+					String url = protocol+"//"+filedomain+fileport+"/publish/httpfileupload/"+asset.getUid()+"/"+asset.getName().toLowerCase();
 					sendBinaryImage(to, url,asset);
 				}else if (to.indexOf("Spark")>0) {
 					sendAsset(asset,to);					
@@ -1636,7 +1640,7 @@ public class XMPPServiceImpl implements XMPPService{
 		        xml.append(" type=\"form\">");
 		        for(int i=0; i<assets.size();i++) {
 		        	Asset asset = assets.get(i);
-					String url = "https://"+filedomain+fileport+"/publish/"+(asset.getContentType().startsWith("image/")?"httpfileupload":"download")+"/"+asset.getUid()+"/"+asset.getName().toLowerCase();
+					String url = protocol+"//"+filedomain+fileport+"/publish/"+(asset.getContentType().startsWith("image/")?"httpfileupload":"download")+"/"+asset.getUid()+"/"+asset.getName().toLowerCase();
 			        xml.append("<field label=\""+asset.getTitle()+"\" var=\"media"+i+"\">");
 			        xml.append("<media xmlns=\"urn:xmpp:media-element\" height=\""+(asset.getHeight()==null?0:asset.getHeight())+"\" width=\""+(asset.getWidth()==null?0:asset.getWidth())+"\">");
 			        xml.append("<uri type=\""+asset.getContentType()+"\" size=\""+asset.getSize()+"\" duration=\"0\">");
