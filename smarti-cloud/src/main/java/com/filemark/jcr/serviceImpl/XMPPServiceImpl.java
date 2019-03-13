@@ -237,7 +237,7 @@ public class XMPPServiceImpl implements XMPPService{
 					        } catch (SmackException.NotLoggedInException |        SmackException.NotConnectedException | InterruptedException e) {
 					            e.printStackTrace();
 					        }
-				Collection<RosterEntry> entries = roster.getEntries();
+/*				Collection<RosterEntry> entries = roster.getEntries();
 				for (RosterEntry entry : entries) {
 				    VCard vCard = getVCard(entry.getJid().asEntityBareJidIfPossible());
 				    	String name = entry.getJid().toString().split("@")[0];
@@ -264,7 +264,7 @@ public class XMPPServiceImpl implements XMPPService{
 						} catch (RepositoryException e) {
 							log.error(e.getMessage());
 						}	
-				}
+				}*/
 /*				for (RosterEntry entry : entries) {
 					//example: get presence, type, mode, status
 					        Presence entryPresence = roster.getPresence(entry.getJid());
