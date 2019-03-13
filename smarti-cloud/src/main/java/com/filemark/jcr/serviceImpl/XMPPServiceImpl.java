@@ -647,22 +647,30 @@ public class XMPPServiceImpl implements XMPPService{
 		Message msg = new Message();
 		msg.setSubject(asset.getTitle());
 		asset.setUrl( protocol+"//"+filedomain+fileport+"/content/httpfileupload/"+asset.getUid()+"/"+asset.getName().toLowerCase());
+		msg.setBody(asset.getUrl());
 		shareFileForm.addAsset(asset);
-		if(n>0) {
-			for (int i=0;i<n;i++) {
-	        	Asset a = new Asset();
-	        	a.setContentType("image/jpg");
-	    		String url = protocol+"//"+filedomain+fileport+"/publish/doc2pdf.jpj?path="+asset.getPath()+"&p="+i;
-	    		msg.setBody(url);
-	    		a.setUrl(url);        	
-	            shareFileForm.addAsset(a);
-	       	
-	        }			
-		}
 		msg.addExtension(shareFileForm);
 
 		try {
 			sendMessage(msg,to);
+			
+			if(n>0) {
+				msg = new Message();
+				shareFileForm = new ShareFileForm(DataForm.Type.form);
+				for (int i=0;i<n;i++) {
+		        	Asset a = new Asset();
+		        	a.setContentType("image/jpg");
+		        	a.setHeight(1600l);
+		        	a.setWidth(800l);
+		    		String url = protocol+"//"+filedomain+fileport+"/publish/pdf2img.jpj?path="+asset.getPath()+"&p="+i;
+		    		//msg.setBody(url);
+		    		a.setUrl(url);        	
+		            shareFileForm.addAsset(a);
+		       	
+		        }	
+				msg.addExtension(shareFileForm);
+				sendMessage(msg,to);
+			}			
 			//log.info("pages:"+n+","+msg.toXML("x").toString());
 		} catch (NotConnectedException | XmppStringprepException
 				| XMPPException | InterruptedException e) {
@@ -1685,7 +1693,7 @@ public class XMPPServiceImpl implements XMPPService{
 			        xml.append("<field label=\""+asset.getTitle()+"\" var=\"media"+i+"\">");
 			        xml.append("<media xmlns=\"urn:xmpp:media-element\" height=\""+(asset.getHeight()==null?0:asset.getHeight())+"\" width=\""+(asset.getWidth()==null?0:asset.getWidth())+"\">");
 			        xml.append("<uri type=\""+asset.getContentType()+"\" size=\""+asset.getSize()+"\" duration=\"0\">");
-			        xml.append(url+"</uri></media></field>");
+			        xml.append(asset.getUrl()==null?url:asset.getUrl()+"</uri></media></field>");
 		        }
 		        xml.closeElement("x");
 		        return xml;
