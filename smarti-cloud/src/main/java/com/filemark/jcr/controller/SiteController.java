@@ -452,7 +452,8 @@ public class SiteController extends BaseController {
 		            }       
 		        request.getSession().invalidate();
 				response.sendRedirect("/forget");
-			}	
+			}
+			model.addAttribute("tableContent", getAssetsHTML(path,type,"0",null,model,request,null));
 			model.addAttribute("presences", XMPPService.getPresences());
 		}catch(Exception e) {
 	   		File json = new File(jcrService.getDevice()+path+"/Output.json");
@@ -1266,6 +1267,57 @@ public class SiteController extends BaseController {
 			logger.error("folder:"+folder.getPath()+","+e.getMessage());		
 		}
 		return data;
+	}
+
+	@RequestMapping(value = {"/site/getassets.html"}, method = RequestMethod.GET)
+	public @ResponseBody String getAssetsHTML(String path,String type,String r,Integer w,Model model,HttpServletRequest request, HttpServletResponse response){
+		Folder folder = folderJson(path,type,model,request,response);
+		if(w ==null) w = 4; 
+		String data="";
+		//Map<String, News[]> data = new HashMap<String, News[]>();	
+		File html = new File(jcrService.getDevice()+path+"/Assets_"+type+"_"+w+".html");
+		try {	
+			if((r==null || "".equals(r)) && html.exists() && folder.getLastModified() !=null && html.lastModified() > folder.getLastModified().getTime()) {
+				if(response != null) {
+					response.setContentType("text/html");
+					FileUtils.copyFile(html, response.getOutputStream());
+					return null;					
+				}
+
+	   		}else {
+   			
+				List<News> f2new = new ArrayList<News>();
+				if(folder != null && folder.getAssets()!=null)
+					getAsset2News(folder,f2new,w,type);
+				//data.put("data", f2new.toArray(new News[0]));
+	   			OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(html),"UTF-8");
+				try {
+					for(News n:f2new) {
+						String line = "<tr><td class=\"product-name h4\">"+n.getTitle()
+								+"</td><td class=\"product-platforms\">"+n.getUrl()
+								+"</td><td class=\"product-shortdescription\">"+n.getDescription()
+								+"</td><td class=\"product-platforms\">"+n.getLastPublished()
+								+"</td><td class=\"product-longdescription\">"+n.getContentType()
+								+"</td><td class=\"product-department\">"+n.getLocation()
+								+"</td><td class=\"product-link-container\">"+n.getLastModified()+"</td></tr>\r";
+						writer.write(line);
+					}
+				}finally {
+	   				writer.close();
+	   			}
+	   		}
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			FileUtils.copyFile(html, out);
+			return new String(out.toByteArray(),"utf-8");
+		} catch (IOException e) {
+			html.delete();
+			logger.error(e.getMessage());		
+		} catch (NullPointerException e) {
+			html.delete();
+			logger.error("folder:"+folder.getPath()+","+e.getMessage());		
+		}
+		return null;
+
 	}
 	
 	private void getAsset2News(Folder folder,List<News>newsList,Integer w,String type) {

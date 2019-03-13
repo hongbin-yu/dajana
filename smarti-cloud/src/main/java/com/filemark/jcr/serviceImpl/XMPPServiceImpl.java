@@ -13,6 +13,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.URL;
+import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -1048,9 +1049,18 @@ public class XMPPServiceImpl implements XMPPService{
 		//nodeName = URLDecoder.decode(nodeName, "UTF-8");
 			if(!jcrService.nodeExsits(path)) {
 				jcrService.addNodes(path, "nt:unstructured",username);		
-			}			
+			}
+			
 	        URL url_img = new URL(getUTF8(url).replace(" ", "+"));
-	    	HttpsURLConnection conn = (HttpsURLConnection) url_img.openConnection();
+	        URLConnection conn;
+	        int status;
+	        if(url.startsWith("https:")) {
+	        	conn = (HttpsURLConnection) url_img.openConnection();
+	        	status = ((HttpsURLConnection)conn).getResponseCode();
+	        } else {
+	        	conn = (HttpURLConnection) url_img.openConnection();
+	        	status = ((HttpURLConnection)conn).getResponseCode();
+	        }      	
 	    	conn.setReadTimeout(30000);
 	    	conn.addRequestProperty("Accept-Language", "en-US,en;q=0.8");
 	    	conn.addRequestProperty("User-Agent", "Mozilla");
@@ -1058,7 +1068,7 @@ public class XMPPServiceImpl implements XMPPService{
 	    	boolean redirect = false;
 	
 	    	// normally, 3xx is redirect
-	    	int status = conn.getResponseCode();
+	    	//int status = conn.getResponseCode();
 	    	if (status != HttpURLConnection.HTTP_OK) {
 	    		if (status == HttpURLConnection.HTTP_MOVED_TEMP
 	    			|| status == HttpURLConnection.HTTP_MOVED_PERM
