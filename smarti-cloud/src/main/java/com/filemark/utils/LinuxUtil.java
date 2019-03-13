@@ -26,6 +26,7 @@ import static org.bytedeco.javacpp.opencv_imgcodecs.*;*/
 
 
 
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -962,6 +963,12 @@ public class LinuxUtil
     	
     	return execute(pb);
     }      
+    
+    public static String update_by_query(String index,String json) throws IOException, InterruptedException {
+    	ProcessBuilder pb = new ProcessBuilder("curl","POST",index,"/_update_by_query",json);
+    	
+    	return execute(pb);    	
+    }
     
     private static String execute(ProcessBuilder pb) throws IOException, InterruptedException {
     	String s;

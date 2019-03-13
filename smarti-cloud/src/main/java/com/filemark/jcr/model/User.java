@@ -69,7 +69,7 @@ public class User implements SmartiNode {
 	@Field
 	private String city;	
 	@Field
-	private String avatar;
+	private byte[] avatar;
 	@Field	
 	private String organization;
 	@Field
@@ -351,11 +351,12 @@ public class User implements SmartiNode {
 		this.status = status;
 	}
 
-	public String getAvatar() {
+
+	public byte[] getAvatar() {
 		return avatar;
 	}
 
-	public void setAvatar(String avatar) {
+	public void setAvatar(byte[] avatar) {
 		this.avatar = avatar;
 	}
 

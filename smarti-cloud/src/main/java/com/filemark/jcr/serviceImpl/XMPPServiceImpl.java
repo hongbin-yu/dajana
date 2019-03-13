@@ -238,6 +238,33 @@ public class XMPPServiceImpl implements XMPPService{
 					            e.printStackTrace();
 					        }
 				Collection<RosterEntry> entries = roster.getEntries();
+				for (RosterEntry entry : entries) {
+				    VCard vCard = getVCard(entry.getJid().asEntityBareJidIfPossible());
+				    	String name = entry.getJid().toString().split("@")[0];
+			    	try {
+					    	if(jcrService.nodeExsits("/system/users/"+name)) {
+	
+									User user = (User)jcrService.getObject("/system/users/"+name);
+									if(vCard.getAvatar()!=null) user.setAvatar(vCard.getAvatar());
+									user.setOrganization(vCard.getOrganization());
+									if(vCard.getNickName() != null) 
+										user.setTitle(vCard.getNickName());
+									jcrService.addOrUpdate(user);
+	
+					    	}else {
+					    		User user = new User();
+					    		user.setPath("/system/users/"+name);
+					    		user.setTitle(name);
+					    		if(vCard.getAvatar()!=null) user.setAvatar(vCard.getAvatar());
+								user.setOrganization(vCard.getOrganization());
+								if(vCard.getNickName() != null) 
+									user.setTitle(vCard.getNickName());
+								jcrService.addOrUpdate(user);						
+					    	}
+						} catch (RepositoryException e) {
+							log.error(e.getMessage());
+						}	
+				}
 /*				for (RosterEntry entry : entries) {
 					//example: get presence, type, mode, status
 					        Presence entryPresence = roster.getPresence(entry.getJid());
