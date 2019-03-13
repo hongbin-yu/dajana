@@ -1035,7 +1035,7 @@ public class XMPPServiceImpl implements XMPPService{
 		for(String url:fileupload) {
 			try {
 		
-				Asset asset = importAsset(url,username.toString(),filepath);
+				Asset asset = importAsset(url.trim(),username.toString(),filepath);
 				jcrService.updatePropertyByPath(asset.getPath(), "status", "bullhorn");
 
 		        if(asset.getExt().endsWith(".doc") || asset.getExt().endsWith(".docx") || asset.getExt().endsWith(".pdf"))  {
