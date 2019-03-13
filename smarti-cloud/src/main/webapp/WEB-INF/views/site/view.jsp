@@ -9,7 +9,7 @@
      <main role="main" property="mainContentOfPage" class="container">
      <div class="row profile">
      <div class="col-md-12">
-        <h1 id="wb-cont">
+        <h1 id="wb-cont" class="wb-inview bar-demo" data-inview="bottom-bar">
         ${folder.title}
         <a class="btn btn-default pull-right" href="javascript:downloadAll()" title="下载本页全部文件"><span id="downloadIcon" class="glyphicon glyphicon-download"></span></a>	
         <a class="btn btn-default pull-right" href="view.html?path=${folder.path}&type=${type}&r=1&w=${param.w}" title="刷屏"><span class="glyphicon glyphicon-refresh"></span></a>	
@@ -97,22 +97,7 @@
 </nav>
 </div>
 </main>
-		<section id="inline_content_modal" class="mfp-hide modal-dialog modal-content overlay-def">
-			<header class="modal-header">
-				<h2 class="modal-title">通讯目录</h2>
-			</header>
-			<div class="modal-body">
-                <ul class="list-group menu list-unstyled">
-                    <c:forEach items="${presences}" var="presence" varStatus="loop">
-                    	<li class="list-group-item" >
-                    	<a class="bnt bnt-default" href="javascript:sendAsset('${presence.from}')" title="发送到：${presence.from}"><span class="glyphicon glyphicon-user"></span> ${presence.from}</a>
-						</li>
-                    </c:forEach>
-                </ul>	
 
-                <button class="btn btn-primary popup-modal-dismiss" type="button">关闭</button>			
-			</div>
-		</section>
 		
 <section id="left-bar" class="wb-overlay modal-content overlay-def wb-panel-l col-md-4 col-xs-12">
 			<header class="modal-header">
@@ -127,7 +112,16 @@
                     </c:forEach>
                 </ul>	
            </div>     
-</section> 		
+</section> 
+<section id="bottom-bar" class="wb-overlay modal-content overlay-def wb-bar-b col-xs-12">
+
+		<a class="btn btn-default btn-xs" href="javascript:openFiles()"><span class="glyphicon glyphicon-align-justify"></span></a>
+		<a class="btn btn-default btn-xs" href="javascript:openFiles()"><span class="glyphicon glyphicon-camera"></span></a>
+		<input name="" size="25" type="text" value=""/>
+		<a class="btn btn-default btn-xs" href="javascript:openFiles()"><span class="glyphicon glyphicon-search"></span></a>
+
+
+</section>		
 		<script type="text/javascript">
 			var selected_uid = "";
 			function setUid(uid) {

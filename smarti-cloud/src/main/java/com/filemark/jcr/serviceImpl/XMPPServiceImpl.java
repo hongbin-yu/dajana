@@ -670,8 +670,9 @@ public class XMPPServiceImpl implements XMPPService{
 		        }	
 				msg.addExtension(shareFileForm);
 				sendMessage(msg,to);
+				log.info("pages:"+n+","+msg.toXML("x").toString());
 			}			
-			//log.info("pages:"+n+","+msg.toXML("x").toString());
+
 		} catch (NotConnectedException | XmppStringprepException
 				| XMPPException | InterruptedException e) {
 			log.error(e.getMessage());;
@@ -1037,7 +1038,7 @@ public class XMPPServiceImpl implements XMPPService{
 				Asset asset = importAsset(url,username.toString(),filepath);
 				jcrService.updatePropertyByPath(asset.getPath(), "status", "bullhorn");
 
-		        if(asset.getExt().endsWith(".doc") || asset.getExt().endsWith(".docx"))  {
+		        if(asset.getExt().endsWith(".doc") || asset.getExt().endsWith(".docx") || asset.getExt().endsWith(".pdf"))  {
 		        	sendDoc(asset,from);
 		        	continue;
 		        }
