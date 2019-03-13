@@ -54,7 +54,7 @@ public class Asset implements SmartiNode, Serializable {
 	@Field
 	private Long height;
 	@Field
-	private Long total;	
+	private Long total = 1l;	
 	@Field
 	private String icon;
 	@Field

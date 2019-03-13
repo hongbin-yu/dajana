@@ -1362,7 +1362,7 @@ public class SiteController extends BaseController {
 	        if(asset.getDoc2pdf()) {
 	        	title = "<a class=\""+asset.getCssClass()+"\" href=\"doc2pdf.pdf?path="+asset.getPath()+"\" title=\"DOC2PDF\""+" target=\"_BLANK\">"+asset.getTitle()+"</a>";//+"<a class=\"download pull-right\" href=\"download/"+asset.getName()+"?path="+asset.getPath()+"\" download=\""+asset.getName()+"\"><span class=\"glyphicon glyphicon-download\">下载</span></a>"
 	        			
-	        	a2news.setUrl("<a class=\""+asset.getCssClass()+"\" href=\"doc2pdf.pdf?path="+asset.getPath()+"\" title=\"DOC2PDF\""+" target=\"_BLANK\">"+"<img id=\"img"+asset.getUid()+"\" src=\""+icon+"\" class=\"img-responsive img-rounded mrgn-rght-md "+"\" draggable=\"true\"/></a>");
+	        	a2news.setUrl("<a href=\"javascript:openPdfGallery('"+asset.getPath()+"',"+getNumberOfPage(asset)+")\"><img id=\"img"+asset.getUid()+"\" src=\""+icon+"\" class=\"img-responsive img-rounded mrgn-rght-md "+"\" draggable=\"true\"/></a>");
 			    		//+"<img id=\"img"+asset.getUid()+"\" src=\""+icon+"\" class=\"img-responsive img-rounded mrgn-rght-md "+(w==4?" col-md-6":"")+"\" draggable=\"true\"/></a>";
 					    //+"<a class=\""+asset.getCssClass()+"\" href=\"doc2pdf.pdf?path="+asset.getPath()+" title=\"DOC2PDF\""+"\" target=\"_BLANK\">"+asset.getTitle()+"</a>";
 	        }	
@@ -4281,8 +4281,9 @@ public class SiteController extends BaseController {
 			if(pdf.exists()) {
 				PdfReader reader = new PdfReader(pdf.getAbsolutePath());
 				reader.close();
-				jcrService.setProperty(asset.getPath(), "total", (long)reader.getNumberOfPages());
-				numberOfPage = reader.getNumberOfPages();				
+				numberOfPage = reader.getNumberOfPages();	
+				jcrService.setProperty(asset.getPath(), "total", (long)numberOfPage);
+			
 			}
 		} catch (RepositoryException e) {
 			logger.error(e.getMessage());

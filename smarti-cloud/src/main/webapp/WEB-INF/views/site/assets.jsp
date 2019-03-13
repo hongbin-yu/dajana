@@ -224,7 +224,7 @@
 		<label for="contentType${item.uid }"><spring:message code="djn.content_type"/>&nbsp;</label><input class="form-control" id="contentType${item.uid }" name="contentType" value="${item.contentType}" size="24" uid="${item.uid}" disabled/>
 		</div>
 		<div class="form-group">
-			<label for="length${item.uid}"><spring:message code="djn.length"/>&nbsp;</label><input class="form-control" id="length${item.uid}" name="size" value="${item.size}(${item.width}x${item.height}})" size="24" uid="${item.uid}" disabled/>
+			<label for="length${item.uid}"><spring:message code="djn.length"/>&nbsp;</label><input class="form-control" id="length${item.uid}" name="size" value="${item.size}(${item.width}x${item.height})" size="24" uid="${item.uid}" disabled/>
 		</div>
 		<div class="form-group">
 			<label for="total${item.uid}"><spring:message code="djn.total"/>&nbsp;</label><input class="form-control" id="total${item.uid}" name="total" value="${item.total }" size="24" uid="${item.uid}" disabled/>
