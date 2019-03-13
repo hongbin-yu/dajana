@@ -48,7 +48,7 @@ import com.filemark.jcr.model.Role;
 import com.filemark.jcr.model.User;
 import com.filemark.jcr.service.JcrServices;
 import com.filemark.jcr.service.XMPPService;
-import com.filemark.utils.ImageUtil;
+import com.filemark.utils.LinuxUtil;
 import com.filemark.utils.QueryCustomSetting;
 
 
@@ -124,8 +124,8 @@ public class BaseController {
 				logger.error("loadLibrary error:"+e.getMessage());
 			}						
 		}*/
-		ImageUtil.gpioMode("out");
-		ImageUtil.HDDOn();
+		LinuxUtil.gpioMode("out");
+		LinuxUtil.HDDOn();
 /*		try {
 			ImageUtil.HDDSleep();
 		} catch (IOException e) {

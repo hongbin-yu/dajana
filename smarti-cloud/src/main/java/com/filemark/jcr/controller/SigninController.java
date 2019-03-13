@@ -52,7 +52,7 @@ import com.filemark.jcr.model.Role;
 import com.filemark.jcr.model.User;
 import com.filemark.sso.CookieUtil;
 import com.filemark.sso.JwtUtil;
-import com.filemark.utils.ImageUtil;
+import com.filemark.utils.LinuxUtil;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -171,7 +171,7 @@ public class SigninController extends BaseController{
 	                return "signin";        		
 	        	}else {
 	        		if(user.getXmppid()!=null) {
-	        				XMPPService.sendMessage(user.getXmppid()+" 从 "+lastIp+ "("+ImageUtil.geoip(lastIp)+")" +" 登入。 发送‘-L’锁定账号",user.getXmppid());
+	        				XMPPService.sendMessage(user.getXmppid()+" 从 "+lastIp+ "("+LinuxUtil.geoip(lastIp)+")" +" 登入。 发送‘-L’锁定账号",user.getXmppid());
 	        		}     		
 	        	}
 			} catch (NotConnectedException e) {

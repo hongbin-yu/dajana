@@ -68,6 +68,13 @@ public class User implements SmartiNode {
 	private String icon="/resources/images/usericon.png";	
 	@Field
 	private String city;	
+	@Field
+	private String avatar;
+	@Field	
+	private String organization;
+	@Field
+	private String location;
+	
 	@Collection(autoUpdate=false)
 	private Set<Role> roles = new HashSet<Role>();
 	
@@ -342,6 +349,30 @@ public class User implements SmartiNode {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public String getAvatar() {
+		return avatar;
+	}
+
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
+	}
+
+	public String getOrganization() {
+		return organization;
+	}
+
+	public void setOrganization(String organization) {
+		this.organization = organization;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
 	}
 	
 }

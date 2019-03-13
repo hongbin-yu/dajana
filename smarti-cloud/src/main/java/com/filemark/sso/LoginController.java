@@ -36,7 +36,7 @@ import com.filemark.jcr.controller.SiteController;
 import com.filemark.jcr.model.Page;
 import com.filemark.jcr.model.Role;
 import com.filemark.jcr.model.User;
-import com.filemark.utils.ImageUtil;
+import com.filemark.utils.LinuxUtil;
 
 @Controller
 public class LoginController extends BaseController {
@@ -185,7 +185,7 @@ public class LoginController extends BaseController {
         	if(isIntranet(request))
         		jcrService.updatePropertyByPath(user.getPath(), "city", "内网");
         	else
-        		jcrService.updatePropertyByPath(user.getPath(), "city", ImageUtil.geoip(lastIp));
+        		jcrService.updatePropertyByPath(user.getPath(), "city", LinuxUtil.geoip(lastIp));
         }
 		Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 		authorities.add(new SimpleGrantedAuthority(this.getRolePrefix()+"USER"));

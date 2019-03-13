@@ -22,14 +22,18 @@ import static org.bytedeco.javacpp.opencv_core.*;
 import static org.bytedeco.javacpp.opencv_imgproc.*;
 import static org.bytedeco.javacpp.opencv_imgcodecs.*;*/
 
+
+
+
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
 
-public class ImageUtil
+public class LinuxUtil
 {
-	private final static Logger log = LoggerFactory.getLogger(ImageUtil.class);
+	private final static Logger log = LoggerFactory.getLogger(LinuxUtil.class);
 	private static String HDDPIN = "18";
 	public static boolean video = false;
     /**
@@ -933,10 +937,36 @@ public class ImageUtil
     }
     
     public static String HDDSleep() throws IOException, InterruptedException {
+    	ProcessBuilder pb = new ProcessBuilder("hdparm","-Y","/dev/sda");
+  	
+        return execute(pb);
+    }
+    public static String put(String host,String index,String content) throws IOException, InterruptedException {
+
+    	ProcessBuilder pb = new ProcessBuilder("curl","PUT",index,content);
+        return execute(pb);
+    }
+    public static String update(String host,String index,String query) throws IOException, InterruptedException {
+    	ProcessBuilder pb = new ProcessBuilder("curl","GET",index,"/_search",query);
+   	    	
+    	return execute(pb);
+    }      
+    public static String get(String host,String index,String query) throws IOException, InterruptedException {
+    	ProcessBuilder pb = new ProcessBuilder("curl","GET",index,"/_search",query);
+    	
+    	return execute(pb);
+    } 
+    
+    public static String delete(String host,String index,String doc) throws IOException, InterruptedException {
+    	ProcessBuilder pb = new ProcessBuilder("curl","DELETE",index,doc);
+    	
+    	return execute(pb);
+    }      
+    
+    private static String execute(ProcessBuilder pb) throws IOException, InterruptedException {
     	String s;
     	Process p;
     	String exit="";
-    	ProcessBuilder pb = new ProcessBuilder("hdparm","-Y","/dev/sda");
     	pb.redirectErrorStream(true);
         p = pb.start();
 
@@ -959,7 +989,7 @@ public class ImageUtil
         	//log.error("convert exit: " + exit);
         	
         }
-        p.destroy();    	
-        return exit;
+        p.destroy();    	    	
+    	return exit;   	
     }
 }

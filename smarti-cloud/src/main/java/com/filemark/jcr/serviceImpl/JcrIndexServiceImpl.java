@@ -25,7 +25,7 @@ import com.filemark.jcr.model.User;
 import com.filemark.jcr.service.JcrIndexService;
 import com.filemark.jcr.service.JcrServices;
 import com.filemark.sso.JwtUtil;
-import com.filemark.utils.ImageUtil;
+import com.filemark.utils.LinuxUtil;
 import com.filemark.utils.WebPage;
 import com.google.gson.Gson;
 import com.lowagie.text.pdf.PdfReader;

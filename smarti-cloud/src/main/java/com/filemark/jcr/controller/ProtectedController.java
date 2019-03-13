@@ -26,7 +26,7 @@ import com.filemark.jcr.model.Chat;
 import com.filemark.jcr.model.Folder;
 import com.filemark.jcr.model.Page;
 import com.filemark.jcr.model.User;
-import com.filemark.utils.ImageUtil;
+import com.filemark.utils.LinuxUtil;
 import com.filemark.utils.WebPage;
 
 @Controller
@@ -111,7 +111,7 @@ public class ProtectedController extends BaseController {
 		Page page = new Page();
 		page.setTitle("优信");
 		page.setPath("/content/"+username);
-		model.addAttribute("video", ImageUtil.video);
+		model.addAttribute("video", LinuxUtil.video);
 		model.addAttribute("video_url", video_url);
    		model.addAttribute("folders", folders);
    		model.addAttribute("page", page);
@@ -161,7 +161,7 @@ public class ProtectedController extends BaseController {
 		Page page = new Page();
 		page.setTitle("优视");
 		page.setPath("/content/"+username);
-		model.addAttribute("video", ImageUtil.video);
+		model.addAttribute("video", LinuxUtil.video);
 		model.addAttribute("video_url", video_url);
    		model.addAttribute("folders", folders);
    		model.addAttribute("page", page);
@@ -225,12 +225,12 @@ public class ProtectedController extends BaseController {
    	public @ResponseBody String video(String action, Integer width,Model model,HttpServletRequest request, HttpServletResponse response) {
    		String result="";
    		if (action!=null && action.equals("close")) {
-   			ImageUtil.closevideo();
-   			ImageUtil.video = false;	
+   			LinuxUtil.closevideo();
+   			LinuxUtil.video = false;	
    		}else {
    			if(width==null) width=300;
-   			ImageUtil.video = true;	
-   			result = ImageUtil.video(width, width);
+   			LinuxUtil.video = true;	
+   			result = LinuxUtil.video(width, width);
    		}
    		return result;
    	}
@@ -255,7 +255,7 @@ public class ProtectedController extends BaseController {
 		jcrService.addOrUpdate(asset);
 		jcrService.updateCalendar(assetPath,"lastModified");
 		jcrService.setProperty(assetPath, "changed", "true");
-		ImageUtil.fswebcam(getDevice().getLocation()+assetPath+"/origin.jpg", 1080, 720);
+		LinuxUtil.fswebcam(getDevice().getLocation()+assetPath+"/origin.jpg", 1080, 720);
    		return asset;
 
    	}
@@ -299,7 +299,7 @@ public class ProtectedController extends BaseController {
   	
 	@RequestMapping(value = {"/protected/browse.html","/protected/image.html"}, method = {RequestMethod.GET,RequestMethod.POST},produces = "text/plain;charset=UTF-8")
 	public String browse(String path,String type, String input,String kw,Integer p,Integer m,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
-		ImageUtil.HDDOn();
+		LinuxUtil.HDDOn();
 		String assetFolder =  "/assets"+"/"+getUsername();
 		if(!jcrService.nodeExsits(assetFolder)) {
 			jcrService.addNodes(assetFolder, "nt:unstructured",getUsername());		
@@ -353,13 +353,13 @@ public class ProtectedController extends BaseController {
 		model.addAttribute("type", type);
 		model.addAttribute("input", input);		
 		model.addAttribute("kw", kw);	
-		ImageUtil.HDDOff();
+		LinuxUtil.HDDOff();
 		return "chat/browse";
 	}
 
 	@RequestMapping(value = {"/protected/browsemore.html","/protected/**/browsemore.html"}, method = {RequestMethod.GET,RequestMethod.POST},produces = "text/plain;charset=UTF-8")
 	public String browsemore(String path,String type, String input,String kw,Integer p,Integer m,String topage,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
-		ImageUtil.HDDOn();
+		LinuxUtil.HDDOn();
 		String assetFolder =  "/assets"+"/"+getUsername();
 		if(!jcrService.nodeExsits(assetFolder)) {
 			jcrService.addNodes(assetFolder, "nt:unstructured",getUsername());		
@@ -400,7 +400,7 @@ public class ProtectedController extends BaseController {
 		model.addAttribute("type", type);
 		model.addAttribute("input", input);		
 		model.addAttribute("kw", kw);	
-		ImageUtil.HDDOff();
+		LinuxUtil.HDDOff();
 		return "chat/"+topage;
 	}
 	
@@ -462,7 +462,7 @@ public class ProtectedController extends BaseController {
 			}
 
 		}
-		if(ImageUtil.video) {
+		if(LinuxUtil.video) {
 			String video_url = request.getScheme()+"://"+request.getServerName()+":8088/?action=stream";
 			chats.setAction(video_url);
 		}

@@ -82,7 +82,7 @@ import com.filemark.jcr.service.AssetManager;
 import com.filemark.sso.CookieUtil;
 import com.filemark.sso.JwtUtil;
 import com.filemark.utils.CacheFileFromResponse;
-import com.filemark.utils.ImageUtil;
+import com.filemark.utils.LinuxUtil;
 import com.filemark.utils.ScanUploadForm;
 import com.filemark.utils.WebPage;
 import com.google.gson.Gson;
@@ -114,14 +114,14 @@ public class SiteController extends BaseController {
 	    	simpleName = ex.getCause().getClass().getSimpleName();
 	    //logger.info(simpleName);
 	    if (simpleName.equals("ClientAbortException") || simpleName.equals("SocketException")) {
-			ImageUtil.HDDOff();
+			//LinuxUtil.HDDOff();
 	    	return null;
 	    }
 	    request.getSession().invalidate();
 	    modelAndView.addObject("error","<details><summary>此页没找到</summary><p>"+message+"</p></details>");
 	    //modelAndView.addObject("breadcrumb", jcrService.getBreadcrumb(paths[0]));
 	    logger.debug(ex.toString());
-		ImageUtil.HDDOff();
+		//LinuxUtil.HDDOff();
 	    return modelAndView;
     }
 	@RequestMapping(value = {"/proxy/**"}, method = {RequestMethod.GET,RequestMethod.POST},produces = "text/plain;charset=UTF-8")
@@ -144,7 +144,7 @@ public class SiteController extends BaseController {
 	
 	@RequestMapping(value = {"/site/browse.html","/site/image.html"}, method = {RequestMethod.GET,RequestMethod.POST},produces = "text/plain;charset=UTF-8")
 	public String browse(String path,String type, String input,String kw,Integer p,Integer m,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
-		ImageUtil.HDDOn();
+		//LinuxUtil.HDDOn();
 		String assetFolder = "/assets"+"/"+getUsername();
 		if(!jcrService.nodeExsits(assetFolder)) {
 			jcrService.addNodes(assetFolder, "nt:unstructured",getUsername());		
@@ -198,13 +198,13 @@ public class SiteController extends BaseController {
 		model.addAttribute("type", type);
 		model.addAttribute("input", input);		
 		model.addAttribute("kw", kw);	
-		ImageUtil.HDDOff();
+		//LinuxUtil.HDDOff();
 		return "site/browse";
 	}
 
 	@RequestMapping(value = {"/site/browsemore.html"}, method = {RequestMethod.GET,RequestMethod.POST},produces = "text/plain;charset=UTF-8")
 	public String browsemore(String path,String type, String input,String kw,Integer p,Integer m,String topage,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
-		ImageUtil.HDDOn();
+		//LinuxUtil.HDDOn();
 		String assetFolder =  "/assets"+"/"+getUsername();
 		if(!jcrService.nodeExsits(assetFolder)) {
 			jcrService.addNodes(assetFolder, "nt:unstructured",getUsername());		
@@ -246,7 +246,7 @@ public class SiteController extends BaseController {
 		model.addAttribute("type", type);
 		model.addAttribute("input", input);		
 		model.addAttribute("kw", kw);	
-		ImageUtil.HDDOff();
+		//LinuxUtil.HDDOff();
 		return "site/"+topage;
 	}
 	@RequestMapping(value = {"/site/media.html","/protected/media.html"}, method = {RequestMethod.GET,RequestMethod.POST})
@@ -408,7 +408,7 @@ public class SiteController extends BaseController {
 	}
 
 	@RequestMapping(value = {"/site/view.html","/site/view"}, method = {RequestMethod.GET,RequestMethod.POST},produces = "text/plain;charset=UTF-8")
-	public String view(String path,String type, String input,String kw,Integer p,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public String view(String path,String type, String input,String kw,String r,Integer p,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String username = getUsername();
 		String assetFolder = "/assets"+"/"+username;
 		String oldFolder = "/"+username+"/assets";
@@ -453,7 +453,7 @@ public class SiteController extends BaseController {
 		        request.getSession().invalidate();
 				response.sendRedirect("/forget");
 			}
-			model.addAttribute("tableContent", getAssetsHTML(path,type,"0",null,model,request,null));
+			model.addAttribute("tableContent", getAssetsHTML(path,type,r,null,model,request,null));
 			model.addAttribute("presences", XMPPService.getPresences());
 		}catch(Exception e) {
 	   		File json = new File(jcrService.getDevice()+path+"/Output.json");
@@ -465,7 +465,7 @@ public class SiteController extends BaseController {
 	
 	@RequestMapping(value = {"/site/createPage.html"}, method = RequestMethod.GET)
 	public String createPageGet(String path,String uid,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
-		ImageUtil.HDDOn();
+		//LinuxUtil.HDDOn();
 		if(uid!=null) {
 			Page page = jcrService.getPageByUid(uid);
 			path = page.getPath();
@@ -495,7 +495,7 @@ public class SiteController extends BaseController {
 			model.addAttribute("templates", templates);
 		}	
 		model.addAttribute("path", path);
-		ImageUtil.HDDOff();
+		//LinuxUtil.HDDOff();
 		return "site/createPage";
 	}
 	
@@ -600,7 +600,7 @@ public class SiteController extends BaseController {
 			currentpage = jcrService.getPage(path);
 
 		} catch (RepositoryException e) {
-			ImageUtil.HDDOff();
+			//LinuxUtil.HDDOff();
 			model.addAttribute("message", "<div class=\"alert alert-danger\"><h2>&#22833;&#36133;</h2><p>"+e.getMessage()+"</p></div>");
 		}
 		
@@ -1118,7 +1118,7 @@ public class SiteController extends BaseController {
 			if(asset.getDevice()!=null) {
 				Device device = (Device)jcrService.getObject(asset.getDevice());
 				String infile = device.getLocation()+asset.getPath()+"/origin"+ext;
-				String position = ImageUtil.getPosition(infile);
+				String position = LinuxUtil.getPosition(infile);
 				asset.setPosition(position);
 			}
 		} catch (RepositoryException e) {
@@ -1366,11 +1366,11 @@ public class SiteController extends BaseController {
 			    		//+"<img id=\"img"+asset.getUid()+"\" src=\""+icon+"\" class=\"img-responsive img-rounded mrgn-rght-md "+(w==4?" col-md-6":"")+"\" draggable=\"true\"/></a>";
 					    //+"<a class=\""+asset.getCssClass()+"\" href=\"doc2pdf.pdf?path="+asset.getPath()+" title=\"DOC2PDF\""+"\" target=\"_BLANK\">"+asset.getTitle()+"</a>";
 	        }	
-	        if(asset.getContentType().endsWith("/pdf")) {
-	        	title = "<a href=\"file/"+asset.getName()+"?path="+asset.getPath()+"\" target=\"_BLANK\">"+asset.getTitle()+"</a>"//+"<a class=\"download pull-right\" href=\"download/"+asset.getName()+"?path="+asset.getPath()+"\" download=\""+asset.getName()+"\"><span class=\"glyphicon glyphicon-download\">下载</span></a>"
-	        			+"<a href=\"javascript:openPdfGallery('"+asset.getPath()+"',"+getNumberOfPage(asset)+")\">";
+	        if(asset.getContentType().equals("application/pdf")) {
+	        	title = "<a href=\"file/"+asset.getName()+"?path="+asset.getPath()+"\" target=\"_BLANK\">"+asset.getTitle()+"</a>";//+"<a class=\"download pull-right\" href=\"download/"+asset.getName()+"?path="+asset.getPath()+"\" download=\""+asset.getName()+"\"><span class=\"glyphicon glyphicon-download\">下载</span></a>"
+	        			//+"<a href=\"javascript:openPdfGallery('"+asset.getPath()+"',"+getNumberOfPage(asset)+")\">";
 			    		//+"<img id=\"img"+asset.getUid()+"\" src=\""+icon+"\" class=\"img-responsive img-rounded mrgn-rght-md "+(w==4?" col-md-6":"")+"\" draggable=\"true\"/></a>";
-	        	a2news.setUrl("<img id=\"img"+asset.getUid()+"\" src=\""+icon+"\" class=\"img-responsive img-rounded mrgn-rght-md "+"\" draggable=\"true\"/></a>");
+	        	a2news.setUrl("<a href=\"javascript:openPdfGallery('"+asset.getPath()+"',"+getNumberOfPage(asset)+")\"><img id=\"img"+asset.getUid()+"\" src=\""+icon+"\" class=\"img-responsive img-rounded mrgn-rght-md "+"\" draggable=\"true\"/></a>");
 					    //+"<a href=\"file/"+asset.getName()+"?path="+asset.getPath()+"\" target=\"_BLANK\">"+asset.getTitle()+"</a>";
 	        }		        
 			a2news.setTitle(title);
@@ -1507,11 +1507,11 @@ public class SiteController extends BaseController {
         				in.close();
 	           			if("application/vnd.ms-powerpoint".equals(contentType) || contentType.startsWith("application/vnd.ms-excel") || contentType.startsWith("application/vnd.openformats-officedocument")  || contentType.startsWith("application/vnd.openxmlformats-officedocument")) {
 	           				 logger.debug("xls2pdf:"+file.getAbsolutePath());
-	        				 ImageUtil.xls2pdf(file.getAbsolutePath(), file.getParentFile().getAbsolutePath());
+	        				 LinuxUtil.xls2pdf(file.getAbsolutePath(), file.getParentFile().getAbsolutePath());
 
 	           			}else if("application/vnd.ms-powerpoint".equals(contentType) || "application/vnd.ms-word".equals(contentType) || "application/vnd.ms-excel".equals(contentType) || "application/msword".equals(contentType) || assetPath.endsWith(".doc") || assetPath.endsWith(".docx")) {	
 	           				 logger.debug("doc2pdf:"+file.getAbsolutePath());
-	        				 ImageUtil.doc2pdf(file.getAbsolutePath(), file.getParentFile().getAbsolutePath());
+	        				 LinuxUtil.doc2pdf(file.getAbsolutePath(), file.getParentFile().getAbsolutePath());
 	        			}
 	           			if(contentType!=null && contentType.startsWith("video/")) {	
 	           				 logger.debug("video2mp4:"+file.getAbsolutePath());
@@ -1535,7 +1535,7 @@ public class SiteController extends BaseController {
 	           				 }
 	           				jcrService.addOrUpdate(asset);
 	           				if(!"1080x720".equals(resolution) && !contentType.equals("video/mp4"))
-	           					ImageUtil.video2mp4(file.getAbsolutePath(),resolution);
+	           					LinuxUtil.video2mp4(file.getAbsolutePath(),resolution);
 	        			} 
 /*           				if(asset.getContentType().startsWith("audio/amr")) {
            				   ImageUtil.amr2wav(file.getAbsolutePath(),"22050", file.getAbsolutePath().replace(".amr", ".wav"));
@@ -1586,7 +1586,7 @@ public class SiteController extends BaseController {
 
 		String username = getUsername();
 		Asset asset= new Asset();
-		ImageUtil.HDDOn();
+		//LinuxUtil.HDDOn();
 		try {
 			for (MultipartFile multipartFile : uploadForm.getFile()) {
 				String fileName = multipartFile.getOriginalFilename();
@@ -1622,7 +1622,7 @@ public class SiteController extends BaseController {
 			return "error:"+e.getMessage();
 			
 		}
-		ImageUtil.HDDOff();
+		//LinuxUtil.HDDOff();
 		return "/site/httpfileupload/"+asset.getUid()+"/icon.jpg?w=0&time="+new Date().getTime();
 	}	
 	
@@ -1630,7 +1630,7 @@ public class SiteController extends BaseController {
 	public @ResponseBody Asset  assetsImport(String path,String url, String override,Model model,HttpServletRequest request, HttpServletResponse response) {
 		Asset asset= new Asset();
 		String username = getUsername();
-		ImageUtil.HDDOn();
+		//LinuxUtil.HDDOn();
 		try {
 		if(!jcrService.nodeExsits(path)) {
 			jcrService.addNodes(path, "nt:unstructured",getUsername());		
@@ -1686,7 +1686,7 @@ public class SiteController extends BaseController {
 			MimeType mimeType = allTypes.forName(contentType);
 		    ext = mimeType.getExtension(); 
 		} catch (MimeTypeException e1) {
-			ImageUtil.HDDOff();
+			//LinuxUtil.HDDOff();
 			logger.error(e1.getMessage());
 		}
 		
@@ -1707,7 +1707,7 @@ public class SiteController extends BaseController {
 		if(jcrService.nodeExsits(path+"/"+fileName)) {
 			asset = (Asset)jcrService.getObject(path+"/"+fileName);
 			if(!"true".equals(override)) {
-				ImageUtil.HDDOff();
+				//LinuxUtil.HDDOff();
 				return asset;
 			}
 		}else {
@@ -1768,12 +1768,12 @@ public class SiteController extends BaseController {
 		}		
 
 		}catch (Exception e){
-			ImageUtil.HDDOff();
+			//LinuxUtil.HDDOff();
 			logger.error("error:"+e.getMessage());
 			asset.setTitle("error:"+e.getMessage());
 			
 		}
-		ImageUtil.HDDOff();
+		//LinuxUtil.HDDOff();
 		return asset;
 	}
 
@@ -1781,7 +1781,7 @@ public class SiteController extends BaseController {
 	public @ResponseBody Asset  assetsImportMove(String path,String uid, Model model,HttpServletRequest request, HttpServletResponse response) {
 		Asset asset= new Asset();
 		String username = getUsername();
-		ImageUtil.HDDOn();
+		//LinuxUtil.HDDOn();
 		try {
 			asset = (Asset)jcrService.getObject(uid);//jcrService.getAssetById(uid);
 			//String names[]=asset.getPath().split("/");
@@ -1836,12 +1836,12 @@ public class SiteController extends BaseController {
 			}   
     		//jcrService.deleteNode(asset.getPath());
 		}catch (Exception e){
-			ImageUtil.HDDOff();
+			//LinuxUtil.HDDOff();
 			logger.error("asset move error:"+e.getMessage());
 			asset.setTitle("asset move error:"+e.getMessage());
 			
 		}
-		ImageUtil.HDDOff();
+		//LinuxUtil.HDDOff();
 		return asset;
 	}	
 	
@@ -1973,7 +1973,7 @@ public class SiteController extends BaseController {
 		if(value==null) value="true";
 		BufferedWriter bufferWriter = null;
 		//try {
-			ImageUtil.HDDOn();
+			//LinuxUtil.HDDOn();
 			Page page = null;
 			//String template = getAssetContent("/assets/templates/structure/page.html");
 			if(uid !=null && !"".equals(uid)) {
@@ -2085,7 +2085,7 @@ public class SiteController extends BaseController {
 			result = "error:"+e.getMessage();
 			
 		}*/
-		ImageUtil.HDDOff();
+		//LinuxUtil.HDDOff();
 		return result;
 	}
 	
@@ -2218,7 +2218,7 @@ public class SiteController extends BaseController {
 	public @ResponseBody Asset  rotateImage(String uid,Integer angle, Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String result="";
 		Asset asset = null;
-		ImageUtil.HDDOn();
+		//LinuxUtil.HDDOn();
 		try {
 			asset = jcrService.getAssetById(uid);
 			String path = asset.getPath();
@@ -2235,8 +2235,8 @@ public class SiteController extends BaseController {
 			}else if(angle == 180) {
 				oreitation = 2;
 			}
-			if(oreitation!=0 && ImageUtil.opencvRotate(infile, infile, oreitation)!=0) {
-				if(ImageUtil.rotate(infile, infile, angle)!=0) {
+			if(oreitation!=0 && LinuxUtil.opencvRotate(infile, infile, oreitation)!=0) {
+				if(LinuxUtil.rotate(infile, infile, angle)!=0) {
 					jcrService.roateImage(path, angle);
 					jcrService.createFile(path, 400);					
 				}
@@ -2247,17 +2247,17 @@ public class SiteController extends BaseController {
 			new File(device.getLocation()+asset.getPath()+"/x1200.jpg").delete();			
 		}catch (Exception e){
 			logger.error(e.getLocalizedMessage());
-			ImageUtil.HDDOff();
+			//LinuxUtil.HDDOff();
 			result = "error:"+e.getMessage();
 			asset.setTitle(result);
 		}
-		ImageUtil.HDDOff();
+		//LinuxUtil.HDDOff();
 		return asset;
 	}	
 	
 	@RequestMapping(value = {"/site/delete.html","/protected/delete.html"}, method = RequestMethod.GET)
 	public String deleteNodeConfirm(String uid,String path,String redirect,Model model,HttpServletRequest request, HttpServletResponse response) {
-		ImageUtil.HDDOn();
+		//LinuxUtil.HDDOn();
 			try {
 				if(uid!=null && !uid.equals("")) {
 					path = jcrService.getNodeById(uid);
@@ -2267,16 +2267,16 @@ public class SiteController extends BaseController {
 				model.addAttribute("redirect", redirect);
 				model.addAttribute("smartiNode", jcrService.getObject(path));
 			} catch (RepositoryException e) {
-				ImageUtil.HDDOff();
+				//LinuxUtil.HDDOff();
 				model.addAttribute("error", "路径没找到"+path);
 			}
-		ImageUtil.HDDOff();
+		//LinuxUtil.HDDOff();
 		return "site/deleteNode";
 	}
 
 	@RequestMapping(value = {"/site/deletefolder.html","/protected/deletefolder.html"}, method = RequestMethod.GET)
 	public String deleteFolderConfirm(String uid,String path,String redirect,Model model,HttpServletRequest request, HttpServletResponse response) {
-		ImageUtil.HDDOn();
+		//LinuxUtil.HDDOn();
 			try {
 				if(uid!=null && !uid.equals("")) {
 					path = jcrService.getNodeById(uid);
@@ -2286,16 +2286,16 @@ public class SiteController extends BaseController {
 				model.addAttribute("redirect", redirect);
 				model.addAttribute("smartiNode", jcrService.getObject(path));
 			} catch (RepositoryException e) {
-				ImageUtil.HDDOff();
+				//LinuxUtil.HDDOff()il.HDDOff();
 				model.addAttribute("error", "路径没找到"+path);
 			}
-		ImageUtil.HDDOff();
+		LinuxUtil.HDDOff();
 		return "site/deleteFolder";
 	}	
 
 	@RequestMapping(value = {"/site/deleteasset.html","/protected/deleteasset.html"}, method = RequestMethod.GET)
 	public String deleteAssetConfirm(String uid,String path,String redirect,Model model,HttpServletRequest request, HttpServletResponse response) {
-		ImageUtil.HDDOn();
+		LinuxUtil.HDDOn();
 			try {
 				if(uid!=null && !uid.equals("")) {
 					path = jcrService.getNodeById(uid);
@@ -2305,16 +2305,16 @@ public class SiteController extends BaseController {
 				model.addAttribute("redirect", redirect);
 				model.addAttribute("smartiNode", jcrService.getObject(path));
 			} catch (RepositoryException e) {
-				ImageUtil.HDDOff();
+				//LinuxUtil.HDDOff();
 				model.addAttribute("error", "路径没找到"+path);
 			}
-		ImageUtil.HDDOff();
+		//LinuxUtil.HDDOff();
 		return "site/deleteAsset";
 	}
 	
 	@RequestMapping(value = {"/site/deletePage.html"}, method = RequestMethod.GET)
 	public String deletePageConfirm(String uid,String path,String redirect,Model model,HttpServletRequest request, HttpServletResponse response) {
-		ImageUtil.HDDOn();
+		LinuxUtil.HDDOn();
 			try {
 				if(uid!=null && !uid.equals("")) {
 					path = jcrService.getNodeById(uid);
@@ -2324,16 +2324,16 @@ public class SiteController extends BaseController {
 				model.addAttribute("redirect", redirect);
 				model.addAttribute("page", jcrService.getPage(path));
 			} catch (RepositoryException e) {
-				ImageUtil.HDDOff();
+				//LinuxUtil.HDDOff();
 				model.addAttribute("error", "路径没找到"+path);
 			}
-		ImageUtil.HDDOff();
+		//LinuxUtil.HDDOff();
 		return "site/deletePage";
 	} 
 	@RequestMapping(value = {"/site/deletePage.html"}, method = RequestMethod.POST)
 	public String deletePage(String uid,String path,String redirect,Model model,HttpServletRequest request, HttpServletResponse response) {
 		String result="";
-		ImageUtil.HDDOn();
+		LinuxUtil.HDDOn();
 		if(uid!=null && !uid.equals("")) {
 			try {
 				path = jcrService.getNodeById(uid);
@@ -2342,15 +2342,15 @@ public class SiteController extends BaseController {
 				jcrService.deleteNode(path);
 			} catch (RepositoryException e) {
 				logger.error(e.getMessage());
-				ImageUtil.HDDOff();
+				//LinuxUtil.HDDOff();
 				result = "error:"+e.getMessage();
 			} catch (IOException e) {
-				ImageUtil.HDDOff();
+				//LinuxUtil.HDDOff();
 				logger.error(e.getMessage());
 				result = "error:"+e.getMessage();
 			}
 		}
-		ImageUtil.HDDOff();
+		//LinuxUtil.HDDOff();
 		return result;
 	} 
 
@@ -2601,7 +2601,7 @@ public class SiteController extends BaseController {
 					file = new File(pdfname);
 					if(!file.exists()) {
 						try {
-							int exit = ImageUtil.doc2pdf(docname, file.getParentFile().getAbsolutePath());
+							int exit = LinuxUtil.doc2pdf(docname, file.getParentFile().getAbsolutePath());
 							if(exit != 0) {
 
 								return "文件转换将在15分钟内完成！";									
@@ -2661,7 +2661,7 @@ public class SiteController extends BaseController {
 				if(w!=null && w==1) {
 					WXH = "100x100";
 				}
-				if(ImageUtil.pdf2jpg(pdffile.getAbsolutePath(), p, WXH, jpgfile.getAbsolutePath())==0) {
+				if(LinuxUtil.pdf2jpg(pdffile.getAbsolutePath(), p, WXH, jpgfile.getAbsolutePath())==0) {
 /*					FileInputStream in = new FileInputStream(jpgfile);
 					response.setContentType("image/jpeg");
 					IOUtils.copy(in, response.getOutputStream());
@@ -2697,14 +2697,14 @@ public class SiteController extends BaseController {
 					file = new File(pdfname);
 					if(!file.exists()) {
 						try {
-							int exit = ImageUtil.doc2pdf(docname, file.getParentFile().getAbsolutePath());
+							int exit = LinuxUtil.doc2pdf(docname, file.getParentFile().getAbsolutePath());
 							if(exit != 0) {
-								ImageUtil.HDDOff();
+								//LinuxUtil.HDDOff();
 								return "文件转换将在15分钟内完成！";									
 							}
 						} catch (InterruptedException e) {
 							logger.error("doc2pdf:"+e.getMessage());
-							ImageUtil.HDDOff();
+							//LinuxUtil.HDDOff();
 							return e.getMessage();
 						}
 					}
@@ -2713,7 +2713,7 @@ public class SiteController extends BaseController {
 						if(w!=null && w==1) {
 							WXH = "100x100";
 						}
-						if(ImageUtil.pdf2jpg(pdffile.getAbsolutePath(), p, WXH, jpgfile.getAbsolutePath())==0) {
+						if(LinuxUtil.pdf2jpg(pdffile.getAbsolutePath(), p, WXH, jpgfile.getAbsolutePath())==0) {
 /*							FileInputStream in = new FileInputStream(jpgfile);
 							response.setContentType("image/jpeg");
 							IOUtils.copy(in, response.getOutputStream());
@@ -2776,7 +2776,7 @@ public class SiteController extends BaseController {
 				if(w!=null && w==1) {
 					WXH = "100x100";
 				}
-				int exit = ImageUtil.pdf2jpg(pdfname,0,WXH, jpgname);
+				int exit = LinuxUtil.pdf2jpg(pdfname,0,WXH, jpgname);
 				if(exit != 0) {
 					if(w != null && w==1)
 						response.sendRedirect("/resources/images/pdf-icon100.png");
@@ -2837,7 +2837,7 @@ public class SiteController extends BaseController {
 				if(w!=null && w==1) {
 					WXH = "100x100";
 				}
-				int exit = ImageUtil.pdf2jpg(pdfname,p,WXH, jpgname);
+				int exit = LinuxUtil.pdf2jpg(pdfname,p,WXH, jpgname);
 				if(exit != 0) {
 					if(w != null && w==1)
 						response.sendRedirect("/resources/images/pdf-icon100.png");
@@ -2899,7 +2899,7 @@ public class SiteController extends BaseController {
 				if(w!=null && w==1) {
 					WXH = "100x100";
 				}
-				int exit = ImageUtil.pdf2jpg(pdfname,p,WXH, jpgname);
+				int exit = LinuxUtil.pdf2jpg(pdfname,p,WXH, jpgname);
 				if(exit != 0) {
 				    if(path.endsWith(".doc") || path.endsWith(".docx")) {	
 						if(w != null && w==1)
@@ -2978,7 +2978,7 @@ public class SiteController extends BaseController {
 				if(w!=null && w==1) {
 					WXH = "100x100";
 				}
-				if(ImageUtil.video2jpg(infile, WXH, jpgname) !=0)
+				if(LinuxUtil.video2jpg(infile, WXH, jpgname) !=0)
 					if(w != null && w==1)
 						response.sendRedirect("resources/images/video-icon100.png");
 					else
@@ -3784,13 +3784,13 @@ public class SiteController extends BaseController {
 			//ImageUtil.HDDOff();
 			return "Error:"+e.getMessage();
 		}
-		ImageUtil.HDDOff();
+		//LinuxUtil.HDDOff();
 		return null;
 	}	
 	@RequestMapping(value = {"/viewpdf*.pdf","/site/viewpdf*","/site/viewpdf.pdf","/content/viewpdf","/content/**/viewpdf"}, method = {RequestMethod.GET})
 	public @ResponseBody String viewPdf(String uid[],HttpServletRequest request, HttpServletResponse response) throws IOException, RepositoryException {
 		List<Asset> assets = new ArrayList<Asset>();
-		ImageUtil.HDDOn();
+		//LinuxUtil.HDDOn();
 		try {
 			for(String id:uid) {
 				assets.add(jcrService.getAssetById(id));
@@ -3798,10 +3798,10 @@ public class SiteController extends BaseController {
 			jcrService.assets2pdf(assets, response.getOutputStream());			
 		}catch(Exception e) {
 			logger.error("viewPdf"+e.getMessage());
-			ImageUtil.HDDOff();
+			//LinuxUtil.HDDOff();
 			return "Error:"+e.getMessage();
 		}
-		ImageUtil.HDDOff();
+		//LinuxUtil.HDDOff();
 		return null;
 	}
 
@@ -3869,7 +3869,7 @@ public class SiteController extends BaseController {
 					}
 				}else
 					jcrService.readAsset(path+"/original", response);
-				ImageUtil.HDDOff();
+				//LinuxUtil.HDDOff();
 				return null;
 	
 			}else {
@@ -4162,7 +4162,7 @@ public class SiteController extends BaseController {
 		}
 		//limit size max 1200
 
-		ImageUtil.limit(folder.getAbsolutePath(), "jpg", 1200);
+		LinuxUtil.limit(folder.getAbsolutePath(), "jpg", 1200);
 
 		
 		return doc.body().html();
@@ -4231,7 +4231,7 @@ public class SiteController extends BaseController {
 				File file = new File(filePath);
 				if(!file.exists()) {
 					String pdfPath = devicePath+asset.getPath()+"/origin.pdf";
-					int exit = ImageUtil.pdf2jpg(pdfPath,Integer.parseInt(p),"1600x1600", filePath);
+					int exit = LinuxUtil.pdf2jpg(pdfPath,Integer.parseInt(p),"1600x1600", filePath);
 
 				}			
 			}		    

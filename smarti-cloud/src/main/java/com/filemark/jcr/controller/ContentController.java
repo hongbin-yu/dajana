@@ -63,7 +63,7 @@ import com.filemark.jcr.model.News;
 import com.filemark.jcr.model.Page;
 import com.filemark.jcr.model.User;
 import com.filemark.sso.JwtUtil;
-import com.filemark.utils.ImageUtil;
+import com.filemark.utils.LinuxUtil;
 import com.filemark.utils.WebPage;
 import com.google.gson.Gson;
 import com.itextpdf.text.Document;
@@ -93,19 +93,19 @@ public class ContentController extends BaseController {
   	    String simpleName = ex.getCause().getClass().getSimpleName();
   	    logger.info(simpleName);
   	    if (simpleName.equals("ClientAbortException") || simpleName.equals("SocketException")) {
-			ImageUtil.HDDOff();
+			LinuxUtil.HDDOff();
   	    	return null;
   	    }
 		  modelAndView.addObject("navigation", getNavigation());
     	  //modelAndView.addObject("navigation",getNavigator(apps,contentPath));
     	  modelAndView.addObject("breadcrumb", jcrService.getBreadcrumb(paths[0]) );
       } catch(Exception e ) {
-    	  ImageUtil.HDDOff();
+    	  LinuxUtil.HDDOff();
     	  logger.error(e.getMessage()); 
       }
       invalidCache();
       logger.error(ex.toString());
-	  ImageUtil.gpio("write","18","0");
+	  LinuxUtil.gpio("write","18","0");
       return modelAndView;
     }
     @RequestMapping(value = {"/{site}","/mysite"}, method = RequestMethod.GET)
@@ -401,7 +401,7 @@ public class ContentController extends BaseController {
 	@RequestMapping(value = {"/content/{site}","/content/{site}.html","/content/{site}/**/*","/content/{site}/**/*.html","/content/{site}/*.html"}, method = RequestMethod.GET)
 	public String page(@PathVariable String site, String uid,Integer p, Model model,HttpServletRequest request, HttpServletResponse response) throws Exception  {
 		try {
-			ImageUtil.HDDOn();
+			LinuxUtil.HDDOn();
 			String paths = URLDecoder.decode(request.getRequestURI(),"UTF-8");
 			if(!request.getContextPath().equals("/"))
 				paths = paths.replaceFirst(request.getContextPath(), "");
@@ -438,7 +438,7 @@ public class ContentController extends BaseController {
 					}else {
 						logger.error("Error:"+HttpServletResponse.SC_NOT_FOUND);
 						response.sendError(HttpServletResponse.SC_NOT_FOUND);
-						ImageUtil.HDDOff();
+						LinuxUtil.HDDOff();
 						return null;
 					}
 				}
@@ -474,13 +474,13 @@ public class ContentController extends BaseController {
 					model.addAttribute("path", path);
 					model.addAttribute("title", currentpage.getTitle());
 					model.addAttribute("passcode", currentpage.getPasscode());
-					ImageUtil.HDDOff();
+					LinuxUtil.HDDOff();
 					return "content/passcode";
 				}
 			}
 
 			if(currentpage.getRedirectTo() != null && !"".equals(currentpage.getRedirectTo())) {
-				ImageUtil.HDDOff();
+				LinuxUtil.HDDOff();
 				return "redirect:"+currentpage.getRedirectTo();
 			}
 			navigation = FileUtils.readFileToString(new File(jcrService.getHome()+menuPath+"/navimenu.html"),"UTF-8");
@@ -495,18 +495,18 @@ public class ContentController extends BaseController {
 			model.addAttribute("origin", request.getRequestURL()+"?"+request.getQueryString());	
 		} catch (UnsupportedEncodingException e) {
 			logger.error(e.getMessage());
-			ImageUtil.HDDOff();
+			LinuxUtil.HDDOff();
 			throw new Exception("\u8DEF\u5F84\u51FA\u9519!");
 		} catch (RepositoryException e) {
 			logger.error(e.getMessage());
-			ImageUtil.HDDOff();
+			LinuxUtil.HDDOff();
 			throw new Exception("\u9875\u9762\u6CA1\u627E\u5230!");
 		} catch (IOException e) {
 			logger.error(e.getMessage());
-			ImageUtil.HDDOff();
+			LinuxUtil.HDDOff();
 			throw new Exception(e.getMessage());			
 		}
-		ImageUtil.HDDOff();
+		LinuxUtil.HDDOff();
 		return "content/page";
 	}
 	

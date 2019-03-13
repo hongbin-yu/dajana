@@ -103,7 +103,7 @@ import com.filemark.jcr.model.Folder;
 import com.filemark.jcr.model.User;
 import com.filemark.jcr.service.JcrServices;
 import com.filemark.jcr.service.XMPPService;
-import com.filemark.utils.ImageUtil;
+import com.filemark.utils.LinuxUtil;
 import com.filemark.utils.WebPage;
 import com.lowagie.text.pdf.PdfReader;
 
@@ -1207,11 +1207,11 @@ public class XMPPServiceImpl implements XMPPService{
 			try {
 	   			if("application/vnd.ms-powerpoint".equals(contentType) || contentType.startsWith("application/vnd.ms-excel") || contentType.startsWith("application/vnd.openformats-officedocument")  || contentType.startsWith("application/vnd.openxmlformats-officedocument")) {
 	  				 log.debug("xls2pdf:"+file.getAbsolutePath());
-					 ImageUtil.xls2pdf(file.getAbsolutePath(), file.getParentFile().getAbsolutePath());
+					 LinuxUtil.xls2pdf(file.getAbsolutePath(), file.getParentFile().getAbsolutePath());
 	
 	  			}else if("application/vnd.ms-powerpoint".equals(contentType) || "application/vnd.ms-word".equals(contentType) || "application/vnd.ms-excel".equals(contentType) || "application/msword".equals(contentType) || assetPath.endsWith(".doc") || assetPath.endsWith(".docx")) {	
 	  				 log.debug("doc2pdf:"+file.getAbsolutePath());
-					 ImageUtil.doc2pdf(file.getAbsolutePath(), file.getParentFile().getAbsolutePath());
+					 LinuxUtil.doc2pdf(file.getAbsolutePath(), file.getParentFile().getAbsolutePath());
 				}
        			if(contentType!=null && contentType.startsWith("video/")) {	
       				 log.debug("video2mp4:"+file.getAbsolutePath());
@@ -1235,7 +1235,7 @@ public class XMPPServiceImpl implements XMPPService{
       				 }
       				jcrService.addOrUpdate(asset);
       				if(!"1080x720".equals(resolution) && !contentType.equals("video/mp4"))
-      					ImageUtil.video2mp4(file.getAbsolutePath(),resolution);
+      					LinuxUtil.video2mp4(file.getAbsolutePath(),resolution);
    			} 	   			
 			} catch(IOException | InterruptedException e) {
    				log.error(e.toString());

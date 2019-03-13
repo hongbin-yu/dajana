@@ -72,7 +72,7 @@ import com.filemark.jcr.model.Log;
 import com.filemark.jcr.model.Page;
 import com.filemark.jcr.model.SmartiNode;
 import com.filemark.jcr.service.JcrServices;
-import com.filemark.utils.ImageUtil;
+import com.filemark.utils.LinuxUtil;
 import com.filemark.utils.ScanUploadForm;
 import com.filemark.utils.WebPage;
 import com.itextpdf.text.Element;
@@ -1702,9 +1702,9 @@ public class JcrServicesImpl implements JcrServices {
         				out.getParentFile().mkdirs();
         			}
 
-    				int exit = ImageUtil.opencvResize(infile, outfile, w, h);
+    				int exit = LinuxUtil.opencvResize(infile, outfile, w, h);
     				if(exit != 0)
-    					exit =  ImageUtil.convert(infile, outfile, w, h);
+    					exit =  LinuxUtil.convert(infile, outfile, w, h);
     				if(exit==0) {
     					//updatePropertyByPath(path, "icon", outfile);
     					//updatePropertyByPath(path, "updated", "true");
@@ -1867,13 +1867,13 @@ public class JcrServicesImpl implements JcrServices {
       	    file = new File(file,"origin"+ext);
 	        Metadata metadata = null;
 			try {
-				String sorientation=ImageUtil.oreintation(infile);
-				String position = ImageUtil.getPosition(infile);
+				String sorientation=LinuxUtil.oreintation(infile);
+				String position = LinuxUtil.getPosition(infile);
 				node.setProperty("position", position);
 				log.debug("linux orientation="+sorientation+",position="+position);
 				if("2,3,4,5,6,7".indexOf(sorientation)>=0) {
-					if(!"".equals(sorientation) && (ImageUtil.opencvRotate(infile, infile, Integer.parseInt(sorientation) - 1) == 0 || ImageUtil.autoRotate(infile, infile)==0)) {
-						String wxh=ImageUtil.getWidthxHeight(infile);
+					if(!"".equals(sorientation) && (LinuxUtil.opencvRotate(infile, infile, Integer.parseInt(sorientation) - 1) == 0 || LinuxUtil.autoRotate(infile, infile)==0)) {
+						String wxh=LinuxUtil.getWidthxHeight(infile);
 						log.debug("linux wxh="+wxh);
 						if(wxh.indexOf("x")>0) {
 							String w_h[] = wxh.split("x");
@@ -1884,7 +1884,7 @@ public class JcrServicesImpl implements JcrServices {
 						}
 					}
 				}else {
-					String wxh=ImageUtil.getWidthxHeight(infile);
+					String wxh=LinuxUtil.getWidthxHeight(infile);
 					log.debug("linux wxh="+wxh);
 					if(wxh.indexOf("x")>0) {
 						String w_h[] = wxh.split("x");
