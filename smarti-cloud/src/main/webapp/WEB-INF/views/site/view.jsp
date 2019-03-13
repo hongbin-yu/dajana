@@ -113,14 +113,19 @@
                 </ul>	
            </div>     
 </section> 
-<section id="bottom-bar" class="wb-overlay modal-content overlay-def wb-bar-b col-xs-12">
-
+<section id="bottom-bar" class="wb-overlay modal-content overlay-def wb-bar-b visible-xs">
+	<form action="upload.html" method="POST" id="form-upload" enctype="multipart/form-data">
+		<input type="hidden" id="path" name="path" value="${folder.path}"/>
+		<input type="hidden" id="type"  name="type" value="${type}"/>
+		<input type="hidden" id="input" name="input" value="${input}"/>
 		<a class="btn btn-default btn-xs" href="javascript:openFiles()"><span class="glyphicon glyphicon-align-justify"></span></a>
 		<a class="btn btn-default btn-xs" href="javascript:openFiles()"><span class="glyphicon glyphicon-camera"></span></a>
-		<input name="" size="25" type="text" value=""/>
+		<input name="" size="20" type="text" value=""/>
 		<a class="btn btn-default btn-xs" href="javascript:openFiles()"><span class="glyphicon glyphicon-search"></span></a>
-
-
+		<input class="form-control wb-inv" type="file" id="fileUpload" name="file" size="60" required="required"  multiple/>
+	</form>	
+	<div class="wb-inv" id="selectedFiles">
+	</div>	
 </section>		
 		<script type="text/javascript">
 			var selected_uid = "";
