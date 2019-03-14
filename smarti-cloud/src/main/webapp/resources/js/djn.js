@@ -992,6 +992,8 @@ function getAsset(formData,file,id) {
 	$("#top_insert").after(html);	
     var tag = $("#top_insert");
     $('html,body').animate({scrollTop: tag.offset().top},'slow');
+    var totop = $("#totop");
+    if(totop) totop.click()
     $.ajax({
 	    url: 'getasset.json?path='+path+'&filename='+filename+'&lastModified='+lastModified,
 	    type: "GET",

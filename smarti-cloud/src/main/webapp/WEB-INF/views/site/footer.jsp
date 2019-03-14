@@ -36,7 +36,7 @@
     <div class="container">
     <div class="row">
         <div class="col-xs-4 visible-sm visible-xs tofpg text-center">
-            <a href="#wb-cont">到页端 <span class="glyphicon glyphicon-chevron-up"></span></a>
+            <a id="totop" href="#wb-cont">到页端 <span class="glyphicon glyphicon-chevron-up"></span></a>
         </div>
    </div>
 	<div class="col-xs-6 col-md-12 text-center"><spring:message code="djn.copy_right"/></div>
