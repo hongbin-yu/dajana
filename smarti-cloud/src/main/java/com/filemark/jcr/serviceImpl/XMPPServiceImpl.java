@@ -663,7 +663,7 @@ public class XMPPServiceImpl implements XMPPService{
 		        	a.setHeight(1600l);
 		        	a.setWidth(800l);
 		    		String url = protocol+"//"+filedomain+fileport+"/publish/pdf2img.jpj?path="+asset.getPath()+"&p="+i;
-		    		//msg.setBody(url);
+		    		msg.setBody(url);
 		    		a.setUrl(url);        	
 		            shareFileForm.addAsset(a);
 		       	
@@ -1694,7 +1694,7 @@ public class XMPPServiceImpl implements XMPPService{
 			        xml.append("<field label=\""+asset.getTitle()+"\" var=\"media"+i+"\">");
 			        xml.append("<media xmlns=\"urn:xmpp:media-element\" height=\""+(asset.getHeight()==null?0:asset.getHeight())+"\" width=\""+(asset.getWidth()==null?0:asset.getWidth())+"\">");
 			        xml.append("<uri type=\""+asset.getContentType()+"\" size=\""+asset.getSize()+"\" duration=\"0\">");
-			        xml.append(asset.getUrl()==null?url:asset.getUrl()+"</uri></media></field>");
+			        xml.append(url+"</uri></media></field>");
 		        }
 		        xml.closeElement("x");
 		        return xml;
