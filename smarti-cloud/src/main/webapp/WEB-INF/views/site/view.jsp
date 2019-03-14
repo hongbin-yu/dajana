@@ -21,6 +21,8 @@
      </div>
      <div class="row">
      <div class="col-md-9 col-md-push-3">
+     <span id="top_insert">
+	</span>
 	<section class="cn-search-dataTable"> 
 	        <h2 class="wb-inv">查询结果</h2>
 	        <div class="mrgn-tp-xl"></div> <!-- /*&quot;aoColumns&quot;: [ { &quot;data&quot;: &quot;title&quot;,&quot;sClass&quot;: &quot;product-name h4&quot; },  { &#34;data&#34;: &#34;url&#34;,&quot;sClass&quot;: &quot;product-platforms&quot; }, { &#34;data&#34;: &#34;description&#34;,&quot;sClass&quot;: &quot;product-shortdescription&quot; },  { &quot;data&quot;: &quot;lastPublished&quot;,&quot;sClass&quot;: &quot;product-platforms&quot; },{&#34;data&#34;: &#34;contentType&#34;, &quot;sClass&quot;: &quot;product-longdescription&quot; }, { &#34;data&#34;: &#34;location&#34;, &quot;sClass&quot;: &quot;product-department&quot; },{&#34;data&#34;: &#34;lastModified&#34;,  &quot;sClass&quot;: &quot;product-link-container&quot; } ]&quot;sAjaxSource&quot;: &quot;getassets.json?path=${folder.path}&type=${type}&w=${param.w}&r=${param.r}&quot;,*/ -->
@@ -118,10 +120,10 @@
 		<input type="hidden" id="path" name="path" value="${folder.path}"/>
 		<input type="hidden" id="type"  name="type" value="${type}"/>
 		<input type="hidden" id="input" name="input" value="${input}"/>
-		<a class="btn btn-default btn-xs" href="javascript:openFiles()"><span class="glyphicon glyphicon-align-justify"></span></a>
+		<a class="btn btn-default btn-xs" href=""><span class="glyphicon glyphicon-align-justify"></span></a>
 		<a class="btn btn-default btn-xs" href="javascript:openFiles()"><span class="glyphicon glyphicon-camera"></span></a>
 		<input name="" size="20" type="text" value=""/>
-		<a class="btn btn-default btn-xs" href="javascript:openFiles()"><span class="glyphicon glyphicon-search"></span></a>
+		<a class="btn btn-default btn-xs" href=""><span class="glyphicon glyphicon-search"></span></a>
 		<input class="form-control wb-inv" type="file" id="fileUpload" name="file" size="60" required="required"  multiple/>
 	</form>	
 	<div class="wb-inv" id="selectedFiles">
