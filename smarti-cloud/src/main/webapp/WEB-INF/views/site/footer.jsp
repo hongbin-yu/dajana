@@ -26,7 +26,7 @@
 </section>
  <section class="col-sm-3">
   <ul class="list-unstyled">
-<li><a href="http://home.dajana.ca" title="优鸿云"><img src="/resources/images/yuhong-icon100.png" alt="优鸿云"></a></li>
+<li><a href="http://home.dajana.net" title="优鸿云"><img src="/resources/images/yuhong-icon100.png" alt="优鸿云"></a></li>
 </ul>
 <%-- <object type="image/svg+xml" tabindex="-1" role="img" data="<c:url value="/resources/images/hongicon.svg" />" aria-label="优鸿网络"></object>
  --%> </section>

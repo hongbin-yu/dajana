@@ -39,11 +39,11 @@
 <main role="main" property="mainContentOfPage" >
 <div class="sp-hb">
 <div class="sp-bx col-xs-12">
-<h1 property="name" class="wb-inv">dajana.ca</h1>
+<h1 property="name" class="wb-inv">dajana.net</h1>
 <div class="row">
 
 <div class="col-xs-11 col-md-8">
-<a href="http://dajana.cn/content/home.html">
+<a href="http://dajana.net/content/home.html">
 <img alt="<spring:message code="djn.dajana"/>" src='<c:url value="/resources/images/logo.svg"></c:url>'/>
 </a>
 <!-- 
@@ -83,7 +83,7 @@
 </ul> --%>
  </div>
 <div class="col-xs-4 pull-right">
-<a class="btn btn-default" href="http://home.dajana.ca" title="内网登入"><img class="img-responsive" src ="/resources/images/yuhong-icon100.png" alt="内网登入"/></a>
+<a class="btn btn-default" href="http://home.dajana.net" title="内网登入"><img class="img-responsive" src ="/resources/images/yuhong-icon100.png" alt="内网登入"/></a>
 </div>
 
 </div>
@@ -124,11 +124,11 @@
     var selectedImageIndex = 1;
     document.getElementById("splash-image").src = splashImagePaths[Math.floor((Math.random() * numImages))]+"/origin.jpg";
 	$(document).ready(function() {
-		if(location.hostname.indexOf("home.dajana.ca")<0 && location.hostname.indexOf(".dajana.ca")>0)
+		if(location.hostname.indexOf("home.dajana.net")<0 && location.hostname.indexOf(".dajana.net")>0)
 		$.ajax({
-	          url: '//home.dajana.ca',
+	          url: '//home.dajana.net',
 	          success: function(result){
-	             location.href=location.origin.replace("dajana.ca","home.dajana.ca");
+	             location.href=location.origin.replace("dajana.ner","home.dajana.net");
 	          },     
 	          error: function(result){
 	              //alert('timeout/error');

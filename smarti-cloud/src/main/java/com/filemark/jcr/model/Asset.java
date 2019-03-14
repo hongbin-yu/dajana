@@ -76,7 +76,9 @@ public class Asset implements SmartiNode, Serializable {
 		this.path = path;
 		this.title = title;
 	}
-	
+	public String get_doc() {
+		return uid;
+	}
 	public String getUid() {
 		return uid;
 	}

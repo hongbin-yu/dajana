@@ -51,6 +51,8 @@ import org.apache.poi.util.IOUtils;
 import org.apache.tika.mime.MimeType;
 import org.apache.tika.mime.MimeTypeException;
 import org.apache.tika.mime.MimeTypes;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.ObjectWriter;
 import org.jfree.util.Log;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -1564,6 +1566,10 @@ public class SiteController extends BaseController {
         				asset = (Asset)jcrService.getObject(asset.getPath());
         				XMPPService.sendAsset(asset, user.getXmppid());
         			}
+        			ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        			String json = ow.writeValueAsString(asset);
+        			logger.info("asset json="+json);
+        			LinuxUtil.put("localhost:9200", "/yuhongyun", json);
 
         		}catch(Exception ej) {
         			logger.error(ej.getMessage());
