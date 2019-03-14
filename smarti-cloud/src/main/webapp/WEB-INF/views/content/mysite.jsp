@@ -123,19 +123,19 @@
     var numImages = ${numImages};
     var selectedImageIndex = 1;
     document.getElementById("splash-image").src = splashImagePaths[Math.floor((Math.random() * numImages))]+"/origin.jpg";
-	$(document).ready(function() {
+ 	$(document).ready(function() {
 		if(location.hostname.indexOf("home.dajana.net")<0 && location.hostname.indexOf(".dajana.net")>0)
 		$.ajax({
 	          url: '//home.dajana.net',
 	          success: function(result){
-	             location.href=location.origin.replace("dajana.ner","home.dajana.net");
+	             location.href=location.origin.replace("dajana.net","home.dajana.net");
 	          },     
 	          error: function(result){
 	              //alert('timeout/error');
 	          },
 	          timeout: 3000
 	       });
-		}); 
+		});  
 	
 	
 			
