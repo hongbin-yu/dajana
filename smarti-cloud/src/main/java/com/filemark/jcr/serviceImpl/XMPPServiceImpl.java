@@ -1089,6 +1089,7 @@ public class XMPPServiceImpl implements XMPPService{
 			}
 			
 	        URL url_img = new URL(getUTF8(url).replace(" ", "+"));
+	        log.debug("url:"+getUTF8(url).replace(" ", "+"));
 	        URLConnection conn;
 	        int status;
 	        if(url.startsWith("https:")) {
