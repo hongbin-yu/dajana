@@ -1023,7 +1023,7 @@ public class XMPPServiceImpl implements XMPPService{
    		if(!jcrService.nodeExsits("/assets/"+username)) {
    			Folder folder = new Folder();
    			folder.setTitle(username);
-   			folder.setDescription(jid.toString());
+   			//folder.setDescription(jid.toString());
    			folder.setName(username);
    			folder.setPath("/assets/"+username);
    			folder.setLastUpdated(new Date());
@@ -1090,19 +1090,14 @@ public class XMPPServiceImpl implements XMPPService{
 			
 	        URL url_img = new URL(getUTF8(url).replace(" ", "+"));
 	        log.debug("url:"+getUTF8(url).replace(" ", "+"));
-	        URLConnection conn;
+	        HttpsURLConnection conn = (HttpsURLConnection)url_img.openConnection();;
 	        int status;
-	        if(url.startsWith("https:")) {
-	        	conn = (HttpsURLConnection) url_img.openConnection();
-	        	status = ((HttpsURLConnection)conn).getResponseCode();
-	        } else {
-	        	conn = (HttpURLConnection) url_img.openConnection();
-	        	status = ((HttpURLConnection)conn).getResponseCode();
-	        }      	
+  	
 	    	conn.setReadTimeout(30000);
 	    	conn.addRequestProperty("Accept-Language", "en-US,en;q=0.8");
 	    	conn.addRequestProperty("User-Agent", "Mozilla");
-	    	conn.addRequestProperty("Referer", "dajana.cn");
+	    	conn.addRequestProperty("Referer", "dajana.net");
+	    	status = conn.getResponseCode();
 	    	boolean redirect = false;
 	
 	    	// normally, 3xx is redirect

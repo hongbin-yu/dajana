@@ -990,6 +990,8 @@ function getAsset(formData,file,id) {
     //var id = "uploading_"+file.name.replace(/[\s()\.]+/g,"_");
     var html = '<div id="'+id+'" class="col-md-4 well">'+running+'</div>';
 	$("#top_insert").after(html);	
+    var tag = $("#top_insert");
+    $('html,body').animate({scrollTop: tag.offset().top},'slow');
     $.ajax({
 	    url: 'getasset.json?path='+path+'&filename='+filename+'&lastModified='+lastModified,
 	    type: "GET",
