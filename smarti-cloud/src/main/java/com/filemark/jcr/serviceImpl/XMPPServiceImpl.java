@@ -656,19 +656,20 @@ public class XMPPServiceImpl implements XMPPService{
 			
 			if(n>0) {
 				msg = new Message();
-				shareFileForm = new ShareFileForm(DataForm.Type.form);
+				DataForm  dataForm = new DataForm(DataForm.Type.form);
+		        XmlStringBuilder xml = new XmlStringBuilder(dataForm);
+		        xml.append(" type=\"form\">");
+
 				for (int i=0;i<n;i++) {
-		        	Asset a = new Asset();
-		        	a.setContentType("image/jpg");
-		        	a.setHeight(1600l);
-		        	a.setWidth(800l);
 		    		String url = protocol+"//"+filedomain+fileport+"/publish/pdf2img.jpj?path="+asset.getPath()+"&p="+i;
-		    		msg.setBody(url);
-		    		a.setUrl(url);        	
-		            shareFileForm.addAsset(a);
+					xml.append("<field label=\""+asset.getTitle()+"\" var=\"media"+i+"\">");
+			        xml.append("<media xmlns=\"urn:xmpp:media-element\" height=\"1600\" width=\"800\">");
+			        xml.append("<uri type=\"image/jpg\" size=\""+asset.getSize()+"\" duration=\"0\">");
+			        xml.append(url+"</uri></media></field>");
 		       	
-		        }	
-				msg.addExtension(shareFileForm);
+		        }
+				xml.closeElement("x");
+				msg.addExtension(dataForm);
 				sendMessage(msg,to);
 				log.info("pages:"+n+","+msg.toXML("x").toString());
 			}			
