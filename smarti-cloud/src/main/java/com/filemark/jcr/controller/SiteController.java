@@ -2349,12 +2349,19 @@ public class SiteController extends BaseController {
 	public @ResponseBody String deleteNode(String uid,String path,Model model,HttpServletRequest request, HttpServletResponse response) {
 		String parentPath = "";
 			try {
-				if(uid!=null && !uid.equals("")) 
+				if(uid!=null && !uid.equals("")) {
 					path = jcrService.getNodeById(uid);
+				}
 				if(jcrService.nodeExsits(path))
 					parentPath =jcrService.deleteNode(path);
+				if(uid==null) uid = jcrService.getNode(path).getIdentifier();
+				LinuxUtil.delete(uid);
 			} catch (RepositoryException e) {
-				//mya node deleted by other user
+				logger.error(e.getMessage());
+			} catch (IOException e) {
+				logger.error(e.getMessage());
+			} catch (InterruptedException e) {
+				logger.error(e.getMessage());
 			}
 
 
@@ -2387,7 +2394,7 @@ public class SiteController extends BaseController {
 				}
 				backup.delete();				
 			}
-
+			
 			return jcrService.deleteNode(path);
 		} catch (RepositoryException e) {
 			logger.error(e.getMessage());
@@ -2442,6 +2449,13 @@ public class SiteController extends BaseController {
 	public @ResponseBody String addComponent(String path,Model model,Djcontainer djcontainer,HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		return super.deleteNode(model, request, response);
+	}
+
+	@RequestMapping(value = {"/site/search.json"}, method = RequestMethod.GET)
+	public @ResponseBody String search(String path,String q,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
+		response.setContentType("application/json");
+		response.getOutputStream().println(LinuxUtil.search(path, q));
+		return null;
 	}
 	
 	@RequestMapping(value = {"/site/profile.html"}, method = RequestMethod.GET)
