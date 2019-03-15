@@ -961,10 +961,10 @@ public class LinuxUtil
    	    	
     	return execute(pb);
     }      
-    public static String addOrupdate(Asset asset) throws IOException, InterruptedException {
+    public static String add(Asset asset) throws IOException, InterruptedException {
 
 		String json = ow.writeValueAsString(asset);
-    	ProcessBuilder pb = new ProcessBuilder("curl","-XPOST",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/assets","-d",json);
+    	ProcessBuilder pb = new ProcessBuilder("curl","-XPOST",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/assets/"+asset.getUid(),"-d",json);
 
     	return execute(pb);
     }     
@@ -990,7 +990,7 @@ public class LinuxUtil
     	String s;
     	Process p;
     	String exit="";
-    	pb.redirectErrorStream(true);
+    	//pb.redirectErrorStream(true);
         p = pb.start();
 
 

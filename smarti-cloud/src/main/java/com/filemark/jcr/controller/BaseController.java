@@ -10,6 +10,7 @@ import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.URLDecoder;
+import java.net.UnknownHostException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -29,6 +30,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.hibernate.cfg.Settings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,6 +76,7 @@ public class BaseController {
 	protected SessionLocaleResolver localeResolver;
 	@Autowired
 	protected ResourceBundleMessageSource messageSource;
+
 	@PostConstruct
 	private void setUp() {
 		/*
@@ -133,6 +136,8 @@ public class BaseController {
 		} catch (InterruptedException e) {
 			logger.error(e.getMessage());
 		}*/
+		
+		//initialize();
 	}
 
 	

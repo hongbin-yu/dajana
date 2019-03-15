@@ -1554,7 +1554,7 @@ public class SiteController extends BaseController {
         				XMPPService.sendAsset(asset, user.getXmppid());
         			}
 
-        			logger.debug(LinuxUtil.addOrupdate(asset));
+        			logger.debug("Add ELK:"+LinuxUtil.add(asset));
 
         		}catch(Exception ej) {
         			logger.error(ej.getMessage());
