@@ -8,30 +8,23 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
-import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLDecoder;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -51,13 +44,9 @@ import org.apache.poi.util.IOUtils;
 import org.apache.tika.mime.MimeType;
 import org.apache.tika.mime.MimeTypeException;
 import org.apache.tika.mime.MimeTypes;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.ObjectWriter;
-import org.jfree.util.Log;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamResource;
@@ -83,13 +72,11 @@ import com.filemark.jcr.model.User;
 import com.filemark.jcr.service.AssetManager;
 import com.filemark.sso.CookieUtil;
 import com.filemark.sso.JwtUtil;
-import com.filemark.utils.CacheFileFromResponse;
 import com.filemark.utils.LinuxUtil;
 import com.filemark.utils.ScanUploadForm;
 import com.filemark.utils.WebPage;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
 import com.lowagie.text.pdf.PdfReader;
 
 
@@ -1566,10 +1553,8 @@ public class SiteController extends BaseController {
         				asset = (Asset)jcrService.getObject(asset.getPath());
         				XMPPService.sendAsset(asset, user.getXmppid());
         			}
-        			ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-        			String json = ow.writeValueAsString(asset);
-        			logger.info("asset json="+json);
-        			LinuxUtil.put("localhost:9200", "/yuhongyun", json);
+
+        			logger.debug(LinuxUtil.addOrupdate(asset));
 
         		}catch(Exception ej) {
         			logger.error(ej.getMessage());

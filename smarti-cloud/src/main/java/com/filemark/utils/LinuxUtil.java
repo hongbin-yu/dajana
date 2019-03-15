@@ -27,8 +27,14 @@ import static org.bytedeco.javacpp.opencv_imgcodecs.*;*/
 
 
 
+
+
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.ObjectWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.filemark.jcr.model.Asset;
 
 
 
@@ -37,6 +43,9 @@ public class LinuxUtil
 	private final static Logger log = LoggerFactory.getLogger(LinuxUtil.class);
 	private static String HDDPIN = "18";
 	public static boolean video = false;
+	public static String HOST = "192.168.0.134:9200";
+	public static String INDEX = "yuhongyun";
+	public static ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
     /**
      * Takes a file, and resizes it to the given width and height, while keeping
      * original proportions. Note: It resizes a new file rather than resizing 
@@ -952,6 +961,14 @@ public class LinuxUtil
    	    	
     	return execute(pb);
     }      
+    public static String addOrupdate(Asset asset) throws IOException, InterruptedException {
+
+		String json = ow.writeValueAsString(asset);
+		json ="{ \"doc\":"+json+"\r\"doc_as_upsert\": true}";
+    	ProcessBuilder pb = new ProcessBuilder("curl","POST",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/_doc/"+asset.getUid()+"/_update",json);
+   	    	
+    	return execute(pb);
+    }     
     public static String get(String host,String index,String query) throws IOException, InterruptedException {
     	ProcessBuilder pb = new ProcessBuilder("curl","GET",index,"/_search",query);
     	
