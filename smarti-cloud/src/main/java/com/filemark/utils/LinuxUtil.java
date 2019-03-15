@@ -964,7 +964,7 @@ public class LinuxUtil
     public static String addOrupdate(Asset asset) throws IOException, InterruptedException {
 
 		String json = ow.writeValueAsString(asset);
-		json ="-d '{ \"doc\":"+json+"\r\"doc_as_upsert\": true}'";
+		json ="-d '{ \"doc\":"+json+",\r\"doc_as_upsert\": true}'";
     	ProcessBuilder pb = new ProcessBuilder("curl","-XPOST",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/_doc/"+asset.getUid()+"/_update",json);
    	    	
     	return execute(pb);

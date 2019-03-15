@@ -3163,7 +3163,7 @@ public class SiteController extends BaseController {
 				        long lastModified = file.lastModified();
 				        long ifModifiedSince = request.getDateHeader("If-Modified-Since");
 				        logger.debug("ifModifiedSince="+ifModifiedSince+"/"+lastModified);
-				        if (ifModifiedSince != -1 && ifModifiedSince + 1000 <= lastModified) {
+				        if (ifModifiedSince == -1 || ifModifiedSince + 1000 <= lastModified) {
 							FileInputStream in = new FileInputStream(file);
 							IOUtils.copy(in, response.getOutputStream());	
 							in.close();	
