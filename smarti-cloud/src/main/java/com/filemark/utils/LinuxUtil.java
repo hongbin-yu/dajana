@@ -43,7 +43,7 @@ public class LinuxUtil
 	private final static Logger log = LoggerFactory.getLogger(LinuxUtil.class);
 	private static String HDDPIN = "18";
 	public static boolean video = false;
-	public static String HOST = "192.168.0.134:9200";
+	public static String HOST = "http://192.168.0.134:9200";
 	public static String INDEX = "yuhongyun";
 	public static ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
     /**
@@ -964,13 +964,13 @@ public class LinuxUtil
     public static String addOrupdate(Asset asset) throws IOException, InterruptedException {
 
 		String json = ow.writeValueAsString(asset);
-		json ="{ \"doc\":"+json+"\r\"doc_as_upsert\": true}";
-    	ProcessBuilder pb = new ProcessBuilder("curl","POST",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/_doc/"+asset.getUid()+"/_update",json);
+		json ="-d'{ \"doc\":"+json+"\r\"doc_as_upsert\": true}'";
+    	ProcessBuilder pb = new ProcessBuilder("curl","-XPOST",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/_doc/"+asset.getUid()+"/_update",json);
    	    	
     	return execute(pb);
     }     
-    public static String get(String host,String index,String query) throws IOException, InterruptedException {
-    	ProcessBuilder pb = new ProcessBuilder("curl","GET",index,"/_search",query);
+    public static String get(String query) throws IOException, InterruptedException {
+    	ProcessBuilder pb = new ProcessBuilder("curl","-XPOST",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/_search","-d'"+query+"'");
     	
     	return execute(pb);
     } 
@@ -998,7 +998,7 @@ public class LinuxUtil
         BufferedReader br = new BufferedReader(
             new InputStreamReader(p.getInputStream()));
         while ((s = br.readLine()) != null) {
-            log.debug("line: " + s);
+            //log.debug("line: " + s);
             exit +=s;
         }
         p.waitFor();
@@ -1007,7 +1007,7 @@ public class LinuxUtil
         	br = new BufferedReader(
                     new InputStreamReader(p.getErrorStream()));
                 while ((s = br.readLine()) != null) {
-                    log.debug("line: " + s);
+                    //log.debug("line: " + s);
                     exit +=s;
                 }
         	//log.error("convert exit: " + exit);
