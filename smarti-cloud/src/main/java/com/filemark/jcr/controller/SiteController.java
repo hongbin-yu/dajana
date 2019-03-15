@@ -3084,7 +3084,7 @@ public class SiteController extends BaseController {
 	}
 	@RequestMapping(value = {"/protected/file/*.*","/site/file/*.*","/protected/file/**","/site/file/**","/site/viewimage","/content/viewimage","/content/**/viewimage","/protected/viewimage","/protected/**/viewimage","/protected/file","/site/file","/site/file*.*","/content/file","/content/file*.*","/content/**/file","/content/**/file*.*"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public @ResponseBody String viewFile(String uid,String path,Integer w,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
-		logger.info("Request from:"+request.getRemoteAddr()+" for "+request.getRequestURI());
+		//logger.info("Request from:"+request.getRemoteAddr()+" for "+request.getRequestURI());
 /*		Enumeration<String> headerNames = request.getHeaderNames();
 		while (headerNames.hasMoreElements()) {
 			String headerName = headerNames.nextElement();
@@ -3160,7 +3160,16 @@ public class SiteController extends BaseController {
 					}
 					if(file.exists()) {
 						//file.setReadOnly();
-						logger.info("file exists:"+file.getAbsolutePath());
+				        long lastModified = file.lastModified();
+				        long ifModifiedSince = request.getDateHeader("If-Modified-Since");
+				        logger.debug("ifModifiedSince="+ifModifiedSince+"/"+lastModified);
+				        if (ifModifiedSince != -1 && ifModifiedSince + 1000 <= lastModified) {
+							FileInputStream in = new FileInputStream(file);
+							IOUtils.copy(in, response.getOutputStream());	
+							in.close();	
+							return null;
+				        }							
+						logger.debug("file exists:"+file.getAbsolutePath());
 						super.serveResource(request, response, file,asset.getName(), asset.getContentType());
 					}else  if(jcrService.nodeExsits(path+"/original")) {
 				
