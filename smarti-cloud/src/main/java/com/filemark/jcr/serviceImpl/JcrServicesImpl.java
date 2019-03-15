@@ -1692,7 +1692,7 @@ public class JcrServicesImpl implements JcrServices {
         			String infile = file.getAbsolutePath();
         			String ext = getProperty(path,"ext");
         			if(infile.indexOf(".") >0)
-        				ext = infile.substring(infile.indexOf("."));
+        				ext = infile.substring(infile.lastIndexOf("."));
         			if(file.isDirectory()) {
         				infile +="/origin"+ ext;
         			}
