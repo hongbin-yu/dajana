@@ -119,7 +119,7 @@ public class Asset implements SmartiNode, Serializable {
 		if(this.path==null) {
 			return null;
 		}
-		return path.substring(0, path.lastIndexOf("/"));
+		return this.path.substring(0, this.path.lastIndexOf("/"));
 	}
 	
 

@@ -262,7 +262,7 @@ public class JcrServicesImpl implements JcrServices {
             		node.setProperty("jcr:lastModified", Calendar.getInstance());
                     log.debug("Node exists. update node={}", node);
     	            try {
-    					LinuxUtil.add(obj);
+    					LinuxUtil.update(obj);
     				} catch (IOException | InterruptedException e) {
     					log.error(e.getMessage());
     				}       			
@@ -272,7 +272,7 @@ public class JcrServicesImpl implements JcrServices {
             		node.setProperty("jcr:lastModified", Calendar.getInstance());
                     log.debug("Saved node.  node={}", node);
     	            try {
-    					LinuxUtil.update(obj);
+    					LinuxUtil.add(obj);
     				} catch (IOException | InterruptedException e) {
     					log.error(e.getMessage());
     				}     			
