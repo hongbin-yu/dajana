@@ -966,7 +966,7 @@ public class LinuxUtil
     	return execute(pb);
     }
     
-    public static String updateProperty(String type,String uid,String json) throws IOException, InterruptedException {
+    public static String updateProperty(String uid,String json) throws IOException, InterruptedException {
     	ProcessBuilder pb = new ProcessBuilder("curl","XPUT",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/"+uid+"/_update","-d",json);
     	return execute(pb);
     } 

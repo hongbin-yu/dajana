@@ -262,7 +262,8 @@ public class JcrServicesImpl implements JcrServices {
             		node.setProperty("jcr:lastModified", Calendar.getInstance());
                     log.debug("Node exists. update node={}", node);
     	            try {
-    					LinuxUtil.update(obj);
+    	            	String result = LinuxUtil.update(obj);
+    					log.debug(result);
     				} catch (IOException | InterruptedException e) {
     					log.error(e.getMessage());
     				}       			
@@ -272,7 +273,8 @@ public class JcrServicesImpl implements JcrServices {
             		node.setProperty("jcr:lastModified", Calendar.getInstance());
                     log.debug("Saved node.  node={}", node);
     	            try {
-    					LinuxUtil.add(obj);
+    					String result = LinuxUtil.add(obj);
+    					log.debug(result);
     				} catch (IOException | InterruptedException e) {
     					log.error(e.getMessage());
     				}     			
@@ -744,7 +746,8 @@ public class JcrServicesImpl implements JcrServices {
                 	node.remove();
                 	session.save();
                     try {
-    					LinuxUtil.delete(node.getIdentifier());
+    					String result = LinuxUtil.delete(node.getIdentifier());
+    					log.debug(result);
     				} catch (IOException e) {
     					log.error(e.getMessage());
     				} catch (InterruptedException e) {
@@ -2450,7 +2453,28 @@ public class JcrServicesImpl implements JcrServices {
 	         return asset;
 	    	} 
 	    });		
-	}	
+	}
+	
+	public String updateProperty(final String uid,final String name,final long value)
+			throws RepositoryException {
+		return (String) jcrTemplate.execute(new JcrCallback() { 
+        	public String doInJcr(Session session) throws RepositoryException, IOException {
+        		Node node = session.getNodeByIdentifier(uid);
+        		node.setProperty(name, value);
+        		session.save();
+        		try {
+            		String json = "{\""+name+":"+value+"}";
+        			String result = LinuxUtil.updateProperty(uid, json);
+					log.debug("updateProperty:"+result);
+				} catch (InterruptedException e) {
+					log.error("updatePropertyByPath"+e.getMessage());
+				}        		
+        		return node.getPath();
+        	};
+		});
+	}
+
+	
 	public String updateProperty(final String uid,final String name,final String value)
 			throws RepositoryException {
 		return (String) jcrTemplate.execute(new JcrCallback() { 
@@ -2473,6 +2497,13 @@ public class JcrServicesImpl implements JcrServices {
         			//setPageNavigation(node.getPath(),2,20);
         		}
 
+        		try {
+            		String json = "{\""+name+":\""+value+"\"}";
+        			String result = LinuxUtil.updateProperty(uid, json);
+					log.debug("updateProperty:"+result);
+				} catch (InterruptedException e) {
+					log.error("updatePropertyByPath"+e.getMessage());
+				}
         		session.save();
         		return node.getPath();
         	};
@@ -2493,7 +2524,13 @@ public class JcrServicesImpl implements JcrServices {
         			node.setProperty("breadcrumb", getBreadcrumb(node.getPath()));
         			//setPageNavigation(node.getPath(),2,20);
         		}
-
+        		String json = "{\""+name+":\""+value+"\"}";
+        		try {
+					String result = LinuxUtil.updateProperty(node.getIdentifier(), json);
+					log.debug("updateProperty:"+result);
+				} catch (InterruptedException e) {
+					log.error("updatePropertyByPath"+e.getMessage());
+				}
         		session.save();
         		return node.getPath();
         	};
@@ -2507,8 +2544,16 @@ public class JcrServicesImpl implements JcrServices {
 		jcrTemplate.execute(new JcrCallback() { 
         	public Object doInJcr(Session session) throws RepositoryException, IOException {
         		Node node = session.getNode(path);
-       			node.setProperty(name, Calendar.getInstance());
+        		Calendar calendar = Calendar.getInstance();
+       			node.setProperty(name, calendar);
         		session.save();
+        		try {
+            		String json = "{\""+name+":\""+calendar.getTime().getTime()+"\"}";
+        			String result = LinuxUtil.updateProperty(node.getIdentifier(), json);
+					log.debug("updateProperty:"+result);
+				} catch (InterruptedException e) {
+					log.error("updatePropertyByPath"+e.getMessage());
+				}       		
 				return node;
         	};
         	
@@ -2522,6 +2567,7 @@ public class JcrServicesImpl implements JcrServices {
         		Node node = session.getNode(path);
        			node.setProperty(name, calendar);
         		session.save();
+        		
 				return node;
         	};
         	
