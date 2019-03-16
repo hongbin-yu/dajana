@@ -116,6 +116,9 @@ public class Asset implements SmartiNode, Serializable {
 	}
 	
 	public String getParent() {
+		if(this.path==null) {
+			return null;
+		}
 		return path.substring(0, path.lastIndexOf("/"));
 	}
 	
