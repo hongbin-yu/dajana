@@ -989,6 +989,12 @@ public class LinuxUtil
     	
     	return execute(pb);
     } 
+ 
+    public static String get(String uid) throws IOException, InterruptedException {
+    	ProcessBuilder pb = new ProcessBuilder("curl","-XGET",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/"+uid);
+    	
+    	return execute(pb);
+    }
     
     public static String delete(String uid) throws IOException, InterruptedException {
     	ProcessBuilder pb = new ProcessBuilder("curl","XDELETE",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/"+uid);

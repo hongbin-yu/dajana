@@ -63,10 +63,8 @@ public class Asset implements SmartiNode, Serializable {
 	@Field
 	private String status="lock";
 	
-	private String ocm_classname;
+	private String ocm_classname = Asset.class.getSimpleName().toLowerCase();
 	private String nodeName;
-	private String parent;
-	
 	public Asset() {
 		super();
 
@@ -116,12 +114,11 @@ public class Asset implements SmartiNode, Serializable {
 	public void setOcm_classname(String ocm_classname) {
 		this.ocm_classname = ocm_classname;
 	}
+	
 	public String getParent() {
-		return parent;
+		return path.substring(0, path.lastIndexOf("/"));
 	}
-	public void setParent(String parent) {
-		this.parent = parent;
-	}
+	
 
 	public String getCreatedBy() {
 		return createdBy;
