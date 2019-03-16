@@ -959,37 +959,37 @@ public class LinuxUtil
     
     public static String update(Asset asset) throws IOException, InterruptedException {
 		String json = ow.writeValueAsString(asset);
-    	ProcessBuilder pb = new ProcessBuilder("curl","XPUT",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/_doc/"+asset.getUid()+"/_update","-d",json);
+    	ProcessBuilder pb = new ProcessBuilder("curl","XPUT",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/assets/"+asset.getUid()+"/_update","-d",json);
     	return execute(pb);
     }
     
     public static String updateProperty(String uid,String json) throws IOException, InterruptedException {
-    	ProcessBuilder pb = new ProcessBuilder("curl","XPUT",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/_doc/"+uid+"/_update","-d",json);
+    	ProcessBuilder pb = new ProcessBuilder("curl","XPUT",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/assets/"+uid+"/_update","-d",json);
     	return execute(pb);
     } 
     
     public static String add(Asset asset) throws IOException, InterruptedException {
 
 		String json = ow.writeValueAsString(asset);
-    	ProcessBuilder pb = new ProcessBuilder("curl","-XPOST",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/_doc/"+asset.getUid(),"-d",json);
+    	ProcessBuilder pb = new ProcessBuilder("curl","-XPOST",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/assets/"+asset.getUid(),"-d",json);
 
     	return execute(pb);
     } 
     
     public static String search(String path,String query) throws IOException, InterruptedException {
-    	ProcessBuilder pb = new ProcessBuilder("curl","-XGET",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/_search?q="+query);
+    	ProcessBuilder pb = new ProcessBuilder("curl","-XGET",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/assets/_search?q="+query);
     	
     	return execute(pb);
     } 
     
     public static String query(String query) throws IOException, InterruptedException {
-    	ProcessBuilder pb = new ProcessBuilder("curl","-XPOST",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/_search","-d",query);
+    	ProcessBuilder pb = new ProcessBuilder("curl","-XPOST",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/assets/_search","-d",query);
     	
     	return execute(pb);
     } 
     
     public static String delete(String uid) throws IOException, InterruptedException {
-    	ProcessBuilder pb = new ProcessBuilder("curl","XDELETE",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/doc/"+uid);
+    	ProcessBuilder pb = new ProcessBuilder("curl","XDELETE",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/assets/"+uid);
     	return execute(pb);
     }      
     
