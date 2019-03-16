@@ -4,6 +4,7 @@ import org.apache.jackrabbit.ocm.mapper.impl.annotation.Field;
 
 public class JcrNode implements SmartiNode {
 	@Field(path=true)	
+	protected String uid;
 	protected String path;
 	@Field(jcrName="jcr:title")
 	protected String title;
@@ -35,6 +36,12 @@ public class JcrNode implements SmartiNode {
 
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+
+	@Override
+	public String getUid() {
+		return uid;
 	}
 
 }

@@ -1,6 +1,7 @@
 package com.filemark.jcr.model;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.apache.jackrabbit.ocm.mapper.impl.annotation.Field;
@@ -175,7 +176,10 @@ public class Asset implements SmartiNode, Serializable {
 	public String getDescription() {
 		return description;
 	}
-
+	public String getCreatedDate() {
+		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+		return sf.format(originalDate);
+	}
 	public Date getOriginalDate() {
 		return originalDate;
 	}

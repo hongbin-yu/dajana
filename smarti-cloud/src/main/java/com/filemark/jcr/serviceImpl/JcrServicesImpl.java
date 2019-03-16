@@ -261,13 +261,21 @@ public class JcrServicesImpl implements JcrServices {
             		Node node = session.getNode(obj.getPath());
             		node.setProperty("jcr:lastModified", Calendar.getInstance());
                     log.debug("Node exists. update node={}", node);
-        			
+    	            try {
+    					LinuxUtil.add(obj);
+    				} catch (IOException | InterruptedException e) {
+    					log.error(e.getMessage());
+    				}       			
         		}else {
         			ocm.insert(obj); 
             		Node node = session.getNode(obj.getPath());
             		node.setProperty("jcr:lastModified", Calendar.getInstance());
                     log.debug("Saved node.  node={}", node);
-     			
+    	            try {
+    					LinuxUtil.update(obj);
+    				} catch (IOException | InterruptedException e) {
+    					log.error(e.getMessage());
+    				}     			
         		}
 	            ocm.save();
 
@@ -735,6 +743,13 @@ public class JcrServicesImpl implements JcrServices {
                 	parentPath = node.getParent().getPath();
                 	node.remove();
                 	session.save();
+                    try {
+    					LinuxUtil.delete(node.getIdentifier());
+    				} catch (IOException e) {
+    					log.error(e.getMessage());
+    				} catch (InterruptedException e) {
+    					log.error(e.getMessage());
+    				}                   	
                 }
                 log.debug("Node deleted node="+node);
     		}else {
@@ -761,7 +776,13 @@ public class JcrServicesImpl implements JcrServices {
         		while(it.hasNext()) {
         			Node node = it.nextNode();
         			node.remove();
-       			
+                    try {
+    					LinuxUtil.delete(node.getIdentifier());
+    				} catch (IOException e) {
+    					log.error(e.getMessage());
+    				} catch (InterruptedException e) {
+    					log.error(e.getMessage());
+    				}           			
 
         		}
         		session.save();
@@ -781,6 +802,13 @@ public class JcrServicesImpl implements JcrServices {
                 node.remove();
                 session.save();
                 node = session.getNode(parentPath);
+                try {
+					LinuxUtil.delete(node.getIdentifier());
+				} catch (IOException e) {
+					log.error(e.getMessage());
+				} catch (InterruptedException e) {
+					log.error(e.getMessage());
+				}                
                 log.debug("Node deleted node="+node);
     		}else {
                 log.debug("Node does not exists path="+path);

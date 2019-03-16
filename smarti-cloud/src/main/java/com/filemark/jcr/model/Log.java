@@ -9,6 +9,7 @@ import org.apache.jackrabbit.ocm.mapper.impl.annotation.Node;
 @Node
 public class Log implements SmartiNode{
 
+	
 	@Field
 	private String event;
 	@Field
@@ -73,6 +74,12 @@ public class Log implements SmartiNode{
 
 	@Override
 	public String getTitle() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getUid() {
 		// TODO Auto-generated method stub
 		return null;
 	}

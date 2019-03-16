@@ -16,6 +16,8 @@ public class User implements SmartiNode, java.io.Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	@Field(uuid=true)
+	private String uid;
 	private int id;
 	@Field
 	private String userName;
@@ -133,6 +135,11 @@ public class User implements SmartiNode, java.io.Serializable {
 	public String getTitle() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public String getUid() {
+		return uid;
 	}
 	
 	

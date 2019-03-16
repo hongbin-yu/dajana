@@ -33,4 +33,8 @@ public class Product implements Serializable, SmartiNode {
 		
 		return null;
 	}
+	@Override
+	public String getUid() {
+		return uid;
+	}
 }

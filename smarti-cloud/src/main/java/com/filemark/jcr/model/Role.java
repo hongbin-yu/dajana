@@ -119,6 +119,11 @@ public class Role implements SmartiNode,Serializable {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	@Override
+	public String getUid() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 	
 }

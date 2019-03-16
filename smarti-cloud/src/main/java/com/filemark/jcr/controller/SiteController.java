@@ -1554,7 +1554,6 @@ public class SiteController extends BaseController {
         				XMPPService.sendAsset(asset, user.getXmppid());
         			}
 
-        			logger.debug("Add ELK:"+LinuxUtil.add(asset));
 
         		}catch(Exception ej) {
         			logger.error(ej.getMessage());
@@ -2355,7 +2354,7 @@ public class SiteController extends BaseController {
 				if(jcrService.nodeExsits(path))
 					parentPath =jcrService.deleteNode(path);
 				if(uid==null) uid = jcrService.getNode(path).getIdentifier();
-				LinuxUtil.delete(uid);
+				LinuxUtil.delete("assets",uid);
 			} catch (RepositoryException e) {
 				logger.error(e.getMessage());
 			} catch (IOException e) {
@@ -2454,7 +2453,7 @@ public class SiteController extends BaseController {
 	@RequestMapping(value = {"/site/search.json"}, method = RequestMethod.GET)
 	public @ResponseBody String search(String path,String q,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
 		response.setContentType("application/json");
-		response.getOutputStream().println(LinuxUtil.search(path, q));
+		response.getOutputStream().println(LinuxUtil.search("assets",path, q));
 		return null;
 	}
 	

@@ -29,12 +29,14 @@ import static org.bytedeco.javacpp.opencv_imgcodecs.*;*/
 
 
 
+
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.filemark.jcr.model.Asset;
+import com.filemark.jcr.model.SmartiNode;
 
 
 
@@ -45,6 +47,7 @@ public class LinuxUtil
 	public static boolean video = false;
 	public static String HOST = "http://192.168.0.134:9200";
 	public static String INDEX = "yuhongyun";
+	public static String TYPE = "assets";
 	public static ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
     /**
      * Takes a file, and resizes it to the given width and height, while keeping
@@ -957,39 +960,38 @@ public class LinuxUtil
         return execute(pb);
     }
     
-    public static String update(Asset asset) throws IOException, InterruptedException {
-		String json = ow.writeValueAsString(asset);
-    	ProcessBuilder pb = new ProcessBuilder("curl","XPUT",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/assets/"+asset.getUid()+"/_update","-d",json);
+    public static String update(SmartiNode node) throws IOException, InterruptedException {
+		String json = ow.writeValueAsString(node);
+    	ProcessBuilder pb = new ProcessBuilder("curl","XPOST",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/"+node.getUid()+"/_update","-d",json);
     	return execute(pb);
     }
     
-    public static String updateProperty(String uid,String json) throws IOException, InterruptedException {
-    	ProcessBuilder pb = new ProcessBuilder("curl","XPUT",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/assets/"+uid+"/_update","-d",json);
+    public static String updateProperty(String type,String uid,String json) throws IOException, InterruptedException {
+    	ProcessBuilder pb = new ProcessBuilder("curl","XPUT",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/"+uid+"/_update","-d",json);
     	return execute(pb);
     } 
     
-    public static String add(Asset asset) throws IOException, InterruptedException {
-
-		String json = ow.writeValueAsString(asset);
-    	ProcessBuilder pb = new ProcessBuilder("curl","-XPOST",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/assets/"+asset.getUid(),"-d",json);
+    public static String add(SmartiNode node) throws IOException, InterruptedException {
+		String json = ow.writeValueAsString(node);
+    	ProcessBuilder pb = new ProcessBuilder("curl","-XPOST",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/"+node.getUid(),"-d",json);
 
     	return execute(pb);
     } 
     
     public static String search(String path,String query) throws IOException, InterruptedException {
-    	ProcessBuilder pb = new ProcessBuilder("curl","-XGET",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/assets/_search?q="+query);
+    	ProcessBuilder pb = new ProcessBuilder("curl","-XGET",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/_search?q="+query);
     	
     	return execute(pb);
     } 
     
     public static String query(String query) throws IOException, InterruptedException {
-    	ProcessBuilder pb = new ProcessBuilder("curl","-XPOST",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/assets/_search","-d",query);
+    	ProcessBuilder pb = new ProcessBuilder("curl","-XPOST",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/_search","-d",query);
     	
     	return execute(pb);
     } 
     
     public static String delete(String uid) throws IOException, InterruptedException {
-    	ProcessBuilder pb = new ProcessBuilder("curl","XDELETE",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/assets/"+uid);
+    	ProcessBuilder pb = new ProcessBuilder("curl","XDELETE",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/"+uid);
     	return execute(pb);
     }      
     
