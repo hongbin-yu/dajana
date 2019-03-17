@@ -971,7 +971,7 @@ public class LinuxUtil
     }
     
     public static String update(SmartiNode node) throws IOException, InterruptedException {
-		String json = ow.writeValueAsString(node);
+		String json = "{\"doc\":"+ow.writeValueAsString(node)+"}";
     	ProcessBuilder pb = new ProcessBuilder("curl","XPOST",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/"+node.getUid()+"/_update","-d",json);
     	return execute(pb);
     }

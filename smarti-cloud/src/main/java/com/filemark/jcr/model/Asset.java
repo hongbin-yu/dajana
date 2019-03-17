@@ -43,7 +43,7 @@ public class Asset implements SmartiNode, Serializable {
 	@Field 
 	private Date originalDate;
 	@Field 
-	private String modifiedDate;	
+	private Date modifiedDate;	
 	@Field
 	private String html;
 	@Field
@@ -178,7 +178,7 @@ public class Asset implements SmartiNode, Serializable {
 	}
 	public String getCreatedDate() {
 		if(originalDate == null) originalDate = new Date();
-		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
 		return sf.format(originalDate);
 	}
 	public Date getOriginalDate() {
@@ -378,16 +378,13 @@ public class Asset implements SmartiNode, Serializable {
 		return devicePath;
 	}
 
-	public String getModifiedDate() {
-		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		if(modifiedDate == null) modifiedDate = sf.format(new Date());
-
+	public Date getModifiedDate() {
+		
 		return modifiedDate;
 	}
 
 	public void setModifiedDate(Date modifiedDate) {
-		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		this.modifiedDate = sf.format(modifiedDate);		
+		this.modifiedDate = modifiedDate;
 	}
 
 	public static void setDevicePath(String devicePath) {

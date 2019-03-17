@@ -1900,7 +1900,10 @@ public class JcrServicesImpl implements JcrServices {
 			try {
 				String sorientation=LinuxUtil.oreintation(infile);
 				String position = LinuxUtil.getPosition(infile);
-				updateProperty(node.getIdentifier(),"position", position);
+				if(position.indexOf("Warning")<0) {
+					updateProperty(node.getIdentifier(),"position", position);					
+				}
+
 				log.debug("linux orientation="+sorientation+",position="+position);
 				if("2,3,4,5,6,7".indexOf(sorientation)>=0) {
 					if(!"".equals(sorientation) && (LinuxUtil.opencvRotate(infile, infile, Integer.parseInt(sorientation) - 1) == 0 || LinuxUtil.autoRotate(infile, infile)==0)) {
