@@ -977,8 +977,8 @@ public class LinuxUtil
     }
     
     public static String updateProperty(String uid,String name,String value) {
-		String json = "{\""+name+"\":\""+value+"\"}";
-    	ProcessBuilder pb = new ProcessBuilder("curl","XPUT",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/"+uid+"/_update","-d",json);
+		String json = "'{\"doc\":{\""+name+"\":\""+value+"\"}}'";
+    	ProcessBuilder pb = new ProcessBuilder("curl","XPOST",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/"+uid+"/_update","-d",json);
     	try {
     		String result = execute(pb);
     		log.debug(result);
@@ -990,8 +990,8 @@ public class LinuxUtil
     } 
  
     public static String updateProperty(String uid,String name,long value) {
-		String json = "\"doc\":{\""+name+"\":"+value+"}";
-    	ProcessBuilder pb = new ProcessBuilder("curl","XPUT",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/"+uid+"/_update","-d",json);
+		String json = "'{\"doc\":{\""+name+"\":"+value+"}}'";
+    	ProcessBuilder pb = new ProcessBuilder("curl","XPOST",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/"+uid+"/_update","-d",json);
     	try {
     		String result = execute(pb);
     		log.debug(result);
