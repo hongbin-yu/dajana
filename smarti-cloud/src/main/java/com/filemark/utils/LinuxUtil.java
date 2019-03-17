@@ -30,6 +30,8 @@ import static org.bytedeco.javacpp.opencv_imgcodecs.*;*/
 
 
 
+
+
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
 import org.slf4j.Logger;
@@ -48,6 +50,7 @@ public class LinuxUtil
 	public static String HOST = "http://192.168.0.134:9200";
 	public static String INDEX = "yuhongyun";
 	public static String TYPE = "assets";
+	public static String apikey = "AIzaSyCt8lHCo_XqZ4okZ95lqiYLSyGt_R6r-og";
 	public static ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
     /**
      * Takes a file, and resizes it to the given width and height, while keeping
@@ -966,11 +969,32 @@ public class LinuxUtil
     	return execute(pb);
     }
     
-    public static String updateProperty(String uid,String json) throws IOException, InterruptedException {
+    public static String updateProperty(String uid,String name,String value) {
+		String json = "{\""+name+"\":\""+value+"\"}";
     	ProcessBuilder pb = new ProcessBuilder("curl","XPUT",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/"+uid+"/_update","-d",json);
-    	return execute(pb);
+    	try {
+    		String result = execute(pb);
+    		log.debug(result);
+			return result;
+		} catch (IOException | InterruptedException e) {
+			log.error("updateProperty"+e.getMessage());
+		}
+    	return null;
     } 
-    
+ 
+    public static String updateProperty(String uid,String name,long value) {
+		String json = "{\""+name+"\":"+value+"}";
+    	ProcessBuilder pb = new ProcessBuilder("curl","XPUT",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/"+uid+"/_update","-d",json);
+    	try {
+    		String result = execute(pb);
+    		log.debug(result);
+			return result;
+		} catch (IOException | InterruptedException e) {
+			log.error("updateProperty"+e.getMessage());
+		}
+    	return null;
+    } 
+        
     public static String add(SmartiNode node) throws IOException, InterruptedException {
 		String json = ow.writeValueAsString(node);
     	ProcessBuilder pb = new ProcessBuilder("curl","-XPOST",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/"+node.getUid(),"-d",json);

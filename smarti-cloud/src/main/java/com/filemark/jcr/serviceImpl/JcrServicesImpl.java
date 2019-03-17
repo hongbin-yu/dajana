@@ -1900,7 +1900,7 @@ public class JcrServicesImpl implements JcrServices {
 			try {
 				String sorientation=LinuxUtil.oreintation(infile);
 				String position = LinuxUtil.getPosition(infile);
-				node.setProperty("position", position);
+				updateProperty(node.getIdentifier(),"position", position);
 				log.debug("linux orientation="+sorientation+",position="+position);
 				if("2,3,4,5,6,7".indexOf(sorientation)>=0) {
 					if(!"".equals(sorientation) && (LinuxUtil.opencvRotate(infile, infile, Integer.parseInt(sorientation) - 1) == 0 || LinuxUtil.autoRotate(infile, infile)==0)) {
@@ -1908,8 +1908,8 @@ public class JcrServicesImpl implements JcrServices {
 						log.debug("linux wxh="+wxh);
 						if(wxh.indexOf("x")>0) {
 							String w_h[] = wxh.split("x");
-							node.setProperty("width", Long.parseLong(w_h[0]));
-			                node.setProperty("height", Long.parseLong(w_h[1]));  		
+							updateProperty(node.getIdentifier(),"width", Long.parseLong(w_h[0]));
+			                updateProperty(node.getIdentifier(),"height", Long.parseLong(w_h[1]));  		
 			                session.save();		                	
 		                	return null;  
 						}
@@ -1919,8 +1919,8 @@ public class JcrServicesImpl implements JcrServices {
 					log.debug("linux wxh="+wxh);
 					if(wxh.indexOf("x")>0) {
 						String w_h[] = wxh.split("x");
-						node.setProperty("width", Long.parseLong(w_h[0]));
-		                node.setProperty("height", Long.parseLong(w_h[1]));  		
+						updateProperty(node.getIdentifier(),"width", Long.parseLong(w_h[0]));
+		                updateProperty(node.getIdentifier(),"height", Long.parseLong(w_h[1]));  		
 		                session.save();		                	
 	                	return null;  
 					}
@@ -1953,9 +1953,9 @@ public class JcrServicesImpl implements JcrServices {
                 //int height = jpegDirectory.getImageHeight();
                 //log.debug("Orientation="+orientation);
                 if(orientation == 1 || orientation >7) {
-					node.setProperty("width", image.getWidth());
-	                node.setProperty("height", image.getHeight());   
-	                session.save();		                	
+					updateProperty(node.getIdentifier(),"width", image.getWidth());
+	                updateProperty(node.getIdentifier(),"height", image.getHeight());   
+	                //session.save();		                	
                 	return null;
                 }
                 
@@ -2023,8 +2023,8 @@ public class JcrServicesImpl implements JcrServices {
     		        }                	
                 }
 
-                node.setProperty("width", width);
-                node.setProperty("height", height);   
+                updateProperty(node.getIdentifier(),"width", width);
+                updateProperty(node.getIdentifier(),"height", height);   
                 session.save();		        
 			} catch (ImageProcessingException e) {
 				log.error(e.getMessage());
@@ -2299,6 +2299,7 @@ public class JcrServicesImpl implements JcrServices {
         	public Node doInJcr(Session session) throws RepositoryException, IOException { 
         		Node node = session.getNode(path);
         		node.setProperty(name, content);
+				updateProperty(node.getIdentifier(),name, content);
                 session.save();
 	            return node;
         	} 		
@@ -2342,6 +2343,7 @@ public class JcrServicesImpl implements JcrServices {
         		if(session.nodeExists(path)) {
         			Node node = session.getNode(path);
         			node.setProperty(name, value);
+    				updateProperty(node.getIdentifier(),name, value);        			
         			session.save();
         		}
 
@@ -2358,6 +2360,7 @@ public class JcrServicesImpl implements JcrServices {
         		if(session.nodeExists(path)) {
         			Node node = session.getNode(path);
         			node.setProperty(name, value);
+    				updateProperty(node.getIdentifier(),name, value);        			
         			session.save();
         		}
 
@@ -2439,6 +2442,12 @@ public class JcrServicesImpl implements JcrServices {
         		asset.setLastModified(new Date());
         		asset.setContentType(mineType);
         		add(asset);
+        		try {
+					String result = LinuxUtil.add(asset);
+					log.debug(result);
+				} catch (InterruptedException e1) {
+					log.error("importAsset:"+e1.getMessage());
+				}
     			try {
     					addFile(assetPath,"original",is,mineType);
 						Node folder = getNode(path);
@@ -2462,13 +2471,7 @@ public class JcrServicesImpl implements JcrServices {
         		Node node = session.getNodeByIdentifier(uid);
         		node.setProperty(name, value);
         		session.save();
-        		try {
-            		String json = "{\""+name+":"+value+"}";
-        			String result = LinuxUtil.updateProperty(uid, json);
-					log.debug("updateProperty:"+result);
-				} catch (InterruptedException e) {
-					log.error("updatePropertyByPath"+e.getMessage());
-				}        		
+        		LinuxUtil.updateProperty(node.getIdentifier(), name,value); 		
         		return node.getPath();
         	};
 		});
@@ -2497,14 +2500,8 @@ public class JcrServicesImpl implements JcrServices {
         			//setPageNavigation(node.getPath(),2,20);
         		}
 
-        		try {
-            		String json = "{\""+name+":\""+value+"\"}";
-        			String result = LinuxUtil.updateProperty(uid, json);
-					log.debug("updateProperty:"+result);
-				} catch (InterruptedException e) {
-					log.error("updatePropertyByPath"+e.getMessage());
-				}
         		session.save();
+        		LinuxUtil.updateProperty(node.getIdentifier(), name,value); 
         		return node.getPath();
         	};
 		});
@@ -2524,14 +2521,8 @@ public class JcrServicesImpl implements JcrServices {
         			node.setProperty("breadcrumb", getBreadcrumb(node.getPath()));
         			//setPageNavigation(node.getPath(),2,20);
         		}
-        		String json = "{\""+name+":\""+value+"\"}";
-        		try {
-					String result = LinuxUtil.updateProperty(node.getIdentifier(), json);
-					log.debug("updateProperty:"+result);
-				} catch (InterruptedException e) {
-					log.error("updatePropertyByPath"+e.getMessage());
-				}
         		session.save();
+        		LinuxUtil.updateProperty(node.getIdentifier(), name,value);
         		return node.getPath();
         	};
 		});
@@ -2547,13 +2538,8 @@ public class JcrServicesImpl implements JcrServices {
         		Calendar calendar = Calendar.getInstance();
        			node.setProperty(name, calendar);
         		session.save();
-        		try {
-            		String json = "{\""+name+":\""+calendar.getTime().getTime()+"\"}";
-        			String result = LinuxUtil.updateProperty(node.getIdentifier(), json);
-					log.debug("updateProperty:"+result);
-				} catch (InterruptedException e) {
-					log.error("updatePropertyByPath"+e.getMessage());
-				}       		
+        		LinuxUtil.updateProperty(node.getIdentifier(), name,calendar.getTime().getTime()); 
+	
 				return node;
         	};
         	
@@ -2567,6 +2553,8 @@ public class JcrServicesImpl implements JcrServices {
         		Node node = session.getNode(path);
        			node.setProperty(name, calendar);
         		session.save();
+
+        		LinuxUtil.updateProperty(node.getIdentifier(), name,calendar.getTime().getTime()); 
         		
 				return node;
         	};
