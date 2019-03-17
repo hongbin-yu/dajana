@@ -738,6 +738,13 @@ public class LinuxUtil
     	
     }
     
+    public String getAddress(String gps) {
+       	ProcessBuilder pb = new ProcessBuilder("curl","XGET","http://maps.google.com/maps/api/geocode/json?sensor=false&latlng="+gps);
+
+    	
+    	return "";
+    }
+    
     public static String getPosition(String infile) {
     	String s;
     	Process p;
@@ -983,7 +990,7 @@ public class LinuxUtil
     } 
  
     public static String updateProperty(String uid,String name,long value) {
-		String json = "{\""+name+"\":"+value+"}";
+		String json = "\"doc\":{\""+name+"\":"+value+"}";
     	ProcessBuilder pb = new ProcessBuilder("curl","XPUT",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/"+uid+"/_update","-d",json);
     	try {
     		String result = execute(pb);
