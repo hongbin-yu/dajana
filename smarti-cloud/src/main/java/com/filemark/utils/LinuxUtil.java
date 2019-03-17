@@ -972,12 +972,14 @@ public class LinuxUtil
     
     public static String update(SmartiNode node) throws IOException, InterruptedException {
 		String json = "{\"doc\":"+ow.writeValueAsString(node)+"}";
+		log.debug("update:"+json);
     	ProcessBuilder pb = new ProcessBuilder("curl","XPOST",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/"+node.getUid()+"/_update","-d",json);
     	return execute(pb);
     }
     
     public static String updateProperty(String uid,String name,String value) {
 		String json = "'{\"doc\":{\""+name+"\":\""+value+"\"}}'";
+		log.debug("update:"+json);
     	ProcessBuilder pb = new ProcessBuilder("curl","XPOST",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/"+uid+"/_update","-d",json);
     	try {
     		String result = execute(pb);
@@ -991,6 +993,7 @@ public class LinuxUtil
  
     public static String updateProperty(String uid,String name,long value) {
 		String json = "'{\"doc\":{\""+name+"\":"+value+"}}'";
+		log.debug("update:"+json);
     	ProcessBuilder pb = new ProcessBuilder("curl","XPOST",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/"+uid+"/_update","-d",json);
     	try {
     		String result = execute(pb);
