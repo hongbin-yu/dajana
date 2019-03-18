@@ -44,6 +44,10 @@ import org.apache.poi.util.IOUtils;
 import org.apache.tika.mime.MimeType;
 import org.apache.tika.mime.MimeTypeException;
 import org.apache.tika.mime.MimeTypes;
+import org.jfree.util.Log;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -2453,9 +2457,11 @@ public class SiteController extends BaseController {
 	}
 
 	@RequestMapping(value = {"/site/search.json"}, method = RequestMethod.GET)
-	public @ResponseBody String search(String path,String q,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public @ResponseBody String search(String path,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
 		response.setContentType("application/json");
-		response.getOutputStream().println(LinuxUtil.search(path, q));
+		String username = getUsername();
+		String q = request.getQueryString();
+		response.getOutputStream().println(LinuxUtil.search(username,path, q));
 		return null;
 	}
 	
@@ -3257,6 +3263,27 @@ public class SiteController extends BaseController {
 
 	@RequestMapping(value = {"/protected/youcloud/{uid}/**","/site/youcloud/{uid}/**","/publish/youcloud/{uid}/**"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public @ResponseBody String file(@PathVariable String uid,String path,Integer w,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
+		try {
+			String json = LinuxUtil.get(uid);
+			logger.debug("json="+json);
+			JSONParser parser = new JSONParser();
+			JSONObject jsonObject = (JSONObject) parser.parse(json);
+			if(jsonObject.get("error") ==null) {
+				JSONObject source = (JSONObject)jsonObject.get("_source");
+				Gson gson = new Gson();
+				Asset asset = gson.fromJson(source.toJSONString(), Asset.class);
+				File file = new File(asset.getFilePath()+"/origin"+asset.getExt());
+				if(file.exists()) {
+					FileInputStream in = new FileInputStream(file);
+					IOUtils.copy(in, response.getOutputStream());	
+					in.close();	
+					return null;
+				}
+			};
+		} catch (IOException | InterruptedException | ParseException e) {
+			logger.error(e.getMessage());
+		}
+		
 		return viewFile(uid,null,w,request,response);
 		/*
 		Integer width = null;

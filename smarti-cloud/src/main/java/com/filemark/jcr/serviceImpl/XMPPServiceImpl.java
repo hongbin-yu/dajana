@@ -765,7 +765,8 @@ public class XMPPServiceImpl implements XMPPService{
     			sendHelp(options,from.toString(),"求助");
             }else if(body.indexOf("AstraChat")>=0) {
 	        	proccessAstraChat(from,message,chat);
-
+            }else if(body.indexOf("ChatSecure")>=0) {
+	        	proccessChatSecure(from,message,chat);
             }else if(body.indexOf("/httpfileupload/")>0) {
             	processAssets(from,message,chat);
             }else {
@@ -896,6 +897,71 @@ public class XMPPServiceImpl implements XMPPService{
 			log.error(e.getMessage());
 		} 
 	}
+	
+	private void proccessChatSecure(EntityBareJid from, Message message, Chat chat) throws NotConnectedException, XmppStringprepException, XMPPException, InterruptedException, RepositoryException, UnsupportedEncodingException{
+		String fileupload[] = message.getBody().split("\n");
+		String username = from.toString().split("@")[0];
+		String filepath = "/assets/"+username+"/httpfileupload";
+		String html ="<section class=\"wb-lbx lbx-hide-gal\"><ul class=\"list-inline\">";
+   		if(!jcrService.nodeExsits("/assets/"+username)) {
+   			Folder folder = new Folder();
+   			folder.setTitle(username);
+   			//folder.setDescription(jid.toString());
+   			folder.setName(username);
+   			folder.setPath("/assets/"+username);
+   			folder.setLastUpdated(new Date());
+   			folder.setLastModified(new Date());   			
+   			jcrService.addOrUpdate(folder);
+   		}
+        ShareFileForm shareFileForm = new ShareFileForm(DataForm.Type.form);
+		Message msg = new Message();
+
+		for(String url:fileupload) {
+			try {
+		
+				Asset asset = importAsset(url.trim(),username.toString(),filepath);
+				jcrService.updatePropertyByPath(asset.getPath(), "status", "bullhorn");
+
+		        if(asset.getExt().endsWith(".doc") || asset.getExt().endsWith(".docx") || asset.getExt().endsWith(".pdf"))  {
+		        	sendDoc(asset,from);
+		        	continue;
+		        }
+				shareFileForm.addAsset(asset);
+				String link = protocol+"//"+filedomain+fileport+"/publish/httpfileupload/"+asset.getUid()+"/"+asset.getName();
+				asset.setUrl(link);
+				//msg.setBody(link);	
+				msg.setBody(link);	
+				//msg.setSubject(asset.getTitle());
+		        String httpfileupload = "/publish/httpfileupload/"+asset.getUid()+"/"+asset.getName().toLowerCase();
+				//log.info(httpfileupload);
+				html +="<li><a href=\""+httpfileupload+"\" title=\"\"><img src=\""+httpfileupload+"?w=4\" class=\"img-resposive\" alt=\"\"></li>";
+			//sendMessage(protocol+"//"+filedomain+fileport+httpfileupload,from);
+				//sendHtmlLink(from,"http://"+filedomain+fileport+httpfileupload,asset);
+			} catch (IOException e) {
+				log.error(e.getMessage());
+			}
+		}
+		if(shareFileForm.getSize()==0) return;
+		html +="</ul></section>";
+		String subject = message.getSubject();
+		if(subject == null) subject = username;
+		
+		String path = "/youchat/"+subject;
+		if(!jcrService.nodeExsits(path)) {
+   			Folder folder = new Folder();
+   			folder.setName(subject);
+   			folder.setPath(path);
+   			folder.setLastUpdated(new Date());
+   			folder.setLastModified(new Date());
+   			jcrService.addOrUpdate(folder);
+   		}	   		
+		
+		addChat(html,username,path);
+		msg.addExtension(shareFileForm);
+		//msg.addExtension(new StandardExtensionElement("active","http://jabber.org/protocol/chatstates"));
+		log.debug(msg.toXML("x").toString());
+		sendMessage(msg,from);
+	}	
 	
 	private void sendHelp(Options options, String to,String error) {
 		String help=error;

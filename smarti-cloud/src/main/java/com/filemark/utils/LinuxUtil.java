@@ -50,7 +50,6 @@ public class LinuxUtil
 	public static String HOST = "http://192.168.0.134:9200";
 	public static String INDEX = "yuhongyun";
 	public static String TYPE = "assets";
-	public static String apikey = "AIzaSyCt8lHCo_XqZ4okZ95lqiYLSyGt_R6r-og";
 	public static ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
     /**
      * Takes a file, and resizes it to the given width and height, while keeping
@@ -1012,7 +1011,9 @@ public class LinuxUtil
     	return execute(pb);
     } 
     
-    public static String search(String path,String query) throws IOException, InterruptedException {
+    public static String search(String username, String path, String query) throws IOException, InterruptedException {
+    	String q = "{ \"query\" : {\"match\":  { \"_all\" : \""+query+"\"} }, \"filter\": {\"term\" : { \"createdby\" : \""+username+"\"} } }";
+   			
     	ProcessBuilder pb = new ProcessBuilder("curl","-XGET",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/_search?q="+query);
     	
     	return execute(pb);
@@ -1026,7 +1027,6 @@ public class LinuxUtil
  
     public static String get(String uid) throws IOException, InterruptedException {
     	ProcessBuilder pb = new ProcessBuilder("curl","-XGET",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/"+uid);
-    	
     	return execute(pb);
     }
     

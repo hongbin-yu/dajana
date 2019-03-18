@@ -62,9 +62,12 @@ public class Asset implements SmartiNode, Serializable {
 	private String position;
 	@Field
 	private String status="lock";
+	@Field
+	private Long reads = 0l;
 	private String address;
 	private String ocm_classname = Asset.class.getSimpleName().toLowerCase();
 	private String nodeName;
+	
 	public Asset() {
 		super();
 
@@ -422,6 +425,14 @@ public class Asset implements SmartiNode, Serializable {
 
 	public void setAddress(String address) {
 		this.address = address;
+	}
+
+	public Long getReads() {
+		return reads;
+	}
+
+	public void setReads(Long reads) {
+		this.reads = reads;
 	}
 
 
