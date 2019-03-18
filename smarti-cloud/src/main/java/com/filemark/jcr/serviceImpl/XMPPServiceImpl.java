@@ -140,7 +140,8 @@ public class XMPPServiceImpl implements XMPPService{
 	//private PingFailedListener pingFailedListener ;
 	private static final PegDownProcessor pegDownProcessor = new PegDownProcessor();
 			//Extensions.ALL | Extensions.SUPPRESS_ALL_HTML, 5000);
-	Map<String,WebPage<Asset>> lastQueries = new HashMap<String,WebPage<Asset>>();		
+	Map<String,WebPage<Asset>> lastQueries = new HashMap<String,WebPage<Asset>>();
+	Map<String,Message> lastSend = new HashMap<String,Message>();	
 	//private IncomingChatMessageListener incomingChatMessageListener;
 	public void initialize() {
 
@@ -701,6 +702,12 @@ public class XMPPServiceImpl implements XMPPService{
         	String query = body;
         	String xmppid = from.toString();
         	String username = xmppid.split("@")[0];
+        	Message lastOne = lastSend.get(username);
+        	if(lastOne !=null && lastOne.equals(message)) {
+        		return;
+        	}else {
+        		lastSend.put(username, message);
+        	}
         	if(jcrService.nodeExsits("/system/users/"+username)) {
         		User user = (User)jcrService.getObject("/system/users/"+username);
         		if(!xmppid.equals(user.getXmppid())) {
