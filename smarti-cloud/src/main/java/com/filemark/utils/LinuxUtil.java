@@ -978,7 +978,7 @@ public class LinuxUtil
     }
     
     public static String updateProperty(String uid,String name,String value) {
-		String json = "'{ \"doc\" : {\""+name+"\":\""+value+"\" } }'";
+		String json = "{ \"doc\" : {\""+name+"\":\""+value+"\" } }";
 		log.debug("update:"+json);
     	ProcessBuilder pb = new ProcessBuilder("curl","XPOST",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/"+uid+"/_update","-d",json);
     	try {
