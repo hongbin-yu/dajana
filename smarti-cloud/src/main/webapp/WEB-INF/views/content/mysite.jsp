@@ -58,7 +58,7 @@
 </section>
 <section class="col-xs-6">
 <h2 class="wb-inv"><spring:message code="djn.dajana"/></h2>
-<p><a href='<c:url value="/content/home.html"></c:url>' class="btn btn-primary"><spring:message code="djn.website"/></a></p>
+<p><a href='<c:url value="/protected/mycloud"></c:url>' class="btn btn-primary"><spring:message code="djn.website"/></a></p>
 </section>
 </div>
 </div>
@@ -72,7 +72,7 @@
 </div>
 <div class="row">
 <div class="col-xs-4 text-right">
-<a class="btn btn-default" href='<c:url value="signup"></c:url>'>
+<a class="btn btn-default" href='<c:url value="/signup"></c:url>'>
 <img title="<spring:message code="djn.scan_qr"/><spring:message code="djn.dajana"/>" class="img-responsive" src="/content/signup.qrb.jpg?path=http://${pageContext.request.serverName }:${pageContext.request.serverPort }<c:url value='/signup'/>" alt="<spring:message code="djn.dajana"/>" width="100" height="100"/>
 </a>
 </div>
@@ -83,7 +83,7 @@
 </ul> --%>
  </div>
 <div class="col-xs-4 pull-right">
-<a class="btn btn-default" href="http://home.dajana.net" title="内网登入"><img class="img-responsive" src ="/resources/images/yuhong-icon100.png" alt="内网登入"/></a>
+<a class="btn btn-default" id="yuhongyun-href" href="http://home.dajana.net" title="内网登入"><img class="img-responsive" id="yuhongyun" src ="/resources/images/yuhong-icon100.png" alt="内网登入"/></a>
 </div>
 
 </div>
@@ -123,19 +123,22 @@
     var numImages = ${numImages};
     var selectedImageIndex = 1;
     document.getElementById("splash-image").src = splashImagePaths[Math.floor((Math.random() * numImages))]+"/origin.jpg";
-/*  	$(document).ready(function() {
+  	$(document).ready(function() {
+	
 		if(location.hostname.indexOf("home.dajana.net")<0 && location.hostname.indexOf(".dajana.net")>0)
 		$.ajax({
 	          url: '//home.dajana.net',
 	          success: function(result){
-	             location.href=location.origin.replace("dajana.net","home.dajana.net");
+		          $("#yuhongyun").attr("src","/resources/images/lock-secure.png");
+		          $("#yuhongyun-href").attr("href",location.origin.replace("dajana.net","home.dajana.net"));
+	             //location.href=location.origin.replace("dajana.net","home.dajana.net");
 	          },     
 	          error: function(result){
 	              //alert('timeout/error');
 	          },
 	          timeout: 3000
 	       });
-		});   */
+		}); 
 	
 	
 			

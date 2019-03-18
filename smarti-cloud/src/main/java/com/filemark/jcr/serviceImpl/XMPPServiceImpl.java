@@ -156,10 +156,12 @@ public class XMPPServiceImpl implements XMPPService{
 			JSONObject jsonObject = (JSONObject) obj;
 			
 			domain = (String)jsonObject.get("domain");
+
 			port = (Long)jsonObject.get("port");
 			username = (String)jsonObject.get("username");
 			password = (String)jsonObject.get("password");			
 			filedomain = (String)jsonObject.get("filedomain");
+			//LinuxUtil.INDEX = filedomain;			
 			fileport = (String)jsonObject.get("fileport");
 			if(jsonObject.get("iconpath")!=null) {
 				iconpath = (String)jsonObject.get("iconpath");				
