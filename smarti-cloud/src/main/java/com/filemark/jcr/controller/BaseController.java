@@ -643,9 +643,9 @@ public class BaseController {
 			if(jcrService.nodeExsits("/system/devices/default")) {
 				try {
 					device = (Device)jcrService.getObject("/system/devices/default");
-					if(device.getLocation().equals(jcrService.getDevice())) {
-						jcrService.updatePropertyByPath(device.getPath(), "location", jcrService.getDevice());
-					}
+					//if(device.getLocation().equals(jcrService.getDevice())) {
+					//	jcrService.updatePropertyByPath(device.getPath(), "location", jcrService.getDevice());
+					//}
 					return device;
 				} catch (RepositoryException e) {
 					logger.error(e.getMessage());

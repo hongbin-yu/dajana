@@ -971,14 +971,14 @@ public class LinuxUtil
     }
     
     public static String update(SmartiNode node) throws IOException, InterruptedException {
-		String json = "{\"doc\":"+ow.writeValueAsString(node)+"}";
+		String json = "{\"doc\" :"+ow.writeValueAsString(node)+", \"doc_as_upsert\" : true}";
 		log.debug("update:"+json);
     	ProcessBuilder pb = new ProcessBuilder("curl","XPOST",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/"+node.getUid()+"/_update","-d",json);
     	return execute(pb);
     }
     
     public static String updateProperty(String uid,String name,String value) {
-		String json = "{ \"doc\" : {\""+name+"\":\""+value+"\" } }";
+		String json = "{ \"doc\" : {\""+name+"\":\""+value+"\" }, \"doc_as_upsert\" : true }";
 		log.debug("update:"+json);
     	ProcessBuilder pb = new ProcessBuilder("curl","XPOST",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/"+uid+"/_update","-d",json);
     	try {
@@ -992,7 +992,7 @@ public class LinuxUtil
     } 
  
     public static String updateProperty(String uid,String name,long value) {
-		String json = " { \"doc\" : { \""+name+"\":"+value+" } }";
+		String json = " { \"doc\" : { \""+name+"\":"+value+" }, \"doc_as_upsert\" : true }";
 		log.debug("update:"+json);
     	ProcessBuilder pb = new ProcessBuilder("curl","XPOST",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/"+uid+"/_update","-d",json);
     	try {
