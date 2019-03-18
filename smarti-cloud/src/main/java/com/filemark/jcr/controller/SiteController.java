@@ -1483,6 +1483,8 @@ public class SiteController extends BaseController {
         				Device device = (Device)jcrService.getObject(asset.getDevice());
         				//logger.debug("Writing device "+device.getPath() +":"+device.getLocation());
         				infile = device.getLocation()+asset.getPath();
+        				asset.setFilePath(infile);
+        				jcrService.setProperty(path, "filePath", infile);
         				File folder = new File(device.getLocation()+asset.getPath());
         				if(!folder.exists()) folder.mkdirs();
         				folder.setLastModified(new Date().getTime());
