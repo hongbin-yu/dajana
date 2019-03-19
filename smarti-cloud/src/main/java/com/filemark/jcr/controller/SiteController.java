@@ -2457,11 +2457,11 @@ public class SiteController extends BaseController {
 	}
 
 	@RequestMapping(value = {"/site/search.json"}, method = RequestMethod.GET)
-	public @ResponseBody String search(String path,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public @ResponseBody String search(String path,String q, Long from,Long size,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
 		response.setContentType("application/json");
 		String username = getUsername();
-		String q = request.getQueryString();
-		response.getOutputStream().println(LinuxUtil.search(username,path, q));
+		String query = request.getQueryString();
+		response.getOutputStream().println(LinuxUtil.search(username,path, query));
 		return null;
 	}
 	

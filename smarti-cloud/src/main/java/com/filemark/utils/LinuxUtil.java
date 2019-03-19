@@ -1014,7 +1014,7 @@ public class LinuxUtil
     public static String search(String username, String path, String query) throws IOException, InterruptedException {
     	String q = "{ \"query\" : {\"match\":  { \"_all\" : \""+query+"\"} }, \"filter\": {\"term\" : { \"createdby\" : \""+username+"\"} } }";
    			
-    	ProcessBuilder pb = new ProcessBuilder("curl","-XGET",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/_search?q="+query);
+    	ProcessBuilder pb = new ProcessBuilder("curl","-XGET",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/_search?"+query);
     	
     	return execute(pb);
     } 
