@@ -2458,10 +2458,10 @@ public class SiteController extends BaseController {
 
 	@RequestMapping(value = {"/site/search.json"}, method = RequestMethod.GET, produces = { "application/json;**charset=UTF-8**" })
 	public @ResponseBody String search(String path,String q, Long from,Long size,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
-		response.setContentType("application/json");
+		response.setContentType("application/json;charset=UTF-8");
 		String username = getUsername();
 		String query = request.getQueryString();
-		response.getOutputStream().println(LinuxUtil.search(username,path, query));
+		response.getOutputStream().print(LinuxUtil.search(username,path, query));
 		return null;
 	}
 	
