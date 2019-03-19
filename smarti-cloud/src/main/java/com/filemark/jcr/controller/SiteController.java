@@ -3263,33 +3263,38 @@ public class SiteController extends BaseController {
 
 	@RequestMapping(value = {"/protected/youcloud/{uid}/**","/site/youcloud/{uid}/**","/publish/youcloud/{uid}/**"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public @ResponseBody String file(@PathVariable String uid,String path,Integer w,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
-		try {
-			String json = LinuxUtil.get(uid);
-			logger.debug("json="+json);
-			JSONParser parser = new JSONParser();
-			JSONObject jsonObject = (JSONObject) parser.parse(json);
-			if(jsonObject.get("error") ==null) {
-				JSONObject source = (JSONObject)jsonObject.get("_source");
-				if(source != null) {
-					String filePath = (String)source.get("filePath");
-					if(filePath != null) {
-						String ext = (String)source.get("ext");
-						File file = new File(filePath+"/origin"+ext);
-						if(file.exists()) {
-							FileInputStream in = new FileInputStream(file);
-							IOUtils.copy(in, response.getOutputStream());	
-							in.close();	
-							return null;
-						}					
-					}					
-				}
+        long ifModifiedSince = request.getDateHeader("If-Modified-Since");
+        if(ifModifiedSince == -1) {
+    		try {
+
+    			String json = LinuxUtil.get(uid);
+    			logger.debug("json="+json);
+    			JSONParser parser = new JSONParser();
+    			JSONObject jsonObject = (JSONObject) parser.parse(json);
+    			if(jsonObject.get("error") ==null) {
+    				JSONObject source = (JSONObject)jsonObject.get("_source");
+    				if(source != null) {
+    					String filePath = (String)source.get("filePath");
+    					if(filePath != null) {
+    						String ext = (String)source.get("ext");
+    						File file = new File(filePath+"/origin"+ext);
+    						if(file.exists()) {
+    							FileInputStream in = new FileInputStream(file);
+    							IOUtils.copy(in, response.getOutputStream());	
+    							in.close();	
+    							return null;
+    						}					
+    					}					
+    				}
 
 
-			};
-		} catch (IOException | InterruptedException | ParseException e) {
-			logger.error(e.getMessage());
-		}
-		
+    			};
+    		} catch (IOException | InterruptedException | ParseException e) {
+    			logger.error(e.getMessage());
+    		}
+    		        	
+        }
+
 		return viewFile(uid,null,w,request,response);
 
 		
