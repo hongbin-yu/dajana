@@ -980,7 +980,7 @@ public class LinuxUtil
     
     public static String updateProperty(String uid,String name,String value) {
     	try {
-    		String json = "{ \"doc\" : {\""+name+"\":\""+value+" 鸿\" }, \"doc_as_upsert\" : true }";
+    		String json = "{ \"doc\" : {\""+name+"\":\""+value+"\" }, \"doc_as_upsert\" : true }";
     		log.debug("update:"+json);
         	ProcessBuilder pb = new ProcessBuilder("curl","XPOST","-H" ,"Content-Type: application/json; charset=utf-8",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/"+uid+"/_update","-d",json);
 
@@ -997,7 +997,7 @@ public class LinuxUtil
 
     	try {
     		String json = " { \"doc\" : { \""+name+"\":"+value+" }, \"doc_as_upsert\" : true }";
-    		json = new String(json.getBytes(),"utf-8");
+    		//json = new String(json.getBytes(),"utf-8");
     		log.debug("update:"+json);
         	ProcessBuilder pb = new ProcessBuilder("curl","XPOST","-H" ,"Content-Type: application/json; charset=utf-8",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/"+uid+"/_update","-d",json);
 
@@ -1020,7 +1020,7 @@ public class LinuxUtil
     public static String search(String username, String path, String query) throws IOException, InterruptedException {
     	String q = "{ \"query\" : {\"match\":  { \"_all\" : \""+query+"\"} }, \"filter\": {\"term\" : { \"createdby\" : \""+username+"\"} } }";
    			
-    	ProcessBuilder pb = new ProcessBuilder("curl","-XGET",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/_search?"+query);
+    	ProcessBuilder pb = new ProcessBuilder("curl","-XGET","-H", "Content-Type: text/plain; charset=UTF-8", "--data-binary", LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/_search?"+query);
     	
     	return execute(pb);
     } 
