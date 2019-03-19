@@ -1165,7 +1165,7 @@ public class XMPPServiceImpl implements XMPPService{
 			
 	        URL url_img = new URL(getUTF8(url).replace(" ", "+"));
 	        log.debug("url:"+getUTF8(url).replace(" ", "+"));
-	        HttpsURLConnection conn = (HttpsURLConnection)url_img.openConnection();;
+	        HttpsURLConnection conn = (HttpsURLConnection)url_img.openConnection();
 	        int status;
   	
 	    	conn.setReadTimeout(30000);

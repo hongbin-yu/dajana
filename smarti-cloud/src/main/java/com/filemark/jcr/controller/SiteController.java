@@ -34,6 +34,7 @@ import java.util.Random;
 import javax.activation.MimetypesFileTypeMap;
 import javax.inject.Inject;
 import javax.jcr.RepositoryException;
+import javax.net.ssl.HttpsURLConnection;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -2458,10 +2459,27 @@ public class SiteController extends BaseController {
 
 	@RequestMapping(value = {"/site/search.json"}, method = RequestMethod.GET, produces = { "application/json;**charset=UTF-8**" })
 	public @ResponseBody String search(String path,String q, Long from,Long size,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
-		response.setContentType("application/json;charset=UTF-8");
-		String username = getUsername();
-		String query = request.getQueryString();
-		response.getOutputStream().print(LinuxUtil.search(username,path, query));
+	
+		URL url = new URL(LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/_search?"+request.getQueryString());
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+    	conn.setReadTimeout(30000);
+    	conn.addRequestProperty("Accept-Language", "en-US,en;q=0.8");
+    	conn.addRequestProperty("User-Agent", "Mozilla");
+    	conn.addRequestProperty("Referer", "dajana.net");
+    	String contentType = conn.getContentType();
+    	byte b[] = new byte[1024];
+    	InputStream is = conn.getInputStream(); 	
+    	
+		response.setContentType(contentType);
+		response.setContentLength(conn.getContentLength());
+		OutputStream out = response.getOutputStream();
+		while(is.read(b)>0) {
+			out.write(b);
+		}
+		out.close();
+		//String username = getUsername();
+		//String query = request.getQueryString();
+		//response.getOutputStream().print(LinuxUtil.search(username,path, query));
 		return null;
 	}
 	
