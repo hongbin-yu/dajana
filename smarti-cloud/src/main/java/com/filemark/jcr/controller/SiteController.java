@@ -2456,7 +2456,7 @@ public class SiteController extends BaseController {
 		return super.deleteNode(model, request, response);
 	}
 
-	@RequestMapping(value = {"/site/search.json"}, method = RequestMethod.GET)
+	@RequestMapping(value = {"/site/search.json"}, method = RequestMethod.GET, produces = { "application/json;**charset=UTF-8**" })
 	public @ResponseBody String search(String path,String q, Long from,Long size,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
 		response.setContentType("application/json");
 		String username = getUsername();

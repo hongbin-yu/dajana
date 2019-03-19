@@ -972,14 +972,14 @@ public class LinuxUtil
     public static String update(SmartiNode node) throws IOException, InterruptedException {
 		String json = "{\"doc\" :"+ow.writeValueAsString(node)+", \"doc_as_upsert\" : true}";
 		log.debug("update:"+json);
-    	ProcessBuilder pb = new ProcessBuilder("curl","XPOST","-H" ,"Content-Type: application/x-wwwform-urlencoded; charset=utf-8",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/"+node.getUid()+"/_update","-d",json);
+    	ProcessBuilder pb = new ProcessBuilder("curl","XPOST","-H" ,"Content-Type: application/json; charset=utf-8",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/"+node.getUid()+"/_update","-d",json);
     	return execute(pb);
     }
     
     public static String updateProperty(String uid,String name,String value) {
 		String json = "{ \"doc\" : {\""+name+"\":\""+value+"\" }, \"doc_as_upsert\" : true }";
 		log.debug("update:"+json);
-    	ProcessBuilder pb = new ProcessBuilder("curl","XPOST","-H" ,"Content-Type: application/x-wwwform-urlencoded; charset=utf-8",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/"+uid+"/_update","-d",json);
+    	ProcessBuilder pb = new ProcessBuilder("curl","XPOST","-H" ,"Content-Type: application/json; charset=utf-8",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/"+uid+"/_update","-d",json);
     	try {
     		String result = execute(pb);
     		log.debug(result);
@@ -993,7 +993,7 @@ public class LinuxUtil
     public static String updateProperty(String uid,String name,long value) {
 		String json = " { \"doc\" : { \""+name+"\":"+value+" }, \"doc_as_upsert\" : true }";
 		log.debug("update:"+json);
-    	ProcessBuilder pb = new ProcessBuilder("curl","XPOST","-H" ,"Content-Type: application/x-wwwform-urlencoded; charset=utf-8",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/"+uid+"/_update","-d",json);
+    	ProcessBuilder pb = new ProcessBuilder("curl","XPOST","-H" ,"Content-Type: application/json; charset=utf-8",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/"+uid+"/_update","-d",json);
     	try {
     		String result = execute(pb);
     		log.debug(result);
@@ -1006,7 +1006,7 @@ public class LinuxUtil
         
     public static String add(SmartiNode node) throws IOException, InterruptedException {
 		String json = ow.writeValueAsString(node);
-    	ProcessBuilder pb = new ProcessBuilder("curl","-XPOST","-H" ,"Content-Type: application/x-wwwform-urlencoded; charset=utf-8",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/"+node.getUid(),"-d",json);
+    	ProcessBuilder pb = new ProcessBuilder("curl","-XPOST","-H" ,"Content-Type: application/json; charset=utf-8",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/"+node.getUid(),"-d",json);
 
     	return execute(pb);
     } 
