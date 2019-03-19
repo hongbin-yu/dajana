@@ -3285,137 +3285,7 @@ public class SiteController extends BaseController {
 		}
 		
 		return viewFile(uid,null,w,request,response);
-		/*
-		Integer width = null;
-		if(w !=null && w <= 12) {
-			width = w*100;
-			if(width==0)
-				width = 48;
-		}
-		try {
-			if(uid!=null && (path==null || "".equals(path)))
-				path = jcrService.getNodeById(uid);
-			Asset asset = (Asset)jcrService.getObject(path);
-			String devicePath = jcrService.getDevice();
-			File outFile = new File(devicePath+path);
-			if(!outFile.exists()) {
-				devicePath = jcrService.getBackup();
-				outFile = new File(devicePath+path);
-			}
-			if(outFile.exists() && outFile.isFile()) {
-		        long lastModified = outFile.lastModified();
-		        long ifModifiedSince = request.getDateHeader("If-Modified-Since");
-		        logger.debug("ifModifiedSince="+ifModifiedSince+"/"+lastModified);
-		        if (ifModifiedSince != -1 && ifModifiedSince + 1000 <= lastModified) {
-					FileInputStream in = new FileInputStream(outFile);
-					IOUtils.copy(in, response.getOutputStream());	
-					in.close();	
-					return null;
-		        }				
-				logger.debug("path is file output:"+outFile.getAbsolutePath());
-				super.serveResource(request, response, outFile, asset.getName(),null);
-				return null;					
-			}
-			String ext = asset.getExt();
-			if(ext==null && path.lastIndexOf(".")>0) ext = path.substring(path.lastIndexOf("."));
-			outFile = new File(devicePath+path+(width==null?"/origin"+ext:"/x"+width+".jpg"));
-			if(outFile.exists() && outFile.isFile()) {
-				logger.debug("output:"+outFile.getAbsolutePath());
-				super.serveResource(request, response, outFile,asset.getName(), null);
-				return null;					
-			}
 
-			if(path !=null  && jcrService.nodeExsits(path)) {
-
-				ext = asset.getExt();
-*/				
-/*				if(width!=null && jcrService.nodeExsits(path+"/file-"+width)) {
-					response.setContentType(asset.getContentType());
-					jcrService.readAsset(path+"/file-"+width, response.getOutputStream());
-				}else */
-/*				if(asset.getDevice()!=null) {
-					Device device = (Device)jcrService.getObject(asset.getDevice());
-					File file = new File(device.getLocation()+asset.getPath()+"/origin"+ext);
-					if(file.exists() && asset.getWidth() == null && asset.getContentType().startsWith("image/")) {
-						jcrService.autoRoateImage(path);
-					}
-					if(width!=null && file.exists()) {
-						String iconfile = device.getLocation()+asset.getPath()+"/x"+width+".jpg";
-						File icon = new File(iconfile);
-						
-						if(!icon.exists()) {
-							jcrService.createIcon(path, width,width);
-						}
-						if(icon.exists())
-							file = icon;
-
-					}
-					if(file.exists()) {
-						//file.setReadOnly();
-						super.serveResource(request, response, file,asset.getName(), null);
-					}else  if(jcrService.nodeExsits(path+"/original")) {
-						response.setContentType(asset.getContentType());
-						if(asset.getSize()!=null)
-							response.setContentLength(asset.getSize().intValue());
-						if(asset.getOriginalDate()!=null)
-							response.setDateHeader("Last-Modified", asset.getOriginalDate().getTime());
-						
-						file = new File(getDevice().getLocation()+asset.getPath());
-						file.getParentFile().mkdirs();
-						OutputStream out = new FileOutputStream(file);
-						jcrService.readAsset(path+"/original",  out);
-						asset.setDevice(getDevice().getPath());
-						jcrService.addOrUpdate(asset);
-						
-						out.close();
-						super.serveResource(request, response, file,asset.getName(), null);
-						//jcrService.readAsset(path+"/original",  response.getOutputStream());
-
-						return null;
-						
-					}
-					*/
-/*					FileInputStream in = new FileInputStream(file);
-					response.setContentType(asset.getContentType());
-					IOUtils.copy(in, response.getOutputStream());
-					in.close();*/
-/*
-					return null;
-				}else  if(jcrService.nodeExsits(path+"/original")) {
-					response.setContentType(asset.getContentType());
-					if(asset.getSize()!=null)
-						response.setContentLength(asset.getSize().intValue());
-					if(asset.getOriginalDate()!=null)
-						response.setDateHeader("Last-Modified", asset.getOriginalDate().getTime());
-					
-					File file = new File(getDevice().getLocation()+asset.getPath());
-					file.getParentFile().mkdirs();
-					OutputStream out = new FileOutputStream(file);
-					jcrService.readAsset(path+"/original",  out);
-					asset.setDevice(getDevice().getPath());
-					jcrService.addOrUpdate(asset);
-					
-					out.close();
-					//file.setReadOnly();
-					super.serveResource(request, response, file,asset.getName(), null);
-					//jcrService.readAsset(path+"/original",  response.getOutputStream());
-
-					return null;
-				}else {
-
-					return path +" original file not found";
-				}
-			}else {
-
-				return path +" file not found";		
-			}
-
-		}catch(Exception e) {
-			logger.error("viewFile:"+e.getMessage()+",path="+path);
-
-			return e.getMessage();
-		}
-		*/
 		
 	} 
 	@RequestMapping(value = {"/protected/icon/{username}/icon.jpg","/site/icon/{username}/icon.jpg","/content/icon/{username}/icon.jpg","/publish/icon/{username}/icon.jpg"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
@@ -3433,9 +3303,29 @@ public class SiteController extends BaseController {
 	}
 	@RequestMapping(value = {"/protected/httpfileupload/{uid}/*.*","/site/httpfileupload/{uid}/*.*","/content/httpfileupload/{uid}/*.*","/publish/httpfileupload/{uid}/*.*"}, method = {RequestMethod.GET,RequestMethod.POST,RequestMethod.HEAD})
 	public @ResponseBody String httpfileupload(@PathVariable String uid,String path,Integer w,HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException  {
-	
+		return file(uid,null,w,request,response);
+/*		try {
+			String json = LinuxUtil.get(uid);
+			logger.debug("json="+json);
+			JSONParser parser = new JSONParser();
+			JSONObject jsonObject = (JSONObject) parser.parse(json);
+			if(jsonObject.get("error") ==null) {
+				JSONObject source = (JSONObject)jsonObject.get("_source");
+				Gson gson = new Gson();
+				Asset asset = gson.fromJson(source.toJSONString(), Asset.class);
+				File file = new File(asset.getFilePath()+"/origin"+asset.getExt());
+				if(file.exists()) {
+					FileInputStream in = new FileInputStream(file);
+					IOUtils.copy(in, response.getOutputStream());	
+					in.close();	
+					return null;
+				}
+			};
+		} catch (IOException | InterruptedException | ParseException e) {
+			logger.error(e.getMessage());
+		}	
 		return viewFile(uid,null,w,request,response);
-	/*	
+	
 		Integer width = null;
 		if(w !=null && w <= 12) {
 			width = w*100;
