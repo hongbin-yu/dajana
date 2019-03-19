@@ -3270,8 +3270,9 @@ public class SiteController extends BaseController {
 			JSONObject jsonObject = (JSONObject) parser.parse(json);
 			if(jsonObject.get("error") ==null) {
 				JSONObject source = (JSONObject)jsonObject.get("_source");
+				logger.debug("source="+source);
 				Gson gson = new Gson();
-				Asset asset = gson.fromJson(source.toJSONString(), Asset.class);
+				Asset asset = gson.fromJson(source.toString(), Asset.class);
 				File file = new File(asset.getFilePath()+"/origin"+asset.getExt());
 				if(file.exists()) {
 					FileInputStream in = new FileInputStream(file);
