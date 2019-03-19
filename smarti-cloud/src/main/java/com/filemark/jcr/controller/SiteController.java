@@ -3270,17 +3270,20 @@ public class SiteController extends BaseController {
 			JSONObject jsonObject = (JSONObject) parser.parse(json);
 			if(jsonObject.get("error") ==null) {
 				JSONObject source = (JSONObject)jsonObject.get("_source");
-				String filePath = (String)source.get("filePath");
-				if(filePath != null) {
-					String ext = (String)source.get("ext");
-					File file = new File(filePath+"/origin"+ext);
-					if(file.exists()) {
-						FileInputStream in = new FileInputStream(file);
-						IOUtils.copy(in, response.getOutputStream());	
-						in.close();	
-						return null;
+				if(source != null) {
+					String filePath = (String)source.get("filePath");
+					if(filePath != null) {
+						String ext = (String)source.get("ext");
+						File file = new File(filePath+"/origin"+ext);
+						if(file.exists()) {
+							FileInputStream in = new FileInputStream(file);
+							IOUtils.copy(in, response.getOutputStream());	
+							in.close();	
+							return null;
+						}					
 					}					
 				}
+
 
 			};
 		} catch (IOException | InterruptedException | ParseException e) {
