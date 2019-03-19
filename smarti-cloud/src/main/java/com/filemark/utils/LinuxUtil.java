@@ -980,7 +980,7 @@ public class LinuxUtil
     
     public static String updateProperty(String uid,String name,String value) {
     	try {
-    		String json = "{ \"doc\" : {\""+name+"\":\""+new String(value.getBytes(),"UTF-8")+" 鸿\" }, \"doc_as_upsert\" : true }";
+    		String json = "{ \"doc\" : {\""+name+"\":\""+value+" 鸿\" }, \"doc_as_upsert\" : true }";
     		log.debug("update:"+json);
         	ProcessBuilder pb = new ProcessBuilder("curl","XPOST","-H" ,"Content-Type: application/json; charset=utf-8",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/"+uid+"/_update","-d",json);
 
@@ -1056,7 +1056,7 @@ public class LinuxUtil
 
 
         BufferedReader br = new BufferedReader(
-            new InputStreamReader(p.getInputStream()));
+            new InputStreamReader(p.getInputStream(), "UTF-8"));
         while ((s = br.readLine()) != null) {
             //log.debug("line: " + s);
             exit +=s;
