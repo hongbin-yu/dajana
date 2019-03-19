@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
 <meta charset="UTF-8"/>
-<!--
+<!-- 
 <meta http-equiv="cache-control" content="max-age=0" />
 <meta http-equiv="cache-control" content="no-cache" />
 <meta http-equiv="expires" content="0" />

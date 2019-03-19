@@ -3184,12 +3184,12 @@ public class SiteController extends BaseController {
 				        long lastModified = file.lastModified();
 				        long ifModifiedSince = request.getDateHeader("If-Modified-Since");
 				        logger.debug("ifModifiedSince="+ifModifiedSince+"/"+lastModified);
-				        if (ifModifiedSince == -1 || ifModifiedSince + 1000 <= lastModified) {
+/*				        if (ifModifiedSince == -1 || ifModifiedSince + 1000 <= lastModified) {
 							FileInputStream in = new FileInputStream(file);
 							IOUtils.copy(in, response.getOutputStream());	
 							in.close();	
 							return null;
-				        }							
+				        }		*/					
 						logger.debug("file exists:"+file.getAbsolutePath());
 						super.serveResource(request, response, file,asset.getName(), asset.getContentType());
 					}else  if(jcrService.nodeExsits(path+"/original")) {
@@ -3275,15 +3275,19 @@ public class SiteController extends BaseController {
     				JSONObject source = (JSONObject)jsonObject.get("_source");
     				if(source != null) {
     					String filePath = (String)source.get("filePath");
+    					String name = (String)source.get("name");
+    					String contentType = (String)source.get("contentType");
     					if(filePath != null) {
     						String ext = (String)source.get("ext");
     						File file = new File(filePath+"/origin"+ext);
     						if(file.exists()) {
-    							FileInputStream in = new FileInputStream(file);
+        						super.serveResource(request, response, file,name, contentType);   						
+
+/*    							FileInputStream in = new FileInputStream(file);
     							IOUtils.copy(in, response.getOutputStream());	
     							in.close();	
-    							return null;
-    						}					
+    							return null;*/
+    						}
     					}					
     				}
 
