@@ -16,11 +16,13 @@ import java.io.InputStreamReader;
 import java.net.URL;
 
 import javax.imageio.ImageIO;
+import javax.json.stream.JsonGenerator;
 import javax.swing.JPanel;
 /*
 import static org.bytedeco.javacpp.opencv_core.*;
 import static org.bytedeco.javacpp.opencv_imgproc.*;
 import static org.bytedeco.javacpp.opencv_imgcodecs.*;*/
+
 
 
 
@@ -977,10 +979,11 @@ public class LinuxUtil
     }
     
     public static String updateProperty(String uid,String name,String value) {
-		String json = "{ \"doc\" : {\""+name+"\":\""+value+"\" }, \"doc_as_upsert\" : true }";
-		log.debug("update:"+json);
-    	ProcessBuilder pb = new ProcessBuilder("curl","XPOST","-H" ,"Content-Type: application/json; charset=utf-8",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/"+uid+"/_update","-d",json);
     	try {
+    		String json = "{ \"doc\" : {\""+name+"\":\""+new String(value.getBytes(),"UTF-8")+" 鸿\" }, \"doc_as_upsert\" : true }";
+    		log.debug("update:"+json);
+        	ProcessBuilder pb = new ProcessBuilder("curl","XPOST","-H" ,"Content-Type: application/json; charset=utf-8",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/"+uid+"/_update","-d",json);
+
     		String result = execute(pb);
     		log.debug(result);
 			return result;
@@ -991,10 +994,13 @@ public class LinuxUtil
     } 
  
     public static String updateProperty(String uid,String name,long value) {
-		String json = " { \"doc\" : { \""+name+"\":"+value+" }, \"doc_as_upsert\" : true }";
-		log.debug("update:"+json);
-    	ProcessBuilder pb = new ProcessBuilder("curl","XPOST","-H" ,"Content-Type: application/json; charset=utf-8",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/"+uid+"/_update","-d",json);
+
     	try {
+    		String json = " { \"doc\" : { \""+name+"\":"+value+" }, \"doc_as_upsert\" : true }";
+    		json = new String(json.getBytes(),"utf-8");
+    		log.debug("update:"+json);
+        	ProcessBuilder pb = new ProcessBuilder("curl","XPOST","-H" ,"Content-Type: application/json; charset=utf-8",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/"+uid+"/_update","-d",json);
+
     		String result = execute(pb);
     		log.debug(result);
 			return result;
