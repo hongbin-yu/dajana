@@ -1014,7 +1014,8 @@ public class LinuxUtil
     } 
     
     public static String xpost(String action,String json) throws IOException, InterruptedException {
-		log.debug("update:"+json);
+		json = new String(json.getBytes("ISO-8859-1"),"UTF-8");
+    	log.debug("update:"+json);
 /*		URL url = new URL(action);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.setRequestMethod("POST");
