@@ -1045,8 +1045,9 @@ public class LinuxUtil
 
 		log.debug(result);*/
     	ProcessBuilder pb = new ProcessBuilder("curl","-XPOST",action,"-d",json);
-    	
-    	return execute(pb);
+    	String result = execute(pb);
+    	log.debug("result:"+result);
+    	return result;
 
 		//return result;
     }
