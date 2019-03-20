@@ -2478,6 +2478,7 @@ public class SiteController extends BaseController {
 			out.write(b);
 		}
 		String username = getUsername();
+		if(path ==null || !path.startsWith("/assets/"+username)) path = "/assets/"+username;
 		response.getOutputStream().println(LinuxUtil.search(username,path, q));
 		out.close();
 		//String username = getUsername();
