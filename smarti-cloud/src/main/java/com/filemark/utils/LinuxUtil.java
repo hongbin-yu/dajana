@@ -1015,7 +1015,7 @@ public class LinuxUtil
     
     public static String xpost(String action,String json) throws IOException, InterruptedException {
 		json = new String(json.getBytes("UTF-8"),"ISO-8859-1");
-    	log.debug("curl"+" -XPOST ",action +" -d " +json);
+    	log.debug("curl"+" -XPOST "+action +" -d " +json);
     	ProcessBuilder pb = new ProcessBuilder("curl","-XPOST",action,"-d",json);
     	String result = execute(pb);
     	log.debug("result:"+result);
