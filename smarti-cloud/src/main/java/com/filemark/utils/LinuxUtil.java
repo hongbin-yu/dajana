@@ -987,13 +987,13 @@ public class LinuxUtil
     
     public static String update(SmartiNode node) throws IOException, InterruptedException {
 		String json = "{\"doc\" :"+ow.writeValueAsString(node)+", \"doc_as_upsert\" : true}";
-		return xpost(LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/_update",json);
+		return xpost(LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/"+node.getUid()+"/_update",json);
     }
     
     public static String updateProperty(String uid,String name,String value) {
     	try {
     		String json = "{ \"doc\" : {\""+name+"\":\""+value+"\" }, \"doc_as_upsert\" : true }";
-			return xpost(LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/_update",json);
+			return xpost(LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/"+uid+"/_update",json);
 
 		} catch (IOException | InterruptedException e) {
 			log.error("updateProperty"+e.getMessage());
@@ -1006,7 +1006,7 @@ public class LinuxUtil
     	try {
     		String json = " { \"doc\" : { \""+name+"\":"+value+" }, \"doc_as_upsert\" : true }";
 
-			return xpost(LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/_update",json);
+			return xpost(LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/"+uid+"/_update",json);
 		} catch (IOException | InterruptedException e) {
 			log.error("updateProperty"+e.getMessage());
 		}
