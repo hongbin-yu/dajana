@@ -10,6 +10,7 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -26,6 +27,10 @@ import javax.swing.JPanel;
 import static org.bytedeco.javacpp.opencv_core.*;
 import static org.bytedeco.javacpp.opencv_imgproc.*;
 import static org.bytedeco.javacpp.opencv_imgcodecs.*;*/
+
+
+
+
 
 
 
@@ -990,7 +995,7 @@ public class LinuxUtil
     		String json = "{ \"doc\" : {\""+name+"\":\""+value+"\" }, \"doc_as_upsert\" : true }";
 			return xpost(LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/_update",json);
 
-		} catch (IOException e) {
+		} catch (IOException | InterruptedException e) {
 			log.error("updateProperty"+e.getMessage());
 		}
     	return null;
@@ -1002,22 +1007,30 @@ public class LinuxUtil
     		String json = " { \"doc\" : { \""+name+"\":"+value+" }, \"doc_as_upsert\" : true }";
 
 			return xpost(LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/_update",json);
-		} catch (IOException e) {
+		} catch (IOException | InterruptedException e) {
 			log.error("updateProperty"+e.getMessage());
 		}
     	return null;
     } 
     
-    public static String xpost(String action,String json) throws IOException {
+    public static String xpost(String action,String json) throws IOException, InterruptedException {
 		log.debug("update:"+json);
-		URL url = new URL(action);
+/*		URL url = new URL(action);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.setRequestMethod("POST");
-		conn.addRequestProperty("d", json);
+
     	conn.setReadTimeout(10000);
     	conn.addRequestProperty("Accept-Language", "en-US,en;q=0.8");
     	conn.addRequestProperty("User-Agent", "Mozilla");
     	conn.addRequestProperty("Referer", "dajana.net");
+    	
+		// Send post request
+		conn.setDoOutput(true);
+		DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
+		wr.writeBytes(urlParameters);
+		wr.flush();
+		wr.close();
+		
     	String contentType = conn.getContentType();
     	byte b[] = new byte[1024];
     	InputStream is = conn.getInputStream(); 
@@ -1029,8 +1042,12 @@ public class LinuxUtil
 
 		String result = new String(out.toByteArray(),"uft-8");
 
-		log.debug(result);
-		return result;
+		log.debug(result);*/
+    	ProcessBuilder pb = new ProcessBuilder("curl","-XPOST",action,"-d",json);
+    	
+    	return execute(pb);
+
+		//return result;
     }
     
     public static String add(SmartiNode node) throws IOException, InterruptedException {
