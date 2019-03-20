@@ -1016,40 +1016,11 @@ public class LinuxUtil
     public static String xpost(String action,String json) throws IOException, InterruptedException {
 		json = new String(json.getBytes("UTF-8"),"ISO-8859-1");
     	log.debug("update:"+json);
-/*		URL url = new URL(action);
-		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-		conn.setRequestMethod("POST");
-
-    	conn.setReadTimeout(10000);
-    	conn.addRequestProperty("Accept-Language", "en-US,en;q=0.8");
-    	conn.addRequestProperty("User-Agent", "Mozilla");
-    	conn.addRequestProperty("Referer", "dajana.net");
-    	
-		// Send post request
-		conn.setDoOutput(true);
-		DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
-		wr.writeBytes(urlParameters);
-		wr.flush();
-		wr.close();
-		
-    	String contentType = conn.getContentType();
-    	byte b[] = new byte[1024];
-    	InputStream is = conn.getInputStream(); 
-    	ByteArrayOutputStream out = new ByteArrayOutputStream();
-		while(is.read(b)>0) {
-			out.write(b);
-		}
-		out.close();        	
-
-		String result = new String(out.toByteArray(),"uft-8");
-
-		log.debug(result);*/
     	ProcessBuilder pb = new ProcessBuilder("curl","-XPOST",action,"-d",json);
     	String result = execute(pb);
     	log.debug("result:"+result);
     	return result;
 
-		//return result;
     }
     
     public static String add(SmartiNode node) throws IOException, InterruptedException {
@@ -1059,11 +1030,10 @@ public class LinuxUtil
     } 
     
     public static String search(String username, String path, String query) throws IOException, InterruptedException {
-    	String q = "{ \"query\" : {\"match\":  { \"_all\" : \""+query+"\"} }, \"filter\": {\"term\" : { \"createdby\" : \""+username+"\"} } }";
-   			
-    	ProcessBuilder pb = new ProcessBuilder("curl","-XGET","-H", "Content-Type: text/plain; charset=UTF-8", "--data-binary", LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/_search?"+query);
-    	
-    	return execute(pb);
+    	String json = "{ \"query\" : {\"match\":  { \"_all\" : \""+query+"\"} }, \"filter\": {\"term\" : { \"path\" : \""+path+"*\"} } }";
+   		String action = LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/_search";	
+  		return xpost(action,json);
+
     } 
     
     public static String query(String query) throws IOException, InterruptedException {

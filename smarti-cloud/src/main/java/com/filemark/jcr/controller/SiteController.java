@@ -2477,6 +2477,8 @@ public class SiteController extends BaseController {
 		while(is.read(b)>0) {
 			out.write(b);
 		}
+		String username = getUsername();
+		response.getOutputStream().println(LinuxUtil.search(username,path, q));
 		out.close();
 		//String username = getUsername();
 		//String query = request.getQueryString();
