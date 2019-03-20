@@ -2466,6 +2466,7 @@ public class SiteController extends BaseController {
     	conn.addRequestProperty("Accept-Language", "en-US,en;q=0.8");
     	conn.addRequestProperty("User-Agent", "Mozilla");
     	conn.addRequestProperty("Referer", "dajana.net");
+    	
     	String contentType = conn.getContentType();
     	byte b[] = new byte[1024];
     	InputStream is = conn.getInputStream(); 	

@@ -9,10 +9,14 @@ import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 
 import javax.imageio.ImageIO;
@@ -22,6 +26,11 @@ import javax.swing.JPanel;
 import static org.bytedeco.javacpp.opencv_core.*;
 import static org.bytedeco.javacpp.opencv_imgproc.*;
 import static org.bytedeco.javacpp.opencv_imgcodecs.*;*/
+
+
+
+
+
 
 
 
@@ -973,21 +982,15 @@ public class LinuxUtil
     
     public static String update(SmartiNode node) throws IOException, InterruptedException {
 		String json = "{\"doc\" :"+ow.writeValueAsString(node)+", \"doc_as_upsert\" : true}";
-		log.debug("update:"+json);
-    	ProcessBuilder pb = new ProcessBuilder("curl","XPOST","-H" ,"Content-Type: application/json; charset=utf-8",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/"+node.getUid()+"/_update","-d",json);
-    	return execute(pb);
+		return xpost(LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/_update",json);
     }
     
     public static String updateProperty(String uid,String name,String value) {
     	try {
     		String json = "{ \"doc\" : {\""+name+"\":\""+value+"\" }, \"doc_as_upsert\" : true }";
-    		log.debug("update:"+json);
-        	ProcessBuilder pb = new ProcessBuilder("curl","XPOST","-H" ,"Content-Type: application/json; charset=utf-8",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/"+uid+"/_update","-d",json);
+			return xpost(LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/_update",json);
 
-    		String result = execute(pb);
-    		log.debug(result);
-			return result;
-		} catch (IOException | InterruptedException e) {
+		} catch (IOException e) {
 			log.error("updateProperty"+e.getMessage());
 		}
     	return null;
@@ -997,24 +1000,43 @@ public class LinuxUtil
 
     	try {
     		String json = " { \"doc\" : { \""+name+"\":"+value+" }, \"doc_as_upsert\" : true }";
-    		//json = new String(json.getBytes(),"utf-8");
-    		log.debug("update:"+json);
-        	ProcessBuilder pb = new ProcessBuilder("curl","XPOST","-H" ,"Content-Type: application/json; charset=utf-8",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/"+uid+"/_update","-d",json);
 
-    		String result = execute(pb);
-    		log.debug(result);
-			return result;
-		} catch (IOException | InterruptedException e) {
+			return xpost(LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/_update",json);
+		} catch (IOException e) {
 			log.error("updateProperty"+e.getMessage());
 		}
     	return null;
     } 
-        
+    
+    public static String xpost(String action,String json) throws IOException {
+		log.debug("update:"+json);
+		URL url = new URL(action);
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		conn.setRequestMethod("POST");
+		conn.addRequestProperty("d", json);
+    	conn.setReadTimeout(10000);
+    	conn.addRequestProperty("Accept-Language", "en-US,en;q=0.8");
+    	conn.addRequestProperty("User-Agent", "Mozilla");
+    	conn.addRequestProperty("Referer", "dajana.net");
+    	String contentType = conn.getContentType();
+    	byte b[] = new byte[1024];
+    	InputStream is = conn.getInputStream(); 
+    	ByteArrayOutputStream out = new ByteArrayOutputStream();
+		while(is.read(b)>0) {
+			out.write(b);
+		}
+		out.close();        	
+
+		String result = new String(out.toByteArray(),"uft-8");
+
+		log.debug(result);
+		return result;
+    }
+    
     public static String add(SmartiNode node) throws IOException, InterruptedException {
 		String json = ow.writeValueAsString(node);
-    	ProcessBuilder pb = new ProcessBuilder("curl","-XPOST","-H" ,"Content-Type: application/json; charset=utf-8",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/"+node.getUid(),"-d",json);
+  		return xpost(LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/"+node.getUid(),json);
 
-    	return execute(pb);
     } 
     
     public static String search(String username, String path, String query) throws IOException, InterruptedException {
@@ -1042,7 +1064,7 @@ public class LinuxUtil
     }      
     
     public static String update_by_query(String index,String json) throws IOException, InterruptedException {
-    	ProcessBuilder pb = new ProcessBuilder("curl","POST",index,"/_update_by_query",json);
+    	ProcessBuilder pb = new ProcessBuilder("curl","XPOST",index,"/_update_by_query",json);
     	
     	return execute(pb);    	
     }
