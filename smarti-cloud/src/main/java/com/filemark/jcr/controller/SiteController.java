@@ -2459,7 +2459,7 @@ public class SiteController extends BaseController {
 
 	@RequestMapping(value = {"/site/search.json"}, method = RequestMethod.GET, produces = { "application/json;**charset=UTF-8**" })
 	public @ResponseBody String search(String path,String q, Long from,Long size,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
-	
+		/*
 		URL url = new URL(LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/_search?"+request.getQueryString());
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
     	conn.setReadTimeout(30000);
@@ -2476,11 +2476,11 @@ public class SiteController extends BaseController {
 		OutputStream out = response.getOutputStream();
 		while(is.read(b)>0) {
 			out.write(b);
-		}
+		}*/
 		String username = getUsername();
 		if(path ==null || !path.startsWith("/assets/"+username)) path = "/assets/"+username;
 		response.getOutputStream().println(LinuxUtil.search(username,path, q));
-		out.close();
+		//out.close();
 		//String username = getUsername();
 		//String query = request.getQueryString();
 		//response.getOutputStream().print(LinuxUtil.search(username,path, query));
