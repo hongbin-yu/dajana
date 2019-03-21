@@ -66,6 +66,7 @@ import org.jivesoftware.smack.packet.StandardExtensionElement;
 import org.jivesoftware.smack.provider.ProviderManager;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
+import org.jivesoftware.smack.roster.RosterListener;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import org.jivesoftware.smack.util.PacketParserUtils;
@@ -103,6 +104,7 @@ import com.filemark.jcr.model.Folder;
 import com.filemark.jcr.model.User;
 import com.filemark.jcr.service.JcrServices;
 import com.filemark.jcr.service.XMPPService;
+import com.filemark.utils.Buddy;
 import com.filemark.utils.LinuxUtil;
 import com.filemark.utils.WebPage;
 import com.lowagie.text.pdf.PdfReader;
@@ -142,6 +144,8 @@ public class XMPPServiceImpl implements XMPPService{
 			//Extensions.ALL | Extensions.SUPPRESS_ALL_HTML, 5000);
 	Map<String,WebPage<Asset>> lastQueries = new HashMap<String,WebPage<Asset>>();
 	Map<String,Message> lastSend = new HashMap<String,Message>();	
+	Map<String,Buddy> buddies = new HashMap<>();
+	protected RosterListener listener = null;
 	//private IncomingChatMessageListener incomingChatMessageListener;
 	public void initialize() {
 
@@ -268,16 +272,56 @@ public class XMPPServiceImpl implements XMPPService{
 							log.error(e.getMessage());
 						}	
 				}*/
-/*				for (RosterEntry entry : entries) {
-					//example: get presence, type, mode, status
-					        Presence entryPresence = roster.getPresence(entry.getJid());
+				Collection<RosterEntry> entries = roster.getEntries();
+				for (RosterEntry entry : entries) {
+					buddies.put(entry.getName(), new Buddy(entry.getName()));
+					buddies.get(entry.getName()).setOnline(roster.getPresence(entry.getJid()) != null);
+/*					        Presence entryPresence = roster.getPresence(entry.getJid());
 
 					        Presence.Type userType = entryPresence.getType();
 					        Presence.Mode mode = entryPresence.getMode();
 					        String status = entryPresence.getStatus();
 
 					        log.info("####User status"+"...."+entry.getJid()+"....."+entryPresence.getStatus()+"....."+entryPresence +" \ntype: "+"\n"+userType + "\nmode: " +mode + "\nstatus: " + status);// + "\nType: " + status.getType());
-					    }*/
+*/					    }
+				listener = new RosterListener() {
+
+
+					public  void presenceChanged(Presence prsnc) {
+						String uname = prsnc.getFrom().toString();
+						if (uname.contains("/")) {
+							uname = uname.substring(0, uname.indexOf('/'));
+						}
+						Buddy b = buddies.get(uname);
+						if (b == null) {
+							// add to buddy list
+							b = new Buddy(uname);
+							buddies.put(uname, b);
+						}
+						//System.out.println("presence changed: " + uname + ": " + prsnc + "  -" + (prsnc.isAvailable() || prsnc.isAway()));
+						b.setOnline(prsnc.isAvailable() || prsnc.isAway());
+					}
+
+					@Override
+					public void entriesAdded(Collection<Jid> addresses) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					@Override
+					public void entriesUpdated(Collection<Jid> addresses) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					@Override
+					public void entriesDeleted(Collection<Jid> addresses) {
+						// TODO Auto-generated method stub
+						
+					}
+				};
+				roster.addRosterListener(listener);
+				roster.setSubscriptionMode(Roster.SubscriptionMode.accept_all);
 				//roster.setRosterLoadedAtLogin(true);
 
 				//presence = new Presence(connection.getUser(),Type.available);

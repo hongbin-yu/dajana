@@ -1067,7 +1067,7 @@ public class LinuxUtil
 
 
         BufferedReader br = new BufferedReader(
-            new InputStreamReader(p.getInputStream(), "UTF-8"));
+            new InputStreamReader(p.getInputStream()));
         while ((s = br.readLine()) != null) {
             //log.debug("line: " + s);
             exit +=s;
