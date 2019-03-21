@@ -9,6 +9,7 @@ encoding//src/main/java/com/filemark/jcr/controller/SiteController.java=UTF-8
 encoding//src/main/java/com/filemark/jcr/model/Chat.java=UTF-8
 encoding//src/main/java/com/filemark/jcr/serviceImpl/XMPPServiceImpl.java=UTF-8
 encoding//src/main/java/com/filemark/sso/LoginController.java=UTF-8
+encoding//src/main/java/com/filemark/utils/Buddy.java=UTF-8
 encoding//src/main/java/com/filemark/utils/LinuxUtil.java=UTF-8
 encoding//src/main/resources/replace.html=UTF-8
 encoding//src/main/webapp/WEB-INF/views/content/mysite.jsp=UTF-8

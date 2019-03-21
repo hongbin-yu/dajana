@@ -448,7 +448,8 @@ public class SiteController extends BaseController {
 				response.sendRedirect("/forget");
 			}
 			model.addAttribute("tableContent", getAssetsHTML(path,type,r,null,model,request,null));
-			model.addAttribute("presences", XMPPService.getPresences());
+			model.addAttribute("presences", XMPPService.getBuddies());
+			model.addAttribute("onlineCount", XMPPService.getOnlineCount());
 		}catch(Exception e) {
 	   		File json = new File(jcrService.getDevice()+path+"/Output.json");
 	   		json.delete();
@@ -2479,9 +2480,11 @@ public class SiteController extends BaseController {
 		}*/
 		String query = request.getQueryString();
 		if(query==null) query = "*";
+		if(from == null) from = 0l;
+		if(size==null) size = 10l;
 		String username = getUsername();
 		if(path ==null || !path.startsWith("/assets/"+username)) path = "/assets/"+username;
-		response.getOutputStream().println(LinuxUtil.search(username,path, q));
+		response.getOutputStream().println(LinuxUtil.search(username,path, q,from,size));
 		//out.close();
 		//String username = getUsername();
 		//String query = request.getQueryString();

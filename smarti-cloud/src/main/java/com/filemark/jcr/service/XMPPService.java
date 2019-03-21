@@ -12,6 +12,7 @@ import org.jxmpp.jid.EntityBareJid;
 import org.jxmpp.stringprep.XmppStringprepException;
 
 import com.filemark.jcr.model.Asset;
+import com.filemark.utils.Buddy;
 
 public interface XMPPService {
 	public void initialize();
@@ -20,4 +21,7 @@ public interface XMPPService {
 	public void sendAsset(Asset asset, String to);
 	public Roster getRoster();
 	public Collection<Presence> getPresences();
+	public Collection<Buddy> getBuddies();	
+	public long getOnlineCount();	
+
 }

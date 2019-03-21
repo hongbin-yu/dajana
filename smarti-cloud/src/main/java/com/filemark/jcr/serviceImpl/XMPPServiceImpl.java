@@ -274,8 +274,17 @@ public class XMPPServiceImpl implements XMPPService{
 				}*/
 				Collection<RosterEntry> entries = roster.getEntries();
 				for (RosterEntry entry : entries) {
-					buddies.put(entry.getName(), new Buddy(entry.getName()));
-					buddies.get(entry.getName()).setOnline(roster.getPresence(entry.getJid()) != null);
+					String jid = entry.getJid().toString();
+					Presence entryPresence = roster.getPresence(entry.getJid());
+					if(entryPresence != null) {
+						Buddy buddy = new Buddy(jid);
+						buddy.setOnline(entryPresence.isAvailable() || entryPresence.isAway());
+						buddies.put(jid, buddy);
+				        log.info("####User status"+"...."+entry.getJid()+"....."+entryPresence.getStatus()+"....."+entryPresence +" \ntype: "+entryPresence.getType() + "\nmode: " +entryPresence.getMode() + "\nstatus: " + entryPresence.getStatus());// + "\nType: " + status.getType());
+
+					}
+					if(getOnlineCount()==0) LinuxUtil.HDDOff();
+					else LinuxUtil.HDDOn();
 /*					        Presence entryPresence = roster.getPresence(entry.getJid());
 
 					        Presence.Type userType = entryPresence.getType();
@@ -288,10 +297,10 @@ public class XMPPServiceImpl implements XMPPService{
 
 
 					public  void presenceChanged(Presence prsnc) {
-						String uname = prsnc.getFrom().toString();
-						if (uname.contains("/")) {
-							uname = uname.substring(0, uname.indexOf('/'));
-						}
+						String uname = prsnc.getFrom().asBareJid().toString();
+						//if (uname.contains("/")) {
+						//	uname = uname.substring(0, uname.indexOf('/'));
+						//}
 						Buddy b = buddies.get(uname);
 						if (b == null) {
 							// add to buddy list
@@ -304,20 +313,39 @@ public class XMPPServiceImpl implements XMPPService{
 
 					@Override
 					public void entriesAdded(Collection<Jid> addresses) {
-						// TODO Auto-generated method stub
+						for(Jid jid:addresses) {
+							String sjid = jid.toString();
+							buddies.get(sjid).setOnline(roster.getPresence(jid.asBareJid()) != null);
 						
+						}
+						if(getOnlineCount()==0) LinuxUtil.HDDOff();
+						else LinuxUtil.HDDOn();						
 					}
 
 					@Override
 					public void entriesUpdated(Collection<Jid> addresses) {
-						// TODO Auto-generated method stub
+						for(Jid jid:addresses) {
+							String sjid = jid.toString();
+							Buddy buddy = buddies.get(sjid);
+							if(buddy.isOnline()) buddy.setOnline(false);
+							buddies.remove(sjid);
 						
+						}
+						if(getOnlineCount()==0) LinuxUtil.HDDOff();
+						else LinuxUtil.HDDOn();						
 					}
 
 					@Override
 					public void entriesDeleted(Collection<Jid> addresses) {
-						// TODO Auto-generated method stub
+						for(Jid jid:addresses) {
+							String sjid = jid.toString();
+							Buddy buddy = buddies.get(sjid);
+							if(buddy.isOnline()) buddy.setOnline(false);
+							buddies.remove(sjid);
 						
+						}
+						if(getOnlineCount()==0) LinuxUtil.HDDOff();
+						else LinuxUtil.HDDOn();					
 					}
 				};
 				roster.addRosterListener(listener);
@@ -1660,6 +1688,7 @@ public class XMPPServiceImpl implements XMPPService{
 		                	//calendar.setTimeInMillis(connection.getLastStanzaReceived());
 		                	//log.info("Last Stenza:"+calendar.getTime());
 		                }
+		                log.debug("Online:"+getOnlineCount());
 						//log.info("Task performed on " + new Date()+", isConnection:"+pingManager.pingMyServer());
 					} catch (NotConnectedException e) {
 						log.error("checkConnection:"+e.getMessage());
@@ -1752,15 +1781,25 @@ public class XMPPServiceImpl implements XMPPService{
 			return roster;
 		}
 
-		public Collection<RosterEntry> getEntries() {
-			  try {
+		public Collection<Buddy> getBuddies() {
+/*			  try {
 		            roster.reloadAndWait();
 		        } catch (SmackException.NotLoggedInException |        SmackException.NotConnectedException | InterruptedException e) {
 		            e.printStackTrace();
 		        }
 
-				return roster.getEntries();
-			}	
+				return roster.getEntries();*/
+			return buddies.values();
+		}	
+		
+		@Override
+		public long getOnlineCount() {
+			long count = 0;
+			for(Buddy b:buddies.values()) {
+				if(b.isOnline()) count++;
+			}
+			return count;
+		}
 		
 		public Collection<Presence> getPresences() {
 			Collection<Presence> presences = new ArrayList<Presence>();
@@ -1930,6 +1969,7 @@ public static String[] translateCommandline(String toProcess) {
     }
     return result.toArray(new String[result.size()]);
 }
+
 
 
 }

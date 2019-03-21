@@ -1029,8 +1029,8 @@ public class LinuxUtil
 
     } 
     
-    public static String search(String username, String path, String query) throws IOException, InterruptedException {
-    	String json = "{ \"query\" : {\"bool\": {\"must\":  { \"query_string\": {\"query\" : \""+query+"\"} }, \"filter\" : {\"term\": {\"createdBy\" : \""+username+"\"} } } } }";
+    public static String search(String username, String path, String query, long from, long size) throws IOException, InterruptedException {
+    	String json = "{ \"from\" : "+from+ ", \"size\" : "+size+",\"query\" : {\"bool\": {\"must\":  { \"query_string\": {\"query\" : \""+query+"\"} }, \"filter\" : {\"term\": {\"createdBy\" : \""+username+"\"} } } } }";
    		String action = LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/_search";	
   		return xpost(action,json);
 

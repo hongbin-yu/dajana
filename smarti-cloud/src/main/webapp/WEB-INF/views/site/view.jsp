@@ -103,13 +103,13 @@
 		
 <section id="left-bar" class="wb-overlay modal-content overlay-def wb-panel-l col-md-4 col-xs-12">
 			<header class="modal-header">
-				<h2 class="modal-title">通讯目录</h2>
+				<h2 class="modal-title">通讯目录  (在线： ${onlineCount} )</h2>
 			</header>
 			<div class="modal-body">
                 <ul class="list-group menu list-unstyled">
                     <c:forEach items="${presences}" var="presence" varStatus="loop">
                     	<li class="list-group-item" >
-                    	<a class="bnt bnt-default" href="javascript:sendAsset('${presence.from}')" title="发送到：${presence.from}"><span class="glyphicon glyphicon-user"></span> ${presence.from}</a>
+                    	<a class="bnt bnt-default" href="javascript:sendAsset('${presence.name}')" title="发送到：${presence.username}"><span class="glyphicon glyphicon-user"></span> ${presence.username}(${presence.status})</a>
 						</li>
                     </c:forEach>
                 </ul>	
