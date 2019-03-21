@@ -2477,6 +2477,8 @@ public class SiteController extends BaseController {
 		while(is.read(b)>0) {
 			out.write(b);
 		}*/
+		String query = request.getQueryString();
+		if(query==null) query = "*";
 		String username = getUsername();
 		if(path ==null || !path.startsWith("/assets/"+username)) path = "/assets/"+username;
 		response.getOutputStream().println(LinuxUtil.search(username,path, q));
