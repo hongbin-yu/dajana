@@ -147,7 +147,7 @@ public class XMPPServiceImpl implements XMPPService{
 	//private PingFailedListener pingFailedListener ;
 	private static final PegDownProcessor pegDownProcessor = new PegDownProcessor();
 			//Extensions.ALL | Extensions.SUPPRESS_ALL_HTML, 5000);
-	Map<String,WebPage<Asset>> lastQueries = new HashMap<String,WebPage<Asset>>();
+	Map<String,String> lastQueries = new HashMap<String,String>();
 	Map<String,Message> lastSend = new HashMap<String,Message>();	
 	Map<String,Buddy> buddies = new HashMap<>();
 	protected RosterListener listener = null;
@@ -809,12 +809,8 @@ public class XMPPServiceImpl implements XMPPService{
 	        	sendVerifyCode(from.toString());
             }else if(commandLine.hasOption("n")) {
             	
-        		WebPage<Asset> assets = lastQueries.get(message.getFrom().toString());
-        		if(assets!=null) {
-        			query = assets.getAction();
-
-        			p = assets.getPageNumber()+1;
-        			m = assets.getPageSize();
+        		query = lastQueries.get(message.getFrom().toString());
+        		if(query!=null) {
         			processSearch(message.getFrom().toString(),query,chat,p,m);             		
             	}else {
     				sendMessage("上次查询没找到！",from);
@@ -853,14 +849,13 @@ public class XMPPServiceImpl implements XMPPService{
             	//HelpFormatter formatter = new HelpFormatter();
             	//formatter.printHelp("Help", options);
         		if("".equals(query)) {
-        			WebPage<Asset> assets = lastQueries.get(message.getFrom().toString());
-        			if(assets == null) {
+        			query = lastQueries.get(message.getFrom().toString());
+        			if(query == null) {
         				sendMessage("上次查询没找到！",from);
         				return;
         			}else {
-            			query = assets.getAction();
             			if(p==0)
-            				p = assets.getPageNumber()+1;
+            				p = 1;
         			}
 
         		}            	
@@ -1484,7 +1479,7 @@ public class XMPPServiceImpl implements XMPPService{
 			sendMessage(msg,to);
 			//if(to.indexOf("Xabber")>0)
 			//assets.setAction(query);
-			//lastQueries.put(to, assets);
+			lastQueries.put(to, query+" -p "+p+" m="+m);
 			//long start_page = (assets.getPageNumber())*assets.getPageSize();
 			if(total>0) {
 				p +=1;
@@ -1544,7 +1539,7 @@ public class XMPPServiceImpl implements XMPPService{
 		sendMessage(msg,to);
 		//if(to.indexOf("Xabber")>0)
 		assets.setAction(query);
-		lastQueries.put(to, assets);
+		lastQueries.put(to, query);
 		long start_page = (assets.getPageNumber())*assets.getPageSize();
 		if(assets.getPageCount()>0) {
 			start_page +=1;
