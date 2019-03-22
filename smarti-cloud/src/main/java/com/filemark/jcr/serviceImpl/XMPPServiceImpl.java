@@ -1452,7 +1452,7 @@ public class XMPPServiceImpl implements XMPPService{
 			size = assets.size();
 			for(int i = 0; i < size; i++) {
 				JsonObject e = assets.get(i).getAsJsonObject();
-				String source = e.getAsJsonObject("_source").getAsString();
+				String source = e.getAsJsonObject("_source").toString();
 				Asset asset = gson.fromJson(source, Asset.class);
 				jcrService.updatePropertyByPath(asset.getPath(), "status", "bullhorn");
 
