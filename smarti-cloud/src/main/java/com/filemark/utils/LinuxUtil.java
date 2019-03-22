@@ -48,6 +48,7 @@ import static org.bytedeco.javacpp.opencv_imgcodecs.*;*/
 
 
 
+
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
 import org.slf4j.Logger;
@@ -55,6 +56,7 @@ import org.slf4j.LoggerFactory;
 
 import com.filemark.jcr.model.Asset;
 import com.filemark.jcr.model.SmartiNode;
+import com.google.gson.Gson;
 
 
 
@@ -67,6 +69,7 @@ public class LinuxUtil
 	public static String INDEX = "yuhongyun";
 	public static String TYPE = "assets";
 	public static ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+	public static Gson gson = new Gson();
     /**
      * Takes a file, and resizes it to the given width and height, while keeping
      * original proportions. Note: It resizes a new file rather than resizing 
@@ -1024,13 +1027,14 @@ public class LinuxUtil
     }
     
     public static String add(SmartiNode node) throws IOException, InterruptedException {
-		String json = ow.writeValueAsString(node);
+		//String json = ow.writeValueAsString(node);
+		String json = gson.toJson(node);
   		return xpost(LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/"+node.getUid(),json);
 
     } 
     
     public static String search(String username, String path, String query, long from, long size) throws IOException, InterruptedException {
-    	String json = "{ \"from\" : "+from+ ", \"size\" : "+size+",\"query\" : {\"bool\": {\"must\":  { \"query_string\": {\"query\" : \""+query+"\"} }, \"filter\" : {\"term\": {\"createdBy\" : \""+username+"\"} } } } }";
+    	String json = "{\"sort\" : [ {\"lastModified\" : {\"order\" : \"desc\" } }, \"_score\" ], \"from\" : "+from+ ", \"size\" : "+size+",\"query\" : {\"bool\": {\"must\":  { \"query_string\": {\"query\" : \""+query+"\"} }, \"filter\" : {\"term\": {\"createdBy\" : \""+username+"\"} } } } }";
    		String action = LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/_search";	
   		return xpost(action,json);
 

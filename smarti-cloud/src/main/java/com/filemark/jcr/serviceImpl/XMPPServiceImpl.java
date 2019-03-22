@@ -1432,7 +1432,9 @@ public class XMPPServiceImpl implements XMPPService{
 	private void processCommand(EntityBareJid from, Message message, Chat chat) {
 		
 	}	
-	
+	private void elasticSearch(String to, String query, Chat chat,long p, long m) throws NotConnectedException, XMPPException, InterruptedException, RepositoryException, IOException {
+		
+	}
 	private void processSearch(String to, String query, Chat chat,long p, long m) throws NotConnectedException, XMPPException, InterruptedException, RepositoryException, IOException {
 		
 		String keywords =" and contains(s.*,'"+ query+"')";
