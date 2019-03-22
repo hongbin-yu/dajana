@@ -256,6 +256,7 @@ public class JcrServicesImpl implements JcrServices {
 		return jcrTemplate.execute(new JcrCallback() { 
         	public Object doInJcr(Session session) throws RepositoryException { 
         		ObjectContentManager ocm = new  ObjectContentManagerImpl(session, mapper);
+        		SmartiNode newObj = obj;
         		if(session.nodeExists(obj.getPath())) {
             		ocm.update(obj);
             		Node node = session.getNode(obj.getPath());
@@ -272,8 +273,10 @@ public class JcrServicesImpl implements JcrServices {
             		Node node = session.getNode(obj.getPath());
             		node.setProperty("jcr:lastModified", Calendar.getInstance());
                     log.debug("Saved node.  node={}", node);
+                    newObj = (SmartiNode)getObject(obj.getPath());
+                    
     	            try {
-    					String result = LinuxUtil.add(obj);
+    					String result = LinuxUtil.add(newObj);
     					log.debug(result);
     				} catch (IOException | InterruptedException e) {
     					log.error(e.getMessage());
@@ -281,7 +284,7 @@ public class JcrServicesImpl implements JcrServices {
         		}
 	            ocm.save();
 
-	            return obj; 
+	            return newObj; 
         	} 
         });
 	}
