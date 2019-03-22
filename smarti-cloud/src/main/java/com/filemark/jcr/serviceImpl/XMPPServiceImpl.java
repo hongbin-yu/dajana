@@ -1436,7 +1436,7 @@ public class XMPPServiceImpl implements XMPPService{
 	}	
 	private void elasticSearch(String to, String query, Chat chat,long p, long m) throws NotConnectedException, XMPPException, InterruptedException, RepositoryException, IOException, ParseException {
 		String username = to.split("@")[0];
-		String json = LinuxUtil.search(query, "/"+username+"/assets", query, p, m);
+		String json = LinuxUtil.search(username,"/"+username+"/assets", query, p, m);
 		JsonParser parser = new JsonParser();
 		JsonObject jsonObject =  parser.parse(json).getAsJsonObject();
 		ShareFileForm shareFileForm = new ShareFileForm(DataForm.Type.form);
@@ -1446,13 +1446,14 @@ public class XMPPServiceImpl implements XMPPService{
 		if(jsonObject.getAsJsonObject("error") != null ) {
 			
 		}else {
-			JsonArray hits  = jsonObject.getAsJsonArray("hits");
-			size = hits.size();
+			JsonObject hits  = jsonObject.getAsJsonObject("hits");
+			total = hits.getAsJsonObject("total").getAsLong();
+			JsonArray assets = hits.getAsJsonArray("hits");
+			size = assets.size();
 			for(int i = 0; i < size; i++) {
-				JsonObject e = hits.get(i).getAsJsonObject();
-				total = e.getAsJsonObject("total").getAsLong();
+				JsonObject e = assets.get(i).getAsJsonObject();
 				String source = e.getAsJsonObject("_source").getAsString();
-				Asset asset = gson.fromJson(json, Asset.class);
+				Asset asset = gson.fromJson(source, Asset.class);
 				jcrService.updatePropertyByPath(asset.getPath(), "status", "bullhorn");
 
 				if(asset.getContentType().startsWith("image/")) {
