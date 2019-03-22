@@ -1452,11 +1452,14 @@ public class XMPPServiceImpl implements XMPPService{
 			size = assets.size();
 			for(int i = 0; i < size; i++) {
 				JsonObject e = assets.get(i).getAsJsonObject();
-				String source = e.getAsJsonObject("_source").toString();
-				Asset asset = gson.fromJson(source, Asset.class);
-				jcrService.updatePropertyByPath(asset.getPath(), "status", "bullhorn");
-
-				if(asset.getContentType().startsWith("image/")) {
+				JsonObject source = e.getAsJsonObject("_source");
+				//Asset asset = gson.fromJson(source, Asset.class);
+				String path = source.getAsJsonObject("pat").getAsString();
+				jcrService.updatePropertyByPath(path, "status", "bullhorn");
+				String contentType =  source.getAsJsonObject("path").getAsString();
+				String uid = source.getAsJsonObject("uid").getAsString();
+				Asset asset  = jcrService.getAssetById(uid);
+				if(contentType.startsWith("image/")) {
 					if(to.indexOf("AstraChat")>0) {
 						String url = protocol+"//"+filedomain+fileport+"/publish/httpfileupload/"+asset.getUid()+"/"+asset.getName().toLowerCase();
 						sendBinaryImage(to, url,asset);
