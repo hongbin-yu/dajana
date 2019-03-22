@@ -1027,8 +1027,8 @@ public class LinuxUtil
     }
     
     public static String add(SmartiNode node) throws IOException, InterruptedException {
-		//String json = ow.writeValueAsString(node);
-		String json = gson.toJson(node);
+		String json = ow.writeValueAsString(node);
+		//String json = gson.toJson(node);
   		return xpost(LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/"+node.getUid(),json);
 
     } 
