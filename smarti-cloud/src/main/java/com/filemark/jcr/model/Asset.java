@@ -43,7 +43,7 @@ public class Asset implements SmartiNode, Serializable {
 	@Field 
 	private Date originalDate;
 	@Field 
-	private Date modifiedDate;	
+	private Date modifiedDate = new Date();	
 	@Field
 	private String html;
 	@Field

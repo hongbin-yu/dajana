@@ -881,10 +881,7 @@ public class XMPPServiceImpl implements XMPPService{
 			//e.printStackTrace();
 			String error = e.getMessage().replaceFirst("Unrecognized option:", "不认识选项:{").replaceFirst("Missing argument for option:", "选项缺少参数:{")+" }\r";
 			sendHelp(options,from.toString(),error);
-		} catch (ParseException e) {
-			log.error(e.getMessage());
-		}
-        
+		} 
 		
 	}
 	
@@ -1434,7 +1431,7 @@ public class XMPPServiceImpl implements XMPPService{
 	private void processCommand(EntityBareJid from, Message message, Chat chat) {
 		
 	}	
-	private void elasticSearch(String to, String query, Chat chat,long p, long m) throws NotConnectedException, XMPPException, InterruptedException, RepositoryException, IOException, ParseException {
+	private void elasticSearch(String to, String query, Chat chat,long p, long m) throws NotConnectedException, XMPPException, InterruptedException, RepositoryException, IOException{
 		String username = to.split("@")[0];
 		String json = LinuxUtil.search(username,"/"+username+"/assets", query, p, m);
 		JsonParser parser = new JsonParser();
@@ -1453,12 +1450,19 @@ public class XMPPServiceImpl implements XMPPService{
 			for(int i = 0; i < size; i++) {
 				JsonObject e = assets.get(i).getAsJsonObject();
 				JsonObject source = e.getAsJsonObject("_source");
-				//Asset asset = gson.fromJson(source, Asset.class);
 				String path = source.getAsJsonPrimitive("path").getAsString();
 				jcrService.updatePropertyByPath(path, "status", "bullhorn");
 				String contentType =  source.getAsJsonPrimitive("contentType").getAsString();
 				String uid = source.getAsJsonPrimitive("uid").getAsString();
-				Asset asset  = jcrService.getAssetById(uid);
+				Asset asset = null;
+				try {
+					asset = gson.fromJson(source.toString(), Asset.class);
+				}catch(Exception ee) {
+					log.error(ee.getMessage());
+					asset  = jcrService.getAssetById(uid);
+				}
+
+				
 				if(contentType.startsWith("image/")) {
 					if(to.indexOf("AstraChat")>0) {
 						String url = protocol+"//"+filedomain+fileport+"/publish/httpfileupload/"+asset.getUid()+"/"+asset.getName().toLowerCase();
