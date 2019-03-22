@@ -1447,7 +1447,7 @@ public class XMPPServiceImpl implements XMPPService{
 			
 		}else {
 			JsonObject hits  = jsonObject.getAsJsonObject("hits");
-			total = hits.getAsJsonObject("total").getAsLong();
+			total = hits.getAsJsonPrimitive("total").getAsLong();
 			JsonArray assets = hits.getAsJsonArray("hits");
 			size = assets.size();
 			for(int i = 0; i < size; i++) {
