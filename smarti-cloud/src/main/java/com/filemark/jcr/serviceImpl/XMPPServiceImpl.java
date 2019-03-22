@@ -1454,10 +1454,10 @@ public class XMPPServiceImpl implements XMPPService{
 				JsonObject e = assets.get(i).getAsJsonObject();
 				JsonObject source = e.getAsJsonObject("_source");
 				//Asset asset = gson.fromJson(source, Asset.class);
-				String path = source.getAsJsonObject("path").getAsString();
+				String path = source.getAsJsonPrimitive("path").getAsString();
 				jcrService.updatePropertyByPath(path, "status", "bullhorn");
-				String contentType =  source.getAsJsonObject("contentType").getAsString();
-				String uid = source.getAsJsonObject("uid").getAsString();
+				String contentType =  source.getAsJsonPrimitive("contentType").getAsString();
+				String uid = source.getAsJsonPrimitive("uid").getAsString();
 				Asset asset  = jcrService.getAssetById(uid);
 				if(contentType.startsWith("image/")) {
 					if(to.indexOf("AstraChat")>0) {
