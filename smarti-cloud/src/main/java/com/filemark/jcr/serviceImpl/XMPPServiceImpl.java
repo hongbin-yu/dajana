@@ -107,6 +107,11 @@ import com.filemark.jcr.service.XMPPService;
 import com.filemark.utils.Buddy;
 import com.filemark.utils.LinuxUtil;
 import com.filemark.utils.WebPage;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.lowagie.text.pdf.PdfReader;
 
 
@@ -859,7 +864,7 @@ public class XMPPServiceImpl implements XMPPService{
         			}
 
         		}            	
-            	processSearch(message.getFrom().toString(),query,chat,p,m);
+        		elasticSearch(message.getFrom().toString(),query,chat,p,m);
 
             }
      
@@ -881,6 +886,8 @@ public class XMPPServiceImpl implements XMPPService{
 			//e.printStackTrace();
 			String error = e.getMessage().replaceFirst("Unrecognized option:", "不认识选项:{").replaceFirst("Missing argument for option:", "选项缺少参数:{")+" }\r";
 			sendHelp(options,from.toString(),error);
+		} catch (ParseException e) {
+			log.error(e.getMessage());
 		}
         
 		
@@ -1432,9 +1439,62 @@ public class XMPPServiceImpl implements XMPPService{
 	private void processCommand(EntityBareJid from, Message message, Chat chat) {
 		
 	}	
-	private void elasticSearch(String to, String query, Chat chat,long p, long m) throws NotConnectedException, XMPPException, InterruptedException, RepositoryException, IOException {
-		
+	private void elasticSearch(String to, String query, Chat chat,long p, long m) throws NotConnectedException, XMPPException, InterruptedException, RepositoryException, IOException, ParseException {
+		String username = to.split("@")[0];
+		String json = LinuxUtil.search(query, "/"+username+"/assets", query, p, m);
+		JsonParser parser = new JsonParser();
+		JsonObject jsonObject =  parser.parse(json).getAsJsonObject();
+		ShareFileForm shareFileForm = new ShareFileForm(DataForm.Type.form);
+		Message msg = new Message();
+		Gson gson = new Gson();
+		long total = 0,size= 0 ;
+		if(jsonObject.getAsJsonObject("error") != null ) {
+			
+		}else {
+			JsonArray hits  = jsonObject.getAsJsonArray("hits");
+			size = hits.size();
+			for(int i = 0; i < size; i++) {
+				JsonObject e = hits.get(i).getAsJsonObject();
+				total = e.getAsJsonObject("total").getAsLong();
+				String source = e.getAsJsonObject("_source").getAsString();
+				Asset asset = gson.fromJson(json, Asset.class);
+				jcrService.updatePropertyByPath(asset.getPath(), "status", "bullhorn");
+
+				if(asset.getContentType().startsWith("image/")) {
+					if(to.indexOf("AstraChat")>0) {
+						String url = protocol+"//"+filedomain+fileport+"/publish/httpfileupload/"+asset.getUid()+"/"+asset.getName().toLowerCase();
+						sendBinaryImage(to, url,asset);
+					}else if (to.indexOf("Spark")>0) {
+						sendAsset(asset,to);					
+					}else {
+						shareFileForm.addAsset(asset);
+						String url = protocol+"//"+filedomain+fileport+"/publish/httpfileupload/"+asset.getUid()+"/"+asset.getName().toLowerCase();
+						msg.setBody(url);
+					}
+				}else {
+					ShareFileForm fileForm = new ShareFileForm(DataForm.Type.form);
+					fileForm.addAsset(asset);
+					Message msg_doc = new Message();
+					msg_doc.setBody(asset.getTitle());
+					msg_doc.addExtension(fileForm);
+					sendMessage(msg_doc,to);
+				}				
+			}
+			msg.addExtension(shareFileForm);
+			sendMessage(msg,to);
+			//if(to.indexOf("Xabber")>0)
+			//assets.setAction(query);
+			//lastQueries.put(to, assets);
+			//long start_page = (assets.getPageNumber())*assets.getPageSize();
+			if(total>0) {
+				p +=1;
+				sendMessage(query+ " : "+p+"-"+(p+size-1)+ "/"+total,to);
+			}else {
+				sendMessage(query+ " : "+p+"-"+(p+size)+ "/"+total,to);
+			}			
+		}
 	}
+	
 	private void processSearch(String to, String query, Chat chat,long p, long m) throws NotConnectedException, XMPPException, InterruptedException, RepositoryException, IOException {
 		
 		String keywords =" and contains(s.*,'"+ query+"')";
