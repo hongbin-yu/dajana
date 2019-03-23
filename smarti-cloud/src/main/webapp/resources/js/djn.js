@@ -1289,19 +1289,20 @@ function elasticsearch(from) {
 	    		$("#availablePages").val(availablePages);
 	    		$.each(hits.hits, function(i,item){
 	    			outputView(item._source);
-	    			if(i%3==1) {
+	    			if((i+1)%3==0) {
 	    				$("#view_insert").append("<div class=\"clearfix\"/>");	
 	    			}
-			    	var offset = $("#loading");
+			    	/*var offset = $("#loading");
 			    	offset.left -= 20;
 			    	offset.top -= 100;
 			    	$('html, body').animate({
 			    	    scrollTop: offset.top,
 			    	    scrollLeft: offset.left
-			    	});
+			    	});*/
 	    		});
 	    	}
-	    	$("#loading").html(""+p*12+"/"+search_total);
+	    	if(search_total>0) 
+	    		$("#loading").html(""+p*12+"/"+search_total);
 	    },
 	    error: function(jqXHR, exception) {
 	        var error =  "<section class=\"alert alert-warning\"><h2 class=\"h3\">"+i18n("fail")+": elasticsearch"+",sttus:"+jqXHR+",exception:"+exception+"</h2></section>"; // 
