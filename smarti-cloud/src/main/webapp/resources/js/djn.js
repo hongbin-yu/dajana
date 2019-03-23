@@ -1275,12 +1275,14 @@ function elasticsearch() {
 	    	if(data.error) {
 	    		alert(data.error);
 	    	}else {
-	    		$("#view_insert").after("");	
+	    		$("#view_insert").html("");	
 	    		var hits = data.hits;
 	    		var total = hits.total;
 	    		$.each(hits.hits, function(i,item){
+	    			if(i%3==0) {
+	    				$("#view_insert").after("<div class=\"clearfix\"/>");	
+	    			}
 	    			outputView(item._source);
-	    			
 	    		});
 	    	}
 
