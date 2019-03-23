@@ -130,7 +130,7 @@
 	          url: '//home.dajana.net',
 	          success: function(result){
 		          $("#yuhongyun").attr("src","/resources/images/lock-secure.png");
-		          $("#yuhongyun-href").attr("href","home."+location.origin);
+		          //$("#yuhongyun-href").attr("href","home."+location.origin);
 	             //location.href=location.origin.replace("dajana.net","home.dajana.net");
 	          },     
 	          error: function(result){
