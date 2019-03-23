@@ -1280,7 +1280,7 @@ function elasticsearch() {
 	    		var total = hits.total;
 	    		$.each(hits.hits, function(i,item){
 	    			outputView(item._source);
-	    			if((i+1)%3==0) {
+	    			if((i+1)%3==1) {
 	    				$("#view_insert").after("<div class=\"clearfix\"/>");	
 	    			}
 	    		});
