@@ -1290,8 +1290,15 @@ function elasticsearch(from) {
 	    		$.each(hits.hits, function(i,item){
 	    			outputView(item._source);
 	    			if(i%3==1) {
-	    				$("#view_insert").after("<div class=\"clearfix\"/>");	
+	    				$("#view_insert").append("<div class=\"clearfix\"/>");	
 	    			}
+			    	var offset = $("#bottom-bar");
+			    	offset.left -= 20;
+			    	offset.top -= 100;
+			    	$('html, body').animate({
+			    	    scrollTop: offset.top,
+			    	    scrollLeft: offset.left
+			    	});
 	    		});
 	    	}
 
