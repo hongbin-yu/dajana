@@ -1289,7 +1289,7 @@ function elasticsearch(from) {
 	    		$("#availablePages").val(availablePages);
 	    		$.each(hits.hits, function(i,item){
 	    			outputView(item._source);
-	    			if((i+1)%3==1) {
+	    			if(i%3==1) {
 	    				$("#view_insert").after("<div class=\"clearfix\"/>");	
 	    			}
 	    		});
@@ -1328,7 +1328,7 @@ function outputSearch(data) {
 	  	}
     	
 	  	html +='</div>';
-    	$("#view_insert").after(html);		
+    	$("#view_insert").append(html);		
 
 }
 
