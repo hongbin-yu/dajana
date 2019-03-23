@@ -1295,7 +1295,6 @@ function elasticsearch() {
 
 function outputView(data) {
 	var html = "";
-	alert(data.uid);
 	    html = '<div id="'+data.uid+'" class="col-md-6 col-lg-4 well">';
     	if(data.contentType.indexOf('video/')>=0) {
     		html +='<a class="download" href="file/'+data.name+'?path='+data.path+'" target="_BLANK" download><span class="glyphicon glyphicon-download">下载</span></a>'
