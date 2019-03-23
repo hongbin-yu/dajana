@@ -34,7 +34,6 @@ import java.util.Random;
 import javax.activation.MimetypesFileTypeMap;
 import javax.inject.Inject;
 import javax.jcr.RepositoryException;
-import javax.net.ssl.HttpsURLConnection;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -45,7 +44,6 @@ import org.apache.poi.util.IOUtils;
 import org.apache.tika.mime.MimeType;
 import org.apache.tika.mime.MimeTypeException;
 import org.apache.tika.mime.MimeTypes;
-import org.jfree.util.Log;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -447,7 +445,7 @@ public class SiteController extends BaseController {
 		        request.getSession().invalidate();
 				response.sendRedirect("/forget");
 			}
-			model.addAttribute("tableContent", getAssetsHTML(path,type,r,null,model,request,null));
+			//model.addAttribute("tableContent", getAssetsHTML(path,type,r,null,model,request,null));
 			model.addAttribute("presences", XMPPService.getBuddies());
 			model.addAttribute("onlineCount", XMPPService.getOnlineCount());
 		}catch(Exception e) {
@@ -1264,7 +1262,7 @@ public class SiteController extends BaseController {
 		return data;
 	}
 
-	@RequestMapping(value = {"/site/getassets.html"}, method = RequestMethod.GET)
+	@RequestMapping(value = {"/site/getassets.html"}, method = RequestMethod.GET, produces="text/plain;charset=UTF-8")
 	public @ResponseBody String getAssetsHTML(String path,String type,String r,Integer w,Model model,HttpServletRequest request, HttpServletResponse response){
 		Folder folder = folderJson(path,type,model,request,response);
 		if(w ==null) w = 4; 
@@ -1274,7 +1272,7 @@ public class SiteController extends BaseController {
 		try {	
 			if((r==null || "".equals(r)) && html.exists() && folder.getLastModified() !=null && html.lastModified() > folder.getLastModified().getTime()) {
 				if(response != null) {
-					response.setContentType("text/html");
+					response.setContentType("text/plain");
 					FileUtils.copyFile(html, response.getOutputStream());
 					return null;					
 				}
@@ -2458,8 +2456,8 @@ public class SiteController extends BaseController {
 		return super.deleteNode(model, request, response);
 	}
 
-	@RequestMapping(value = {"/site/search.json"}, method = RequestMethod.GET, produces = { "application/json;**charset=UTF-8**" })
-	public @ResponseBody String search(String path,String q, Long from,Long size,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
+	@RequestMapping(value = {"/site/search.json"}, method = RequestMethod.GET, produces = { "application/json;charset=UTF-8" })
+	public @ResponseBody String search(String path,String q, Long from,Long size,Model model,HttpServletRequest request, HttpServletResponse response) throws IOException {
 		/*
 		URL url = new URL(LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/_search?"+request.getQueryString());
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -2478,13 +2476,40 @@ public class SiteController extends BaseController {
 		while(is.read(b)>0) {
 			out.write(b);
 		}*/
+		//out.close();
 		String query = request.getQueryString();
 		if(query==null) query = "*";
 		if(from == null) from = 0l;
 		if(size==null) size = 10l;
 		String username = getUsername();
 		if(path ==null || !path.startsWith("/assets/"+username)) path = "/assets/"+username;
-		response.getOutputStream().println(LinuxUtil.search(username,path, q,from,size));
+		
+			try {
+				String result = LinuxUtil.search(username,path, q,from,size);
+				response.getOutputStream().println(result);
+			} catch (IOException | InterruptedException e) {
+				logger.error(e.getMessage());
+				/*URL url = new URL(LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/_search?q="+q);
+				HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		    	conn.setReadTimeout(30000);
+		    	conn.addRequestProperty("Accept-Language", "en-US,en;q=0.8");
+		    	conn.addRequestProperty("User-Agent", "Mozilla");
+		    	conn.addRequestProperty("Referer", "dajana.net");
+		    	
+		    	String contentType = conn.getContentType();
+		    	byte b[] = new byte[1024];
+		    	InputStream is = conn.getInputStream(); 	
+		    	
+				response.setContentType(contentType);
+				response.setContentLength(conn.getContentLength());
+				OutputStream out = response.getOutputStream();
+				while(is.read(b)>0) {
+					out.write(b);
+				}
+				out.close();*/
+				return "{ \"error\" : { \"cause\": \" error\"}}";
+			}
+
 		//out.close();
 		//String username = getUsername();
 		//String query = request.getQueryString();

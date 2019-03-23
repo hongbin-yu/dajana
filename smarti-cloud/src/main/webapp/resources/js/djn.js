@@ -1265,9 +1265,38 @@ function output(data) {
     	});
 }
 
+function elasticsearch() {
+	//alert("q="+$("#elk_q").val());
+    $.ajax({
+	    url: 'search.json?path='+path+"&q="+$("#elk_q").val(),
+	    type: "GET",
+	    success: function(data) {
+
+	    	if(data.error) {
+	    		alert(data.error);
+	    	}else {
+	    		var hits = data.hits;
+	    		var total = hits.total;
+	    		alert("total="+total);
+	    		$.each(hits.hits, function(i,item){
+	    			alert(item._source);
+	    			outputView(item._source);
+	    			
+	    		});
+	    	}
+
+	    },
+	    error: function(jqXHR, exception) {
+	        var error =  "<section class=\"alert alert-warning\"><h2 class=\"h3\">"+i18n("fail")+": elasticsearch"+",sttus:"+jqXHR+",exception:"+exception+"</h2></section>"; // 
+	        $("#header_message").html(error);
+	    }
+    });
+	
+}
+
 function outputView(data) {
 	var html = "";
-
+	alert(data.uid);
 	    html = '<div id="'+data.uid+'" class="col-md-6 col-lg-4 well">';
     	if(data.contentType.indexOf('video/')>=0) {
     		html +='<a class="download" href="file/'+data.name+'?path='+data.path+'" target="_BLANK" download><span class="glyphicon glyphicon-download">下载</span></a>'
