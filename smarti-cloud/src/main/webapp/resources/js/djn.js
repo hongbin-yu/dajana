@@ -1356,7 +1356,7 @@ function outputView(data) {
 	  	}
     	
 	  	html +='</div>';
-    	$("#view_insert").after(html);		
+    	$("#view_insert").append(html);		
 
 }
 
