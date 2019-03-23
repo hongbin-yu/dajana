@@ -1279,10 +1279,10 @@ function elasticsearch() {
 	    		var hits = data.hits;
 	    		var total = hits.total;
 	    		$.each(hits.hits, function(i,item){
-	    			if(i%3==0) {
+	    			outputView(item._source);
+	    			if((i+1)%3==0) {
 	    				$("#view_insert").after("<div class=\"clearfix\"/>");	
 	    			}
-	    			outputView(item._source);
 	    		});
 	    	}
 
@@ -1293,6 +1293,33 @@ function elasticsearch() {
 	    }
     });
 	
+}
+function outputSearch(data) {
+	var html = "";
+	    html = '<div id="'+data.uid+'" class="col-md-6 col-lg-4 well">';
+    	if(data.contentType.indexOf('video/')>=0) {
+    		html +='<a class="download" href="file/'+data.name+'?path='+data.path+'" target="_BLANK" download><span class="glyphicon glyphicon-download">下载</span></a>'
+    			  +'<figure class="pull-left mrgn-md">'
+    			  +'<video poster="video2jpg.jpg?path='+data.path+'" title="'+data.title+'" controls="controls" preload="none" width="150" height="100">'
+    			  +'<source type="video/mp4" src="video.mp4?path='+data.path+'"/>'
+    			  +'</video>'
+    			  +'</figure>';   		
+    	}else {
+	    	html +='<a href="javascript:openImage(\''+data.link+'\')"><img id="img'+data.uid+'" src="'+data.icon+'" class="img-responsive  pull-left mrgn-rght-md" draggable="true"></img></a>';
+    	}
+	  	if(data.pdf) {
+	  		 html +='<a title="打开PDF" href="viewpdf.pdf?uid='+data.uid+'" target="_BLANK"><span class="glyphicon glyphicon-open"></span> 打开PDF</a>';
+	  	}
+	  	html	+='	<a class="download pull-right" href="file'+data.ext+'?path='+data.path+'" target="_BLANK" download="'+data.title+'"><span class="glyphicon glyphicon-download pull-right">下载</span></a>';
+
+    	html +='<div><input type="checkbox" name="puid" value="'+data.uid+'"> '+data.title+'</div>';
+	  	if(data.description) {
+	  		html +='<p>'+data.description+'</p>';
+	  	}
+    	
+	  	html +='</div>';
+    	$("#view_insert").after(html);		
+
 }
 
 function outputView(data) {
@@ -1318,7 +1345,7 @@ function outputView(data) {
 	  		html +='<p>'+data.description+'</p>';
 	  	}
     	
-	  	html +='<div class="clearfix"></div></div>';
+	  	html +='</div>';
     	$("#view_insert").after(html);		
 
 }
