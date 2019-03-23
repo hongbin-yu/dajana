@@ -1275,11 +1275,10 @@ function elasticsearch() {
 	    	if(data.error) {
 	    		alert(data.error);
 	    	}else {
+	    		$("#view_insert").after("");	
 	    		var hits = data.hits;
 	    		var total = hits.total;
-	    		alert("total="+total);
 	    		$.each(hits.hits, function(i,item){
-	    			alert(item._source);
 	    			outputView(item._source);
 	    			
 	    		});
@@ -1306,7 +1305,7 @@ function outputView(data) {
     			  +'</video>'
     			  +'</figure>';   		
     	}else {
-	    	html +='<a href="javascript:openImage(\''+data.link+'\')"><img id="img'+data.uid+'" src="'+data.iconSmall+'" class="img-responsive  pull-left mrgn-rght-md" draggable="true"></img></a>';
+	    	html +='<a href="javascript:openImage(\''+data.link+'\')"><img id="img'+data.uid+'" src="'+data.icon+'" class="img-responsive  pull-left mrgn-rght-md" draggable="true"></img></a>';
     	}
 	  	if(data.pdf) {
 	  		 html +='<a title="打开PDF" href="viewpdf.pdf?uid='+data.uid+'" target="_BLANK"><span class="glyphicon glyphicon-open"></span> 打开PDF</a>';
