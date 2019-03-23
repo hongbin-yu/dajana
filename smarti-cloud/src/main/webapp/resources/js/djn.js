@@ -2,6 +2,7 @@ var files=[];
 var droppedFiles = [];
 var dataTable = [];
 var total = 0;
+var search_total = 0;
 var i = 0;
 var $element = $( ".wb-sessto" );
 var settings = $element.data( "wb-sessto" );
@@ -71,7 +72,9 @@ function ScrollHandler(e) {
                 
                 //alert("browsemore.html?path="+path+"&type="+type+"&kw="+kw+"&p="+p+"&topage="+topage);
                 $("#loading").html("<img src=\"/resources/images/loadingx400.gif\" width=\"48\" height=\"48\" alt=\"\">");
+                elasticsearch(p);
                 //alert("near bottom!"+"browsemore.html?path="+path+"&input="+input+"&kw="+kw+"&p="+p);
+               /*
                 $.ajax ({
     			    url: "browsemore.html?path="+path+"&type="+type+"&kw="+kw+"&p="+p+"&topage="+topage,
     			    type: "GET", 
@@ -88,7 +91,7 @@ function ScrollHandler(e) {
     			    }
     			    // ... Other options like success and etc
     			}); 	    
-                
+                */
             }
 
         }else if($window.scrollTop() ==0) {
@@ -1265,19 +1268,25 @@ function output(data) {
     	});
 }
 
-function elasticsearch() {
+function elasticsearch(from) {
 	//alert("q="+$("#elk_q").val());
     $.ajax({
-	    url: 'search.json?path='+path+"&q="+$("#elk_q").val(),
+	    url: 'search.json?path='+path+"&q="+$("#elk_q").val()+"&from="+from+"&size=12",
 	    type: "GET",
 	    success: function(data) {
 
 	    	if(data.error) {
 	    		alert(data.error);
 	    	}else {
-	    		$("#view_insert").html("");	
+	    		if(from ==0) {
+	    			$("#view_insert").html("");	
+	    			p = 0;
+	    		}
+
 	    		var hits = data.hits;
-	    		var total = hits.total;
+	    		search_total = hits.total;
+	    		var availablePages = search_total/12;
+	    		$("#availablePages").val(availablePages);
 	    		$.each(hits.hits, function(i,item){
 	    			outputView(item._source);
 	    			if((i+1)%3==1) {
@@ -1294,6 +1303,7 @@ function elasticsearch() {
     });
 	
 }
+
 function outputSearch(data) {
 	var html = "";
 	    html = '<div id="'+data.uid+'" class="col-md-6 col-lg-4 well">';

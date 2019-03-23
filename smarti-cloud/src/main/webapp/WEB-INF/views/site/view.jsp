@@ -123,7 +123,7 @@
 		<a class="btn btn-default btn-xs" href=""><span class="glyphicon glyphicon-align-justify"></span></a>
 		<a class="btn btn-default btn-xs" href="#wb-cont" onclick="javascript:openFiles()"><span class="glyphicon glyphicon-camera"></span></a>
 		<input name="q" id="elk_q" size="20" type="text" value=""/>
-		<a class="btn btn-default btn-xs" href="javascript:elasticsearch()"><span class="glyphicon glyphicon-search"></span></a>
+		<a class="btn btn-default btn-xs" href="javascript:elasticsearch(0)"><span class="glyphicon glyphicon-search"></span></a>
 		<input class="form-control wb-inv" type="file" id="fileUpload" name="file" size="60" required="required"  multiple/>
 		<div class="wb-inv" id="selectedFiles"></div>
 	</form>	
