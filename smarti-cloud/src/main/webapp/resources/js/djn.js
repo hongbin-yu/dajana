@@ -1292,7 +1292,7 @@ function elasticsearch(from) {
 	    			if(i%3==1) {
 	    				$("#view_insert").append("<div class=\"clearfix\"/>");	
 	    			}
-			    	var offset = $("#bottom-bar");
+			    	var offset = $("#loading");
 			    	offset.left -= 20;
 			    	offset.top -= 100;
 			    	$('html, body').animate({
@@ -1301,7 +1301,7 @@ function elasticsearch(from) {
 			    	});
 	    		});
 	    	}
-
+	    	$("#loading").html(""+p*12+"/"+search_total);
 	    },
 	    error: function(jqXHR, exception) {
 	        var error =  "<section class=\"alert alert-warning\"><h2 class=\"h3\">"+i18n("fail")+": elasticsearch"+",sttus:"+jqXHR+",exception:"+exception+"</h2></section>"; // 

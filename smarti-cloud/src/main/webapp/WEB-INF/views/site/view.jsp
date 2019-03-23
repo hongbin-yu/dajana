@@ -99,7 +99,7 @@
 </nav>
 </div>
 </main>
-
+<div id="loading" class="text-center"></div>
 		
 <section id="left-bar" class="wb-overlay modal-content overlay-def wb-panel-l col-md-4 col-xs-12">
 			<header class="modal-header">
