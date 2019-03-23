@@ -1753,6 +1753,8 @@ public class XMPPServiceImpl implements XMPPService{
 		                	//calendar.setTimeInMillis(connection.getLastStanzaReceived());
 		                	//log.info("Last Stenza:"+calendar.getTime());
 		                }
+		                if(getOnlineCount() == 0) LinuxUtil.HDDOff();
+		                else LinuxUtil.HDDOn();
 		                log.debug("Online:"+getOnlineCount());
 						//log.info("Task performed on " + new Date()+", isConnection:"+pingManager.pingMyServer());
 					} catch (NotConnectedException e) {
