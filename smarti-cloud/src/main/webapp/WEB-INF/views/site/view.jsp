@@ -43,6 +43,7 @@
    </tbody> 
   </table>      
 	</section>	
+	<div id="loading" class="text-center"></div>
 </div>
     <nav class="wb-sec col-md-3 col-md-pull-9" typeof="SiteNavigationElement" id="wb-sec" role="navigation">
 		<input type="hidden" id="folderpath" name="path" value="${folder.path}"/>
@@ -99,7 +100,7 @@
 </nav>
 </div>
 </main>
-<div id="loading" class="text-center"></div>
+
 		
 <section id="left-bar" class="wb-overlay modal-content overlay-def wb-panel-l col-md-4 col-xs-12">
 			<header class="modal-header">
