@@ -71,6 +71,7 @@ function ScrollHandler(e) {
                 p ++;
                 
                 //alert("browsemore.html?path="+path+"&type="+type+"&kw="+kw+"&p="+p+"&topage="+topage);
+                
                 $("#loading").html("<img src=\"/resources/images/loadingx400.gif\" width=\"48\" height=\"48\" alt=\"\">");
                 elasticsearch(p);
                 //alert("near bottom!"+"browsemore.html?path="+path+"&input="+input+"&kw="+kw+"&p="+p);

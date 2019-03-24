@@ -55,7 +55,8 @@
 			<input type="hidden" id= "input" name="input" value="${input}"/>
 			<input type="hidden" id="kw" name="kw" value="${kw}"/>		
 			<input type="hidden" id="pageNumber" name="pageNumber" value="${assets.pageNumber}"/>	
-			<input type="hidden" id="availablePages" name="availablePages" value="${assets.availablePages}"/>				
+			<!-- input type="hidden" id="availablePages" name="availablePages" value="${assets.availablePages}"/-->				
+			<input type="hidden" id="availablePages" name="availablePages" value="0"/>				
 			<input type="hidden" id="topage" name="topage" value="assetsmore"/>			    
 					<div class="form-group pull-right">
 					<label for="type"><spring:message code="djn.display"/></label>
