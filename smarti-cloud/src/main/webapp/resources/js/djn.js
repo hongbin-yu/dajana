@@ -1277,7 +1277,7 @@ function elasticsearch(from) {
 	    success: function(data) {
 
 	    	if(data.error) {
-	    		alert(data.error);
+	    		alert(data.error.reason);
 	    	}else {
 	    		if(from ==0) {
 	    			$("#view_insert").html("");	
@@ -1302,8 +1302,7 @@ function elasticsearch(from) {
 			    	});*/
 	    		});
 	    	}
-	    	if(search_total>0) 
-	    		$("#loading").html(""+(p*12 >search_total?search_total:p*12)+"/"+search_total);
+    		$("#loading").html(""+(p*12 >search_total?search_total:p*12)+"/"+search_total);
 	    },
 	    error: function(jqXHR, exception) {
 	        var error =  "<section class=\"alert alert-warning\"><h2 class=\"h3\">"+i18n("fail")+": elasticsearch"+",sttus:"+jqXHR+",exception:"+exception+"</h2></section>"; // 
