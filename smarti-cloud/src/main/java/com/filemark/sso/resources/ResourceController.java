@@ -29,9 +29,10 @@ public class ResourceController  extends BaseController{
     public String logout(String redirect,HttpServletRequest request,HttpServletResponse httpServletResponse) {
     	//String username = getUsername();
         String domain = request.getServerName();//.replaceAll(".*\\.(?=.*\\.)", "");
+        String root = domain.replaceAll(".*\\.(?=.*\\.)", "");
         
         CookieUtil.clear(httpServletResponse, JwtUtil.jwtTokenCookieName,domain);
-        CookieUtil.clear(httpServletResponse, JwtUtil.jwtTokenCookieName,"dajana.ca");
+        CookieUtil.clear(httpServletResponse, JwtUtil.jwtTokenCookieName,root);
         Cookie[] cookies = request.getCookies();
         if (cookies != null)
             for (Cookie cookie : cookies) {
