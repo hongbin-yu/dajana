@@ -435,6 +435,11 @@ public class Asset implements SmartiNode, Serializable {
 		this.reads = reads;
 	}
 
+	@Override
+	public String getType() {
+		return Asset.class.getSimpleName().toLowerCase();
+	}
+
 
 	
 }

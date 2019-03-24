@@ -5,6 +5,7 @@ public interface SmartiNode {
 	public String getUid();
 	public String getPath();
 	public String getTitle();
+	public String getType();
 
 	
 }

@@ -58,7 +58,7 @@ function ScrollHandler(e) {
         //console.log('scroll');
 
         //do work
-        if ($window.scrollTop() + $window.height() > $document.height() - 100) {
+        if ($window.scrollTop() + $window.height() > $document.height()) {
         	avalaiblePages = $("#availablePages").val();
         	type = $("#type").val();
         	kw=$("#kw").val();
@@ -1344,7 +1344,7 @@ function outputSearch(data) {
 function outputView(data) {
 	var html = "";
 	    html = '<div id="'+data.uid+'" class="col-md-6 col-lg-4 well">';
-    	if(data.contentType.indexOf('video/')>=0) {
+    	if(data.contentType && data.contentType.indexOf('video/')>=0) {
     		html +='<a class="download" href="file/'+data.name+'?path='+data.path+'" target="_BLANK" download><span class="glyphicon glyphicon-download">下载</span></a>'
     			  +'<figure class="pull-left mrgn-md">'
     			  +'<video poster="video2jpg.jpg?path='+data.path+'" title="'+data.title+'" controls="controls" preload="none" width="150" height="100">'

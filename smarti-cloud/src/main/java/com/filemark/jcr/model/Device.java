@@ -79,5 +79,8 @@ public class Device implements SmartiNode {
 	public void setUsage(String usage) {
 		this.usage = usage;
 	}
-
+	@Override
+	public String getType() {
+		return Device.class.getSimpleName().toLowerCase();
+	}
 }

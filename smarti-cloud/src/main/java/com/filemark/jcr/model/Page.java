@@ -9,6 +9,7 @@ import java.util.List;
 
 
 
+
 import org.apache.jackrabbit.ocm.mapper.impl.annotation.Field;
 import org.apache.jackrabbit.ocm.mapper.impl.annotation.Node;
 
@@ -352,6 +353,9 @@ public class Page implements SmartiNode, Serializable{
 		this.timeout = timeout;
 	}
 
-
+	@Override
+	public String getType() {
+		return Page.class.getSimpleName().toLowerCase();
+	}
 	
 }

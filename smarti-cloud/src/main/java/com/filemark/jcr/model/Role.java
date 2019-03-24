@@ -124,6 +124,9 @@ public class Role implements SmartiNode,Serializable {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+	@Override
+	public String getType() {
+		return Role.class.getSimpleName().toLowerCase();
+	}
 	
 }

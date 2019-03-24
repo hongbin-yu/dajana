@@ -43,5 +43,8 @@ public class JcrNode implements SmartiNode {
 	public String getUid() {
 		return uid;
 	}
-
+	@Override
+	public String getType() {
+		return JcrNode.class.getSimpleName().toLowerCase();
+	}
 }

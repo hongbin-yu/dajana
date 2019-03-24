@@ -37,4 +37,9 @@ public class Product implements Serializable, SmartiNode {
 	public String getUid() {
 		return uid;
 	}
+	
+	@Override
+	public String getType() {
+		return Product.class.getSimpleName().toLowerCase();
+	}	
 }

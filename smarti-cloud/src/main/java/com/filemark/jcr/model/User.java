@@ -375,5 +375,8 @@ public class User implements SmartiNode {
 	public void setLocation(String location) {
 		this.location = location;
 	}
-	
+	@Override
+	public String getType() {
+		return User.class.getSimpleName().toLowerCase();
+	}
 }

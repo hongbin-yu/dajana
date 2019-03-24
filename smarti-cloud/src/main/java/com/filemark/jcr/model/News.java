@@ -137,5 +137,8 @@ public class News implements Serializable, SmartiNode {
 	public void setContentType(String contentType) {
 		this.contentType = contentType;
 	}
-
+	@Override
+	public String getType() {
+		return News.class.getSimpleName().toLowerCase();
+	}
 }

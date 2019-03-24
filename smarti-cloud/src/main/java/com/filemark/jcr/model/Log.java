@@ -84,5 +84,8 @@ public class Log implements SmartiNode{
 		return null;
 	}
 	
-	
+	@Override
+	public String getType() {
+		return Log.class.getSimpleName().toLowerCase();
+	}
 }

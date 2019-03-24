@@ -332,7 +332,10 @@ public class Folder implements SmartiNode, Serializable {
 		this.notice = notice;
 	}
 
-
+	@Override
+	public String getType() {
+		return Folder.class.getSimpleName().toLowerCase();
+	}
 	
 	
 }

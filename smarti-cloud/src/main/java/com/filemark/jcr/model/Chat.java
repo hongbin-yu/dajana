@@ -134,6 +134,9 @@ public class Chat implements SmartiNode, Serializable {
 	public void setTimer(Long timer) {
 		this.timer = timer;
 	}
-	
+	@Override
+	public String getType() {
+		return Chat.class.getSimpleName().toLowerCase();
+	}
 	
 }

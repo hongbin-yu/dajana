@@ -146,4 +146,8 @@ public class Djcontainer implements SmartiNode {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	@Override
+	public String getType() {
+		return Djcontainer.class.getSimpleName().toLowerCase();
+	}
 }

@@ -7,6 +7,7 @@ import org.apache.jackrabbit.ocm.mapper.impl.annotation.Collection;
 import org.apache.jackrabbit.ocm.mapper.impl.annotation.Field;
 import org.apache.jackrabbit.ocm.mapper.impl.annotation.Node;
 
+import com.filemark.jcr.model.Asset;
 import com.filemark.jcr.model.Role;
 import com.filemark.jcr.model.SmartiNode;
 
@@ -141,7 +142,10 @@ public class User implements SmartiNode, java.io.Serializable {
 	public String getUid() {
 		return uid;
 	}
-	
+	@Override
+	public String getType() {
+		return User.class.getSimpleName().toLowerCase();
+	}
 	
 	
 }
