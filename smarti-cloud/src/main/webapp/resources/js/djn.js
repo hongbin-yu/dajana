@@ -1279,10 +1279,10 @@ function elasticsearch(from) {
 	    	if(data.error) {
 	    		alert(data.error.reason);
 	    	}else {
-	    		if(from ==0) {
-	    			$("#view_insert").html("");	
-	    			p = 0;
-	    		}
+	    		//if(from ==0) {
+	    		$("#view_insert").html("");	
+	    		//	p = 0;
+	    		//}
 
 	    		var hits = data.hits;
 	    		search_total = hits.total;
@@ -1291,7 +1291,7 @@ function elasticsearch(from) {
 	    		$.each(hits.hits, function(i,item){
 	    			outputView(item._source);
 	    			if((i+1)%3==0) {
-	    				$("#view_insert").html("<div class=\"clearfix\"/>");	
+	    				$("#view_insert").append("<div class=\"clearfix\"/>");	
 	    			}
 			    	/*var offset = $("#loading");
 			    	offset.left -= 20;
@@ -1313,13 +1313,11 @@ function elasticsearch(from) {
 	
 }
 function pagination(p, total) {
-	var page_total = 0;
-	page_total = total / 12;
-	if(total % 12 >0) page_total++;
+	var page_total = Math.ceil(total / 12);
 	var end =5;
 	if(page_total <5) end = page_total;
 	var html = "<ul class=\"pagination\">";
-	if(p>0) {
+	if(p>1) {
 		html +="<li><a rel='prev' href=\"javascript:elasticsearch("+(p-1)+")\">上一页</a></li>";
 	}
 	if(p>4) {
@@ -1330,10 +1328,12 @@ function pagination(p, total) {
 		 html+="<li><a href=\"javascript:elasticsearch("+(p+1)+")\">"+(p+1)+"</a></li>";
 	}else {
 		for( var i = 1; i <=end; i++) {
-			if(p+1==i)
-			  html+="<li class=\"active\">"+i+"</li>";
-			else
-			  html+="<li><a href=\"javascript:elasticsearch("+(i-1)+")\">"+i+"</a></li>";
+			if(p+1==i) {
+				  html+="<li class=\"active\">"+i+"</li>";
+				
+			} else {
+				  html+="<li><a href=\"javascript:elasticsearch("+(i-1)+")\">"+i+"</a></li>";
+			}
 
 		}		
 	}
@@ -1371,7 +1371,7 @@ function outputSearch(data) {
 	  	}
     	
 	  	html +='</div>';
-    	$("#view_insert").append(html);		
+    	$("#view_insert").html(html);		
 
 }
 
