@@ -43,6 +43,7 @@
    </tbody> 
   </table>      
 	</section>	
+	<div class="clearfix"></div>
 	<div id="loading" class="text-center"></div>
 </div>
     <nav class="wb-sec col-md-3 col-md-pull-9" typeof="SiteNavigationElement" id="wb-sec" role="navigation">
