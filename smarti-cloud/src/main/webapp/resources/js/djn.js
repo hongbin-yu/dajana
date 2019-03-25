@@ -1337,7 +1337,7 @@ function pagination(p, total) {
 			}
 
 		}		
-		if(p!=page_total-1)
+		if(p!=page_total-1 && page_total > 5)
 			html +="<li><a href=\"javascript:elasticsearch("+(page_total -1)+")\">"+page_total+"</a></li>";
 
 	}
