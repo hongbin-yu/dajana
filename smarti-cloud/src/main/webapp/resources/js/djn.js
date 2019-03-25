@@ -1318,7 +1318,7 @@ function pagination(p, total) {
 	if(page_total <5) end = page_total;
 	var html = "<ul class=\"pagination\">";
 	if(p>0) {
-		html +="<li><a rel='prev' href=\"javascript:elasticsearch("+(p-1)+")\">上一页</a></li>";
+		html +="<li><a rel='prev' href=\"javascript:elasticsearch("+(p-1)+")\"></a></li>";
 	}
 	if(p>4) {
 		 html+="<li><a href=\"javascript:elasticsearch(0)\">1</a></li>";
@@ -1342,7 +1342,7 @@ function pagination(p, total) {
 
 	}
 	if((p+1) < page_total) {
-		html +="<li><a rel='next' href=\"javascript:elasticsearch("+(p+1)+")\">下一页</a></li>";
+		html +="<li><a rel='next' href=\"javascript:elasticsearch("+(p+1)+")\"></a></li>";
 		
 	}
 	html+="</ul>";
