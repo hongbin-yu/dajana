@@ -1291,7 +1291,7 @@ function elasticsearch(from) {
 	    		$.each(hits.hits, function(i,item){
 	    			outputView(item._source);
 	    			if((i+1)%3==0) {
-	    				$("#view_insert").append("<div class=\"clearfix\"/>");	
+	    				$("#view_insert").html("<div class=\"clearfix\"/>");	
 	    			}
 			    	/*var offset = $("#loading");
 			    	offset.left -= 20;
@@ -1313,7 +1313,8 @@ function elasticsearch(from) {
 	
 }
 function pagination(p, total) {
-	var page_total = total / 12;
+	var page_total = 0;
+	page_total = total / 12;
 	if(total % 12 >0) page_total++;
 	var end =5;
 	if(page_total <5) end = page_total;
@@ -1322,19 +1323,23 @@ function pagination(p, total) {
 		html +="<li><a rel='prev' href=\"javascript:elasticsearch("+(p-1)+")\">上一页</a></li>";
 	}
 	if(p>4) {
-		 html+="<li><a href=\"javascript:elasticsearch(1)\">1</a></li>";
+		 html+="<li><a href=\"javascript:elasticsearch(0)\">1</a></li>";
 		 
  		 html+="<li><a href=\"javascript:elasticsearch("+(p-1)+")\">"+(p-1)+"</a></li>";
-		 html+="<li class=\"active\">"+p+"</a></li>";
+		 html+="<li class=\"active\">"+p+"</li>";
 		 html+="<li><a href=\"javascript:elasticsearch("+(p+1)+")\">"+(p+1)+"</a></li>";
 	}else {
 		for( var i = 1; i <=end; i++) {
-			 html+="<li><a href=\"javascript:elasticsearch("+i+")\">"+i+"</a></li>";
+			if(p+1==i)
+			  html+="<li class=\"active\">"+i+"</li>";
+			else
+			  html+="<li><a href=\"javascript:elasticsearch("+(i-1)+")\">"+i+"</a></li>";
+
 		}		
 	}
 	if(p < page_total) {
 		if(p!=page_total)
-			html +="<li><a href=\"javascript:elasticsearch("+page_total+")\">"+page_total+"</a></li>";
+			html +="<li><a href=\"javascript:elasticsearch("+(page_total -1)+")\">"+page_total+"</a></li>";
 		html +="<li><a rel='next' href=\"javascript:elasticsearch("+(p+1)+")\">下一页</a></li>";
 		
 	}
