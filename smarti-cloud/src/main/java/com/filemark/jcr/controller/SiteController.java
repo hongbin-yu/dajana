@@ -445,7 +445,7 @@ public class SiteController extends BaseController {
 		        request.getSession().invalidate();
 				response.sendRedirect("/forget");
 			}
-			//model.addAttribute("tableContent", getAssetsHTML(path,type,r,null,model,request,null));
+			model.addAttribute("tableContent", getAssetsHTML(path,type,r,null,model,request,null));
 			model.addAttribute("presences", XMPPService.getBuddies());
 			model.addAttribute("onlineCount", XMPPService.getOnlineCount());
 		}catch(Exception e) {

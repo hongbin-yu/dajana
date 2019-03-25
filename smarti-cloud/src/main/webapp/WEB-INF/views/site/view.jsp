@@ -38,8 +38,8 @@
      <th>Download link(s)</th> 
     </tr> 
    </thead> 
-   <tbody data-ajax-replace="getassets.html?path=${folder.path}&type=${type}&r=${param.r}"> 
-
+   <tbody><!--/* data-ajax-replace="getassets.html?path=${folder.path}&type=${type}&r=${param.r}"*/--> 
+	${tableContent }
    </tbody> 
   </table>      
 	</section>	
