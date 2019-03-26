@@ -1314,13 +1314,13 @@ function elasticsearch(from) {
 }
 function pagination(p, total) {
 	var page_total = Math.ceil(total / 12);
-	var end =5;
+	var end =4;
 	if(page_total <5) end = page_total;
 	var html = "<ul class=\"pagination\">";
 	if(p>0) {
 		html +="<li><a rel='prev' href=\"javascript:elasticsearch("+(p-1)+")\"></a></li>";
 	}
-	if(p>4) {
+	if(p>=4) {
 		 html+="<li><a href=\"javascript:elasticsearch(0)\">1</a></li>";
 		 
  		 html+="<li><a href=\"javascript:elasticsearch("+(p-1)+")\">"+(p)+"</a></li>";
