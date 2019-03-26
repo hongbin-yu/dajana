@@ -1337,10 +1337,11 @@ function pagination(p, total) {
 			}
 
 		}		
-		if(p!=page_total-1 && page_total > 5)
-			html +="<li><a href=\"javascript:elasticsearch("+(page_total -1)+")\">"+page_total+"</a></li>";
 
 	}
+	if(p!=page_total-1 && page_total > 5)
+		html +="<li><a href=\"javascript:elasticsearch("+(page_total -1)+")\">"+page_total+"</a></li>";
+
 	if((p+1) < page_total) {
 		html +="<li><a rel='next' href=\"javascript:elasticsearch("+(p+1)+")\"></a></li>";
 		
@@ -1401,7 +1402,7 @@ function outputView(data) {
 	  	}
     	
 	  	html +='</div>';
-    	$("#view_insert").after(html);		
+    	$("#view_insert").append(html);		
 
 }
 
