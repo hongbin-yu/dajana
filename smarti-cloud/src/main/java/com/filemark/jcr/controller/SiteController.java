@@ -2507,7 +2507,7 @@ public class SiteController extends BaseController {
 					out.write(b);
 				}
 				out.close();*/
-				return "{ \"error\" : { \"cause\": \" error\"}}";
+				return "{ \"error\" : { \"reason\": \""+e.getMessage()+"\"}}";
 			}
 
 		//out.close();

@@ -1373,7 +1373,7 @@ function outputSearch(data) {
 	  	}
     	
 	  	html +='</div>';
-    	$("#view_insert").html(html);		
+    	$("#top_insert").after(html);		
 
 }
 
@@ -1401,7 +1401,7 @@ function outputView(data) {
 	  	}
     	
 	  	html +='</div>';
-    	$("#view_insert").append(html);		
+    	$("#top_insert").after(html);		
 
 }
 

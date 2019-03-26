@@ -14,6 +14,7 @@
         <a class="btn btn-default pull-right" href="javascript:downloadAll()" title="下载本页全部文件"><span id="downloadIcon" class="glyphicon glyphicon-download"></span></a>	
         <a class="btn btn-default pull-right" href="view.html?path=${folder.path}&type=${type}&r=1&w=${param.w}" title="刷屏"><span class="glyphicon glyphicon-refresh"></span></a>	
 		<a href="javascript:openPdf()" class="btn btn-primary pull-right" title="打开PDF"><span class="glyphicon glyphicon-open"></span></a>
+		<a class="btn btn-default pull-right" href="#wb-cont" onclick="javascript:openFiles()"><span class="glyphicon glyphicon-camera"></span></a>
 
         </h1>
 	    <span id="pagetag">${folder.description }</span>         
@@ -23,7 +24,7 @@
      <div class="col-md-9 col-md-push-3">
      <span id="top_insert">
 	</span>
-	<section class="cn-search-dataTable" id="view_insert"> 
+	<section class="cn-search-dataTable"> 
 	        <h2 class="wb-inv">查询结果</h2>
 	        <div class="mrgn-tp-xl"></div> <!-- /*&quot;aoColumns&quot;: [ { &quot;data&quot;: &quot;title&quot;,&quot;sClass&quot;: &quot;product-name h4&quot; },  { &#34;data&#34;: &#34;url&#34;,&quot;sClass&quot;: &quot;product-platforms&quot; }, { &#34;data&#34;: &#34;description&#34;,&quot;sClass&quot;: &quot;product-shortdescription&quot; },  { &quot;data&quot;: &quot;lastPublished&quot;,&quot;sClass&quot;: &quot;product-platforms&quot; },{&#34;data&#34;: &#34;contentType&#34;, &quot;sClass&quot;: &quot;product-longdescription&quot; }, { &#34;data&#34;: &#34;location&#34;, &quot;sClass&quot;: &quot;product-department&quot; },{&#34;data&#34;: &#34;lastModified&#34;,  &quot;sClass&quot;: &quot;product-link-container&quot; } ]&quot;sAjaxSource&quot;: &quot;getassets.json?path=${folder.path}&type=${type}&w=${param.w}&r=${param.r}&quot;,*/ -->
   <table id="mobile-centre" class="product-listing wb-tables" data-wb-tables="{&quot;bDeferRender&quot;: true, &quot;pageLength&quot;: 12, &quot;aLengthMenu&quot;: [[12, 24, 48, 96, -1], [12, 24, 48, 98, &quot;全部&quot;]], &quot;aaSorting&quot;: [[1,&quot;desc&quot;]], &quot;sDom&quot;: &quot;<\&quot;wrapper\&quot;flitp>&quot; }"> 
@@ -119,7 +120,7 @@
            </div>     
 </section> 
 <section id="bottom-bar" class="wb-overlay modal-content overlay-def wb-bar-b text-center">
-	<form action="upload.html" method="POST" id="form-upload" enctype="multipart/form-data">
+	<form action="javascript:elasticsearch(0)" method="POST" id="form-upload" enctype="multipart/form-data">
 		<input type="hidden" id="path" name="path" value="${folder.path}"/>
 		<input type="hidden" id="type"  name="type" value="${type}"/>
 		<input type="hidden" id="input" name="input" value="${input}"/>
@@ -135,7 +136,6 @@
 		<script type="text/javascript">
 			var selected_uid = "";
 			function setUid(uid) {
-				
 				selected_uid = uid;
 				$( "#left-bar" ).trigger( "open.wb-overlaylbx" );
 /* 				$( document ).trigger( "open.wb-overlaylbx", [
