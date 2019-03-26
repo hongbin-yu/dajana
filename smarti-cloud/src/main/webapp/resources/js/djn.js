@@ -1401,7 +1401,7 @@ function outputView(data) {
 	  	}
     	
 	  	html +='</div>';
-    	$("#top_insert").after(html);		
+    	$("#view_insert").after(html);		
 
 }
 

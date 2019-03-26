@@ -24,7 +24,7 @@
      <div class="col-md-9 col-md-push-3">
      <span id="top_insert">
 	</span>
-	<section class="cn-search-dataTable"> 
+	<section class="cn-search-dataTable" id="view_insert"> 
 	        <h2 class="wb-inv">查询结果</h2>
 	        <div class="mrgn-tp-xl"></div> <!-- /*&quot;aoColumns&quot;: [ { &quot;data&quot;: &quot;title&quot;,&quot;sClass&quot;: &quot;product-name h4&quot; },  { &#34;data&#34;: &#34;url&#34;,&quot;sClass&quot;: &quot;product-platforms&quot; }, { &#34;data&#34;: &#34;description&#34;,&quot;sClass&quot;: &quot;product-shortdescription&quot; },  { &quot;data&quot;: &quot;lastPublished&quot;,&quot;sClass&quot;: &quot;product-platforms&quot; },{&#34;data&#34;: &#34;contentType&#34;, &quot;sClass&quot;: &quot;product-longdescription&quot; }, { &#34;data&#34;: &#34;location&#34;, &quot;sClass&quot;: &quot;product-department&quot; },{&#34;data&#34;: &#34;lastModified&#34;,  &quot;sClass&quot;: &quot;product-link-container&quot; } ]&quot;sAjaxSource&quot;: &quot;getassets.json?path=${folder.path}&type=${type}&w=${param.w}&r=${param.r}&quot;,*/ -->
   <table id="mobile-centre" class="product-listing wb-tables" data-wb-tables="{&quot;bDeferRender&quot;: true, &quot;pageLength&quot;: 12, &quot;aLengthMenu&quot;: [[12, 24, 48, 96, -1], [12, 24, 48, 98, &quot;全部&quot;]], &quot;aaSorting&quot;: [[1,&quot;desc&quot;]], &quot;sDom&quot;: &quot;<\&quot;wrapper\&quot;flitp>&quot; }"> 
