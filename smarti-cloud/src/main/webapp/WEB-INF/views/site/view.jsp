@@ -84,12 +84,12 @@
         <ul id="leftmenu_ul" class="list-group menu list-unstyled">
         <c:forEach items="${leftmenu.subfolders}" var="item" varStatus="loop">
             <li>
-             <a  class="list-group-item" href='<c:url value="view.html?path=${item.path }&type=${type }"></c:url>'><c:if test="${item.path==folder.path }"><span class="glyphicon glyphicon-folder-open"></span></c:if><c:if test="${item.path!=folder.path }"><span class="glyphicon glyphicon-folder-close"></span></c:if> ${item.title}</a>
+             <a  class="list-group-item" href='<c:url value="view.html?path=${item.path }&type=${type }"></c:url>' onclick="javascript:itemClick($(this))"><c:if test="${item.path==folder.path }"><span class="glyphicon glyphicon-folder-open"></span></c:if><c:if test="${item.path!=folder.path }"><span class="glyphicon glyphicon-folder-close"></span></c:if> ${item.title}</a>
 <%--    	    <a class="list-group-item" href='javascript:view("${item.path}","${type }","${param.w}")'><c:if test="${item.path == path }"><span class="glyphicon glyphicon-folder-open"></span></c:if><c:if test="${item.path != path }"><span class="glyphicon glyphicon-folder-close"></span></c:if> ${item.title}</a>--%>
                 <ul class="list-group menu list-unstyled">
                     <c:forEach items="${item.subfolders}" var="child" varStatus="loop">
                     	<li>
-                    	<a class="list-group-item" href='<c:url value="view.html?path=${child.path}&type=${type }&w=${param.w}"></c:url>'><span class="glyphicon glyphicon-folder-close"></span> ${child.title}</a>
+                    	<a class="list-group-item" href='<c:url value="view.html?path=${child.path}&type=${type }&w=${param.w}"></c:url>' onclick="javascript:itemClick($(this))"><span class="glyphicon glyphicon-folder-close"></span> ${child.title}</a>
 <%--                   	    	<a class="list-group-item" href='javascript:view("${child.path}","${child.title }","${type }","${param.w}")'><span class="glyphicon glyphicon-folder-close"></span> ${child.title}</a> --%>
 						</li>
                     </c:forEach>
@@ -150,5 +150,7 @@
 				
 				alert(to +"/"+selected_uid);
 				};
-	
+			function itemClick(item) {
+				item.append("<img src=\"/resources/images/loading16x16.gif\" alt=\"\">");
+			}	
 		</script>
