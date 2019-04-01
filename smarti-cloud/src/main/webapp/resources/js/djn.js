@@ -1291,7 +1291,7 @@ function elasticsearch(from) {
 	    		$.each(hits.hits, function(i,item){
 	    			outputView(item._source);
 	    			if((i+1)%3==0) {
-	    				$("#view_insert").append("<div class=\"clearfix\"/>");	
+	    				$("#top_insert").append("<div class=\"clearfix\"/>");	
 	    			}
 			    	/*var offset = $("#loading");
 			    	offset.left -= 20;
@@ -1320,7 +1320,7 @@ function pagination(p, total) {
 	if(p>0) {
 		html +="<li><a rel='prev' href=\"javascript:elasticsearch("+(p-1)+")\"></a></li>";
 	}
-	if(p>=4) {
+	if(p>4) {
 		 html+="<li><a href=\"javascript:elasticsearch(0)\">1</a></li>";
 		 
  		 html+="<li><a href=\"javascript:elasticsearch("+(p-1)+")\">"+(p)+"</a></li>";
@@ -1351,6 +1351,45 @@ function pagination(p, total) {
 }
 
 function outputSearch(data) {
+	var icon = data.icon;
+	var length = data.title.length();
+	var title ="<input type=\"checkbox\" name=\"puid\" value=\""+data.uid+"\"><a href=\""+data.link+"\" target=\"_blank\" title=\"打开原图\">"+(length>25?data.title.substring(0, 10)+"..."+data.title.substring(length-15, length):data.title)+"</a>";
+	var url = "<a href=\"javascript:openImage(\'"+data.link+(data.width != null && data.width >1200?"&w=12":"")+"')\"><img alt=\"\" class=\"img-responsive img-rounded mrgn-rght-md"+(data.contentType.endsWith("pdf") && w==4?" col-md-6":"")+"\" src=\""+icon+"\">";
+
+	if(data.mp4) {
+		   title = data.title;
+		   url  ="<figure class=\"wb-mltmd\">" 
+				+"<video poster=\"video2jpg.jpg?path="+data.path+"\" width=\"250\" height=\"180\" controls=\"controls\"  preload=\"none\">"
+				+"<source type=\"video/mp4\" src=\"video.mp4?path="+data.path+"\"/></video></figture>";
+
+		
+	}
+	if(data.audio) {
+		   url  ="<figure>" 
+				+"<audio controls=\"controls\" title=\""+data.title+"\"  preload=\"metadata\">"
+				+"<source type=\""+data.contentType+"\" src=\"file/"+data.name+"?path="+data.path+"\"/></audio></figture>";
+	
+	}
+	
+    if(data.doc2pdf) {
+    	title = "<a class=\""+data.cssClass+"\" href=\"doc2pdf.pdf?path="+data.path+"\" title=\"DOC2PDF\""+" target=\"_BLANK\">"+data.title+"</a>";
+    			
+    	url ="<a href=\"javascript:openPdfGallery('"+data.path+"',"+getNumberOfPage(data)+")\"><img id=\"img"+data.uid+"\" src=\""+icon+"\" class=\"img-responsive img-rounded mrgn-rght-md "+"\" draggable=\"true\"/></a>";
+    }	
+    if(data.contentType=="application/pdf") {
+    	title = "<a href=\"file/"+data.name+"?path="+data.path+"\" target=\"_BLANK\">"+data.title+"</a>";
+    	url = "<a href=\"javascript:openPdfGallery('"+data.path+"',"+data.total+")\"><img id=\"img"+data.uid+"\" src=\""+icon+"\" class=\"img-responsive img-rounded mrgn-rght-md "+"\" draggable=\"true\"/></a>";
+    }		        
+
+	var line = "<tr><td class=\"product-name h4\">"+title
+	+"</td><td class=\"product-platforms\">"+url
+	+"</td><td class=\"product-shortdescription\">"+data.description
+	+"</td><td class=\"product-platforms\">"+data.publishedDate
+	+"</td><td class=\"product-longdescription\">"+data.contentType
+	+"</td><td class=\"product-department\">"+data.location
+	+"</td><td class=\"product-link-container\">"+data.createdDate+"</td></tr>\r";
+	$("#view_tbody").append(line);
+/*
 	var html = "";
 	    html = '<div id="'+data.uid+'" class="col-md-6 col-lg-4 well">';
     	if(data.contentType.indexOf('video/')>=0) {
@@ -1375,7 +1414,7 @@ function outputSearch(data) {
     	
 	  	html +='</div>';
     	$("#top_insert").after(html);		
-
+*/
 }
 
 function outputView(data) {
@@ -1402,8 +1441,8 @@ function outputView(data) {
 	  	}
     	
 	  	html +='</div>';
-    	$("#view_insert").append(html);		
-
+    	$("#top_insert").append(html);		
+    	
 }
 
 function getDateString(datelong) {
