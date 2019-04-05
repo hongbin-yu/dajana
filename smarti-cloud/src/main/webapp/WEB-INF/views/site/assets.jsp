@@ -253,33 +253,49 @@
 </div>
 <!-- <div class="row" id="contentmore"></div> -->
 		<c:if test="${assets.availablePages>1 }">
-		<c:if test="${assets.pageNumber > 6 }">
-		<c:set var="startPage">${assets.pageNumber-5}</c:set>
+		<c:if test="${assets.pageNumber > 4 }">
+		<c:set var="startPage">${assets.pageNumber-3}</c:set>
 		</c:if>
-		<c:if test="${assets.pageNumber <= 6 }">
-		<c:set var="startPage">1</c:set>
+		<c:if test="${assets.pageNumber <= 4 }">
+		<c:set var="startPage">2</c:set>
 		</c:if>
-		<c:if test="${assets.pageNumber + 10 < assets.availablePages}">
-		<c:set var="endPage">${assets.pageNumber + 10}</c:set>
-		</c:if>		
-		<c:if test="${assets.pageNumber + 10 >= assets.availablePages}">
-		<c:set var="endPage">${assets.availablePages}</c:set>
-		</c:if>		
 
+		<c:set var="endPage">${startPage + 7}</c:set>
+
+		<c:if test="${endPage>= assets.availablePages}">
+		<c:set var="endPage">${assets.availablePages-1}</c:set>
+		<c:set var="startPage">${endPage-7}</c:set>
+		</c:if>		
+		<c:if test="${startPage < 2}">	
+			<c:set var="startPage">2</c:set>
+		</c:if>	
 <!-- 		<section id="loading" class="text-center"> -->
 		<section class="text-center">
 		     <ul class="pagination">
 		     <c:if test="${assets.pageNumber>0}"> 
 		     	<li><a rel='prev' href="<c:url value='?path=${path }&type=${type }&input=${input }&kw=${kw }&p=${assets.pageNumber-1}'/>"><spring:message code="djn.last_page"/></a></li>
 		     </c:if>
+			 <c:if test="${assets.pageNumber==0}">
+			 <li class="active"><a href="<c:url value='?path=${path}&type=${type }&input=${input }&kw=${kw }&p=0'/>">1</a></li>
+			 </c:if>		     
+			 <c:if test="${assets.pageNumber!=0}">
+			 <li><a href="<c:url value='?path=${path}&type=${type }&input=${input }&kw=${kw }&p=0'/>">1</a></li>
+			 </c:if>		     
+
 			 <c:forEach var="i" begin="${startPage}" end="${endPage}">
 			 <c:if test="${assets.pageNumber==i-1}">
 			 <li class="active"><a href="<c:url value='?path=${path}&type=${type }&input=${input }&kw=${kw }&p=${i-1}'/>">${i}</a></li>
 			 </c:if>
 			 <c:if test="${assets.pageNumber!=i-1}">
-			 <li><a href="<c:url value='?path=${path}&type=${type }&input=${input }&kw=${kw }&p=${i-1}'/>">${i}</a></li>
+			 <li class="${assets.pageNumber-i+1==1 || assets.pageNumber-i+1==-1?'':'hidden-xs hidden-sm'}"><a href="<c:url value='?path=${path}&type=${type }&input=${input }&kw=${kw }&p=${i-1}'/>">${i}</a></li>
 			 </c:if>			 
 			 </c:forEach>
+		     <c:if test="${assets.pageNumber!=assets.availablePages-1}">
+				<li><a href="<c:url value='?path=${path}&type=${type }&input=${input }&kw=${kw }&p=${assets.availablePages-1}'/>">${assets.availablePages}</a></li>
+		     </c:if>    
+		     <c:if test="${assets.pageNumber==assets.availablePages-1}">
+				<li class="active"><a href="<c:url value='?path=${path}&type=${type }&input=${input }&kw=${kw }&p=${assets.availablePages-1}'/>">${assets.availablePages}</a></li>
+		     </c:if>  		     			 
 		     <c:if test="${assets.pageNumber+1<assets.availablePages}">
 				<li><a rel="next" href="<c:url value='?path=${path}&type=${type }&input=${input }&kw=${kw }&p=${assets.pageNumber+1}'/>"><spring:message code="djn.next_page"/></a></li>
 		     </c:if>    

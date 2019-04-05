@@ -1314,38 +1314,46 @@ function elasticsearch(from) {
 }
 function pagination(p, total) {
 	var page_total = Math.ceil(total / 12);
-	var end =4;
-	if(page_total <5) end = page_total;
+	var start = 2;
+	var end =p+8;
+	if(p>4) {
+		start = p - 3;
+		end = start +8;
+	}
+	if(end > page_total) {
+	   end = page_total;	
+	}
+
 	var html = "<ul class=\"pagination\">";
 	if(p>0) {
 		html +="<li><a rel='prev' href=\"javascript:elasticsearch("+(p-1)+")\"></a></li>";
 	}
-	if(p>4) {
-		 html+="<li><a href=\"javascript:elasticsearch(0)\">1</a></li>";
-		 
- 		 html+="<li><a href=\"javascript:elasticsearch("+(p-1)+")\">"+(p)+"</a></li>";
-		 html+="<li class=\"active\"><a href=\"javascript:elasticsearch("+p+")\">"+(p+1)+"</a></li>";
-		 html+="<li><a href=\"javascript:elasticsearch("+(p+1)+")\">"+(p+2)+"</a></li>";
-	}else {
-		var i;
-		for( i = 1; i <=end; i++) {
-			if(p+1==i) {
+	if(p==1)
+		html+="<li class=\"active\"><a href=\"javascript:elasticsearch(0)\">"+1+"</a></li>";
+	else
+		html+="<li><a href=\"javascript:elasticsearch(0)\">"+1+"</a></li>";
+
+		for( var i = start; i <=end; i++) {
+			if(p==i) {
 				  html+="<li class=\"active\"><a href=\"javascript:elasticsearch("+(i-1)+")\">"+i+"</a></li>";
-				
+			} else if(p - i > 1 || i - p > 1){
+				  html+="<li class='hidden-sx hidden-sm'><a href=\"javascript:elasticsearch("+(i-1)+")\">"+i+"</a></li>";
 			} else {
 				  html+="<li><a href=\"javascript:elasticsearch("+(i-1)+")\">"+i+"</a></li>";
 			}
 
 		}		
-
+	if(p == page_total)	 {
+		  html+="<li class=\"active\"><a href=\"javascript:elasticsearch("+page_total+")\">"+page_total+"</a></li>";
+	}else {
+		  html+="<li><a href=\"javascript:elasticsearch("+page_total+")\">"+page_total+"</a></li>";
 	}
-	if(p!=page_total-1 && page_total > 5)
-		html +="<li><a href=\"javascript:elasticsearch("+(page_total -1)+")\">"+page_total+"</a></li>";
-
+	
 	if((p+1) < page_total) {
 		html +="<li><a rel='next' href=\"javascript:elasticsearch("+(p+1)+")\"></a></li>";
 		
 	}
+	
 	html+="</ul>";
 	return html;
 }
