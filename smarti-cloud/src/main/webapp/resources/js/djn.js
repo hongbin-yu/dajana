@@ -1291,7 +1291,7 @@ function elasticsearch(from) {
 	    		$.each(hits.hits, function(i,item){
 	    			outputView(item._source);
 	    			if((i+1)%3==0) {
-	    				$("#top_insert").append("<div class=\"clearfix\"/>");	
+	    				$("#view_insert").append("<div class=\"clearfix\"/>");	
 	    			}
 			    	/*var offset = $("#loading");
 			    	offset.left -= 20;
@@ -1320,13 +1320,13 @@ function pagination(p, total) {
 		start = p - 3;
 		end = start +8;
 	}
-	if(end > page_total) {
-	   end = page_total;	
+	if(end >= page_total) {
+	   end = page_total - 1;	
 	}
 
 	var html = "<ul class=\"pagination\">";
 	if(p>0) {
-		html +="<li><a rel='prev' href=\"javascript:elasticsearch("+(p-1)+")\"></a></li>";
+		html +="<li><a rel='prev' href=\"javascript:elasticsearch("+(p-1)+")\"><span class=\"hidden-xs hidden-sm\">上页</span></a></li>";
 	}
 	if(p==1)
 		html+="<li class=\"active\"><a href=\"javascript:elasticsearch(0)\">"+1+"</a></li>";
@@ -1350,7 +1350,7 @@ function pagination(p, total) {
 	}
 	
 	if((p+1) < page_total) {
-		html +="<li><a rel='next' href=\"javascript:elasticsearch("+(p+1)+")\"></a></li>";
+		html +="<li><a rel='next' href=\"javascript:elasticsearch("+(p+1)+")\"><span class=\"hidden-xs hidden-sm\">下页</span></a></li>";
 		
 	}
 	
@@ -1449,7 +1449,7 @@ function outputView(data) {
 	  	}
     	
 	  	html +='</div>';
-    	$("#top_insert").append(html);		
+    	$("#view_insert").append(html);		
     	
 }
 
