@@ -1328,13 +1328,13 @@ function pagination(p, total) {
 	if(p>0) {
 		html +="<li><a rel='prev' href=\"javascript:elasticsearch("+(p-1)+")\"><span class=\"hidden-xs hidden-sm\">上页</span></a></li>";
 	}
-	if(p==1)
+	if(p==0)
 		html+="<li class=\"active\"><a href=\"javascript:elasticsearch(0)\">"+1+"</a></li>";
 	else
 		html+="<li><a href=\"javascript:elasticsearch(0)\">"+1+"</a></li>";
 
 		for( var i = start; i <=end; i++) {
-			if(p==i) {
+			if(p==i - 1) {
 				  html+="<li class=\"active\"><a href=\"javascript:elasticsearch("+(i-1)+")\">"+i+"</a></li>";
 			} else if(p - i > 1 || i - p > 1){
 				  html+="<li class='hidden-sx hidden-sm'><a href=\"javascript:elasticsearch("+(i-1)+")\">"+i+"</a></li>";
