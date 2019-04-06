@@ -1333,10 +1333,10 @@ function pagination(p, total) {
 	else
 		html+="<li><a href=\"javascript:elasticsearch(0)\">"+1+"</a></li>";
 
-		for( var i = start; i <end; i++) {
+		for( var i = start; i <=end; i++) {
 			if(p==i - 1) {
 				  html+="<li class=\"active\"><a href=\"javascript:elasticsearch("+(i-1)+")\">"+i+"</a></li>";
-			} else if(p - i > 1 || i - p > 1){
+			} else if(p - i == 0 || p - i == -2){
 				  html+="<li class='hidden-sx hidden-sm'><a href=\"javascript:elasticsearch("+(i-1)+")\">"+i+"</a></li>";
 			} else {
 				  html+="<li><a href=\"javascript:elasticsearch("+(i-1)+")\">"+i+"</a></li>";
