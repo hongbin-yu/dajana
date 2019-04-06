@@ -1343,10 +1343,10 @@ function pagination(p, total) {
 			}
 
 		}		
-	if(p == page_total)	 {
-		  html+="<li class=\"active\"><a href=\"javascript:elasticsearch("+page_total - 1+")\">"+page_total+"</a></li>";
+	if(p == page_total - 1)	 {
+		  html+="<li class=\"active\"><a href=\"javascript:elasticsearch("+(page_total - 1)+")\">"+page_total+"</a></li>";
 	}else {
-		  html+="<li><a href=\"javascript:elasticsearch("+page_total - 1+")\">"+page_total+"</a></li>";
+		  html+="<li><a href=\"javascript:elasticsearch("+(page_total - 1)+")\">"+page_total+"</a></li>";
 	}
 	
 	if((p+1) < page_total) {
