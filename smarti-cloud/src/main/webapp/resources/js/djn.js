@@ -1333,7 +1333,7 @@ function pagination(p, total) {
 	else
 		html+="<li><a href=\"javascript:elasticsearch(0)\">"+1+"</a></li>";
 
-		for( var i = start; i <=end; i++) {
+		for( var i = start; i <end; i++) {
 			if(p==i - 1) {
 				  html+="<li class=\"active\"><a href=\"javascript:elasticsearch("+(i-1)+")\">"+i+"</a></li>";
 			} else if(p - i > 1 || i - p > 1){
@@ -1344,9 +1344,9 @@ function pagination(p, total) {
 
 		}		
 	if(p == page_total)	 {
-		  html+="<li class=\"active\"><a href=\"javascript:elasticsearch("+page_total+")\">"+page_total+"</a></li>";
+		  html+="<li class=\"active\"><a href=\"javascript:elasticsearch("+page_total - 1+")\">"+page_total+"</a></li>";
 	}else {
-		  html+="<li><a href=\"javascript:elasticsearch("+page_total+")\">"+page_total+"</a></li>";
+		  html+="<li><a href=\"javascript:elasticsearch("+page_total - 1+")\">"+page_total+"</a></li>";
 	}
 	
 	if((p+1) < page_total) {
