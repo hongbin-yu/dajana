@@ -124,11 +124,11 @@
 		<input type="hidden" id="path" name="path" value="${folder.path}"/>
 		<input type="hidden" id="type"  name="type" value="${type}"/>
 		<input type="hidden" id="input" name="input" value="${input}"/>
-		<a class="btn btn-default btn-xs" href=""><span class="glyphicon glyphicon-align-justify"></span></a>
+<!-- 		<a class="btn btn-default btn-xs" href=""><span class="glyphicon glyphicon-align-justify"></span></a> -->
 		<a class="btn btn-default btn-xs" href="#wb-cont" onclick="javascript:openFiles()"><span class="glyphicon glyphicon-camera"></span></a>
 		<input name="q" id="elk_q" size="20" type="text" value=""/>
 		<a class="btn btn-default btn-xs" href="javascript:elasticsearch(0)"><span class="glyphicon glyphicon-search"></span></a>
-		<input class="form-control wb-inv" type="file" id="fileUpload" name="file" size="60" required="required"  multiple/>
+		<input class="form-control wb-inv" type="file" id="fileUpload" name="file" size="60" multiple/>
 		<div class="wb-inv" id="selectedFiles"></div>
 	</form>	
 
@@ -152,5 +152,6 @@
 				};
 			function itemClick(item) {
 				item.append("<img src=\"/resources/images/loading16x16.gif\" alt=\"\">");
-			}	
+			}
+
 		</script>

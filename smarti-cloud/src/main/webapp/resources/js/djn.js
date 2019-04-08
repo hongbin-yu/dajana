@@ -1380,7 +1380,7 @@ function outputSearch(data) {
 	}
 	
     if(data.doc2pdf) {
-    	title = "<a class=\""+data.cssClass+"\" href=\"doc2pdf.pdf?path="+data.path+"\" title=\"DOC2PDF\""+" target=\"_BLANK\">"+data.title+"</a>";
+    	title = "<a class=\""+data.cssClass+" hidden-xs hidden-sm\" href=\"doc2pdf.pdf?path="+data.path+"\" title=\"DOC2PDF\""+" target=\"_BLANK\">"+data.title+"</a>";
     			
     	url ="<a href=\"javascript:openPdfGallery('"+data.path+"',"+getNumberOfPage(data)+")\"><img id=\"img"+data.uid+"\" src=\""+icon+"\" class=\"img-responsive img-rounded mrgn-rght-md "+"\" draggable=\"true\"/></a>";
     }	
@@ -1439,7 +1439,7 @@ function outputView(data) {
 	    	html +='<a href="javascript:openImage(\''+data.link+'\')"><img id="img'+data.uid+'" src="'+data.icon+'" class="img-responsive  pull-left mrgn-rght-md" draggable="true"></img></a>';
     	}
 	  	if(data.pdf) {
-	  		 html +='<a title="打开PDF" href="viewpdf.pdf?uid='+data.uid+'" target="_BLANK"><span class="glyphicon glyphicon-open"></span> 打开PDF</a>';
+	  		 html +='<a class="hidden-xs hidden-sm" title="打开PDF" href="viewpdf.pdf?uid='+data.uid+'" target="_BLANK"><span class="glyphicon glyphicon-open"></span> 打开PDF</a>';
 	  	}
 	  	html	+='	<a class="download pull-right" href="file'+data.ext+'?path='+data.path+'" target="_BLANK" download="'+data.title+'"><span class="glyphicon glyphicon-download pull-right">下载</span></a>';
 
@@ -1449,7 +1449,7 @@ function outputView(data) {
 	  	}
     	
 	  	html +='</div>';
-    	$("#view_insert").append(html);		
+    	$("#top_insert").append(html);		
     	
 }
 
