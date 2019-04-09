@@ -1345,11 +1345,14 @@ function pagination(p, total) {
 			}
 
 		}		
-	if(p == page_total - 1)	 {
-		  html+="<li class=\"active\"><a href=\"javascript:elasticsearch("+(page_total - 1)+")\">"+page_total+"</a></li>";
-	}else {
-		  html+="<li><a href=\"javascript:elasticsearch("+(page_total - 1)+")\">"+page_total+"</a></li>";
-	}
+	if(page_total > 1) {
+		if(p == page_total - 1)	 {
+			  html+="<li class=\"active\"><a href=\"javascript:elasticsearch("+(page_total - 1)+")\">"+page_total+"</a></li>";
+		}else {
+			  html+="<li><a href=\"javascript:elasticsearch("+(page_total - 1)+")\">"+page_total+"</a></li>";
+		}		
+	}	
+
 	
 	if((p+1) < page_total) {
 		html +="<li><a rel='next' href=\"javascript:elasticsearch("+(p+1)+")\"><span class=\"hidden-xs hidden-sm\">下页</span></a></li>";

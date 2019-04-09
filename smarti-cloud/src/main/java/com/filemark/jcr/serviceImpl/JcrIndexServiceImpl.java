@@ -121,6 +121,24 @@ public class JcrIndexServiceImpl implements JcrIndexService {
 		}*/
 		
 		//dydns();
+		elkIndex();
+	}
+	
+	private void elkIndex() {
+		String assetsQuery = "select * from [nt:base] AS s WHERE ISDESCENDANTNODE([/]) and s.delete not like 'true' and s.ocm_classname='com.filemark.jcr.model.Asset' and s.indexedDate is null";
+		WebPage<Asset> assets = jcrService.searchAssets(assetsQuery, 500, 0);
+		int indexedCount = 0;
+		for(Asset asset:assets.getItems()) {
+			Thread.yield();
+			try {
+				LinuxUtil.add(asset);
+				jcrService.updateCalendar(asset.getPath(), "indexedDate");
+			} catch (IOException | InterruptedException e) {
+				log.error(e.getMessage());
+				
+			}
+		}
+		log.debug("ElasticSearch indexed "+indexedCount+"/"+assets.getItems().size());
 	}
 	
 	private void Device2Backup() throws RepositoryException {

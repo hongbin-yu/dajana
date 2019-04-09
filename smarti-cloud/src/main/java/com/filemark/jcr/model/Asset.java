@@ -44,6 +44,8 @@ public class Asset implements SmartiNode, Serializable {
 	private Date originalDate;
 	@Field 
 	private Date modifiedDate = new Date();	
+	@Field 
+	private Date indexedDate;		
 	@Field
 	private String html;
 	@Field
@@ -443,6 +445,14 @@ public class Asset implements SmartiNode, Serializable {
 	@Override
 	public String getType() {
 		return Asset.class.getSimpleName().toLowerCase();
+	}
+
+	public Date getIndexedDate() {
+		return indexedDate;
+	}
+
+	public void setIndexedDate(Date indexedDate) {
+		this.indexedDate = indexedDate;
 	}
 
 
