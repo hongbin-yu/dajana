@@ -1281,6 +1281,7 @@ function elasticsearch(from) {
 	    	}else {
 	    		//if(from ==0) {
 	    		$("#view_insert").html("");	
+	    		$("#view_tbody").html("");
 	    		//	p = 0;
 	    		//}
 
