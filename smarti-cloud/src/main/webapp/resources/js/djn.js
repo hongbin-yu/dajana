@@ -1292,7 +1292,7 @@ function elasticsearch(from) {
 	    		$.each(hits.hits, function(i,item){
 	    			outputView(item._source);
 	    			if((i+1)%3==0) {
-	    				$("#view_insert").append("<div class=\"clearfix\"/>");	
+	    				$("#top_insert").append("<div class=\"clearfix\"/>");	
 	    			}
 			    	/*var offset = $("#loading");
 			    	offset.left -= 20;
