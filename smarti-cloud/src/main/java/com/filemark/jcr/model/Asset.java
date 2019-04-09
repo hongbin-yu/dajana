@@ -181,12 +181,12 @@ public class Asset implements SmartiNode, Serializable {
 	}
 	public String getCreatedDate() {
 		if(originalDate == null) originalDate = new Date();
-		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
 		return sf.format(originalDate);
 	}
 	public String getPublishedDate() {
 		if(modifiedDate == null) modifiedDate = new Date();
-		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
 		return sf.format(modifiedDate);
 	}	
 	public Date getOriginalDate() {

@@ -13,7 +13,7 @@
         ${folder.title}
         <a class="btn btn-default pull-right" href="javascript:downloadAll()" title="下载本页全部文件"><span id="downloadIcon" class="glyphicon glyphicon-download"></span></a>	
         <a class="btn btn-default pull-right" href="view.html?path=${folder.path}&type=${type}&r=1&w=${param.w}" title="刷屏"><span class="glyphicon glyphicon-refresh"></span></a>	
-		<a href="javascript:openPdf()" class="btn btn-primary pull-right" title="打开PDF"><span class="glyphicon glyphicon-open"></span></a>
+		<a href="javascript:openPdf()" class="btn btn-primary pull-right hidden-xs hidden-sm" title="打开PDF"><span class="glyphicon glyphicon-open"></span></a>
 		<a class="btn btn-default pull-right" href="#wb-cont" onclick="javascript:openFiles()"><span class="glyphicon glyphicon-camera"></span></a>
 
         </h1>
