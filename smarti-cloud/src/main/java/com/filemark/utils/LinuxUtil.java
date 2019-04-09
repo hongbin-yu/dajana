@@ -65,7 +65,7 @@ public class LinuxUtil
 	private final static Logger log = LoggerFactory.getLogger(LinuxUtil.class);
 	private static String HDDPIN = "18";
 	public static boolean video = false;
-	public static String HOST = "http://192.168.0.134:9200";
+	public static String HOST = "http://127.0.0.1:9200";
 	public static String INDEX = "yuhongyun";
 	public static String TYPE = "assets";
 	public static ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
@@ -97,8 +97,8 @@ public class LinuxUtil
     	String s;
     	Process p;
     	int exit=1;
-    	String shellCommand = "/opt/opencv-3.3.0/build/bin/resize_image "+src+" "+des+" "+width+" "+hight;
-    	ProcessBuilder pb = new ProcessBuilder("/opt/opencv-3.3.0/build/bin/resize_image",src,des,""+width,""+hight);
+    	String shellCommand = "/usr/local/bin/resize_image "+src+" "+des+" "+width+" "+hight;
+    	ProcessBuilder pb = new ProcessBuilder("/usr/local/bin/resize_image",src,des,""+width,""+hight);
     	pb.redirectErrorStream(true);
 	    try {	
 	        p = pb.start();//Runtime.getRuntime().exec(shellCommand);
@@ -136,8 +136,8 @@ public class LinuxUtil
     	String s;
     	Process p;
     	int exit=1;
-    	String shellCommand = "/opt/opencv-3.3.0/build/bin/rotate_image "+src+" "+des+" "+angle;
-    	ProcessBuilder pb = new ProcessBuilder("/opt/opencv-3.3.0/build/bin/rotate_image",src,des,""+angle);
+    	String shellCommand = "/usr/local/bin/rotate_image "+src+" "+des+" "+angle;
+    	ProcessBuilder pb = new ProcessBuilder("/usr/local/bin/rotate_image",src,des,""+angle);
     	pb.redirectErrorStream(true);
 	    try {	
 	        p = pb.start();//Runtime.getRuntime().exec(shellCommand);
