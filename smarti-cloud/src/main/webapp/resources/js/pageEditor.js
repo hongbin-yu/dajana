@@ -737,7 +737,7 @@ function deleteFiles() {
 		    	//if(!msg.indexOf("error:")>=0)
 		    		//window.location.reload();
 		    	//else
-		    	if(!msg.indexOf("error:")>=0) {
+		    	if(msg.indexOf("error:")>=0) {
 		    		alert(msg);
 		    	} else {
 		    		for(var i = 0; i<uids.length; i++) {
