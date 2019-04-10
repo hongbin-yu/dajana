@@ -2423,7 +2423,7 @@ public class SiteController extends BaseController {
 			for(String id:uid) {
 				try {
 					String result = LinuxUtil.delete(id);
-					logger.debug(result);
+					logger.info(result);
 				} catch (IOException | InterruptedException e) {
 					logger.error(e.getMessage());
 				}
