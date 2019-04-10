@@ -1324,12 +1324,12 @@ function pagination(current, perpage, total) {
 		page = Math.ceil( current / perpage ),
 		low = perpage * ( page - 1 ),
 		high = ( perpage * page ) - 1,
-	    startpage = ( page < 6 ) ? 2 : page - 4,
-	    endpage = 8 + startpage,
+	    startpage = ( current < 6 ) ? 2 : current - 4,
+	    endpage = 6 + startpage,
 	    pagination = [];
 	
     	endpage = ( pages < endpage ) ? pages - 1 : endpage;
-    	var difference = startpage - endpage + 8;
+    	var difference = startpage - endpage + 6;
     	startpage -= ( startpage - difference > 0 ) ? difference : 0;
     	
 
