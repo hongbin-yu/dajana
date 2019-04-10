@@ -2438,10 +2438,10 @@ public class SiteController extends BaseController {
 					jcrService.deleteNode(asset.getPath());
 				} catch (RepositoryException e) {
 					logger.error(e.getMessage());
-					return "error:"+e.getMessage();
+					//return "error:"+e.getMessage();
 				} catch (IOException e) {
 					logger.error(e.getMessage());
-					return "error:"+e.getMessage();
+					//return "error:"+e.getMessage();
 				}
 
 			}
