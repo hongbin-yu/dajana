@@ -2423,7 +2423,7 @@ public class SiteController extends BaseController {
 			for(String id:uid) {
 				try {
 					String result = LinuxUtil.delete(id);
-					logger.info(result);
+					logger.debug(result);
 				} catch (IOException | InterruptedException e) {
 					logger.error(e.getMessage());
 				}
@@ -3354,6 +3354,8 @@ public class SiteController extends BaseController {
     							IOUtils.copy(in, response.getOutputStream());	
     							in.close();	
     							return null;*/
+    						}else {
+    							LinuxUtil.delete(uid);
     						}
     					}					
     				}

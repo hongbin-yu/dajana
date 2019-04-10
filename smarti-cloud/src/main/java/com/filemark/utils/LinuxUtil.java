@@ -1052,12 +1052,12 @@ public class LinuxUtil
     }
     
     public static String delete(String uid) throws IOException, InterruptedException {
-    	ProcessBuilder pb = new ProcessBuilder("curl","XDELETE",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/"+uid);
+    	ProcessBuilder pb = new ProcessBuilder("curl","-XDELETE",LinuxUtil.HOST+"/"+LinuxUtil.INDEX+"/"+LinuxUtil.TYPE+"/"+uid);
     	return execute(pb);
     }      
     
     public static String update_by_query(String index,String json) throws IOException, InterruptedException {
-    	ProcessBuilder pb = new ProcessBuilder("curl","XPOST",index,"/_update_by_query",json);
+    	ProcessBuilder pb = new ProcessBuilder("curl","-XPOST",index,"/_update_by_query",json);
     	
     	return execute(pb);    	
     }
