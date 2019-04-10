@@ -1286,7 +1286,7 @@ public class SiteController extends BaseController {
 	   			OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(html),"UTF-8");
 				try {
 					for(News n:f2new) {
-						String line = "<tr><td class=\"product-name h4\">"+n.getTitle()
+						String line = "<tr id=\""+n.getUid()+"\"><td class=\"product-name h4\">"+n.getTitle()
 								+"</td><td class=\"product-platforms\">"+n.getUrl()
 								+"</td><td class=\"product-shortdescription\">"+n.getDescription()
 								+"</td><td class=\"product-platforms\">"+n.getLastPublished()
@@ -1324,6 +1324,7 @@ public class SiteController extends BaseController {
 					continue;
 				}
 			}
+			a2news.setUid(asset.getUid());
 			String icon = asset.getIcon();// w!=null && w==1?asset.getIconSmall():asset.getIcon();
 			int length = asset.getTitle().length();
 			String title ="<input class=\"hidden-xs hidden-sm\" type=\"checkbox\" name=\"puid\" value=\""+asset.getUid()+"\"><a href=\""+asset.getLink()+"\" target=\"_blank\" title=\"打开原图\">"+(length>25?asset.getTitle().substring(0, 10)+"..."+asset.getTitle().substring(length-15, length):asset.getTitle())+"</a>";

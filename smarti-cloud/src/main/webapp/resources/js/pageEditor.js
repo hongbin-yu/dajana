@@ -740,9 +740,11 @@ function deleteFiles() {
 		    	if(msg.indexOf("error:")>=0) {
 		    		alert(msg);
 		    	} else {
-		    		for(var i = 0; i<uids.length; i++) {
+		    		var length = uids.length
+		    		for(var i = 0; i< length; i++) {
 		    			if(uids[i].checked && uids[i].value !='{uid}') {
 		    				$("#"+uids[i].value).remove();
+		    				i--;
 		    			}
 		    		}		    		
 		    	}
