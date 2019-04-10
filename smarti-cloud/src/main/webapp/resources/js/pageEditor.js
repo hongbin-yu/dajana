@@ -742,7 +742,7 @@ function deleteFiles() {
 		    	} else {
 		    		for(var i = 0; i<uids.length; i++) {
 		    			if(uids[i].checked && uids[i].value !='{uid}') {
-		    				$("#"+uids[i]).remove();
+		    				$("#"+uids[i].value).remove();
 		    			}
 		    		}		    		
 		    	}
