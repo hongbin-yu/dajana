@@ -2378,6 +2378,11 @@ public class SiteController extends BaseController {
 
 		try {
 			if(uid!=null && !uid.equals("")) {
+				try {
+					LinuxUtil.delete(uid);
+				} catch (InterruptedException e) {
+					logger.error(e.getMessage());
+				}				
 				path = jcrService.getNodeById(uid);
 			}else if( path==null || "".equals(path)) {
 				return "error:路径没找到";
@@ -2416,7 +2421,11 @@ public class SiteController extends BaseController {
 	public @ResponseBody String deleteAssets(String[] uid,Model model,HttpServletRequest request, HttpServletResponse response) {
 		if(uid!=null) {
 			for(String id:uid) {
-
+				try {
+					LinuxUtil.delete(id);
+				} catch (IOException | InterruptedException e) {
+					logger.error(e.getMessage());
+				}
 			
 				try {
 					Asset asset = jcrService.getAssetById(id);
@@ -2425,7 +2434,6 @@ public class SiteController extends BaseController {
 						FileUtils.cleanDirectory(file);
 					}
 					file.delete();
-	
 					jcrService.deleteNode(asset.getPath());
 				} catch (RepositoryException e) {
 					logger.error(e.getMessage());
@@ -2434,6 +2442,7 @@ public class SiteController extends BaseController {
 					logger.error(e.getMessage());
 					return "error:"+e.getMessage();
 				}
+
 			}
 		}else {
 			return "error:路径没找到";
@@ -2443,6 +2452,11 @@ public class SiteController extends BaseController {
 	@RequestMapping(value = {"/site/removeNode.html"}, method = RequestMethod.GET)
 	public @ResponseBody String removeNode(String uid,String path,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
 		if(uid!=null && !uid.equals("")) {
+			try {
+				LinuxUtil.delete(uid);
+			} catch (IOException | InterruptedException e) {
+				logger.error(e.getMessage());
+			}			
 			path = jcrService.getNodeById(uid);
 		}else if( path==null || "".equals(path)) {
 			throw new Exception("路径没找到");
