@@ -734,10 +734,16 @@ function deleteFiles() {
 		    url: '/site/deleteassets.html'+url,
 		    type: "POST", 
 		    success: function(msg) {
-		    	if(!msg.indexOf("error:")>=0)
-		    		window.location.reload();
-		    	else
+		    	//if(!msg.indexOf("error:")>=0)
+		    		//window.location.reload();
+		    	//else
+		    	if(!msg.indexOf("error:")>=0) {
 		    		alert(msg);
+		    	} else {
+		    		for(var i = 0; i<uids.length; i++) {
+		    			$("#"+uids[i]).remove();
+		    		}		    		
+		    	}
 		    },
 		    error: function() {
 		    	alert(i18n("fail"));
