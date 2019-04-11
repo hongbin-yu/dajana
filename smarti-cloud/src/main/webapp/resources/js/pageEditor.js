@@ -740,13 +740,14 @@ function deleteFiles() {
 		    	if(msg.indexOf("error:")>=0) {
 		    		alert(msg);
 		    	} else {
-		    		var length = uids.length
+		    		$("#refresh")[0].click();
+		    		/*var length = uids.length
 		    		for(var i = 0; i< length; i++) {
 		    			if(uids[i].checked && uids[i].value !='{uid}') {
 		    				$("#"+uids[i].value).remove();
 		    				i--;
 		    			}
-		    		}		    		
+		    		}	*/	    		
 		    	}
 		    },
 		    error: function() {
