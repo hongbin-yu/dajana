@@ -858,8 +858,9 @@ public class XMPPServiceImpl implements XMPPService{
             				p = 1;
         			}
 
-        		}            	
-        		elasticSearch(message.getFrom().toString(),query,chat,p,m);
+        		} 
+        		processSearch(message.getFrom().toString(),query,chat,p,m);
+        		//elasticSearch(message.getFrom().toString(),query,chat,p,m);
 
             }
      
