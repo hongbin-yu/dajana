@@ -1351,7 +1351,7 @@ function pagination(current, perpage, total) {
 			} else if(current - i == 0 || current - i == -2){
 				  html+="<li><a href=\"javascript:elasticsearch("+(i-1)+")\">"+i+"</a></li>";
 			} else {
-				  html+="<li class='hidden-sx hidden-sm'><a href=\"javascript:elasticsearch("+(i-1)+")\">"+i+"</a></li>";
+				  html+="<li class='hidden-xs hidden-sm'><a href=\"javascript:elasticsearch("+(i-1)+")\">"+i+"</a></li>";
 			}
 
 		}		
