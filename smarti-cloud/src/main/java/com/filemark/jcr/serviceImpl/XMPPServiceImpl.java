@@ -148,6 +148,7 @@ public class XMPPServiceImpl implements XMPPService{
 	private static final PegDownProcessor pegDownProcessor = new PegDownProcessor();
 			//Extensions.ALL | Extensions.SUPPRESS_ALL_HTML, 5000);
 	Map<String,String> lastQueries = new HashMap<String,String>();
+	Map<String,Long> lastPage = new HashMap<String,Long>();	
 	Map<String,Message> lastSend = new HashMap<String,Message>();	
 	Map<String,Buddy> buddies = new HashMap<>();
 	protected RosterListener listener = null;
@@ -808,10 +809,11 @@ public class XMPPServiceImpl implements XMPPService{
 	        	sendMessage(username+" 账号被锁定。",from);
 	        	sendVerifyCode(from.toString());
             }else if(commandLine.hasOption("n")) {
-            	
         		query = lastQueries.get(message.getFrom().toString());
         		if(query!=null) {
-        			processSearch(message.getFrom().toString(),query,chat,p,m);             		
+        			p = lastPage.get(message.getFrom().toString())+1;
+        			processSearch(message.getFrom().toString(),query,chat,p,m); 
+        			return;
             	}else {
     				sendMessage("上次查询没找到！",from);
     				return;
@@ -1549,6 +1551,7 @@ public class XMPPServiceImpl implements XMPPService{
 		//if(to.indexOf("Xabber")>0)
 		assets.setAction(query);
 		lastQueries.put(to, query);
+		lastPage.put(to, new Long(p));		
 		long start_page = (assets.getPageNumber())*assets.getPageSize();
 		if(assets.getPageCount()>0) {
 			start_page +=1;
