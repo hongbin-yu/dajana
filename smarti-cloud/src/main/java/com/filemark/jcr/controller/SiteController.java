@@ -2501,7 +2501,7 @@ public class SiteController extends BaseController {
 		if(path ==null || !path.startsWith("/assets/"+username)) path = "/assets/"+username;
 		
 			try {
-				String result = LinuxUtil.search(username,path, q,from,size);
+				String result = LinuxUtil.search(username,path, q,from*size,size);
 				response.getOutputStream().println(result);
 			} catch (IOException | InterruptedException e) {
 				logger.error(e.getMessage());
