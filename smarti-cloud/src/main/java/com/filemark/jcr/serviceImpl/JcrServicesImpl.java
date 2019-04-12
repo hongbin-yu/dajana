@@ -1736,9 +1736,9 @@ public class JcrServicesImpl implements JcrServices {
         				out.getParentFile().mkdirs();
         			}
 
-    				int exit = LinuxUtil.opencvResize(infile, outfile, w, h);
-    				if(exit != 0)
-    					exit =  LinuxUtil.convert(infile, outfile, w, h);
+    				//int exit = LinuxUtil.opencvResize(infile, outfile, w, h);
+    				//if(exit != 0)
+    				int	exit =  LinuxUtil.convert(infile, outfile, w, h);
     				if(exit==0) {
     					//updatePropertyByPath(path, "icon", outfile);
     					//updatePropertyByPath(path, "updated", "true");
