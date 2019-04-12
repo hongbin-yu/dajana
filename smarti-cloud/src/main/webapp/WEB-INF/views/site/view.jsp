@@ -150,9 +150,7 @@
 			function sendAsset(to) {
 				
 				alert(to +"/"+selected_uid);
-				};
-			function itemClick(item) {
-				item.append("<img src=\"/resources/images/loading16x16.gif\" alt=\"\">");
-			}
+			};
+
 
 		</script>

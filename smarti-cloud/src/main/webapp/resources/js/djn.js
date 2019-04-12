@@ -1864,6 +1864,10 @@ function sleep(delay) {
     var start = new Date().getTime();
     while (new Date().getTime() < start + delay);
   }
+
+function itemClick(item) {
+	item.append("<img src=\"/resources/images/loading16x16.gif\" alt=\"\">");
+}
 //document.addEventListener("click",function(event) {
 //	if(tinymce) {
 //		var editor = tinymce.EditorManager.activeEditor;
@@ -1915,4 +1919,5 @@ $(".loading").on('load',function() {
 	}
 
 });
+
 

@@ -320,8 +320,16 @@ public class ContentController extends BaseController {
 
    	}
    	
-   	@RequestMapping(value = {"/content","/content.html"}, method = RequestMethod.GET)
+   	@RequestMapping(value = {"/content","/content.html","/protected/content.html"}, method = RequestMethod.GET)
    	public String home(Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
+   		String username = getUsername();
+   		if(username !=null) {
+   			return "redirect:/content/"+username+".html";
+   		}else {
+   			return "redirect:/signin?redirect=/protected/content.html";
+   		}
+
+   		/*
    		String content = "/content";
    		String username = getUsername();
    		if(username!=null ) content +="/"+username;
@@ -350,6 +358,7 @@ public class ContentController extends BaseController {
 			home = jcrService.getPage(content);
 
    		return page("home",home.getUid(),0,model,request,response);
+   		*/
    	}
    	
 	@RequestMapping(value = {"/content/{site}.passcode","/content/{site}.passcode","/content/{site}/**/*.passcode","/content/{site}/*.passcode"}, method = RequestMethod.POST)
