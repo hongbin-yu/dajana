@@ -1314,7 +1314,7 @@ public class SiteController extends BaseController {
 	}
 	
 	private void getAsset2News(Folder folder,List<News>newsList,Integer w,String type) {
-		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
 		for(Asset asset:folder.getAssets()) {
 			News a2news = new News();
@@ -1377,7 +1377,7 @@ public class SiteController extends BaseController {
 			if(asset.getPosition()!=null && !"".equals(asset.getPosition()))
 				a2news.setLocation("<a href=\"https://www.google.com/maps?q="+asset.getPosition()+"\" target=\"_blank\">拍摄地址</a>");
 			a2news.setContentType(asset.getContentType());
-			a2news.setCreatedDate(asset.getLastModified());
+			a2news.setCreatedDate(sf.format(asset.getLastModified()));
 			newsList.add(a2news);
 			
 		}

@@ -34,7 +34,7 @@ public class News implements Serializable, SmartiNode {
 	@Field
 	protected String contentType="";		
 	@Field
-	protected Date createdDate;		
+	protected String createdDate;		
 	@Override
 	public String getPath() {
 		return path;
@@ -140,11 +140,12 @@ public class News implements Serializable, SmartiNode {
 		this.contentType = contentType;
 	}
 	
-	public Date getCreatedDate() {
+
+	public String getCreatedDate() {
 		return createdDate;
 	}
 
-	public void setCreatedDate(Date createdDate) {
+	public void setCreatedDate(String createdDate) {
 		this.createdDate = createdDate;
 	}
 
