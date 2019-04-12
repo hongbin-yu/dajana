@@ -1377,6 +1377,7 @@ public class SiteController extends BaseController {
 			if(asset.getPosition()!=null && !"".equals(asset.getPosition()))
 				a2news.setLocation("<a href=\"https://www.google.com/maps?q="+asset.getPosition()+"\" target=\"_blank\">拍摄地址</a>");
 			a2news.setContentType(asset.getContentType());
+			a2news.setCreatedDate(asset.getLastModified());
 			newsList.add(a2news);
 			
 		}
