@@ -1272,7 +1272,7 @@ function output(data) {
 function elasticsearch(from) {
 	//alert("q="+$("#elk_q").val());
     $.ajax({
-	    url: 'search.json?path='+path+"&q="+$("#elk_q").val()+"&from="+from*12+"&size=12",
+	    url: 'search.json?path='+path+"&q="+$("#elk_q").val()+"&from="+from+"&size=12",
 	    type: "GET",
 	    success: function(data) {
 
