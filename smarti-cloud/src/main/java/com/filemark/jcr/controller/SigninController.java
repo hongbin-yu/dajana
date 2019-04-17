@@ -170,9 +170,9 @@ public class SigninController extends BaseController{
 	                model.addAttribute("error", login_error);
 	                return "signin";        		
 	        	}else {
-	        		if(user.getXmppid()!=null && !lastIp.startsWith("192.168")) {
-	        				XMPPService.sendMessage(user.getXmppid()+" 从 "+lastIp+ "("+LinuxUtil.geoip(lastIp)+")" +" 登入。 发送‘-L’锁定账号",user.getXmppid());
-	        		}     		
+	        		//if(user.getXmppid()!=null && !lastIp.startsWith("192.168")) {
+	        		//		XMPPService.sendMessage(user.getXmppid()+" 从 "+lastIp+ "("+LinuxUtil.geoip(lastIp)+")" +" 登入。 发送‘-L’锁定账号",user.getXmppid());
+	        		//}     		
 	        	}
 			} catch (NotConnectedException e) {
 				logger.error(e.getMessage());
