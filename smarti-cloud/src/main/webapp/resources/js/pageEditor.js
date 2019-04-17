@@ -741,8 +741,7 @@ function deleteFiles() {
 		    		alert(msg);
 		    	} else {
 		    		//$("#refresh")[0].click();
-		    		var length = uids.length
-		    		for(var i = 0; i< length; i++) {
+		    		for(var i = 0; i< uids.length; i++) {
 		    			if(uids[i].checked && uids[i].value !='{uid}') {
 		    				$("#"+uids[i].value).remove();
 		    				i--;
