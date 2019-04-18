@@ -715,12 +715,14 @@ function openPdf() {
 function deleteFiles() {
 	var uids = document.getElementsByName("puid");
 		var url = "";
+		var toDelete = [];
 		for(var i = 0; i<uids.length; i++) {
 			if(uids[i].checked && uids[i].value !='{uid}') {
 				if(url =="")
 					url+="?uid="+uids[i].value;
 				else
 					url+="&uid="+uids[i].value;
+				toDelete.push(uids[i].value);
 			} 
 			
 				
@@ -730,24 +732,19 @@ function deleteFiles() {
 			return ;
 		}
 		if(confirm(i18n("are_you_sure_delete")+"?")) {
+			$.each(toDelete,function(i,id) {
+				$("#"+id).remove();
+			});
 	    $.ajax({
 		    url: '/site/deleteassets.html'+url,
 		    type: "POST", 
 		    success: function(msg) {
-		    	//if(!msg.indexOf("error:")>=0)
-		    		//window.location.reload();
-		    	//else
-		    	if(msg.indexOf("error:")>=0) {
-		    		alert(msg);
+		    	if(!msg.indexOf("error:")>=0) {
+		    		if(toDelete.length == 12)
+		    			window.location.reload();
 		    	} else {
-		    		//$("#refresh")[0].click();
-		    		for(var i = 0; i< uids.length; i++) {
-		    			if(uids[i].checked && uids[i].value !='{uid}') {
-		    				$("#"+uids[i].value).remove();
-		    				i--;
-		    			}
-		    		}		    		
-		    	}
+		    		alert(msg);
+		    	};
 		    },
 		    error: function() {
 		    	alert(i18n("fail"));
