@@ -837,7 +837,7 @@ public class XMPPServiceImpl implements XMPPService{
             }else if(commandLine.hasOption('s')) {	
             }else if(commandLine.hasOption('z')) {	
             }else if(commandLine.hasOption('v')) {	
-            	LinuxUtil.restart_VPN();
+            	log.info(LinuxUtil.restart_VPN());
             	sendMessage("重启VPN",from);
             }else if(commandLine.hasOption('u')) {	
             }else if(commandLine.hasOption('h')) {	
