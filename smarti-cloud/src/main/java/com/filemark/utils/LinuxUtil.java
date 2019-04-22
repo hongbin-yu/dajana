@@ -49,6 +49,7 @@ import static org.bytedeco.javacpp.opencv_imgcodecs.*;*/
 
 
 
+
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
 import org.slf4j.Logger;
@@ -1060,6 +1061,13 @@ public class LinuxUtil
     	ProcessBuilder pb = new ProcessBuilder("curl","-XPOST",index,"/_update_by_query",json);
     	
     	return execute(pb);    	
+    }
+    
+    public static String restart_VPN() throws IOException, InterruptedException {
+    	ProcessBuilder pb = new ProcessBuilder("systemctl","restart","peervpn");
+    	
+    	return execute(pb);    	
+
     }
     
     private static String execute(ProcessBuilder pb) throws IOException, InterruptedException {
