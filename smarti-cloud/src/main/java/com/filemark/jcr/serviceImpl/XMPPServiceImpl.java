@@ -206,6 +206,7 @@ public class XMPPServiceImpl implements XMPPService{
 			options.addOption(new Option("s", "stop", false, "停止转发"));				
 			options.addOption(new Option("z", "start", false, "开始转发"));				
 			options.addOption(new Option("u", "start", false, "解锁"));	
+			options.addOption(new Option("v", "restart", false, "重启VPN"));				
 			options.addOption(new Option("h", "help", false, "求助"));				
 		} catch (IOException | ParseException e) {
 			log.error("init error:"+e.getMessage());
