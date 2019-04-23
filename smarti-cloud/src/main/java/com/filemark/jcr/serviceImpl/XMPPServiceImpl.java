@@ -145,6 +145,7 @@ public class XMPPServiceImpl implements XMPPService{
 	private Presence presence;
 	private static boolean isConnected = false; 
 	private static boolean vpnConnected = true; 	
+	private static boolean closeVPN = true; 
 	//private PingFailedListener pingFailedListener ;
 	private static final PegDownProcessor pegDownProcessor = new PegDownProcessor();
 			//Extensions.ALL | Extensions.SUPPRESS_ALL_HTML, 5000);
@@ -189,6 +190,9 @@ public class XMPPServiceImpl implements XMPPService{
 			}	
 			if(jsonObject.get("protocol")!=null) {
 				protocol = (String)jsonObject.get("protocol");				
+			}
+			if(jsonObject.get("closeVPN")!=null) {
+				closeVPN = (Boolean)jsonObject.get("closeVPN");				
 			}				
 			ProviderManager.addIQProvider("vCard", "vcard-temp", new VCardProvider());			
 			log.info("login "+domain+":"+port+" by "+filedomain);
@@ -291,16 +295,8 @@ public class XMPPServiceImpl implements XMPPService{
 				        log.info("####User status"+"...."+entry.getJid()+"....."+entryPresence.getStatus()+"....."+entryPresence +" \ntype: "+entryPresence.getType() + "\nmode: " +entryPresence.getMode() + "\nstatus: " + entryPresence.getStatus());// + "\nType: " + status.getType());
 
 					}
-					if(getOnlineCount()==0) LinuxUtil.HDDOff();
-					else LinuxUtil.HDDOn();
-/*					        Presence entryPresence = roster.getPresence(entry.getJid());
-
-					        Presence.Type userType = entryPresence.getType();
-					        Presence.Mode mode = entryPresence.getMode();
-					        String status = entryPresence.getStatus();
-
-					        log.info("####User status"+"...."+entry.getJid()+"....."+entryPresence.getStatus()+"....."+entryPresence +" \ntype: "+"\n"+userType + "\nmode: " +mode + "\nstatus: " + status);// + "\nType: " + status.getType());
-*/					    }
+					checkVpnConnection();
+				}
 				listener = new RosterListener() {
 
 
@@ -326,8 +322,7 @@ public class XMPPServiceImpl implements XMPPService{
 							buddies.get(sjid).setOnline(roster.getPresence(jid.asBareJid()) != null);
 						
 						}
-						if(getOnlineCount()==0) LinuxUtil.HDDOff();
-						else LinuxUtil.HDDOn();						
+						checkVpnConnection();				
 					}
 
 					@Override
@@ -339,8 +334,7 @@ public class XMPPServiceImpl implements XMPPService{
 							buddies.remove(sjid);
 						
 						}
-						if(getOnlineCount()==0) LinuxUtil.HDDOff();
-						else LinuxUtil.HDDOn();						
+						checkVpnConnection();						
 					}
 
 					@Override
@@ -352,8 +346,7 @@ public class XMPPServiceImpl implements XMPPService{
 							buddies.remove(sjid);
 						
 						}
-						if(getOnlineCount()==0) LinuxUtil.HDDOff();
-						else LinuxUtil.HDDOn();					
+						checkVpnConnection();					
 					}
 				};
 				roster.addRosterListener(listener);
@@ -1763,29 +1756,7 @@ public class XMPPServiceImpl implements XMPPService{
 		                	//calendar.setTimeInMillis(connection.getLastStanzaReceived());
 		                	//log.info("Last Stenza:"+calendar.getTime());
 		                }
-		                if(getOnlineCount() == 0) {
-		                	if(vpnConnected) {
-			                	try {
-									log.info("stop vpn:"+LinuxUtil.comandline("/home/device/dajana/stop_peervpn.sh"));
-									vpnConnected = false;	
-				                	LinuxUtil.HDDOff();
-			                	} catch (IOException e) {
-									log.error(e.getMessage());
-								}		                		
-		                	}
-
-
-		                }else {
-		                	if(!vpnConnected) {
-								try {
-									log.info("start vpn:"+LinuxUtil.comandline("/home/device/dajana/start_peervpn.sh"));
-									vpnConnected = true;
-								} catch (IOException e) {
-									log.error(e.getMessage());
-								}
-		                	LinuxUtil.HDDOn();
-		                	}
-		                }
+		                checkVpnConnection();
 		                log.debug("Online:"+getOnlineCount());
 						//log.info("Task performed on " + new Date()+", isConnection:"+pingManager.pingMyServer());
 					} catch (NotConnectedException e) {
@@ -1800,6 +1771,33 @@ public class XMPPServiceImpl implements XMPPService{
 		    long delay = 1000L;
 		    long period = 60*1000L;		    
 		    timer.schedule(repeatedTask, delay, period);		    
+	   }
+	   
+	   private void checkVpnConnection() {
+           if(getOnlineCount() == 0) {
+           	if(vpnConnected && closeVPN) {
+               	try {
+						log.info("stop vpn:"+LinuxUtil.comandline("/home/device/dajana/stop_peervpn.sh"));
+						vpnConnected = false;	
+	                	LinuxUtil.HDDOff();
+               	} catch (IOException | InterruptedException e) {
+						log.error(e.getMessage());
+				}		                		
+           	}
+
+
+           }else {
+           	if(!vpnConnected) {
+					try {
+						log.info("start vpn:"+LinuxUtil.comandline("/home/device/dajana/start_peervpn.sh"));
+						LinuxUtil.HDDOn();
+						vpnConnected = true;
+					} catch (IOException | InterruptedException e) {
+						log.error(e.getMessage());
+					}
+
+           	}
+           }		   
 	   }
 		protected String getDateTime() {
 			Date now = new Date();
