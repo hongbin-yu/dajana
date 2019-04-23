@@ -144,6 +144,7 @@ public class XMPPServiceImpl implements XMPPService{
 	private Roster roster;
 	private Presence presence;
 	private static boolean isConnected = false; 
+	private static boolean vpnConnected = true; 	
 	//private PingFailedListener pingFailedListener ;
 	private static final PegDownProcessor pegDownProcessor = new PegDownProcessor();
 			//Extensions.ALL | Extensions.SUPPRESS_ALL_HTML, 5000);
@@ -837,7 +838,8 @@ public class XMPPServiceImpl implements XMPPService{
             }else if(commandLine.hasOption('s')) {	
             }else if(commandLine.hasOption('z')) {	
             }else if(commandLine.hasOption('v')) {	
-            	log.info(LinuxUtil.restart_VPN());
+            	log.info("restart vpn"+LinuxUtil.restart_VPN());
+            	vpnConnected = true;
             	sendMessage("重启VPN",from);
             }else if(commandLine.hasOption('u')) {	
             }else if(commandLine.hasOption('h')) {	
@@ -1762,19 +1764,27 @@ public class XMPPServiceImpl implements XMPPService{
 		                	//log.info("Last Stenza:"+calendar.getTime());
 		                }
 		                if(getOnlineCount() == 0) {
-		                	try {
-								log.info(LinuxUtil.comandline("/home/device/dajana/stop_peervpn.sh"));
-							} catch (IOException e) {
-								log.error(e.getMessage());
-							}
-		                	LinuxUtil.HDDOff();
+		                	if(vpnConnected) {
+			                	try {
+									log.info("stop vpn:"+LinuxUtil.comandline("/home/device/dajana/stop_peervpn.sh"));
+									vpnConnected = false;	
+				                	LinuxUtil.HDDOff();
+			                	} catch (IOException e) {
+									log.error(e.getMessage());
+								}		                		
+		                	}
+
+
 		                }else {
-							try {
-								log.info(LinuxUtil.comandline("/home/device/dajana/start_peervpn.sh"));
-							} catch (IOException e) {
-								log.error(e.getMessage());
-							}
+		                	if(!vpnConnected) {
+								try {
+									log.info("start vpn:"+LinuxUtil.comandline("/home/device/dajana/start_peervpn.sh"));
+									vpnConnected = true;
+								} catch (IOException e) {
+									log.error(e.getMessage());
+								}
 		                	LinuxUtil.HDDOn();
+		                	}
 		                }
 		                log.debug("Online:"+getOnlineCount());
 						//log.info("Task performed on " + new Date()+", isConnection:"+pingManager.pingMyServer());
