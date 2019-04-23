@@ -1064,11 +1064,18 @@ public class LinuxUtil
     }
     
     public static String restart_VPN() throws IOException, InterruptedException {
-    	ProcessBuilder pb = new ProcessBuilder("systemctl","restart","peervpn");
+    	ProcessBuilder pb = new ProcessBuilder("suso","systemctl","restart","peervpn");
     	
     	return execute(pb);    	
 
     }
+ 
+    public static String comandline(String line) throws IOException, InterruptedException {
+    	ProcessBuilder pb = new ProcessBuilder(line);
+    	
+    	return execute(pb);    	
+
+    } 
     
     private static String execute(ProcessBuilder pb) throws IOException, InterruptedException {
     	String s;

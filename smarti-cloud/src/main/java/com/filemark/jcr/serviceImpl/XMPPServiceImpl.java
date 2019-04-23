@@ -1761,8 +1761,21 @@ public class XMPPServiceImpl implements XMPPService{
 		                	//calendar.setTimeInMillis(connection.getLastStanzaReceived());
 		                	//log.info("Last Stenza:"+calendar.getTime());
 		                }
-		                if(getOnlineCount() == 0) LinuxUtil.HDDOff();
-		                else LinuxUtil.HDDOn();
+		                if(getOnlineCount() == 0) {
+		                	try {
+								log.info(LinuxUtil.comandline("sudo systemctl stop peervpn"));
+							} catch (IOException e) {
+								log.error(e.getMessage());
+							}
+		                	LinuxUtil.HDDOff();
+		                }else {
+							try {
+								log.info(LinuxUtil.comandline("sudo systemctl start peervpn"));
+							} catch (IOException e) {
+								log.error(e.getMessage());
+							}
+		                	LinuxUtil.HDDOn();
+		                }
 		                log.debug("Online:"+getOnlineCount());
 						//log.info("Task performed on " + new Date()+", isConnection:"+pingManager.pingMyServer());
 					} catch (NotConnectedException e) {
