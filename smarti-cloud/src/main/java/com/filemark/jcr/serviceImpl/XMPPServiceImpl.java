@@ -1763,14 +1763,14 @@ public class XMPPServiceImpl implements XMPPService{
 		                }
 		                if(getOnlineCount() == 0) {
 		                	try {
-								log.info(LinuxUtil.comandline("sudo systemctl stop peervpn"));
+								log.info(LinuxUtil.comandline("/home/device/dajana/stop_peervpn.sh"));
 							} catch (IOException e) {
 								log.error(e.getMessage());
 							}
 		                	LinuxUtil.HDDOff();
 		                }else {
 							try {
-								log.info(LinuxUtil.comandline("sudo systemctl start peervpn"));
+								log.info(LinuxUtil.comandline("/home/device/dajana/start_peervpn.sh"));
 							} catch (IOException e) {
 								log.error(e.getMessage());
 							}

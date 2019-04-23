@@ -1064,7 +1064,7 @@ public class LinuxUtil
     }
     
     public static String restart_VPN() throws IOException, InterruptedException {
-    	ProcessBuilder pb = new ProcessBuilder("suso","systemctl","restart","peervpn");
+    	ProcessBuilder pb = new ProcessBuilder("/home/device/dajana/restart_vpn.sh");
     	
     	return execute(pb);    	
 
