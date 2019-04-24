@@ -145,7 +145,7 @@ public class XMPPServiceImpl implements XMPPService{
 	private Presence presence;
 	private static boolean isConnected = false; 
 	private static boolean vpnConnected = true; 	
-	private static boolean closeVPN = true; 
+	private static boolean closeVPN = false; 
 	//private PingFailedListener pingFailedListener ;
 	private static final PegDownProcessor pegDownProcessor = new PegDownProcessor();
 			//Extensions.ALL | Extensions.SUPPRESS_ALL_HTML, 5000);
@@ -617,11 +617,14 @@ public class XMPPServiceImpl implements XMPPService{
 			    	log.debug("vCard:"+vCard);
 		    	
 			    	File icon = new File(iconpath);
-			    	log.debug("icon file path="+icon.getAbsolutePath());
-			    	InputStream is = new FileInputStream(icon);//conn.getInputStream();		    	
-			    	byte bytes[] = new byte[is.available()];
-			    	is.read(bytes);
-			    	vCard.setAvatar(bytes);
+			    	if(icon.exists()) {
+				    	log.debug("icon file path="+icon.getAbsolutePath());
+				    	InputStream is = new FileInputStream(icon);//conn.getInputStream();		    	
+				    	byte bytes[] = new byte[is.available()];
+				    	is.read(bytes);
+				    	vCard.setAvatar(bytes);			    		
+			    	}
+
 
 			    	//vCard.setAvatar(url);
 			    	vCard.setOrganization(organization);
