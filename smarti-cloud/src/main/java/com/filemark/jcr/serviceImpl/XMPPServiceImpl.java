@@ -657,6 +657,7 @@ public class XMPPServiceImpl implements XMPPService{
 	}
 
 	public void sendMessage(String message, String to) {
+		if(connection == null) return;
 		try {
 			ChatManager chatManager = ChatManager.getInstanceFor(connection);
 			Chat chat = chatManager.chatWith(JidCreate.entityBareFrom(to)); // pass XmppClient instance as listener for received messages.
@@ -670,12 +671,14 @@ public class XMPPServiceImpl implements XMPPService{
 	}
 	
 	public void sendMessage(String message, EntityBareJid to) throws XMPPException, NotConnectedException, XmppStringprepException, InterruptedException {
+		if(connection == null) return;
 		ChatManager chatManager = ChatManager.getInstanceFor(connection);
 		Chat chat = chatManager.chatWith(to); // pass XmppClient instance as listener for received messages.
 		chat.send(message);
 	}
 
 	public void sendMessage(Message message, EntityBareJid to) throws XMPPException, NotConnectedException, XmppStringprepException, InterruptedException {
+		if(connection == null) return;
 		ChatManager chatManager = ChatManager.getInstanceFor(connection);
 		Chat chat = chatManager.chatWith(to); // pass XmppClient instance as listener for received messages.
 		
@@ -683,6 +686,7 @@ public class XMPPServiceImpl implements XMPPService{
 	}	
 	
 	public void sendMessage(Message message, String to) {
+		if(connection == null) return;
 		ChatManager chatManager = ChatManager.getInstanceFor(connection);
 		Chat chat;
 		try {

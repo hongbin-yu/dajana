@@ -45,7 +45,7 @@
 		</div>
 		<div class="form-group">
 			<label for="userName" class="required"><span class="field-name"><spring:message code="djn.username"/></span> <strong class="required">(<spring:message code="djn.required"/>)</strong></label>
-			<input class="form-control" id="userName" name="userName"  value="${user.userName }" type="text" required="required" pattern="[A-Za-z0-9\s]{4,}" data-rule-alphanumeric="true" data-rule-minlength="4" size="40" placeholder="<spring:message code="djn.username_alpha_number"/>"/>
+			<input class="form-control" id="userName" name="userName"  value="${user.userName }" type="password" required="required" pattern="[A-Za-z0-9\s]{4,}" data-rule-alphanumeric="true" data-rule-minlength="4" size="40" placeholder="<spring:message code="djn.username_alpha_number"/>"/>
 		</div>		
 		<div class="form-group">
 			<details id="details_pass">
@@ -83,7 +83,7 @@
 			<label for="passwordconfirm">
 			<span class="field-name"><spring:message code="djn.confirm"/></span> (<spring:message code="djn.reselect_password"/>)
 			</label>			
-			<input class="form-control" id="passwordconfirm" name="passwordconfirm" type="password" maxlength="32" size="40" pattern=".{4,}" data-rule-rangelength="[4,32]" data-rule-equalTo="#password" placeholder="<spring:message code="djn.reselect_4_password_to_confirm"/>"/>
+			<input class="form-control" id="passwordconfirm" name="passwordconfirm" type="text" maxlength="32" size="40" pattern=".{4,}" data-rule-rangelength="[4,32]" data-rule-equalTo="#password" placeholder="<spring:message code="djn.reselect_4_password_to_confirm"/>"/>
 		</summary>
 			<div class="btn-group btn-group-justified">
 			<a class="btn btn-default confirm" id='${ids[0] }'><img class="img-responsive" alt="" width="64" src='<c:url value="/resources/images/security/${imgs[0]}.png"></c:url>'/></a>
