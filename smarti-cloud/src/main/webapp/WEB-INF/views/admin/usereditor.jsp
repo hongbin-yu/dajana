@@ -29,8 +29,8 @@
 			<input class="form-control" id="userName" name="userName" value="${user.userName }" type="text" required="required" pattern="[A-Za-z0-9\s]{4,}" data-rule-alphanumeric="true" data-rule-minlength="4" size="40" placeholder="输入用户名(只能拼音字母和数字)" disabled/>
 		</div>
 		<div class="form-group">				
-			<select id="role" name="role" path="${user..path }" onchange="updateNode(this)">
-				<option value="User" <c:if test="${user..role=='User' }">selected</c:if> ><spring:message code="djn.user"/></option>
+			<select id="role" name="role" path="${user.path }" onchange="updateNode(this)">
+				<option value="User" <c:if test="${user.role=='User' }">selected</c:if> ><spring:message code="djn.user"/></option>
 				<option value="Adminstrator" <c:if test="${user.role=='Administrator' }">selected</c:if> ><spring:message code="djn.adminstrator"/></option>
 				<option value="Owner" <c:if test="${user.role=='Owner' }">selected</c:if> ><spring:message code="djn.owner"/></option>
 			</select>
