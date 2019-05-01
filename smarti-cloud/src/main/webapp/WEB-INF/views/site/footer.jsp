@@ -57,3 +57,9 @@
 <script src="<c:url value='/resources/js/pageEditor.js'/>"></script>
 <script src="<c:url value='/resources/js/pageContent.js'/>"></script>
 <script src="<c:url value='/resources/js/djn.js'/>"></script>
+<script src="<c:url value='/resources/js/lazyload.js'/>"></script>
+<script type="text/javascript">
+$( document ).on( "wb-updated.wb-tables", ".wb-tables", function( event, settings ) {
+	lazyload();
+});
+</script>

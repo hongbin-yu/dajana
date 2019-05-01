@@ -445,7 +445,7 @@ public class SiteController extends BaseController {
 		        request.getSession().invalidate();
 				response.sendRedirect("/forget");
 			}
-			//model.addAttribute("tableContent", getAssetsHTML(path,type,r,null,model,request,null));
+//			model.addAttribute("tableContent", getAssetsHTML(path,type,r,null,model,request,null));
 			model.addAttribute("presences", XMPPService.getBuddies());
 			model.addAttribute("onlineCount", XMPPService.getOnlineCount());
 		}catch(Exception e) {
@@ -1330,7 +1330,7 @@ public class SiteController extends BaseController {
 			String title ="<input class=\"hidden-xs hidden-sm\" type=\"checkbox\" name=\"puid\" value=\""+asset.getUid()+"\"><a href=\""+asset.getLink()+"\" target=\"_blank\" title=\"打开原图\">"+(length>25?asset.getTitle().substring(0, 10)+"..."+asset.getTitle().substring(length-15, length):asset.getTitle())+"</a>";
 						//+"<a class=\"download btn-default btn-xs pull-right\" href=\"download/"+asset.getName()+"?path="+asset.getPath()+"\" download=\""+asset.getName()+"\" title=\""+asset.getTitle()+"\" target=\"_blank\"><span class=\"glyphicon glyphicon-download pull-right\">下载</span></a>"
 						//+"<a href=\"javascript:openImage(\'"+asset.getLink()+(asset.getWidth() != null && asset.getWidth() >1200?"&w=12":"")+"')\"><img alt=\"\" class=\"img-responsive img-rounded mrgn-rght-md"+(asset.getContentType().endsWith("pdf") && w==4?" col-md-6":"")+"\" src=\""+icon+"\">";
-			a2news.setUrl("<a href=\"javascript:openImage(\'"+asset.getLink()+(asset.getWidth() != null && asset.getWidth() >1200?"&w=12":"")+"')\"><img alt=\"\" class=\"img-responsive img-rounded mrgn-rght-md"+(asset.getContentType().endsWith("pdf") && w==4?" col-md-6":"")+"\" src=\""+icon+"\">");
+			a2news.setUrl("<a href=\"javascript:openImage(\'"+asset.getLink()+(asset.getWidth() != null && asset.getWidth() >1200?"&w=12":"")+"')\"><img alt=\"\" class=\"lazyload img-responsive img-rounded mrgn-rght-md"+(asset.getContentType().endsWith("pdf") && w==4?" col-md-6":"")+"\" data-src=\""+icon+"\">");
 
 			if(asset.getMp4()) {
 				if(w!=null && w==1) {
@@ -1356,7 +1356,7 @@ public class SiteController extends BaseController {
 	        if(asset.getDoc2pdf()) {
 	        	title = "<a class=\""+asset.getCssClass()+"\" href=\"doc2pdf.pdf?path="+asset.getPath()+"\" title=\"DOC2PDF\""+" target=\"_BLANK\">"+asset.getTitle()+"</a>";//+"<a class=\"download pull-right\" href=\"download/"+asset.getName()+"?path="+asset.getPath()+"\" download=\""+asset.getName()+"\"><span class=\"glyphicon glyphicon-download\">下载</span></a>"
 	        			
-	        	a2news.setUrl("<a href=\"javascript:openPdfGallery('"+asset.getPath()+"',"+getNumberOfPage(asset)+")\"><img id=\"img"+asset.getUid()+"\" src=\""+icon+"\" class=\"img-responsive img-rounded mrgn-rght-md "+"\" draggable=\"true\"/></a>");
+	        	a2news.setUrl("<a href=\"javascript:openPdfGallery('"+asset.getPath()+"',"+getNumberOfPage(asset)+")\"><img id=\"img"+asset.getUid()+"\" data-src=\""+icon+"\" class=\"lazyload img-responsive img-rounded mrgn-rght-md "+"\" draggable=\"true\"/></a>");
 			    		//+"<img id=\"img"+asset.getUid()+"\" src=\""+icon+"\" class=\"img-responsive img-rounded mrgn-rght-md "+(w==4?" col-md-6":"")+"\" draggable=\"true\"/></a>";
 					    //+"<a class=\""+asset.getCssClass()+"\" href=\"doc2pdf.pdf?path="+asset.getPath()+" title=\"DOC2PDF\""+"\" target=\"_BLANK\">"+asset.getTitle()+"</a>";
 	        }	
@@ -1364,7 +1364,7 @@ public class SiteController extends BaseController {
 	        	title = "<a href=\"file/"+asset.getName()+"?path="+asset.getPath()+"\" target=\"_BLANK\">"+asset.getTitle()+"</a>";//+"<a class=\"download pull-right\" href=\"download/"+asset.getName()+"?path="+asset.getPath()+"\" download=\""+asset.getName()+"\"><span class=\"glyphicon glyphicon-download\">下载</span></a>"
 	        			//+"<a href=\"javascript:openPdfGallery('"+asset.getPath()+"',"+getNumberOfPage(asset)+")\">";
 			    		//+"<img id=\"img"+asset.getUid()+"\" src=\""+icon+"\" class=\"img-responsive img-rounded mrgn-rght-md "+(w==4?" col-md-6":"")+"\" draggable=\"true\"/></a>";
-	        	a2news.setUrl("<a href=\"javascript:openPdfGallery('"+asset.getPath()+"',"+getNumberOfPage(asset)+")\"><img id=\"img"+asset.getUid()+"\" src=\""+icon+"\" class=\"img-responsive img-rounded mrgn-rght-md "+"\" draggable=\"true\"/></a>");
+	        	a2news.setUrl("<a href=\"javascript:openPdfGallery('"+asset.getPath()+"',"+getNumberOfPage(asset)+")\"><img id=\"img"+asset.getUid()+"\" data-src=\""+icon+"\" class=\"lazyload img-responsive img-rounded mrgn-rght-md "+"\" draggable=\"true\"/></a>");
 					    //+"<a href=\"file/"+asset.getName()+"?path="+asset.getPath()+"\" target=\"_BLANK\">"+asset.getTitle()+"</a>";
 	        }		        
 			a2news.setTitle(title);

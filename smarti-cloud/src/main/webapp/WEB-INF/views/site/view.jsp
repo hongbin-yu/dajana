@@ -42,7 +42,6 @@
     </tr> 
    </thead> 
    <tbody id="view_insert"><!-- /*  data-ajax-replace="getassets.html?path=${folder.path}&type=${type}&r=${param.r}" */--> 
-	<!--/* ${tableContent }  */ -->
    </tbody> 
   </table>      
 	</section>	
@@ -152,6 +151,5 @@
 				
 				alert(to +"/"+selected_uid);
 			};
-
 
 		</script>
