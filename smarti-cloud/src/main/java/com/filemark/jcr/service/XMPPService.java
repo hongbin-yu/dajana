@@ -22,6 +22,7 @@ public interface XMPPService {
 	public Roster getRoster();
 	public Collection<Presence> getPresences();
 	public Collection<Buddy> getBuddies();	
-	public long getOnlineCount();	
+	public long getOnlineCount();
+	public boolean isConnected();
 
 }

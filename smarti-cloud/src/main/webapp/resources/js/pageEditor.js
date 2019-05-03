@@ -731,16 +731,20 @@ function deleteFiles() {
 			alert("没有选择文件！");
 			return ;
 		}
+		var deleted = 0 ;
 		if(confirm(i18n("are_you_sure_delete")+"?")) {
 			$.each(toDelete,function(i,id) {
-				$("#"+id).remove();
+				if($("#"+id).length>0) {
+					$("#"+id).remove();		
+					deleted++;
+				}
 			});
 	    $.ajax({
 		    url: '/site/deleteassets.html'+url,
 		    type: "POST", 
 		    success: function(msg) {
 		    	if(!msg.indexOf("error:")>=0) {
-		    		if(toDelete.length == 12)
+		    		if(toDelete.length == 12 || deleted == 0)
 		    			window.location.reload();
 		    	} else {
 		    		alert(msg);

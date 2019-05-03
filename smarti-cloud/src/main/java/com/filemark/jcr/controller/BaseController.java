@@ -128,7 +128,7 @@ public class BaseController {
 			}						
 		}*/
 		LinuxUtil.gpioMode("out");
-		LinuxUtil.HDDOn();
+		//LinuxUtil.HDDOn();
 /*		try {
 			ImageUtil.HDDSleep();
 		} catch (IOException e) {

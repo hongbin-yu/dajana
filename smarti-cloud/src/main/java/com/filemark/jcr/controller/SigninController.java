@@ -157,7 +157,7 @@ public class SigninController extends BaseController{
         	}
 			try {
 	        	if(!user.getSigningKey().equals(j_password) || "locked".equals(user.getStatus())) {
-	        		if(user.getXmppid()!=null) {
+	        		if(user.getXmppid()!=null && XMPPService.isConnected()) {
 	
 						XMPPService.sendVerifyCode(user.getXmppid());
 	

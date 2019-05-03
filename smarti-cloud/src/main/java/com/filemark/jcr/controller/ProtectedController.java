@@ -299,7 +299,7 @@ public class ProtectedController extends BaseController {
   	
 	@RequestMapping(value = {"/protected/browse.html","/protected/image.html"}, method = {RequestMethod.GET,RequestMethod.POST},produces = "text/plain;charset=UTF-8")
 	public String browse(String path,String type, String input,String kw,Integer p,Integer m,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
-		LinuxUtil.HDDOn();
+		//LinuxUtil.HDDOn();
 		String assetFolder =  "/assets"+"/"+getUsername();
 		if(!jcrService.nodeExsits(assetFolder)) {
 			jcrService.addNodes(assetFolder, "nt:unstructured",getUsername());		
@@ -359,7 +359,7 @@ public class ProtectedController extends BaseController {
 
 	@RequestMapping(value = {"/protected/browsemore.html","/protected/**/browsemore.html"}, method = {RequestMethod.GET,RequestMethod.POST},produces = "text/plain;charset=UTF-8")
 	public String browsemore(String path,String type, String input,String kw,Integer p,Integer m,String topage,Model model,HttpServletRequest request, HttpServletResponse response) throws Exception {
-		LinuxUtil.HDDOn();
+		//LinuxUtil.HDDOn();
 		String assetFolder =  "/assets"+"/"+getUsername();
 		if(!jcrService.nodeExsits(assetFolder)) {
 			jcrService.addNodes(assetFolder, "nt:unstructured",getUsername());		

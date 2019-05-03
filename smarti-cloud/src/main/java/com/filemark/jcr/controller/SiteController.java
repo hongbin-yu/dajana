@@ -1327,7 +1327,7 @@ public class SiteController extends BaseController {
 			a2news.setUid(asset.getUid());
 			String icon = asset.getIcon();// w!=null && w==1?asset.getIconSmall():asset.getIcon();
 			int length = asset.getTitle().length();
-			String title ="<input class=\"hidden-xs hidden-sm\" type=\"checkbox\" name=\"puid\" value=\""+asset.getUid()+"\"><a href=\""+asset.getLink()+"\" target=\"_blank\" title=\"打开原图\">"+(length>25?asset.getTitle().substring(0, 10)+"..."+asset.getTitle().substring(length-15, length):asset.getTitle())+"</a>";
+			String title ="<input class=\"hidden-xs hidden-sm\" type=\"checkbox\" name=\"puid\" value=\""+asset.getUid()+"\"> <a href=\""+asset.getLink()+"\" target=\"_blank\" title=\"打开原图\">"+(length>25?asset.getTitle().substring(0, 10)+"..."+asset.getTitle().substring(length-15, length):asset.getTitle())+"</a>";
 						//+"<a class=\"download btn-default btn-xs pull-right\" href=\"download/"+asset.getName()+"?path="+asset.getPath()+"\" download=\""+asset.getName()+"\" title=\""+asset.getTitle()+"\" target=\"_blank\"><span class=\"glyphicon glyphicon-download pull-right\">下载</span></a>"
 						//+"<a href=\"javascript:openImage(\'"+asset.getLink()+(asset.getWidth() != null && asset.getWidth() >1200?"&w=12":"")+"')\"><img alt=\"\" class=\"img-responsive img-rounded mrgn-rght-md"+(asset.getContentType().endsWith("pdf") && w==4?" col-md-6":"")+"\" src=\""+icon+"\">";
 			a2news.setUrl("<a href=\"javascript:openImage(\'"+asset.getLink()+(asset.getWidth() != null && asset.getWidth() >1200?"&w=12":"")+"')\"><img alt=\"\" class=\"lazyload img-responsive img-rounded mrgn-rght-md"+(asset.getContentType().endsWith("pdf") && w==4?" col-md-6":"")+"\" data-src=\""+icon+"\">");
@@ -2293,7 +2293,7 @@ public class SiteController extends BaseController {
 
 	@RequestMapping(value = {"/site/deleteasset.html","/protected/deleteasset.html"}, method = RequestMethod.GET)
 	public String deleteAssetConfirm(String uid,String path,String redirect,Model model,HttpServletRequest request, HttpServletResponse response) {
-		LinuxUtil.HDDOn();
+		//LinuxUtil.HDDOn();
 			try {
 				if(uid!=null && !uid.equals("")) {
 					path = jcrService.getNodeById(uid);
@@ -2312,7 +2312,7 @@ public class SiteController extends BaseController {
 	
 	@RequestMapping(value = {"/site/deletePage.html"}, method = RequestMethod.GET)
 	public String deletePageConfirm(String uid,String path,String redirect,Model model,HttpServletRequest request, HttpServletResponse response) {
-		LinuxUtil.HDDOn();
+		//LinuxUtil.HDDOn();
 			try {
 				if(uid!=null && !uid.equals("")) {
 					path = jcrService.getNodeById(uid);
@@ -2331,7 +2331,7 @@ public class SiteController extends BaseController {
 	@RequestMapping(value = {"/site/deletePage.html"}, method = RequestMethod.POST)
 	public String deletePage(String uid,String path,String redirect,Model model,HttpServletRequest request, HttpServletResponse response) {
 		String result="";
-		LinuxUtil.HDDOn();
+		//LinuxUtil.HDDOn();
 		if(uid!=null && !uid.equals("")) {
 			try {
 				path = jcrService.getNodeById(uid);

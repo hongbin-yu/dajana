@@ -410,7 +410,7 @@ public class ContentController extends BaseController {
 	@RequestMapping(value = {"/content/{site}","/content/{site}.html","/content/{site}/**/*","/content/{site}/**/*.html","/content/{site}/*.html"}, method = RequestMethod.GET)
 	public String page(@PathVariable String site, String uid,Integer p, Model model,HttpServletRequest request, HttpServletResponse response) throws Exception  {
 		try {
-			LinuxUtil.HDDOn();
+			//LinuxUtil.HDDOn();
 			String paths = URLDecoder.decode(request.getRequestURI(),"UTF-8");
 			if(!request.getContextPath().equals("/"))
 				paths = paths.replaceFirst(request.getContextPath(), "");

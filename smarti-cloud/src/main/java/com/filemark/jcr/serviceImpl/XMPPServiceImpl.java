@@ -2004,6 +2004,14 @@ public class XMPPServiceImpl implements XMPPService{
 		}
 
 
+		public boolean isConnected() {
+			return isConnected;
+		}
+
+		public static void setConnected(boolean isConnected) {
+			XMPPServiceImpl.isConnected = isConnected;
+		}
+
 /**
  * [code borrowed from ant.jar]
  * Crack a command line.
