@@ -93,14 +93,19 @@ public class SiteController extends BaseController {
 
 	
     @ExceptionHandler(Exception.class)
-    public ModelAndView  handleException(Exception ex,HttpServletRequest request) throws UnsupportedEncodingException {
+    public ModelAndView  handleException(Exception ex,HttpServletRequest request,HttpServletResponse response) throws UnsupportedEncodingException {
 
 		String path = URLDecoder.decode(request.getRequestURI(),"UTF-8");
 		String paths[] = path.split("\\.");
 	    ModelAndView modelAndView = new ModelAndView("error404");
 	    String errorcode = request.getParameter("error");
 	    String message =  ex.getMessage();
-	    
+	    if("null".equals(message) || message==null)
+			try {
+				response.sendRedirect("/signin");
+			} catch (IOException e) {
+				logger.error(e.getMessage());
+			}
 	    String simpleName ="";
 	    if(ex.getCause()!=null)
 	    	simpleName = ex.getCause().getClass().getSimpleName();

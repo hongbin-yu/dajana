@@ -17,7 +17,7 @@
 	
 	<definition name="error404" extends="contentpage">
 	    <put-attribute name="topmenu" value="/WEB-INF/views/wet/defaultmenu.jsp" />
-		<put-attribute name="content" value="/WEB-INF/views/wet/error.jsp" />
+		<put-attribute name="content" value="/WEB-INF/views/content/mysite.jsp" />
 	</definition>
 		
 </tiles-definitions>
