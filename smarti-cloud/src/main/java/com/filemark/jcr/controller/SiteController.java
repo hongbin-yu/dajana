@@ -102,7 +102,7 @@ public class SiteController extends BaseController {
 	    String message =  ex.getMessage();
 	    if("null".equals(message) || message==null)
 			try {
-				response.sendRedirect("/signin");
+				response.sendRedirect("/logout");
 			} catch (IOException e) {
 				logger.error(e.getMessage());
 			}
