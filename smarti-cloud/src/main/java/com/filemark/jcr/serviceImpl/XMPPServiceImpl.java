@@ -3,19 +3,24 @@ package com.filemark.jcr.serviceImpl;
 
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.URL;
-import java.net.URLConnection;
+import java.nio.file.Files;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -36,7 +41,6 @@ import javax.xml.bind.DatatypeConverter;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.codec.binary.Base64;
@@ -50,6 +54,7 @@ import org.jivesoftware.smack.ConnectionListener;
 import org.jivesoftware.smack.ReconnectionManager;
 import org.jivesoftware.smack.ReconnectionManager.ReconnectionPolicy;
 import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.SmackException.NoResponseException;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
@@ -70,13 +75,29 @@ import org.jivesoftware.smack.roster.RosterListener;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import org.jivesoftware.smack.util.PacketParserUtils;
+import org.jivesoftware.smack.util.StringUtils;
+import org.jivesoftware.smack.util.TLSUtils;
 import org.jivesoftware.smack.util.XmlStringBuilder;
+import org.jivesoftware.smackx.bytestreams.socks5.Socks5BytestreamManager;
+import org.jivesoftware.smackx.bytestreams.socks5.Socks5BytestreamSession;
 import org.jivesoftware.smackx.filetransfer.FileTransfer;
 import org.jivesoftware.smackx.filetransfer.FileTransferListener;
 import org.jivesoftware.smackx.filetransfer.FileTransferManager;
+import org.jivesoftware.smackx.filetransfer.FileTransferNegotiator;
 import org.jivesoftware.smackx.filetransfer.FileTransferRequest;
 import org.jivesoftware.smackx.filetransfer.IncomingFileTransfer;
 import org.jivesoftware.smackx.filetransfer.OutgoingFileTransfer;
+import org.jivesoftware.smackx.iqregister.AccountManager;
+import org.jivesoftware.smackx.jingle.JingleManager;
+import org.jivesoftware.smackx.jingle.JingleUtil;
+import org.jivesoftware.smackx.jingle.element.Jingle;
+import org.jivesoftware.smackx.jingle.element.JingleContent;
+import org.jivesoftware.smackx.jingle.provider.JingleContentProviderManager;
+import org.jivesoftware.smackx.jingle.provider.JingleProvider;
+import org.jivesoftware.smackx.jingle.transports.jingle_ibb.element.JingleIBBTransport;
+import org.jivesoftware.smackx.jingle.transports.jingle_ibb.provider.JingleIBBTransportProvider;
+import org.jivesoftware.smackx.jingle.transports.jingle_s5b.elements.JingleS5BTransport;
+import org.jivesoftware.smackx.jingle.transports.jingle_s5b.provider.JingleS5BTransportProvider;
 import org.jivesoftware.smackx.ping.PingFailedListener;
 import org.jivesoftware.smackx.ping.PingManager;
 import org.jivesoftware.smackx.vcardtemp.VCardManager;
@@ -88,9 +109,13 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.jxmpp.jid.EntityBareJid;
+import org.jxmpp.jid.EntityFullJid;
+import org.jxmpp.jid.FullJid;
 import org.jxmpp.jid.Jid;
 import org.jxmpp.jid.impl.JidCreate;
+import org.jxmpp.jid.parts.Localpart;
 import org.jxmpp.stringprep.XmppStringprepException;
+import org.jxmpp.util.XmppStringUtils;
 import org.pegdown.PegDownProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -109,7 +134,6 @@ import com.filemark.utils.LinuxUtil;
 import com.filemark.utils.WebPage;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.lowagie.text.pdf.PdfReader;
@@ -130,14 +154,19 @@ public class XMPPServiceImpl implements XMPPService{
 	private String iconpath="/var/www/html/resources/images/favicon-mobile.png";
 	private String organization ="优鸿网络科技有限公司";
 	private String phone ="";
-	private String email ="";	
+	private String email ="";
+	private String nickName = "优鸿云";
+
 	@Autowired
 	private JcrServices jcrService;
+	XMPPTCPConnectionConfiguration config;
 	private PingManager pingManager;
 	private VCardManager vCardManager;
 	private ReconnectionManager reconnectionManager;
 	private FileTransferManager fileTransferManager ;
-    private JTextField jid;	
+	private JingleManager jingleManager;
+	private ProviderManager providerManager;
+    //private JTextField jid;	
     private Options options = new Options();
 	private AbstractXMPPConnection connection;
 	private ConnectionListener connectionListener;
@@ -153,8 +182,10 @@ public class XMPPServiceImpl implements XMPPService{
 	Map<String,Long> lastPage = new HashMap<String,Long>();	
 	Map<String,Message> lastSend = new HashMap<String,Message>();	
 	Map<String,Buddy> buddies = new HashMap<>();
-	protected RosterListener listener = null;
+	protected RosterListener rosterListener = null;
 	//private IncomingChatMessageListener incomingChatMessageListener;
+	private static String pathToDirectory = "path to directory";
+	
 	public void initialize() {
 
 		JSONParser parser = new JSONParser();
@@ -188,6 +219,12 @@ public class XMPPServiceImpl implements XMPPService{
 			if(jsonObject.get("email")!=null) {
 				email = (String)jsonObject.get("email");				
 			}	
+			if(jsonObject.get("nickName")!=null) {
+				nickName = (String)jsonObject.get("nickName");				
+			}	
+			if(jsonObject.get("search")!=null) {
+				LinuxUtil.HOST = (String)jsonObject.get("search");				
+			}				
 			if(jsonObject.get("protocol")!=null) {
 				protocol = (String)jsonObject.get("protocol");				
 			}
@@ -195,10 +232,26 @@ public class XMPPServiceImpl implements XMPPService{
 				closeVPN = (Boolean)jsonObject.get("closeVPN");				
 			}				
 			ProviderManager.addIQProvider("vCard", "vcard-temp", new VCardProvider());			
-			log.info("login "+domain+":"+port+" by "+filedomain);
-			login(username,password);				
-			checkConnection();
-			
+			log.info("init "+domain+":"+port+" sub domain "+filedomain);
+			if(filedomain.startsWith("192.")) {
+				InetAddress ipAddr = InetAddress.getLocalHost();
+				filedomain = ipAddr.getHostAddress();					
+			}			
+			config = XMPPTCPConnectionConfiguration
+				    .builder()
+				    //.setUsernameAndPassword(username, password)
+				    .setResource(filedomain)
+				    .setHost(domain)
+				    .setXmppDomain(domain)
+				    .setPort(port.intValue())
+				    .setSendPresence(true)
+				    .setCompressionEnabled(false)
+				    .setSecurityMode(SecurityMode.required)
+				    .build();
+				
+						
+		    //connection = new XMPPTCPConnection(config);
+		
 			
 			options.addOption(new Option("n", "next", false, "下一组"));   
 			options.addOption(new Option("m", "MaxSize", true, "每页最多文件"));       		
@@ -211,42 +264,52 @@ public class XMPPServiceImpl implements XMPPService{
 			options.addOption(new Option("s", "stop", false, "停止转发"));				
 			options.addOption(new Option("z", "start", false, "开始转发"));				
 			options.addOption(new Option("u", "start", false, "解锁"));	
-			options.addOption(new Option("v", "restart", false, "重启VPN"));				
+			options.addOption(new Option("v", "restart", false, "重启VPN"));
+			options.addOption(new Option("r", "reset", false, "重启系统"));			
 			options.addOption(new Option("h", "help", false, "求助"));				
+			//connection.connect();
+			//create(username,password);
+			//login(username,password);		
+	        //test();
+            checkConnection();
 		} catch (IOException | ParseException e) {
 			log.error("init error:"+e.getMessage());
 		} catch (RepositoryException e) {
 			log.error("init error:"+e.getMessage());
 		} catch(NullPointerException e) {
 			log.error("init error:"+e.getMessage());		
-		}
+		} /*catch (XMPPException e) {
+			log.error("init error:"+e.getMessage());	
+		} catch (SmackException e) {
+			log.error("init error:"+e.getMessage());	
+		} catch (InterruptedException e) {
+			log.error("init error:"+e.getMessage());	
+		}*/
 
 
 		
 
 	}
 	
+	private void create(String username,String password) throws NoResponseException, XMPPErrorException, NotConnectedException, XmppStringprepException, InterruptedException {
+	    AccountManager accountManager = AccountManager.getInstance(connection);
+	    accountManager.sensitiveOperationOverInsecureConnection(true);
+	    accountManager.createAccount(Localpart.from(username), password); 
+	}
+	
 	public void login(String username,String password) {
 		
 		try {
-			if(filedomain.startsWith("192.")) {
-				InetAddress ipAddr = InetAddress.getLocalHost();
-				filedomain = ipAddr.getHostAddress();					
-			}
-			
-			XMPPTCPConnectionConfiguration conf = XMPPTCPConnectionConfiguration
-			    .builder()
-			    .setUsernameAndPassword(username, password)
-			    .setResource(filedomain)
-			    .setHost(domain)
-			    .setXmppDomain(domain)
-			    .setPort(port.intValue())
-			    .setSendPresence(true)
-			    .setCompressionEnabled(false)
-			    .setSecurityMode(SecurityMode.required)
-			    .build();
-			    connection = new XMPPTCPConnection(conf);
-				connection.connect().login();
+			if(connection == null)
+			    connection = new XMPPTCPConnection(config);
+			    connection.setReplyTimeout(10000);
+				//if(!connection.isConnected())
+				//	connection.connect();
+				//if(connection.isAuthenticated()) return;
+				connection.connect().login(username,password);	
+		
+			    //isConnected = true;
+			    /*
 				roster = Roster.getInstanceFor(connection);
 				roster.setRosterLoadedAtLogin(true);
 				roster = Roster.getInstanceFor(connection);
@@ -256,34 +319,7 @@ public class XMPPServiceImpl implements XMPPService{
 					        } catch (SmackException.NotLoggedInException |        SmackException.NotConnectedException | InterruptedException e) {
 					            e.printStackTrace();
 					        }
-/*				Collection<RosterEntry> entries = roster.getEntries();
-				for (RosterEntry entry : entries) {
-				    VCard vCard = getVCard(entry.getJid().asEntityBareJidIfPossible());
-				    	String name = entry.getJid().toString().split("@")[0];
-			    	try {
-					    	if(jcrService.nodeExsits("/system/users/"+name)) {
-	
-									User user = (User)jcrService.getObject("/system/users/"+name);
-									if(vCard.getAvatar()!=null) user.setAvatar(vCard.getAvatar());
-									user.setOrganization(vCard.getOrganization());
-									if(vCard.getNickName() != null) 
-										user.setTitle(vCard.getNickName());
-									jcrService.addOrUpdate(user);
-	
-					    	}else {
-					    		User user = new User();
-					    		user.setPath("/system/users/"+name);
-					    		user.setTitle(name);
-					    		if(vCard.getAvatar()!=null) user.setAvatar(vCard.getAvatar());
-								user.setOrganization(vCard.getOrganization());
-								if(vCard.getNickName() != null) 
-									user.setTitle(vCard.getNickName());
-								jcrService.addOrUpdate(user);						
-					    	}
-						} catch (RepositoryException e) {
-							log.error(e.getMessage());
-						}	
-				}*/
+
 				Collection<RosterEntry> entries = roster.getEntries();
 				for (RosterEntry entry : entries) {
 					String jid = entry.getJid().toString();
@@ -292,87 +328,58 @@ public class XMPPServiceImpl implements XMPPService{
 						Buddy buddy = new Buddy(jid);
 						buddy.setOnline(entryPresence.isAvailable() || entryPresence.isAway());
 						buddies.put(jid, buddy);
-				        log.info("####User status"+"...."+entry.getJid()+"....."+entryPresence.getStatus()+"....."+entryPresence +" \ntype: "+entryPresence.getType() + "\nmode: " +entryPresence.getMode() + "\nstatus: " + entryPresence.getStatus());// + "\nType: " + status.getType());
+				        log.debug("####User status"+"...."+entry.getJid()+"....."+entryPresence.getStatus()+"....."+entryPresence +" \ntype: "+entryPresence.getType() + "\nmode: " +entryPresence.getMode() + "\nstatus: " + entryPresence.getStatus());// + "\nType: " + status.getType());
 
 					}
 					checkVpnConnection();
 				}
-				listener = new RosterListener() {
-
-
-					public  void presenceChanged(Presence prsnc) {
-						String uname = prsnc.getFrom().asBareJid().toString();
-						//if (uname.contains("/")) {
-						//	uname = uname.substring(0, uname.indexOf('/'));
-						//}
-						Buddy b = buddies.get(uname);
-						if (b == null) {
-							// add to buddy list
-							b = new Buddy(uname);
-							buddies.put(uname, b);
-						}
-						//System.out.println("presence changed: " + uname + ": " + prsnc + "  -" + (prsnc.isAvailable() || prsnc.isAway()));
-						b.setOnline(prsnc.isAvailable() || prsnc.isAway());
-					}
-
-					@Override
-					public void entriesAdded(Collection<Jid> addresses) {
-						for(Jid jid:addresses) {
-							String sjid = jid.toString();
-							buddies.get(sjid).setOnline(roster.getPresence(jid.asBareJid()) != null);
-						
-						}
-						checkVpnConnection();				
-					}
-
-					@Override
-					public void entriesUpdated(Collection<Jid> addresses) {
-						for(Jid jid:addresses) {
-							String sjid = jid.toString();
-							Buddy buddy = buddies.get(sjid);
-							if(buddy.isOnline()) buddy.setOnline(false);
-							buddies.remove(sjid);
-						
-						}
-						checkVpnConnection();						
-					}
-
-					@Override
-					public void entriesDeleted(Collection<Jid> addresses) {
-						for(Jid jid:addresses) {
-							String sjid = jid.toString();
-							Buddy buddy = buddies.get(sjid);
-							if(buddy.isOnline()) buddy.setOnline(false);
-							buddies.remove(sjid);
-						
-						}
-						checkVpnConnection();					
-					}
-				};
-				roster.addRosterListener(listener);
-				roster.setSubscriptionMode(Roster.SubscriptionMode.accept_all);
+				listener = getRosterListener();
+				//roster.addRosterListener(listener);
+				//roster.setSubscriptionMode(Roster.SubscriptionMode.accept_all);
 				//roster.setRosterLoadedAtLogin(true);
 
 				//presence = new Presence(connection.getUser(),Type.available);
 				presence = roster.getPresence(connection.getUser().asBareJid());
 			    //connection.setReplyTimeout(10000);
 				presence.setType(Type.available);
-				log.info("Status:"+presence.getStatus()+"/"+presence.getType()+"/"+presence);
+				log.debug("Status:"+presence.getStatus()+"/"+presence.getType()+"/"+presence);
 
 				presence.setPriority(presence.getPriority()+1);
 				connection.sendStanza(presence);
 				connection.setReplyTimeout(60000);
-				fileTransferManager = FileTransferManager.getInstanceFor(connection);
-				//jingleManager = JingleManager.getInstanceFor(connection);
-				reconnectionManager = ReconnectionManager.getInstanceFor(connection);
+				//fileTransferManager = FileTransferManager.getInstanceFor(connection);
+				jingleManager = JingleManager.getInstanceFor(connection);
+				
+		        JingleIBBTransportProvider ibbProvider = new JingleIBBTransportProvider();
+		        JingleContentProviderManager.addJingleContentTransportProvider(JingleIBBTransport.NAMESPACE_V1, ibbProvider);
+		        if(ibbProvider.equals(JingleContentProviderManager.getJingleContentTransportProvider(JingleIBBTransport.NAMESPACE_V1))) {
+		        	log.info("ibbProvider set");
+		        }
+		        if(JingleContentProviderManager.getJingleContentTransportProvider(JingleS5BTransport.NAMESPACE_V1) == null) {
+		        	log.error("JingleContentProviderManager is null");
+		        }
+		        test();
+		        JingleS5BTransportProvider s5bProvider = new JingleS5BTransportProvider();
+		        JingleContentProviderManager.addJingleContentTransportProvider(JingleS5BTransport.NAMESPACE_V1, s5bProvider);
+		        if(s5bProvider==JingleContentProviderManager.getJingleContentTransportProvider(JingleS5BTransport.NAMESPACE_V1)) {
+		        	log.info("s5bProvider set");
+		        }
+		        
+		        */
+				installConnectionListeners(connection);
+	            installIncomingChatMessageListener(connection);
+				roster = initRoster(connection);
+				fileTransferManager = initFileTransferManager(connection);			            
+	            initReconnectManager();
+	            initProviderManager();
+
+/*				reconnectionManager = ReconnectionManager.getInstanceFor(connection);
 				ReconnectionManager.setEnabledPerDefault(true);
 				reconnectionManager.enableAutomaticReconnection();
 				reconnectionManager.setReconnectionPolicy(ReconnectionPolicy.RANDOM_INCREASING_DELAY);
-				installConnectionListeners(connection);
-	            installIncomingChatMessageListener(connection);
-	            //checkConnection();
+
 				//connection.isAuthenticated();
-	            vCardManager = VCardManager.getInstanceFor(connection);
+	            //vCardManager = VCardManager.getInstanceFor(connection);
 			    pingManager = PingManager.getInstanceFor(connection);
 			    pingManager.setPingInterval(100);
 			    pingManager.pingMyServer();	
@@ -387,233 +394,15 @@ public class XMPPServiceImpl implements XMPPService{
 		        	
 		        });
 
-			    //FileTransferNegotiator.getInstanceFor(connection)    
+*/			    //FileTransferNegotiator.getInstanceFor(connection)    
 			    
-			    fileTransferManager.addFileTransferListener(new FileTransferListener() {
-			        @Override
-			        public void fileTransferRequest(FileTransferRequest request) {
-/*			        	ProviderManager.addIQProvider("query",
-
-		                        "http://jabber.org/protocol/bytestreams",
-
-		                        new BytestreamsProvider());
-
-		 
-
-		                ProviderManager.addIQProvider("query",
-
-		                        "http://jabber.org/protocol/disco#items",
-
-		                        new DiscoverItemsProvider());
-
-		 
-
-		                ProviderManager.addIQProvider("query",
-
-		                        "http://jabber.org/protocol/disco#info",
-
-		                        new DiscoverInfoProvider());			        	
-		                FileTransferNegotiator fileTransferNegotiator = FileTransferNegotiator.getInstanceFor(connection);
-		                try {
-							fileTransferNegotiator.selectStreamNegotiator(request);
-						} catch (NoStreamMethodsOfferedException
-								| NoAcceptableTransferMechanisms
-								| NotConnectedException | InterruptedException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}*/
-			            IncomingFileTransfer ift = request.accept();
-			            long size = request.getFileSize();
-			            String fileName = request.getFileName();
-			            String contentType = request.getMimeType();
-
-			            Jid jid = request.getRequestor();
-			    		String username = jid.toString().split("@")[0];
-			    		String filepath = "/assets/"+username+"/httpfileupload";
-			            Asset ex_asset = findAsset(filepath,fileName,size);
-			            if(ex_asset!=null) {
-			            	ift.cancel();
-			            	sendAsset(ex_asset,jid.asEntityBareJidIfPossible().toString());
-			            	return;
-			            }
-			    		log.info("fileTransferRequestor:"+jid+",fileName="+fileName);
-			            //byte[] dataReceived = new byte[1];
-			            InputStream is = null;
-						try {
-//							if(contentType == null) {
-								final File tempFile = File.createTempFile("temp-",fileName);
-						        tempFile.deleteOnExit();
-								ift.receiveFile(tempFile);
-								log.info("Incoming file transfer: " + fileName);
-								log.info("Transfer status is: " + ift.getStatus());
-								if(ift.getStatus().toString().equals("Error")) {
-									sendMessage("Transfer file error",jid.toString());
-									ift.cancel();
-									return;
-								}
-							    double progress = ift.getProgress();
-							    double progressPercent = progress * 100.0;
-							    Date start=new Date();
-								while (!ift.isDone())
-								{
-								    Thread.sleep(1000);
-									progress = ift.getProgress();
-								    progressPercent = progress * 100.0;
-								    String percComplete = String.format("%1$,.2f", progressPercent);
-								    log.info("Transfer status is: " + ift.getStatus());
-								    log.info("File transfer is " + percComplete + "% complete");
-
-					                //Thread.sleep(2000L);
-
-					                if (ift.getStatus().equals(FileTransfer.Status.cancelled)) {
-
-					                	log.info("File transfer CANCELLED");
-
-					                }
-
-					 
-
-					                if (ift.getStatus().equals(FileTransfer.Status.complete)) {
-
-					                    log.info("File transfer COMPLETE："+(new Date().getTime() - start.getTime()));
-
-					                }
-
-					 
-
-					                if (ift.getStatus().equals(FileTransfer.Status.error)) {
-
-					                	log.info("File transfer ERROR");
-
-					                    ift.cancel();
-					                    sendMessage("ERROR",jid.toString());
-					                    return;
-
-					                }
-
-					 
-
-					                if (ift.getStatus().equals(FileTransfer.Status.in_progress)) {
-
-					                	log.info("File transfer IN PROGRESS");
-
-					                }
-
-					 
-
-					                if (ift.getStatus().equals(FileTransfer.Status.negotiating_transfer)) {
-
-					                	log.info("File transfer IN NEGOTIATING");
-
-					                }
-
-					 
-
-					                if (ift.getStatus().equals(FileTransfer.Status.initial)) {
-
-					                	log.info("File now transfer INITIAL");
-
-					                }
-
-					 
-
-					                if (ift.getStatus().equals(FileTransfer.Status.negotiating_stream)) {
-
-					                	log.info("File transfer NEGOTIATING STREAM");
-
-					                }
-
-					 
-
-					                if (ift.getStatus().equals(FileTransfer.Status.refused)) {
-
-					                	log.info("File transfer REFUSED");
-
-					                }
-					                
-					                if(new Date().getTime() - start.getTime() > 60000) {
-					                    ift.cancel();	
-										sendMessage("文件传输超时,请用以下网站上载文件： https://"+filedomain+fileport+"/site/assets.html",jid.asEntityBareJidIfPossible());
-					                    return;
-					                }
-				                
-
-								}
-								is = new FileInputStream(tempFile);
-						/*	}else {
-				                is = ift.receiveFile();								
-							}
-							 is = ift.receiveFile();	
-						*/
-			           		if(!jcrService.nodeExsits("/assets/"+username)) {
-			           			Folder folder = new Folder();
-			           			folder.setTitle(username);
-			           			folder.setDescription(jid.toString());
-			           			folder.setName(username);
-			           			folder.setPath("/assets/"+username);
-			           			folder.setLastUpdated(new Date());
-			           			folder.setLastModified(new Date());   			
-			           			jcrService.addOrUpdate(folder);
-			           		}
-			                Asset asset = saveAsset(null,username,fileName,contentType,filepath,size,is);
-							//sendMessage("http://"+filedomain+fileport+"/site/httpfileupload/"+asset.getUid()+"/"+asset.getName().replaceAll(" ", "+"),jid.toString());
-			                is.close();
-			                ShareFileForm shareFileForm = new ShareFileForm(DataForm.Type.form);
-			                shareFileForm.addAsset(asset);
-			        		Message msg = new Message();
-			        		msg.setSubject(asset.getTitle());
-			        		String url = protocol+"//"+filedomain+fileport+"/protected/httpfileupload/"+asset.getUid()+"/"+asset.getName().toLowerCase();
-			        		msg.setBody(url);	
-			        		msg.addExtension(shareFileForm);
-			    			msg.addExtension(new StandardExtensionElement("active","http://jabber.org/protocol/chatstates"));
-			    			XHTMLExtension xhtmlExtension = new XHTMLExtension();
-			    			xhtmlExtension.addBody("<body xmlns='http://www.w3.org/1999/xhtml'>"
-			    				    +"<p style='font-weight:bold'>welcome:"+url+"</p>"
-			    				    +"</body>");
-			    			msg.addExtension(xhtmlExtension);
-			    			if(asset.getContentType() != null && asset.getContentType().startsWith("image/")) {
-			    				jcrService.autoRoateImage(asset.getPath());
-			    				asset = (Asset)jcrService.getObject(asset.getPath());
-			    				//jcrService.createIcon(assetPath, 400,400);
-			    				//jcrService.createIcon(assetPath, 100,100);				
-			    			}				                
-			        		sendMessage(msg,jid.asEntityBareJidIfPossible());
-
-			    			/*			                ByteArrayOutputStream os = new ByteArrayOutputStream();
-			                int nRead;
-			                byte[] buf = new byte[1024];
-			                while ((nRead = is.read(buf,  0, buf.length)) != -1) {
-			                    os.write(buf, 0, nRead);
-			                }
-			                os.flush();
-			                dataReceived = os.toByteArray();*/
-			            } catch (SmackException | IOException | XMPPErrorException e) {
-							log.error("fileTransferManager"+e.getMessage());
-			            } catch (InterruptedException e) {
-							log.error("fileTransferManager"+e.getMessage());
-						} catch (RepositoryException e) {
-							log.error("fileTransferManager"+e.getMessage());
-						} catch (XMPPException e) {
-							log.error("fileTransferManager"+e.getMessage());
-						}finally {
-							if(is !=null)
-								try {
-									is.close();
-								} catch (IOException e) {
-									log.error("fileTransferManager"+e.getMessage());
-
-								}
-						}
-			        }
-
-
-			    });
+			    //fileTransferManager.addFileTransferListener(getFileTransferListener());
 
 			    isConnected = connection.isConnected();
-		    
-	            log.debug("Connection:"+connection);
-			    VCard vCard = getVCard(JidCreate.entityBareFrom(username+"@"+domain));
-			    if(vCard !=null/*  && vCard.getAvatar() == null*/ ) {
+		        
+	            log.info("Connection:"+connection);
+			    /* VCard vCard = getVCard(JidCreate.entityBareFrom(username+"@"+domain));
+			    if(vCard !=null ) {
 			    	log.debug("vCard:"+vCard);
 		    	
 			    	File icon = new File(iconpath);
@@ -630,19 +419,19 @@ public class XMPPServiceImpl implements XMPPService{
 			    	vCard.setOrganization(organization);
 			    	vCard.getPhoneWork(phone);
 			    	vCard.setEmailWork(email);
-			    	vCard.setNickName("优鸿云");
+			    	vCard.setNickName(nickName);
 			    	vCardManager.saveVCard(vCard);
 			    }else {
 			    	log.debug("vCard not found!");
-			    }
+			    }*/
 			} catch (SmackException e) {
-				log.error(e.getMessage());
+				log.error("login "+e.getMessage());
 			} catch (IOException e) {
-				log.error(e.getMessage());
+				log.error("login "+e.getMessage());
 			} catch (XMPPException e) {
-				log.error(e.getMessage());
+				log.error("login "+e.getMessage());
 			} catch (InterruptedException e) {
-				log.error(e.getMessage());
+				log.error("login "+e.getMessage());
 			}
 
 	}
@@ -651,6 +440,10 @@ public class XMPPServiceImpl implements XMPPService{
 	
 	public void disconnect() {
 		isConnected = false;
+		fileTransferManager = null;
+		roster.removeRosterListener(rosterListener);
+		roster = null;
+		
 		log.info("remove connection:"+connection);
 		connection.removeConnectionListener(connectionListener);
 		connection.disconnect();
@@ -886,8 +679,6 @@ public class XMPPServiceImpl implements XMPPService{
 		} catch (IOException e) {
 			log.error(e.getMessage());
 		} catch (org.apache.commons.cli.ParseException e) {
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
 			String error = e.getMessage().replaceFirst("Unrecognized option:", "不认识选项:{").replaceFirst("Missing argument for option:", "选项缺少参数:{")+" }\r";
 			sendHelp(options,from.toString(),error);
 		} 
@@ -1643,6 +1434,8 @@ public class XMPPServiceImpl implements XMPPService{
 				@Override
 				public void authenticated(XMPPConnection connection, boolean arg1) {
 					log.info("Reconnect is Authencated:"+connection.isAuthenticated());
+					//initRoster();
+					//initFileTransferManager();
 /*					ChatManager chatManager = ChatManager.getInstanceFor(connection);   
 			        chatManager.addIncomingListener(new IncomingChatMessageListener() {
 			            public void newIncomingMessage(EntityBareJid from, Message message, Chat chat) {                
@@ -1705,16 +1498,16 @@ public class XMPPServiceImpl implements XMPPService{
 	                vCard = vCardManager.loadVCard(userJid);
 	            
 	        } catch (SmackException.NoResponseException e) {
-	            e.printStackTrace();
+	           log.error(e.getMessage());
 	        } catch (XMPPException.XMPPErrorException e) {
-	            e.printStackTrace();
+		           log.error(e.getMessage());
 	        } catch (SmackException.NotConnectedException e) {
-	            e.printStackTrace();
+		           log.error(e.getMessage());
 	        } catch (IllegalArgumentException iAE) {
+		           log.error(iAE.getMessage());
 	            iAE.printStackTrace();
 	        } catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		           log.error(e.getMessage());
 			}
 
 	        return vCard;
@@ -1885,13 +1678,6 @@ public class XMPPServiceImpl implements XMPPService{
 		}
 
 		public Collection<Buddy> getBuddies() {
-/*			  try {
-		            roster.reloadAndWait();
-		        } catch (SmackException.NotLoggedInException |        SmackException.NotConnectedException | InterruptedException e) {
-		            e.printStackTrace();
-		        }
-
-				return roster.getEntries();*/
 			return buddies.values();
 		}	
 		
@@ -2011,6 +1797,701 @@ public class XMPPServiceImpl implements XMPPService{
 		public static void setConnected(boolean isConnected) {
 			XMPPServiceImpl.isConnected = isConnected;
 		}
+
+		private RosterListener getRosterListener(final Roster roster) {
+			return new RosterListener() {
+				public  void presenceChanged(Presence prsnc) {
+					String uname = prsnc.getFrom().asBareJid().toString();
+					//if (uname.contains("/")) {
+					//	uname = uname.substring(0, uname.indexOf('/'));
+					//}
+					Buddy b = buddies.get(uname);
+					if (b == null) {
+						// add to buddy list
+						b = new Buddy(uname);
+						buddies.put(uname, b);
+					}
+					//System.out.println("presence changed: " + uname + ": " + prsnc + "  -" + (prsnc.isAvailable() || prsnc.isAway()));
+					b.setOnline(prsnc.isAvailable() || prsnc.isAway());
+				}
+
+				@Override
+				public void entriesAdded(Collection<Jid> addresses) {
+					for(Jid jid:addresses) {
+						String sjid = jid.toString();
+						buddies.get(sjid).setOnline(roster.getPresence(jid.asBareJid()) != null);
+					
+					}
+					checkVpnConnection();				
+				}
+
+				@Override
+				public void entriesUpdated(Collection<Jid> addresses) {
+					for(Jid jid:addresses) {
+						String sjid = jid.toString();
+						Buddy buddy = buddies.get(sjid);
+						if(buddy.isOnline()) buddy.setOnline(false);
+						buddies.remove(sjid);
+					
+					}
+					checkVpnConnection();						
+				}
+
+				@Override
+				public void entriesDeleted(Collection<Jid> addresses) {
+					for(Jid jid:addresses) {
+						String sjid = jid.toString();
+						Buddy buddy = buddies.get(sjid);
+						if(buddy.isOnline()) buddy.setOnline(false);
+						buddies.remove(sjid);
+					
+					}
+					checkVpnConnection();					
+				}
+			};
+			
+		}
+	
+	private Roster initRoster(AbstractXMPPConnection connection) {
+		log.info("init Roster");
+		Roster roster = Roster.getInstanceFor(connection);
+		roster.setRosterLoadedAtLogin(true);
+		//roster = Roster.getInstanceFor(connection);
+		if (!roster.isLoaded()) {
+			  try {
+		            roster.reloadAndWait();
+		        } catch (SmackException.NotLoggedInException | SmackException.NotConnectedException | InterruptedException e) {
+		            log.error(e.getMessage());
+		        }			
+		}
+
+		Collection<RosterEntry> entries = roster.getEntries();
+		buddies = new HashMap<>();
+		for (RosterEntry entry : entries) {
+			String jid = entry.getJid().toString();
+			Presence entryPresence = roster.getPresence(entry.getJid());
+			if(entryPresence != null) {
+				Buddy buddy = new Buddy(jid);
+				buddy.setOnline(entryPresence.isAvailable() || entryPresence.isAway());
+				buddies.put(jid, buddy);
+		        log.info("####User status"+"...."+entry.getJid()+"....."+entryPresence.getStatus()+"....."+entryPresence +" \ntype: "+entryPresence.getType() + "\nmode: " +entryPresence.getMode() + "\nstatus: " + entryPresence.getStatus());// + "\nType: " + status.getType());
+
+			}
+			checkVpnConnection();
+		}
+		rosterListener = getRosterListener(roster);
+		roster.addRosterListener(rosterListener);
+		roster.setSubscriptionMode(Roster.SubscriptionMode.accept_all);
+		//roster.setRosterLoadedAtLogin(true);
+
+		//presence = new Presence(connection.getUser(),Type.available);
+		Presence presence = roster.getPresence(connection.getUser().asBareJid());
+	    //connection.setReplyTimeout(10000);
+		presence.setType(Type.available);
+		log.debug("Status:"+presence.getStatus()+"/"+presence.getType()+"/"+presence);
+
+		presence.setPriority(presence.getPriority()+1);
+		try {
+			connection.sendStanza(presence);
+			connection.setReplyTimeout(60000);
+	        vCardManager = VCardManager.getInstanceFor(connection);
+		    VCard vCard = getVCard(JidCreate.entityBareFrom(username+"@"+domain));
+		    if(vCard !=null/*  && vCard.getAvatar() == null*/ ) {
+		    	log.debug("vCard:"+vCard);
+	    	
+		    	File icon = new File(iconpath);
+		    	if(icon.exists()) {
+			    	log.debug("icon file path="+icon.getAbsolutePath());
+			    	InputStream is = new FileInputStream(icon);//conn.getInputStream();		    	
+			    	byte bytes[] = new byte[is.available()];
+			    	is.read(bytes);
+			    	vCard.setAvatar(bytes);			    		
+		    	}
+
+		    	//vCard.setAvatar(url);
+		    	vCard.setOrganization(organization);
+		    	vCard.getPhoneWork(phone);
+		    	vCard.setEmailWork(email);
+		    	vCard.setNickName(nickName);
+		    	vCardManager.saveVCard(vCard);
+		    }else {
+		    	log.debug("vCard not found!");
+		    }
+		} catch (NotConnectedException e) {
+            log.error(e.getMessage());
+		} catch (InterruptedException e) {
+            log.error(e.getMessage());
+		} catch (NoResponseException e) {
+            log.error(e.getMessage());
+		} catch (XMPPErrorException e) {
+            log.error(e.getMessage());
+		} catch (XmppStringprepException e) {
+            log.error(e.getMessage());
+		} catch (FileNotFoundException e) {
+            log.error(e.getMessage());
+		} catch (IOException e) {
+            log.error(e.getMessage());
+		}
+		return roster;
+	
+	}
+		
+	private FileTransferManager initFileTransferManager(AbstractXMPPConnection connection) {
+		log.info("init FileTransferManager");
+		//FileTransferNegotiator.IBB_ONLY = true;
+		jingleManager = JingleManager.getInstanceFor(connection);
+		
+        JingleIBBTransportProvider ibbProvider = new JingleIBBTransportProvider();
+        JingleContentProviderManager.addJingleContentTransportProvider(JingleIBBTransport.NAMESPACE_V1, ibbProvider);
+        if(ibbProvider.equals(JingleContentProviderManager.getJingleContentTransportProvider(JingleIBBTransport.NAMESPACE_V1))) {
+        	log.info("ibbProvider set");
+        }
+        if(JingleContentProviderManager.getJingleContentTransportProvider(JingleS5BTransport.NAMESPACE_V1) == null) {
+        	log.error("JingleContentProviderManager is null");
+        }
+        JingleS5BTransportProvider s5bProvider = new JingleS5BTransportProvider();
+        JingleContentProviderManager.addJingleContentTransportProvider(JingleS5BTransport.NAMESPACE_V1, s5bProvider);
+        if(s5bProvider==JingleContentProviderManager.getJingleContentTransportProvider(JingleS5BTransport.NAMESPACE_V1)) {
+        	log.info("s5bProvider set");
+        }
+        
+        FileTransferManager	ftm = FileTransferManager.getInstanceFor(connection);
+        ftm.addFileTransferListener(new FileTransferListener() {
+		        @Override
+		        public void fileTransferRequest(FileTransferRequest request) {
+	                //String fileName = pathToDirectory +"/"+request.getFileName();
+	                try{
+/*	                	String fileName = request.getFileName();
+						final File tempFile = File.createTempFile("temp-",fileName);
+				        tempFile.deleteOnExit();
+		                IncomingFileTransfer ift = request.accept();
+			            String contentType = request.getMimeType();
+			            Jid jid = request.getRequestor();
+			    		String requester = jid.toString().split("@")[0];
+			    		ift.receiveFile(tempFile);
+						log.info("Incoming file transfer: " + fileName);
+						log.info("Transfer status is: " + ift.getStatus());
+						if(ift.getStatus().toString().equals("Error")) {
+							log.error("Transfer file error",jid.toString());
+							ift.cancel();
+							return;
+						}*/
+	                	String fileName = request.getFileName();
+	                	String description = request.getDescription();
+			            String contentType = request.getMimeType();
+			            if(contentType==null) {
+			            	MimetypesFileTypeMap mimeTypesMap = new MimetypesFileTypeMap();
+			            	contentType = mimeTypesMap.getContentType(fileName);
+			            }
+			            	
+			            long size = request.getFileSize();
+			            Jid jid = request.getRequestor();	   
+			    		String requester = jid.toString().split("@")[0];
+		                IncomingFileTransfer ift = request.accept();
+						InputStream is = ift.receiveFile();
+						ByteArrayOutputStream os = new ByteArrayOutputStream();
+						int nRead;
+						byte[] buf = new byte[1024];
+						while ((nRead = is.read(buf,  0, buf.length)) != -1) {
+							os.write(buf, 0, nRead);
+						}
+						os.flush();
+						log.info("Filetransfer receiving status: " + ift.getStatus()+" .size:"+os.size()+"/"+size  + ". Progress: " + ift.getProgress());
+
+				        log.info("fileTransferRequest:"+fileName+"/"+contentType+"/"+requester+"/"+description);
+				        InputStream inputStream = new ByteArrayInputStream(os.toByteArray()); 
+	                    saveAsset(requester,inputStream,contentType,fileName,description,size);
+	                }
+	                catch(SmackException e){
+	                    log.error(e.getMessage());
+	                }
+	                catch(IOException e){
+	                    log.error(e.getMessage());	                    
+	                } catch (RepositoryException e) {
+	                	log.error(e.getMessage());
+					} catch (InterruptedException e) {
+						log.error(e.getMessage());	
+					} catch (XMPPErrorException e) {
+						log.error(e.getMessage());	
+					}
+		        }
+				
+			});
+        return ftm;
+	}
+
+	private void initReconnectManager() throws NotConnectedException, InterruptedException {
+		log.info("init ReconnectManager");
+		reconnectionManager = ReconnectionManager.getInstanceFor(connection);
+		ReconnectionManager.setEnabledPerDefault(true);
+		reconnectionManager.enableAutomaticReconnection();
+		reconnectionManager.setReconnectionPolicy(ReconnectionPolicy.RANDOM_INCREASING_DELAY);
+
+		//connection.isAuthenticated();
+        //vCardManager = VCardManager.getInstanceFor(connection);
+	    pingManager = PingManager.getInstanceFor(connection);
+	    pingManager.setPingInterval(100);
+	    pingManager.pingMyServer();	
+	    pingManager.registerPingFailedListener(new PingFailedListener() {
+
+			@Override
+			public void pingFailed() {
+				log.error("Ping failed:");
+				disconnect();
+				//checkConnection();
+			}
+        	
+        });
+
+		
+	}
+	
+	private void initProviderManager() {
+		ProviderManager.addIQProvider("jingle", "urn:xmpp:tmp:jingle", new JingleProvider());
+		ProviderManager.addIQProvider("vCard","vcard-temp", new VCardProvider());
+		//ProviderManager.addIQProvider(elementName, namespace, provider);
+	}
+	
+	private void saveAsset(String requestor,InputStream is,String contentType, String fileName,String description, long size) throws RepositoryException, IOException {
+		//InputStream is = new FileInputStream(tempFile);
+		//long size = tempFile.length();
+
+		if(!jcrService.nodeExsits("/assets/"+requestor)) {
+			Folder folder = new Folder();
+			folder.setTitle(requestor);
+			//folder.setDescription("");
+			folder.setName(requestor);
+			folder.setPath("/assets/"+requestor);
+			folder.setLastUpdated(new Date());
+			folder.setLastModified(new Date());   			
+			jcrService.addOrUpdate(folder);
+		}
+		String filepath = "/assets/"+requestor+"/httpfileupload";
+	    Asset asset = saveAsset(null,requestor,fileName,contentType,filepath,size,is);
+		//sendMessage("http://"+filedomain+fileport+"/site/httpfileupload/"+asset.getUid()+"/"+asset.getName().replaceAll(" ", "+"),jid.toString());
+	    is.close();
+/*	    ShareFileForm shareFileForm = new ShareFileForm(DataForm.Type.form);
+	    shareFileForm.addAsset(asset);
+		Message msg = new Message();
+		msg.setSubject(asset.getTitle());
+		String url = protocol+"//"+filedomain+fileport+"/protected/httpfileupload/"+asset.getUid()+"/"+asset.getName().toLowerCase();
+		msg.setBody(url);	
+		msg.addExtension(shareFileForm);
+		msg.addExtension(new StandardExtensionElement("active","http://jabber.org/protocol/chatstates"));
+		XHTMLExtension xhtmlExtension = new XHTMLExtension();
+		xhtmlExtension.addBody("<body xmlns='http://www.w3.org/1999/xhtml'>"
+			    +"<p style='font-weight:bold'>welcome:"+url+"</p>"
+			    +"</body>");
+		msg.addExtension(xhtmlExtension);*/
+		if(asset.getContentType() != null && asset.getContentType().startsWith("image/")) {
+			jcrService.autoRoateImage(asset.getPath());
+			asset = (Asset)jcrService.getObject(asset.getPath());
+		
+		}				                
+		//sendMessage(msg,jid.asEntityBareJidIfPossible());
+		
+	}
+	
+	private FileTransferListener getFileTransferListener() {
+		return new FileTransferListener() {
+	        @Override
+	        public void fileTransferRequest(FileTransferRequest request) {
+/*			        	ProviderManager.addIQProvider("query",
+
+                        "http://jabber.org/protocol/bytestreams",
+
+                        new BytestreamsProvider());
+
+ 
+
+                ProviderManager.addIQProvider("query",
+
+                        "http://jabber.org/protocol/disco#items",
+
+                        new DiscoverItemsProvider());
+
+ 
+
+                ProviderManager.addIQProvider("query",
+
+                        "http://jabber.org/protocol/disco#info",
+
+                        new DiscoverInfoProvider());			        	
+                FileTransferNegotiator fileTransferNegotiator = FileTransferNegotiator.getInstanceFor(connection);
+                try {
+					fileTransferNegotiator.selectStreamNegotiator(request);
+				} catch (NoStreamMethodsOfferedException
+						| NoAcceptableTransferMechanisms
+						| NotConnectedException | InterruptedException e1) {
+					e1.printStackTrace();
+				}*/
+	            IncomingFileTransfer ift = request.accept();
+	            long size = request.getFileSize();
+	            String fileName = request.getFileName();
+	            String contentType = request.getMimeType();
+
+	            Jid jid = request.getRequestor();
+	    		String username = jid.toString().split("@")[0];
+	    		String filepath = "/assets/"+username+"/httpfileupload";
+	            Asset ex_asset = findAsset(filepath,fileName,size);
+	            if(ex_asset!=null) {
+	            	ift.cancel();
+	            	sendAsset(ex_asset,jid.asEntityBareJidIfPossible().toString());
+	            	return;
+	            }
+	    		log.info("fileTransferRequestor:"+jid+",fileName="+fileName);
+	            //byte[] dataReceived = new byte[1];
+	            InputStream is = null;
+				try {
+//					if(contentType == null) {
+						final File tempFile = File.createTempFile("temp-",fileName);
+				        tempFile.deleteOnExit();
+						ift.receiveFile(tempFile);
+						log.info("Incoming file transfer: " + fileName);
+						log.info("Transfer status is: " + ift.getStatus());
+						if(ift.getStatus().toString().equals("Error")) {
+							sendMessage("Transfer file error",jid.toString());
+							ift.cancel();
+							return;
+						}
+					    double progress = ift.getProgress();
+					    double progressPercent = progress * 100.0;
+					    Date start=new Date();
+						while (!ift.isDone())
+						{
+						    Thread.sleep(1000);
+							progress = ift.getProgress();
+						    progressPercent = progress * 100.0;
+						    String percComplete = String.format("%1$,.2f", progressPercent);
+						    log.debug("Transfer status is: " + ift.getStatus());
+						    log.debug("File transfer is " + percComplete + "% complete");
+
+			                //Thread.sleep(2000L);
+
+			                if (ift.getStatus().equals(FileTransfer.Status.cancelled)) {
+
+			                	log.debug("File transfer CANCELLED");
+
+			                }
+
+			 
+
+			                if (ift.getStatus().equals(FileTransfer.Status.complete)) {
+
+			                    log.debug("File transfer COMPLETE："+(new Date().getTime() - start.getTime()));
+
+			                }
+
+			 
+
+			                if (ift.getStatus().equals(FileTransfer.Status.error)) {
+
+			                	log.debug("File transfer ERROR");
+
+			                    ift.cancel();
+			                    sendMessage("ERROR",jid.toString());
+			                    return;
+
+			                }
+
+			 
+
+			                if (ift.getStatus().equals(FileTransfer.Status.in_progress)) {
+
+			                	log.debug("File transfer IN PROGRESS");
+
+			                }
+
+			 
+
+			                if (ift.getStatus().equals(FileTransfer.Status.negotiating_transfer)) {
+
+			                	log.debug("File transfer IN NEGOTIATING");
+
+			                }
+
+			 
+
+			                if (ift.getStatus().equals(FileTransfer.Status.initial)) {
+
+			                	log.debug("File now transfer INITIAL");
+
+			                }
+
+			 
+
+			                if (ift.getStatus().equals(FileTransfer.Status.negotiating_stream)) {
+
+			                	log.debug("File transfer NEGOTIATING STREAM");
+
+			                }
+
+			 
+
+			                if (ift.getStatus().equals(FileTransfer.Status.refused)) {
+
+			                	log.debug("File transfer REFUSED");
+
+			                }
+			                
+			                if(new Date().getTime() - start.getTime() > 60000) {
+			                    ift.cancel();	
+								sendMessage("文件传输超时,请用以下网站上载文件： https://"+filedomain+fileport+"/site/assets.html",jid.asEntityBareJidIfPossible());
+			                    return;
+			                }
+		                
+
+						}
+						is = new FileInputStream(tempFile);
+				/*	}else {
+		                is = ift.receiveFile();								
+					}
+					 is = ift.receiveFile();	
+				*/
+	           		if(!jcrService.nodeExsits("/assets/"+username)) {
+	           			Folder folder = new Folder();
+	           			folder.setTitle(username);
+	           			folder.setDescription(jid.toString());
+	           			folder.setName(username);
+	           			folder.setPath("/assets/"+username);
+	           			folder.setLastUpdated(new Date());
+	           			folder.setLastModified(new Date());   			
+	           			jcrService.addOrUpdate(folder);
+	           		}
+	                Asset asset = saveAsset(null,username,fileName,contentType,filepath,size,is);
+					//sendMessage("http://"+filedomain+fileport+"/site/httpfileupload/"+asset.getUid()+"/"+asset.getName().replaceAll(" ", "+"),jid.toString());
+	                is.close();
+	                ShareFileForm shareFileForm = new ShareFileForm(DataForm.Type.form);
+	                shareFileForm.addAsset(asset);
+	        		Message msg = new Message();
+	        		msg.setSubject(asset.getTitle());
+	        		String url = protocol+"//"+filedomain+fileport+"/protected/httpfileupload/"+asset.getUid()+"/"+asset.getName().toLowerCase();
+	        		msg.setBody(url);	
+	        		msg.addExtension(shareFileForm);
+	    			msg.addExtension(new StandardExtensionElement("active","http://jabber.org/protocol/chatstates"));
+	    			XHTMLExtension xhtmlExtension = new XHTMLExtension();
+	    			xhtmlExtension.addBody("<body xmlns='http://www.w3.org/1999/xhtml'>"
+	    				    +"<p style='font-weight:bold'>welcome:"+url+"</p>"
+	    				    +"</body>");
+	    			msg.addExtension(xhtmlExtension);
+	    			if(asset.getContentType() != null && asset.getContentType().startsWith("image/")) {
+	    				jcrService.autoRoateImage(asset.getPath());
+	    				asset = (Asset)jcrService.getObject(asset.getPath());
+	    				//jcrService.createIcon(assetPath, 400,400);
+	    				//jcrService.createIcon(assetPath, 100,100);				
+	    			}				                
+	        		sendMessage(msg,jid.asEntityBareJidIfPossible());
+
+	    			/*			                ByteArrayOutputStream os = new ByteArrayOutputStream();
+	                int nRead;
+	                byte[] buf = new byte[1024];
+	                while ((nRead = is.read(buf,  0, buf.length)) != -1) {
+	                    os.write(buf, 0, nRead);
+	                }
+	                os.flush();
+	                dataReceived = os.toByteArray();*/
+	            } catch (SmackException | IOException | XMPPErrorException e) {
+					log.error("fileTransferManager"+e.getMessage());
+	            } catch (InterruptedException e) {
+					log.error("fileTransferManager"+e.getMessage());
+				} catch (RepositoryException e) {
+					log.error("fileTransferManager"+e.getMessage());
+				} catch (XMPPException e) {
+					log.error("fileTransferManager"+e.getMessage());
+				}finally {
+					if(is !=null)
+						try {
+							is.close();
+						} catch (IOException e) {
+							log.error("fileTransferManager"+e.getMessage());
+
+						}
+				}
+	        }
+
+	        
+	    };
+	}
+	private final byte[] dataToSend = StringUtils.randomString(1024 * 4 * 3).getBytes();
+	private static byte[] dataReceived=null;  	
+	private void test() {
+		String path="C:\\Users\\hongbin.yu\\Documents\\yuhongweb\\dajana.key";
+/*		JingleUtil jutil = new JingleUtil(connection);
+        FullJid test = connection.getUser().asFullJidOrThrow();
+        FullJid juliet;*/
+      
+		try {
+			FileTransferNegotiator.IBB_ONLY = true;
+			XMPPTCPConnectionConfiguration.Builder conf = XMPPTCPConnectionConfiguration.builder();
+			conf.setHost(domain);
+			conf.setXmppDomain(domain);
+			conf.setUsernameAndPassword(username, password);
+			conf.setSecurityMode(SecurityMode.disabled);
+			conf.setCompressionEnabled(true);
+			TLSUtils.acceptAllCertificates(conf);
+			conf.setResource("sender");
+
+			XMPPTCPConnection connection1 = new XMPPTCPConnection(conf.build());
+			connection1.connect();
+			connection1.login();
+			
+			conf.setResource("receiver");
+			XMPPTCPConnection connection2 = new XMPPTCPConnection(conf.build());
+			connection2.connect();
+			connection2.login();
+			
+			FileTransferManager ftm1 = FileTransferManager.getInstanceFor(connection1);
+			FileTransferManager ftm2 = initFileTransferManager(connection2);
+/*			FileTransferManager ftm2 = FileTransferManager.getInstanceFor(connection2);
+			
+			ftm2.addFileTransferListener(new FileTransferListener() {
+				@Override
+				public void fileTransferRequest(FileTransferRequest request) {
+
+					IncomingFileTransfer ift = request.accept();
+					long size = request.getFileSize();
+					try {
+						InputStream is = ift.receiveFile();
+						ByteArrayOutputStream os = new ByteArrayOutputStream();
+						int nRead;
+						byte[] buf = new byte[1024];
+						while ((nRead = is.read(buf,  0, buf.length)) != -1) {
+							os.write(buf, 0, nRead);
+						}
+						os.flush();
+				        if( os.size() == size )
+							System.out.println("Received size matches send data. \\o/");
+						dataReceived = os.toByteArray();
+					} catch (SmackException | IOException | XMPPErrorException | InterruptedException e) {
+						log.error(e.getMessage());
+					}
+					if (Arrays.equals(dataToSend, dataReceived)) {
+						System.out.println("Received data matches send data. \\o/");
+					} else {
+						System.err.println("Recieved data DOES NOT match send data. :(");
+					}
+				}
+			});
+
+			OutgoingFileTransfer oft = ftm1.createOutgoingFileTransfer(JidCreate.entityFullFrom(username, domain, "receiver"));
+			oft.sendStream(new ByteArrayInputStream(dataToSend), "hello.txt", dataToSend.length, "A greeting");
+			outerloop: while (!oft.isDone()) {
+				switch (oft.getStatus()) {
+				case error:
+					log.error("Filetransfer error: " + oft.getError());
+					break outerloop;
+				default:
+					log.info("Filetransfer sending status: " + oft.getStatus() + ". Progress: " + oft.getProgress());
+					break;
+				}
+				Thread.sleep(1000);
+			}
+			*/			
+			//FileTransferManager ftm = initFileTransferManager(connection2);
+			sendFile(connection1,username+"@"+domain+"/receiver",path,"a greeting");
+			connection1.disconnect();
+			connection2.disconnect();
+			Thread.sleep(1000);
+/*			sendFile(test.toString(),path,"test");
+			juliet = JidCreate.fullFrom("admin@dajana.net/yn0cl4bnw0yr3vym");
+	        String sid = "851ba2";
+	        String contentName = "a-file-offer";
+	        Jingle jingle = jutil.createSessionInitiate(juliet, sid,
+	        JingleContent.Creator.initiator, contentName, JingleContent.Senders.initiator, null, null);
+	        log.info(jingle.toXML("").toString());*/
+		} catch (XmppStringprepException e) {
+			log.error(e.getMessage());
+		} catch (XMPPException e) {
+			log.error(e.getMessage());
+		} catch (SmackException e) {
+			log.error(e.getMessage());
+		} catch (IOException e) {
+			log.error(e.getMessage());
+		} catch (InterruptedException e) {
+			log.error(e.getMessage());
+		} catch (KeyManagementException e) {
+			log.error(e.getMessage());
+		} catch (NoSuchAlgorithmException e) {
+			log.error(e.getMessage());
+		}
+
+	}
+	
+	public String sendFile(AbstractXMPPConnection conn,String jid,String path, String description){
+	    if(jid.equals(null)) return "no jid";
+	    String node = XmppStringUtils.parseLocalpart(jid);
+	    String domain = XmppStringUtils.parseDomain(jid);
+	    String resource = XmppStringUtils.parseResource(jid);
+	    try{
+	        EntityFullJid fqdn = JidCreate.entityFullFrom(node, domain, resource);
+	        OutgoingFileTransfer oft = FileTransferManager.getInstanceFor(conn).createOutgoingFileTransfer(fqdn);
+	        //FileTransferNegotiator.IBB_ONLY = true;
+	        //oft.sendFile(new File(path), description);
+	        File file = new File(path);
+
+	        OutgoingFileTransfer.setResponseTimeout(300000);
+	        InputStream in = new FileInputStream(file);
+			oft.sendStream(in, file.getName(), file.length(), "sending a file");
+			outerloop: while (!oft.isDone()) {
+				switch (oft.getStatus()) {
+				case error:
+					System.out.println("Filetransfer sending error: " + oft.getError());
+					break outerloop;
+				default:
+					System.out.println("Filetransfer sending status: " + oft.getStatus() + ". Progress: " + oft.getProgress());
+					break;
+				}
+				Thread.sleep(1000);
+			}
+			System.out.println("Filetransfer sending status: " + oft.getStatus() + ". Progress: " + oft.getProgress());
+			
+			in.close();
+			
+			return oft.getStatus().name();
+	    }
+	    catch(XmppStringprepException e){
+	    	log.error(e.getMessage());
+	    } catch (InterruptedException e) {
+	    	log.error(e.getMessage());
+		} catch (FileNotFoundException e) {
+	    	log.error(e.getMessage());
+		} catch (IOException e) {
+	    	log.error(e.getMessage());
+		}
+	    return "error";
+	}
+	
+	public void sendFile(byte[] file, String jid)
+			throws XMPPException, IOException, InterruptedException, SmackException {
+		String jidFinal = getFullJid(jid);
+		jidFinal += "/receiver";
+		
+		Socks5BytestreamManager bytestreamManager = Socks5BytestreamManager.getBytestreamManager(connection);
+		OutputStream outputStream = null;
+		try {
+			Socks5BytestreamSession session = bytestreamManager.establishSession(JidCreate.from(jidFinal));
+			outputStream = session.getOutputStream();
+			outputStream.write(file);
+			outputStream.flush();
+		} finally {
+			if (outputStream != null) {
+				try {
+					outputStream.close();
+				} catch (IOException e) {
+					log.error(e.getMessage(), e);
+				}
+			}
+		}
+	}
+	
+	public String getFullJid(String jid) {
+		String jidFinal = jid;
+		if (jid.indexOf("@") < 0) {
+			jidFinal = jid + "@" + domain;
+		}
+		return jidFinal;
+	}
+	
 
 /**
  * [code borrowed from ant.jar]

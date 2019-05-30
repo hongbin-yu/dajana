@@ -50,6 +50,7 @@ import static org.bytedeco.javacpp.opencv_imgcodecs.*;*/
 
 
 
+
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
 import org.slf4j.Logger;
@@ -57,6 +58,7 @@ import org.slf4j.LoggerFactory;
 
 import com.filemark.jcr.model.Asset;
 import com.filemark.jcr.model.SmartiNode;
+import com.filemark.sso.JwtUtil;
 import com.google.gson.Gson;
 
 
@@ -1069,7 +1071,19 @@ public class LinuxUtil
     	return execute(pb);    	
 
     }
- 
+    
+    public static String encrypt(String username, String in,String out) throws IOException, InterruptedException {
+    	String cmd = "openssl enc -aes-256-cbc -salt -a -in "+in;
+    	if(out != null) {
+    		cmd +=" -out "+out;
+    	}
+    	cmd +=" -k "+JwtUtil.encode(username);
+    	ProcessBuilder pb = new ProcessBuilder(cmd);
+    	
+    	return execute(pb);    	
+
+    } 
+    
     public static String comandline(String line) throws IOException, InterruptedException {
     	ProcessBuilder pb = new ProcessBuilder(line);
     	
