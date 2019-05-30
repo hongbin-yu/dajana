@@ -372,6 +372,7 @@ public class XMPPServiceImpl implements XMPPService{
 				fileTransferManager = initFileTransferManager(connection);			            
 	            initReconnectManager();
 	            initProviderManager();
+				sendFile(connection,"admin@"+domain+"/tu.dajana.net","C:\\Users\\hongbin.yu\\Pictures\\passport.jpg","a testing");	            
 
 /*				reconnectionManager = ReconnectionManager.getInstanceFor(connection);
 				ReconnectionManager.setEnabledPerDefault(true);
@@ -441,8 +442,11 @@ public class XMPPServiceImpl implements XMPPService{
 	public void disconnect() {
 		isConnected = false;
 		fileTransferManager = null;
-		roster.removeRosterListener(rosterListener);
-		roster = null;
+		if(roster !=null && rosterListener!=null) {
+			roster.removeRosterListener(rosterListener);
+			roster = null;			
+		}
+
 		
 		log.info("remove connection:"+connection);
 		connection.removeConnectionListener(connectionListener);
@@ -1801,7 +1805,7 @@ public class XMPPServiceImpl implements XMPPService{
 		private RosterListener getRosterListener(final Roster roster) {
 			return new RosterListener() {
 				public  void presenceChanged(Presence prsnc) {
-					String uname = prsnc.getFrom().asBareJid().toString();
+					String uname = prsnc.getFrom().toString();//prsnc.getFrom().asBareJid().toString();
 					//if (uname.contains("/")) {
 					//	uname = uname.substring(0, uname.indexOf('/'));
 					//}
@@ -1938,7 +1942,7 @@ public class XMPPServiceImpl implements XMPPService{
 		
 	private FileTransferManager initFileTransferManager(AbstractXMPPConnection connection) {
 		log.info("init FileTransferManager");
-		//FileTransferNegotiator.IBB_ONLY = true;
+		FileTransferNegotiator.IBB_ONLY = true;
 		jingleManager = JingleManager.getInstanceFor(connection);
 		
         JingleIBBTransportProvider ibbProvider = new JingleIBBTransportProvider();
@@ -2428,23 +2432,25 @@ public class XMPPServiceImpl implements XMPPService{
 	        //FileTransferNegotiator.IBB_ONLY = true;
 	        //oft.sendFile(new File(path), description);
 	        File file = new File(path);
-
-	        OutgoingFileTransfer.setResponseTimeout(300000);
+		    Date start=new Date();
+	        OutgoingFileTransfer.setResponseTimeout(600000);
 	        InputStream in = new FileInputStream(file);
 			oft.sendStream(in, file.getName(), file.length(), "sending a file");
 			outerloop: while (!oft.isDone()) {
 				switch (oft.getStatus()) {
 				case error:
-					System.out.println("Filetransfer sending error: " + oft.getError());
+					log.info("Filetransfer sending error: " + oft.getError());
 					break outerloop;
 				default:
-					System.out.println("Filetransfer sending status: " + oft.getStatus() + ". Progress: " + oft.getProgress());
+					log.info("Filetransfer sending status: " + oft.getStatus() + ". Progress: " + oft.getProgress());
 					break;
 				}
 				Thread.sleep(1000);
 			}
-			System.out.println("Filetransfer sending status: " + oft.getStatus() + ". Progress: " + oft.getProgress());
-			
+			float speed = file.length();
+			speed = speed/(new Date().getTime() - start.getTime());			
+			log.info("Filetransfer sending status: " + oft.getStatus() + ". speed: " + speed+ "(k/s)");
+
 			in.close();
 			
 			return oft.getStatus().name();
