@@ -87,6 +87,7 @@ import org.jivesoftware.smackx.filetransfer.FileTransferNegotiator;
 import org.jivesoftware.smackx.filetransfer.FileTransferRequest;
 import org.jivesoftware.smackx.filetransfer.IncomingFileTransfer;
 import org.jivesoftware.smackx.filetransfer.OutgoingFileTransfer;
+import org.jivesoftware.smackx.httpfileupload.HttpFileUploadManager;
 import org.jivesoftware.smackx.iqregister.AccountManager;
 import org.jivesoftware.smackx.jingle.JingleManager;
 import org.jivesoftware.smackx.jingle.JingleUtil;
@@ -164,6 +165,7 @@ public class XMPPServiceImpl implements XMPPService{
 	private VCardManager vCardManager;
 	private ReconnectionManager reconnectionManager;
 	private FileTransferManager fileTransferManager ;
+	private HttpFileUploadManager httpFileUploadManager;
 	private JingleManager jingleManager;
 	private ProviderManager providerManager;
     //private JTextField jid;	
@@ -269,7 +271,9 @@ public class XMPPServiceImpl implements XMPPService{
 			options.addOption(new Option("h", "help", false, "求助"));				
 			//connection.connect();
 			//create(username,password);
-			//login(username,password);		
+			if(connection == null)
+			    connection = new XMPPTCPConnection(config);
+			login(username,password);		
 	        //test();
             checkConnection();
 		} catch (IOException | ParseException e) {
@@ -284,7 +288,7 @@ public class XMPPServiceImpl implements XMPPService{
 			log.error("init error:"+e.getMessage());	
 		} catch (InterruptedException e) {
 			log.error("init error:"+e.getMessage());	
-		}*/
+		}*/ 
 
 
 		
@@ -300,80 +304,86 @@ public class XMPPServiceImpl implements XMPPService{
 	public void login(String username,String password) {
 		
 		try {
-			if(connection == null)
-			    connection = new XMPPTCPConnection(config);
-			    connection.setReplyTimeout(10000);
-				//if(!connection.isConnected())
-				//	connection.connect();
-				//if(connection.isAuthenticated()) return;
-				connection.connect().login(username,password);	
-		
-			    //isConnected = true;
-			    /*
-				roster = Roster.getInstanceFor(connection);
-				roster.setRosterLoadedAtLogin(true);
-				roster = Roster.getInstanceFor(connection);
-				if (!roster.isLoaded())
-					  try {
-					            roster.reloadAndWait();
-					        } catch (SmackException.NotLoggedInException |        SmackException.NotConnectedException | InterruptedException e) {
-					            e.printStackTrace();
-					        }
 
-				Collection<RosterEntry> entries = roster.getEntries();
-				for (RosterEntry entry : entries) {
-					String jid = entry.getJid().toString();
-					Presence entryPresence = roster.getPresence(entry.getJid());
-					if(entryPresence != null) {
-						Buddy buddy = new Buddy(jid);
-						buddy.setOnline(entryPresence.isAvailable() || entryPresence.isAway());
-						buddies.put(jid, buddy);
-				        log.debug("####User status"+"...."+entry.getJid()+"....."+entryPresence.getStatus()+"....."+entryPresence +" \ntype: "+entryPresence.getType() + "\nmode: " +entryPresence.getMode() + "\nstatus: " + entryPresence.getStatus());// + "\nType: " + status.getType());
+		    connection.setReplyTimeout(10000);
+			//if(!connection.isConnected())
+			//	connection.connect();
+			//if(connection.isAuthenticated()) return;
+			connection.connect().login(username,password);	
+			httpFileUploadManager = HttpFileUploadManager.getInstanceFor(connection);
 
-					}
-					checkVpnConnection();
+		    //isConnected = true;
+		    /*
+			roster = Roster.getInstanceFor(connection);
+			roster.setRosterLoadedAtLogin(true);
+			roster = Roster.getInstanceFor(connection);
+			if (!roster.isLoaded())
+				  try {
+				            roster.reloadAndWait();
+				        } catch (SmackException.NotLoggedInException |        SmackException.NotConnectedException | InterruptedException e) {
+				            e.printStackTrace();
+				        }
+
+			Collection<RosterEntry> entries = roster.getEntries();
+			for (RosterEntry entry : entries) {
+				String jid = entry.getJid().toString();
+				Presence entryPresence = roster.getPresence(entry.getJid());
+				if(entryPresence != null) {
+					Buddy buddy = new Buddy(jid);
+					buddy.setOnline(entryPresence.isAvailable() || entryPresence.isAway());
+					buddies.put(jid, buddy);
+			        log.debug("####User status"+"...."+entry.getJid()+"....."+entryPresence.getStatus()+"....."+entryPresence +" \ntype: "+entryPresence.getType() + "\nmode: " +entryPresence.getMode() + "\nstatus: " + entryPresence.getStatus());// + "\nType: " + status.getType());
+
 				}
-				listener = getRosterListener();
-				//roster.addRosterListener(listener);
-				//roster.setSubscriptionMode(Roster.SubscriptionMode.accept_all);
-				//roster.setRosterLoadedAtLogin(true);
+				checkVpnConnection();
+			}
+			listener = getRosterListener();
+			//roster.addRosterListener(listener);
+			//roster.setSubscriptionMode(Roster.SubscriptionMode.accept_all);
+			//roster.setRosterLoadedAtLogin(true);
 
-				//presence = new Presence(connection.getUser(),Type.available);
-				presence = roster.getPresence(connection.getUser().asBareJid());
-			    //connection.setReplyTimeout(10000);
-				presence.setType(Type.available);
-				log.debug("Status:"+presence.getStatus()+"/"+presence.getType()+"/"+presence);
+			//presence = new Presence(connection.getUser(),Type.available);
+			presence = roster.getPresence(connection.getUser().asBareJid());
+		    //connection.setReplyTimeout(10000);
+			presence.setType(Type.available);
+			log.debug("Status:"+presence.getStatus()+"/"+presence.getType()+"/"+presence);
 
-				presence.setPriority(presence.getPriority()+1);
-				connection.sendStanza(presence);
-				connection.setReplyTimeout(60000);
-				//fileTransferManager = FileTransferManager.getInstanceFor(connection);
-				jingleManager = JingleManager.getInstanceFor(connection);
-				
-		        JingleIBBTransportProvider ibbProvider = new JingleIBBTransportProvider();
-		        JingleContentProviderManager.addJingleContentTransportProvider(JingleIBBTransport.NAMESPACE_V1, ibbProvider);
-		        if(ibbProvider.equals(JingleContentProviderManager.getJingleContentTransportProvider(JingleIBBTransport.NAMESPACE_V1))) {
-		        	log.info("ibbProvider set");
-		        }
-		        if(JingleContentProviderManager.getJingleContentTransportProvider(JingleS5BTransport.NAMESPACE_V1) == null) {
-		        	log.error("JingleContentProviderManager is null");
-		        }
-		        test();
-		        JingleS5BTransportProvider s5bProvider = new JingleS5BTransportProvider();
-		        JingleContentProviderManager.addJingleContentTransportProvider(JingleS5BTransport.NAMESPACE_V1, s5bProvider);
-		        if(s5bProvider==JingleContentProviderManager.getJingleContentTransportProvider(JingleS5BTransport.NAMESPACE_V1)) {
-		        	log.info("s5bProvider set");
-		        }
-		        
-		        */
-				installConnectionListeners(connection);
-	            installIncomingChatMessageListener(connection);
-				roster = initRoster(connection);
-				fileTransferManager = initFileTransferManager(connection);			            
-	            initReconnectManager();
-	            initProviderManager();
-				sendFile(connection,"admin@"+domain+"/tu.dajana.net","C:\\Users\\hongbin.yu\\Pictures\\passport.jpg","a testing");	            
-
+			presence.setPriority(presence.getPriority()+1);
+			connection.sendStanza(presence);
+			connection.setReplyTimeout(60000);
+			//fileTransferManager = FileTransferManager.getInstanceFor(connection);
+			jingleManager = JingleManager.getInstanceFor(connection);
+			
+	        JingleIBBTransportProvider ibbProvider = new JingleIBBTransportProvider();
+	        JingleContentProviderManager.addJingleContentTransportProvider(JingleIBBTransport.NAMESPACE_V1, ibbProvider);
+	        if(ibbProvider.equals(JingleContentProviderManager.getJingleContentTransportProvider(JingleIBBTransport.NAMESPACE_V1))) {
+	        	log.info("ibbProvider set");
+	        }
+	        if(JingleContentProviderManager.getJingleContentTransportProvider(JingleS5BTransport.NAMESPACE_V1) == null) {
+	        	log.error("JingleContentProviderManager is null");
+	        }
+	        test();
+	        JingleS5BTransportProvider s5bProvider = new JingleS5BTransportProvider();
+	        JingleContentProviderManager.addJingleContentTransportProvider(JingleS5BTransport.NAMESPACE_V1, s5bProvider);
+	        if(s5bProvider==JingleContentProviderManager.getJingleContentTransportProvider(JingleS5BTransport.NAMESPACE_V1)) {
+	        	log.info("s5bProvider set");
+	        }
+	        
+	        */
+			installConnectionListeners(connection);
+            installIncomingChatMessageListener(connection);
+            if(roster == null)
+            	roster = initRoster(connection);
+            if(fileTransferManager==null)
+            	fileTransferManager = initFileTransferManager(connection);			            
+            initReconnectManager();
+            initProviderManager();
+			//sendFile(connection,"admin@"+domain+"/tu.dajana.net","C:\\Users\\hongbin.yu\\Pictures\\hongbinyu.jpg","a testing");	            
+/*			if(httpFileUploadManager.isUploadServiceDiscovered()) {
+				log.info(httpFileUploadManager.uploadFile(new File("C:\\Users\\hongbin.yu\\Pictures\\hongbinyu.jpg")).toString());
+			}else {
+				log.info("HttpFileUpload:"+httpFileUploadManager.isUploadServiceDiscovered());
+			}*/
 /*				reconnectionManager = ReconnectionManager.getInstanceFor(connection);
 				ReconnectionManager.setEnabledPerDefault(true);
 				reconnectionManager.enableAutomaticReconnection();
@@ -396,44 +406,39 @@ public class XMPPServiceImpl implements XMPPService{
 		        });
 
 */			    //FileTransferNegotiator.getInstanceFor(connection)    
-			    
-			    //fileTransferManager.addFileTransferListener(getFileTransferListener());
+		    
+		    //fileTransferManager.addFileTransferListener(getFileTransferListener());
 
-			    isConnected = connection.isConnected();
-		        
-	            log.info("Connection:"+connection);
-			    /* VCard vCard = getVCard(JidCreate.entityBareFrom(username+"@"+domain));
-			    if(vCard !=null ) {
-			    	log.debug("vCard:"+vCard);
-		    	
-			    	File icon = new File(iconpath);
-			    	if(icon.exists()) {
-				    	log.debug("icon file path="+icon.getAbsolutePath());
-				    	InputStream is = new FileInputStream(icon);//conn.getInputStream();		    	
-				    	byte bytes[] = new byte[is.available()];
-				    	is.read(bytes);
-				    	vCard.setAvatar(bytes);			    		
-			    	}
+		    isConnected = connection.isConnected();
+	        
+            log.info("Connection:"+connection);
+		    /* VCard vCard = getVCard(JidCreate.entityBareFrom(username+"@"+domain));
+		    if(vCard !=null ) {
+		    	log.debug("vCard:"+vCard);
+	    	
+		    	File icon = new File(iconpath);
+		    	if(icon.exists()) {
+			    	log.debug("icon file path="+icon.getAbsolutePath());
+			    	InputStream is = new FileInputStream(icon);//conn.getInputStream();		    	
+			    	byte bytes[] = new byte[is.available()];
+			    	is.read(bytes);
+			    	vCard.setAvatar(bytes);			    		
+		    	}
 
 
-			    	//vCard.setAvatar(url);
-			    	vCard.setOrganization(organization);
-			    	vCard.getPhoneWork(phone);
-			    	vCard.setEmailWork(email);
-			    	vCard.setNickName(nickName);
-			    	vCardManager.saveVCard(vCard);
-			    }else {
-			    	log.debug("vCard not found!");
-			    }*/
-			} catch (SmackException e) {
-				log.error("login "+e.getMessage());
-			} catch (IOException e) {
-				log.error("login "+e.getMessage());
-			} catch (XMPPException e) {
-				log.error("login "+e.getMessage());
-			} catch (InterruptedException e) {
-				log.error("login "+e.getMessage());
-			}
+		    	//vCard.setAvatar(url);
+		    	vCard.setOrganization(organization);
+		    	vCard.getPhoneWork(phone);
+		    	vCard.setEmailWork(email);
+		    	vCard.setNickName(nickName);
+		    	vCardManager.saveVCard(vCard);
+		    }else {
+		    	log.debug("vCard not found!");
+		    }*/
+		} catch (SmackException | IOException | XMPPException | InterruptedException e) {
+			log.error("login "+e.getMessage());
+			//checkConnection();
+		}
 
 	}
 
@@ -441,11 +446,11 @@ public class XMPPServiceImpl implements XMPPService{
 	
 	public void disconnect() {
 		isConnected = false;
-		fileTransferManager = null;
-		if(roster !=null && rosterListener!=null) {
+		//fileTransferManager = null;
+/*		if(roster !=null && rosterListener!=null) {
 			roster.removeRosterListener(rosterListener);
 			roster = null;			
-		}
+		}*/
 
 		
 		log.info("remove connection:"+connection);
@@ -1430,7 +1435,7 @@ public class XMPPServiceImpl implements XMPPService{
 	 * @param connection
 	 *            The connection to set up
 	 */
-	private void installConnectionListeners(final XMPPConnection connection) {
+	private void installConnectionListeners(final AbstractXMPPConnection connection) {
 	    if (connection != null) {
 	        connectionListener = new ConnectionListener() {
 
@@ -1438,7 +1443,15 @@ public class XMPPServiceImpl implements XMPPService{
 				@Override
 				public void authenticated(XMPPConnection connection, boolean arg1) {
 					log.info("Reconnect is Authencated:"+connection.isAuthenticated());
-					//initRoster();
+					roster = initRoster(connection);
+/*					Presence presence = roster.getPresence(connection.getUser().asBareJid());
+					presence.setType(Type.available);
+					try {
+						connection.sendStanza(presence);
+					} catch (NotConnectedException | InterruptedException e) {
+						log.error(e.getMessage());
+						roster = initRoster(connection);
+					} */
 					//initFileTransferManager();
 /*					ChatManager chatManager = ChatManager.getInstanceFor(connection);   
 			        chatManager.addIncomingListener(new IncomingChatMessageListener() {
@@ -1546,27 +1559,24 @@ public class XMPPServiceImpl implements XMPPService{
 	   private void checkConnection() {
 		   TimerTask repeatedTask = new TimerTask() {
 		        public void run() {
-					try {
-						
-		                //PingManager pingManager = PingManager.getInstanceFor(getConnection());
-		                if(isConnected && !pingManager.pingMyServer()) {
-		                	disconnect();
-		                }else if(!isConnected) {
-		                	login(username,password);
+		        	try {
+		        		if(!connection.isConnected()) {
+		        			login(username,password);
+		        		}else if(!connection.isAuthenticated()) {
+							connection.login(username,password);
 		                }else {
-		                	//presence.setType(Type.available);
-		                	//connection.sendStanza(presence);
-		                	//Calendar calendar = Calendar.getInstance();
-		                	//calendar.setTimeInMillis(connection.getLastStanzaReceived());
-		                	//log.info("Last Stenza:"+calendar.getTime());
+			                checkVpnConnection();
+			                log.info("Online:"+getOnlineCount());
 		                }
-		                checkVpnConnection();
-		                log.debug("Online:"+getOnlineCount());
-						//log.info("Task performed on " + new Date()+", isConnection:"+pingManager.pingMyServer());
-					} catch (NotConnectedException e) {
+					} catch (NotConnectedException e ) {
 						log.error("checkConnection:"+e.getMessage());
-						disconnect();
 					} catch (InterruptedException e) {
+						log.error("checkConnection:"+e.getMessage());
+					} catch (SmackException e) {
+						log.error("checkConnection:"+e.getMessage());
+					} catch (IOException e) {
+						log.error("checkConnection:"+e.getMessage());
+					} catch (XMPPException e) {
 						log.error("checkConnection:"+e.getMessage());
 					}
 		        }
@@ -1613,7 +1623,7 @@ public class XMPPServiceImpl implements XMPPService{
 		private String getUTF8(String message) throws UnsupportedEncodingException {
 			return new String(message.getBytes("UTF-8"),"ISO-8859-1"); 
 		}
-		/*
+		
 	   protected void finalize() throws Throwable {
 	        try {
 	            disconnect();
@@ -1621,7 +1631,7 @@ public class XMPPServiceImpl implements XMPPService{
 	            super.finalize();
 	        }
 	    }
-*/
+
 
 		public static String getFiledomain() {
 			return filedomain;
@@ -1856,7 +1866,7 @@ public class XMPPServiceImpl implements XMPPService{
 			
 		}
 	
-	private Roster initRoster(AbstractXMPPConnection connection) {
+	private Roster initRoster(XMPPConnection connection) {
 		log.info("init Roster");
 		Roster roster = Roster.getInstanceFor(connection);
 		roster.setRosterLoadedAtLogin(true);
@@ -2041,7 +2051,7 @@ public class XMPPServiceImpl implements XMPPService{
 			@Override
 			public void pingFailed() {
 				log.error("Ping failed:");
-				disconnect();
+				//disconnect();
 				//checkConnection();
 			}
         	
