@@ -104,7 +104,7 @@ public class SiteController extends BaseController {
 			//try {
 				logger.error("message is null:"+request.getRequestURI());
 				//response.sendRedirect("/logout");
-				return null;
+				//return null;
 			//} catch (IOException e) {
 				//logger.error(e.getMessage());
 			//}
@@ -3361,7 +3361,7 @@ public class SiteController extends BaseController {
     						File file = new File(filePath+"/origin"+ext);
     						if(file.exists()) {
         						super.serveResource(request, response, file,name, contentType);   						
-
+        						return null;	
 /*    							FileInputStream in = new FileInputStream(file);
     							IOUtils.copy(in, response.getOutputStream());	
     							in.close();	
@@ -3375,7 +3375,7 @@ public class SiteController extends BaseController {
 
     			};
     		} catch (IOException | InterruptedException | ParseException e) {
-    			logger.error(e.getMessage());
+    			logger.error("file:"+e.getMessage());
     		}
     		        	
         }
