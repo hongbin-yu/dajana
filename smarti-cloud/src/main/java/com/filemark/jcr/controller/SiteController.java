@@ -100,12 +100,16 @@ public class SiteController extends BaseController {
 	    ModelAndView modelAndView = new ModelAndView("error404");
 	    String errorcode = request.getParameter("error");
 	    String message =  ex.getMessage();
-	    if("null".equals(message) || message==null)
+	    if("null".equals(message) || message==null) {
 			try {
 				response.sendRedirect("/logout");
+				return null;
 			} catch (IOException e) {
 				logger.error(e.getMessage());
 			}
+	    }else {
+	    	logger.error(message);
+	    }
 	    String simpleName ="";
 	    if(ex.getCause()!=null)
 	    	simpleName = ex.getCause().getClass().getSimpleName();

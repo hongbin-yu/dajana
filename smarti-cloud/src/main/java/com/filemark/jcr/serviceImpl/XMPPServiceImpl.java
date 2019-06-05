@@ -1914,8 +1914,8 @@ public class XMPPServiceImpl implements XMPPService{
 		roster.setSubscriptionMode(Roster.SubscriptionMode.accept_all);
 		//roster.setRosterLoadedAtLogin(true);
 
-		//presence = new Presence(connection.getUser(),Type.available);
-		Presence presence = roster.getPresence(connection.getUser().asBareJid());
+		presence = new Presence(connection.getUser(),Type.available);
+		//Presence presence = roster.getPresence(connection.getUser().asBareJid());
 	    //connection.setReplyTimeout(10000);
 		presence.setType(Type.available);
 		log.debug("Status:"+presence.getStatus()+"/"+presence.getType()+"/"+presence);
