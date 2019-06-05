@@ -101,12 +101,13 @@ public class SiteController extends BaseController {
 	    String errorcode = request.getParameter("error");
 	    String message =  ex.getMessage();
 	    if("null".equals(message) || message==null) {
-			try {
-				response.sendRedirect("/logout");
+			//try {
+				logger.error("message is null");
+				//response.sendRedirect("/logout");
 				return null;
-			} catch (IOException e) {
-				logger.error(e.getMessage());
-			}
+			//} catch (IOException e) {
+				//logger.error(e.getMessage());
+			//}
 	    }else {
 	    	logger.error(message);
 	    }
