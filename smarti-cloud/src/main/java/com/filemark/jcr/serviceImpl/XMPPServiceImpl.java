@@ -51,6 +51,7 @@ import org.apache.tika.mime.MimeTypes;
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.ConnectionConfiguration.SecurityMode;
 import org.jivesoftware.smack.ConnectionListener;
+import org.jivesoftware.smack.ReconnectionListener;
 import org.jivesoftware.smack.ReconnectionManager;
 import org.jivesoftware.smack.ReconnectionManager.ReconnectionPolicy;
 import org.jivesoftware.smack.SmackException;
@@ -72,6 +73,7 @@ import org.jivesoftware.smack.provider.ProviderManager;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
 import org.jivesoftware.smack.roster.RosterListener;
+import org.jivesoftware.smack.roster.RosterLoadedListener;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import org.jivesoftware.smack.util.PacketParserUtils;
@@ -161,6 +163,7 @@ public class XMPPServiceImpl implements XMPPService{
 	@Autowired
 	private JcrServices jcrService;
 	XMPPTCPConnectionConfiguration config;
+	private ChatManager chatManager;
 	private PingManager pingManager;
 	private VCardManager vCardManager;
 	private ReconnectionManager reconnectionManager;
@@ -172,6 +175,10 @@ public class XMPPServiceImpl implements XMPPService{
     private Options options = new Options();
 	private AbstractXMPPConnection connection;
 	private ConnectionListener connectionListener;
+	private ReconnectionListener reconectionListener;
+	private RosterListener rosterListener = null;
+	private IncomingChatMessageListener incomingChatMessageListener;
+	private FileTransferListener fileTransferListener;
 	private Roster roster;
 	private Presence presence;
 	private static boolean isConnected = false; 
@@ -184,7 +191,6 @@ public class XMPPServiceImpl implements XMPPService{
 	Map<String,Long> lastPage = new HashMap<String,Long>();	
 	Map<String,Message> lastSend = new HashMap<String,Message>();	
 	Map<String,Buddy> buddies = new HashMap<>();
-	protected RosterListener rosterListener = null;
 	//private IncomingChatMessageListener incomingChatMessageListener;
 	private static String pathToDirectory = "path to directory";
 	
@@ -447,12 +453,20 @@ public class XMPPServiceImpl implements XMPPService{
 	public void disconnect() {
 		isConnected = false;
 		//fileTransferManager = null;
-/*		if(roster !=null && rosterListener!=null) {
+		if(roster !=null && rosterListener!=null) {
 			roster.removeRosterListener(rosterListener);
 			roster = null;			
-		}*/
-
+		}
 		
+		if(chatManager != null) {
+			chatManager.removeIncomingListener(incomingChatMessageListener);
+			chatManager = null;
+		}
+		
+		if(fileTransferManager !=null) {
+			fileTransferManager.removeFileTransferListener(fileTransferListener);
+			fileTransferManager = null;
+		}
 		log.info("remove connection:"+connection);
 		connection.removeConnectionListener(connectionListener);
 		connection.disconnect();
@@ -565,13 +579,14 @@ public class XMPPServiceImpl implements XMPPService{
 		}			
 	}
 	private void installIncomingChatMessageListener(final AbstractXMPPConnection connection) {
-        ChatManager chatManager = ChatManager.getInstanceFor(connection);  
-
-        chatManager.addIncomingListener(new IncomingChatMessageListener() {
+		log.info("installIncomingChatMessageListener");
+        chatManager = ChatManager.getInstanceFor(connection);  
+        incomingChatMessageListener = new IncomingChatMessageListener() {
             public void newIncomingMessage(EntityBareJid from, Message message, Chat chat) { 
             	processMessage(from, message,chat);
             }
-        });			
+        };
+        chatManager.addIncomingListener(incomingChatMessageListener);
 	}
 
 	private void processMessage(EntityBareJid from, Message message, Chat chat) {
@@ -1444,43 +1459,28 @@ public class XMPPServiceImpl implements XMPPService{
 				public void authenticated(XMPPConnection connection, boolean arg1) {
 					log.info("Reconnect is Authencated:"+connection.isAuthenticated());
 					roster = initRoster(connection);
-/*					Presence presence = roster.getPresence(connection.getUser().asBareJid());
-					presence.setType(Type.available);
-					try {
-						connection.sendStanza(presence);
-					} catch (NotConnectedException | InterruptedException e) {
-						log.error(e.getMessage());
-						roster = initRoster(connection);
-					} */
-					//initFileTransferManager();
-/*					ChatManager chatManager = ChatManager.getInstanceFor(connection);   
-			        chatManager.addIncomingListener(new IncomingChatMessageListener() {
-			            public void newIncomingMessage(EntityBareJid from, Message message, Chat chat) {                
-			            	processMessage(from, message,chat);
-			            }
-			        });		*/		
+
 				}
 
 				@Override
 				public void connected(XMPPConnection connection) {
 					log.info("XMPPConnection:"+connection +" connected");
-					isConnected = true;
-					//roster = Roster.getInstanceFor(connection);
-					//installConnectionListeners(connection);
+					isConnected = connection.isConnected();
+
 				}
 
 				@Override
 				public void connectionClosed() {
 					log.info("XMPPConnection closed");
 					isConnected = false;
-					//disconnect();
+					disconnect();
 				}
 
 				@Override
 				public void connectionClosedOnError(Exception e) {
 					log.error("connection close with error:"+e.getMessage());
 					isConnected = false;
-					//disconnect();
+					disconnect();
 					
 				}
 	        };
@@ -1811,7 +1811,23 @@ public class XMPPServiceImpl implements XMPPService{
 		public static void setConnected(boolean isConnected) {
 			XMPPServiceImpl.isConnected = isConnected;
 		}
+		private RosterLoadedListener getRosterLoadedListener() {
+			return new RosterLoadedListener() {
 
+				@Override
+				public void onRosterLoaded(Roster roster) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				@Override
+				public void onRosterLoadingFailed(Exception exception) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+			};
+		}
 		private RosterListener getRosterListener(final Roster roster) {
 			return new RosterListener() {
 				public  void presenceChanged(Presence prsnc) {
@@ -1970,7 +1986,7 @@ public class XMPPServiceImpl implements XMPPService{
         }
         
         FileTransferManager	ftm = FileTransferManager.getInstanceFor(connection);
-        ftm.addFileTransferListener(new FileTransferListener() {
+        fileTransferListener = new FileTransferListener() {
 		        @Override
 		        public void fileTransferRequest(FileTransferRequest request) {
 	                //String fileName = pathToDirectory +"/"+request.getFileName();
@@ -2030,7 +2046,8 @@ public class XMPPServiceImpl implements XMPPService{
 					}
 		        }
 				
-			});
+			};
+			ftm.addFileTransferListener(fileTransferListener);
         return ftm;
 	}
 
@@ -2040,7 +2057,21 @@ public class XMPPServiceImpl implements XMPPService{
 		ReconnectionManager.setEnabledPerDefault(true);
 		reconnectionManager.enableAutomaticReconnection();
 		reconnectionManager.setReconnectionPolicy(ReconnectionPolicy.RANDOM_INCREASING_DELAY);
+		reconnectionManager.addReconnectionListener(new ReconnectionListener() {
 
+			@Override
+			public void reconnectingIn(int arg0) {
+				log.info("recontectIn:"+arg0);
+				
+			}
+
+			@Override
+			public void reconnectionFailed(Exception arg0) {
+				log.info("reconnectionFailed:"+arg0.getMessage());
+				
+			}
+			
+		});
 		//connection.isAuthenticated();
         //vCardManager = VCardManager.getInstanceFor(connection);
 	    pingManager = PingManager.getInstanceFor(connection);
@@ -2051,7 +2082,7 @@ public class XMPPServiceImpl implements XMPPService{
 			@Override
 			public void pingFailed() {
 				log.error("Ping failed:");
-				//disconnect();
+				disconnect();
 				//checkConnection();
 			}
         	
