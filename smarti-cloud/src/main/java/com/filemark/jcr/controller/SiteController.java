@@ -102,7 +102,7 @@ public class SiteController extends BaseController {
 	    String message =  ex.getMessage();
 	    if("null".equals(message) || message==null) {
 			//try {
-				logger.error("message is null");
+				logger.error("message is null:"+request.getRequestURI());
 				//response.sendRedirect("/logout");
 				return null;
 			//} catch (IOException e) {
