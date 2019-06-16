@@ -80,8 +80,12 @@ import org.jivesoftware.smack.util.PacketParserUtils;
 import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.smack.util.TLSUtils;
 import org.jivesoftware.smack.util.XmlStringBuilder;
+import org.jivesoftware.smackx.bytestreams.ibb.provider.CloseIQProvider;
+import org.jivesoftware.smackx.bytestreams.ibb.provider.DataPacketProvider;
+import org.jivesoftware.smackx.bytestreams.ibb.provider.OpenIQProvider;
 import org.jivesoftware.smackx.bytestreams.socks5.Socks5BytestreamManager;
 import org.jivesoftware.smackx.bytestreams.socks5.Socks5BytestreamSession;
+import org.jivesoftware.smackx.bytestreams.socks5.provider.BytestreamsProvider;
 import org.jivesoftware.smackx.filetransfer.FileTransfer;
 import org.jivesoftware.smackx.filetransfer.FileTransferListener;
 import org.jivesoftware.smackx.filetransfer.FileTransferManager;
@@ -103,6 +107,7 @@ import org.jivesoftware.smackx.jingle.transports.jingle_s5b.elements.JingleS5BTr
 import org.jivesoftware.smackx.jingle.transports.jingle_s5b.provider.JingleS5BTransportProvider;
 import org.jivesoftware.smackx.ping.PingFailedListener;
 import org.jivesoftware.smackx.ping.PingManager;
+import org.jivesoftware.smackx.si.provider.StreamInitiationProvider;
 import org.jivesoftware.smackx.vcardtemp.VCardManager;
 import org.jivesoftware.smackx.vcardtemp.packet.VCard;
 import org.jivesoftware.smackx.vcardtemp.provider.VCardProvider;
@@ -135,6 +140,7 @@ import com.filemark.jcr.service.XMPPService;
 import com.filemark.utils.Buddy;
 import com.filemark.utils.LinuxUtil;
 import com.filemark.utils.WebPage;
+import com.filemark.xmpp.FileTransferIbbListener;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -169,12 +175,12 @@ public class XMPPServiceImpl implements XMPPService{
 	private VCardManager vCardManager;
 	private ReconnectionManager reconnectionManager;
 	private FileTransferManager fileTransferManager ;
-	private HttpFileUploadManager httpFileUploadManager;
+	private static HttpFileUploadManager httpFileUploadManager;
 	private JingleManager jingleManager;
 	private ProviderManager providerManager;
     //private JTextField jid;	
     private Options options = new Options();
-	private AbstractXMPPConnection connection;
+	private static AbstractXMPPConnection connection;
 	private ConnectionListener connectionListener;
 	private ReconnectionListener reconectionListener;
 	private RosterListener rosterListener = null;
@@ -243,7 +249,7 @@ public class XMPPServiceImpl implements XMPPService{
 			if(jsonObject.get("closeVPN")!=null) {
 				closeVPN = (Boolean)jsonObject.get("closeVPN");				
 			}				
-			ProviderManager.addIQProvider("vCard", "vcard-temp", new VCardProvider());			
+		
 			log.info("init "+domain+":"+port+" sub domain "+filedomain);
 			if(filedomain.startsWith("192.")) {
 				InetAddress ipAddr = InetAddress.getLocalHost();
@@ -283,8 +289,12 @@ public class XMPPServiceImpl implements XMPPService{
 			//create(username,password);
 			if(connection == null)
 			    connection = new XMPPTCPConnection(config);
+            initProviderManager();
+			//fileTransferListener = new FileTransferIbbListener(this);
+			//fileTransferManager = FileTransferManager.getInstanceFor(connection);
+			//fileTransferManager.addFileTransferListener(fileTransferListener);
 			login(username,password);		
-	        //test();
+	        test();
             checkConnection();
 		} catch (IOException | ParseException e) {
 			log.error("init error:"+e.getMessage());
@@ -320,8 +330,7 @@ public class XMPPServiceImpl implements XMPPService{
 			//	connection.connect();
 			//if(connection.isAuthenticated()) return;
 			connection.connect().login(username,password);	
-			httpFileUploadManager = HttpFileUploadManager.getInstanceFor(connection);
-
+			//httpFileUploadManager = HttpFileUploadManager.getInstanceFor(connection);
 		    //isConnected = true;
 		    /*
 			roster = Roster.getInstanceFor(connection);
@@ -380,14 +389,14 @@ public class XMPPServiceImpl implements XMPPService{
 	        }
 	        
 	        */
+			httpFileUploadManager = HttpFileUploadManager.getInstanceFor(connection);
+
 			installConnectionListeners(connection);
             installIncomingChatMessageListener(connection);
-            if(roster == null)
-            	roster = initRoster(connection);
-            if(fileTransferManager==null)
-            	fileTransferManager = initFileTransferManager(connection);			            
+           	roster = initRoster(connection);
+           	fileTransferManager = initFileTransferManager(connection);			            
             initReconnectManager();
-            initProviderManager();
+
 			//sendFile(connection,"admin@"+domain+"/tu.dajana.net","C:\\Users\\hongbin.yu\\Pictures\\hongbinyu.jpg","a testing");	            
 /*			if(httpFileUploadManager.isUploadServiceDiscovered()) {
 				log.info(httpFileUploadManager.uploadFile(new File("C:\\Users\\hongbin.yu\\Pictures\\hongbinyu.jpg")).toString());
@@ -2103,10 +2112,13 @@ public class XMPPServiceImpl implements XMPPService{
 	private void initProviderManager() {
 		ProviderManager.addIQProvider("jingle", "urn:xmpp:tmp:jingle", new JingleProvider());
 		ProviderManager.addIQProvider("vCard","vcard-temp", new VCardProvider());
-		//ProviderManager.addIQProvider(elementName, namespace, provider);
+		//ProviderManager.addIQProvider("si","http://jabber.org/protocol/si", new StreamInitiationProvider());
+		//ProviderManager.addIQProvider("query","http://jabber.org/protocol/bytestreams", new BytestreamsProvider());
+		//ProviderManager.addIQProvider("open","http://jabber.org/protocol/ibb", new OpenIQProvider());
+		//ProviderManager.addIQProvider("close","http://jabber.org/protocol/ibb", new CloseIQProvider());
 	}
 	
-	private void saveAsset(String requestor,InputStream is,String contentType, String fileName,String description, long size) throws RepositoryException, IOException {
+	public void saveAsset(String requestor,InputStream is,String contentType, String fileName,String description, long size) throws RepositoryException, IOException {
 		//InputStream is = new FileInputStream(tempFile);
 		//long size = tempFile.length();
 
@@ -2369,7 +2381,7 @@ public class XMPPServiceImpl implements XMPPService{
 	private final byte[] dataToSend = StringUtils.randomString(1024 * 4 * 3).getBytes();
 	private static byte[] dataReceived=null;  	
 	private void test() {
-		String path="C:\\Users\\hongbin.yu\\Documents\\yuhongweb\\dajana.key";
+		String path="C:\\Users\\hongbin.yu\\Documents\\yuhongweb\\product_sample.jpg";
 /*		JingleUtil jutil = new JingleUtil(connection);
         FullJid test = connection.getUser().asFullJidOrThrow();
         FullJid juliet;*/
