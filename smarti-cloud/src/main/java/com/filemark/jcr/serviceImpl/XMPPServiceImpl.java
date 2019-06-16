@@ -294,7 +294,7 @@ public class XMPPServiceImpl implements XMPPService{
 			//fileTransferManager = FileTransferManager.getInstanceFor(connection);
 			//fileTransferManager.addFileTransferListener(fileTransferListener);
 			login(username,password);		
-	        test();
+	        //test();
             checkConnection();
 		} catch (IOException | ParseException e) {
 			log.error("init error:"+e.getMessage());
