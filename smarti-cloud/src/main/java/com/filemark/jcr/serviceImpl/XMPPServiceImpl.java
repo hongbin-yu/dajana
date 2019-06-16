@@ -151,7 +151,8 @@ public class XMPPServiceImpl implements XMPPService{
 	private static String fileport = "";		
 	private static String domain = "dajana.net";
 	private static Long port = new Long(5222);
-	private static String protocol ="http:";
+	private static String protocol ="https:";
+	private static String resource ="cloud:";
 	private String username="tester";
 	private String password="tester";
 	private String iconpath="/var/www/html/resources/images/favicon-mobile.png";
@@ -236,6 +237,9 @@ public class XMPPServiceImpl implements XMPPService{
 			if(jsonObject.get("protocol")!=null) {
 				protocol = (String)jsonObject.get("protocol");				
 			}
+			if(jsonObject.get("resource")!=null) {
+				resource = (String)jsonObject.get("resource");				
+			}			
 			if(jsonObject.get("closeVPN")!=null) {
 				closeVPN = (Boolean)jsonObject.get("closeVPN");				
 			}				
@@ -248,7 +252,7 @@ public class XMPPServiceImpl implements XMPPService{
 			config = XMPPTCPConnectionConfiguration
 				    .builder()
 				    //.setUsernameAndPassword(username, password)
-				    .setResource(filedomain)
+				    .setResource(resource)
 				    .setHost(domain)
 				    .setXmppDomain(domain)
 				    .setPort(port.intValue())
@@ -652,6 +656,9 @@ public class XMPPServiceImpl implements XMPPService{
         		log.debug("p="+p_value +",q="+query);
             }else if(commandLine.hasOption('t')) {	
             }else if(commandLine.hasOption('d')) {	
+            }else if(commandLine.hasOption('r')) {	
+            	disconnect();
+            	login(username,password);
             }else if(commandLine.hasOption('s')) {	
             }else if(commandLine.hasOption('z')) {	
             }else if(commandLine.hasOption('v')) {	
@@ -2018,7 +2025,9 @@ public class XMPPServiceImpl implements XMPPService{
 			            Jid jid = request.getRequestor();	   
 			    		String requester = jid.toString().split("@")[0];
 		                IncomingFileTransfer ift = request.accept();
+		                
 						InputStream is = ift.receiveFile();
+						
 						ByteArrayOutputStream os = new ByteArrayOutputStream();
 						int nRead;
 						byte[] buf = new byte[1024];
