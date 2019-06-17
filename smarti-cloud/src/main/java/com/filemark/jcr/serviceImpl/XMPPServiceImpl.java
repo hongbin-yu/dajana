@@ -158,7 +158,7 @@ public class XMPPServiceImpl implements XMPPService{
 	private static String domain = "dajana.net";
 	private static Long port = new Long(5222);
 	private static String protocol ="https:";
-	private static String resource ="cloud:";
+	private static String resource ="cloud";
 	private String username="tester";
 	private String password="tester";
 	private String iconpath="/var/www/html/resources/images/favicon-mobile.png";
@@ -430,7 +430,7 @@ public class XMPPServiceImpl implements XMPPService{
 
 		    isConnected = connection.isConnected();
 	        
-            log.info("Connection:"+connection);
+            log.info("login Connection:"+connection);
 		    /* VCard vCard = getVCard(JidCreate.entityBareFrom(username+"@"+domain));
 		    if(vCard !=null ) {
 		    	log.debug("vCard:"+vCard);
@@ -2112,10 +2112,10 @@ public class XMPPServiceImpl implements XMPPService{
 	private void initProviderManager() {
 		ProviderManager.addIQProvider("jingle", "urn:xmpp:tmp:jingle", new JingleProvider());
 		ProviderManager.addIQProvider("vCard","vcard-temp", new VCardProvider());
-		//ProviderManager.addIQProvider("si","http://jabber.org/protocol/si", new StreamInitiationProvider());
-		//ProviderManager.addIQProvider("query","http://jabber.org/protocol/bytestreams", new BytestreamsProvider());
-		//ProviderManager.addIQProvider("open","http://jabber.org/protocol/ibb", new OpenIQProvider());
-		//ProviderManager.addIQProvider("close","http://jabber.org/protocol/ibb", new CloseIQProvider());
+		ProviderManager.addIQProvider("si","http://jabber.org/protocol/si", new StreamInitiationProvider());
+		ProviderManager.addIQProvider("query","http://jabber.org/protocol/bytestreams", new BytestreamsProvider());
+		ProviderManager.addIQProvider("open","http://jabber.org/protocol/ibb", new OpenIQProvider());
+		ProviderManager.addIQProvider("close","http://jabber.org/protocol/ibb", new CloseIQProvider());
 	}
 	
 	public void saveAsset(String requestor,InputStream is,String contentType, String fileName,String description, long size) throws RepositoryException, IOException {
