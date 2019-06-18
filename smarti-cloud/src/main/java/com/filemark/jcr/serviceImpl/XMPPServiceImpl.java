@@ -174,7 +174,7 @@ public class XMPPServiceImpl implements XMPPService{
 	private PingManager pingManager;
 	private VCardManager vCardManager;
 	private ReconnectionManager reconnectionManager;
-	private FileTransferManager fileTransferManager ;
+	private static FileTransferManager fileTransferManager ;
 	private static HttpFileUploadManager httpFileUploadManager;
 	private JingleManager jingleManager;
 	private ProviderManager providerManager;
@@ -186,7 +186,7 @@ public class XMPPServiceImpl implements XMPPService{
 	private ReconnectionListener reconectionListener;
 	private RosterListener rosterListener = null;
 	private IncomingChatMessageListener incomingChatMessageListener;
-	private FileTransferListener fileTransferListener;
+	private static FileTransferListener fileTransferListener;
 	private Roster roster;
 	private Presence presence;
 	private static boolean isConnected = false; 
@@ -394,8 +394,10 @@ public class XMPPServiceImpl implements XMPPService{
 
 			installConnectionListeners(connection);
             installIncomingChatMessageListener(connection);
-           	roster = initRoster(connection);
-           	fileTransferManager = initFileTransferManager(connection);			            
+            if(roster == null)
+            	roster = initRoster(connection);
+           	if(fileTransferManager == null)
+           		fileTransferManager = initFileTransferManager(connection);			            
             initReconnectManager();
 
 			//sendFile(connection,"admin@"+domain+"/tu.dajana.net","C:\\Users\\hongbin.yu\\Pictures\\hongbinyu.jpg","a testing");	            
@@ -2101,7 +2103,7 @@ public class XMPPServiceImpl implements XMPPService{
 			@Override
 			public void pingFailed() {
 				log.error("Ping failed:");
-				//disconnect();
+				disconnect();
 				//checkConnection();
 			}
         	
