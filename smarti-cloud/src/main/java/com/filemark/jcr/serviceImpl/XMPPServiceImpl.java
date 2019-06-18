@@ -178,6 +178,7 @@ public class XMPPServiceImpl implements XMPPService{
 	private static HttpFileUploadManager httpFileUploadManager;
 	private JingleManager jingleManager;
 	private ProviderManager providerManager;
+
     //private JTextField jid;	
     private Options options = new Options();
 	private static AbstractXMPPConnection connection;
