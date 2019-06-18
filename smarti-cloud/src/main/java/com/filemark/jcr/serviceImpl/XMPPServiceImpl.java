@@ -2101,7 +2101,7 @@ public class XMPPServiceImpl implements XMPPService{
 			@Override
 			public void pingFailed() {
 				log.error("Ping failed:");
-				disconnect();
+				//disconnect();
 				//checkConnection();
 			}
         	
