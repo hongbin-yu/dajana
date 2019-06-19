@@ -15,6 +15,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.file.Files;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -149,7 +150,7 @@ import com.lowagie.text.pdf.PdfReader;
 
 
 @SuppressWarnings("deprecation")
-public class XMPPServiceImpl implements XMPPService{
+public class XMPPServiceImpl implements XMPPService, ConnectionListener,PingFailedListener,RosterLoadedListener,RosterListener,IncomingChatMessageListener,FileTransferListener{
 
 	private final Logger log = LoggerFactory.getLogger(XMPPServiceImpl.class);
 	//private static String host = "host ip";
@@ -181,13 +182,14 @@ public class XMPPServiceImpl implements XMPPService{
 
     //private JTextField jid;	
     private Options options = new Options();
-	private static AbstractXMPPConnection connection;
-	private ConnectionListener connectionListener;
-	private ReconnectionListener reconectionListener;
+    private XMPPConnection mConnection;
+	private AbstractXMPPConnection connection;
+	private static ConnectionListener connectionListener;
+	private static ReconnectionListener reconectionListener;
 	private RosterListener rosterListener = null;
 	private IncomingChatMessageListener incomingChatMessageListener;
 	private static FileTransferListener fileTransferListener;
-	private Roster roster;
+	private static Roster roster;
 	private Presence presence;
 	private static boolean isConnected = false; 
 	private static boolean vpnConnected = true; 	
@@ -201,7 +203,7 @@ public class XMPPServiceImpl implements XMPPService{
 	Map<String,Buddy> buddies = new HashMap<>();
 	//private IncomingChatMessageListener incomingChatMessageListener;
 	private static String pathToDirectory = "path to directory";
-	
+
 	public void initialize() {
 
 		JSONParser parser = new JSONParser();
@@ -258,7 +260,7 @@ public class XMPPServiceImpl implements XMPPService{
 			}			
 			config = XMPPTCPConnectionConfiguration
 				    .builder()
-				    //.setUsernameAndPassword(username, password)
+				    .setUsernameAndPassword(username, password)
 				    .setResource(resource)
 				    .setHost(domain)
 				    .setXmppDomain(domain)
@@ -269,9 +271,7 @@ public class XMPPServiceImpl implements XMPPService{
 				    .build();
 				
 						
-		    //connection = new XMPPTCPConnection(config);
-		
-			
+
 			options.addOption(new Option("n", "next", false, "下一组"));   
 			options.addOption(new Option("m", "MaxSize", true, "每页最多文件"));       		
 			options.addOption(new Option("q", "query", false, "关键词"));    		
@@ -288,15 +288,29 @@ public class XMPPServiceImpl implements XMPPService{
 			options.addOption(new Option("h", "help", false, "求助"));				
 			//connection.connect();
 			//create(username,password);
-			if(connection == null)
-			    connection = new XMPPTCPConnection(config);
+			//if(connection == null)
+			//    connection = new XMPPTCPConnection(config);
+
             initProviderManager();
+		    mConnection = new XMPPTCPConnection(config);
+            mConnection.setReplyTimeout(10000);
+            mConnection.addConnectionListener(this);
+            connection = (AbstractXMPPConnection) mConnection;
+            try {
+
+            	((AbstractXMPPConnection) mConnection).connect();
+			
+			} catch (SmackException | XMPPException | InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 			//fileTransferListener = new FileTransferIbbListener(this);
 			//fileTransferManager = FileTransferManager.getInstanceFor(connection);
 			//fileTransferManager.addFileTransferListener(fileTransferListener);
-			login(username,password);		
+			//login(username,password);		
 	        //test();
-            checkConnection();
+            //checkConnection();
 		} catch (IOException | ParseException e) {
 			log.error("init error:"+e.getMessage());
 		} catch (RepositoryException e) {
@@ -325,7 +339,8 @@ public class XMPPServiceImpl implements XMPPService{
 	public void login(String username,String password) {
 		
 		try {
-
+			if(connection == null)
+			    connection = new XMPPTCPConnection(config);
 		    connection.setReplyTimeout(10000);
 			//if(!connection.isConnected())
 			//	connection.connect();
@@ -391,14 +406,11 @@ public class XMPPServiceImpl implements XMPPService{
 	        
 	        */
 			httpFileUploadManager = HttpFileUploadManager.getInstanceFor(connection);
-
 			installConnectionListeners(connection);
+			roster = initRoster(connection);
             installIncomingChatMessageListener(connection);
-            if(roster == null)
-            	roster = initRoster(connection);
-           	if(fileTransferManager == null)
-           		fileTransferManager = initFileTransferManager(connection);			            
-            initReconnectManager();
+       		fileTransferManager = initFileTransferManager(connection);			            
+			initReconnectManager();
 
 			//sendFile(connection,"admin@"+domain+"/tu.dajana.net","C:\\Users\\hongbin.yu\\Pictures\\hongbinyu.jpg","a testing");	            
 /*			if(httpFileUploadManager.isUploadServiceDiscovered()) {
@@ -594,7 +606,7 @@ public class XMPPServiceImpl implements XMPPService{
 			log.error(e.getMessage());;
 		}			
 	}
-	private void installIncomingChatMessageListener(final AbstractXMPPConnection connection) {
+	private void installIncomingChatMessageListener(final XMPPConnection connection) {
 		log.info("installIncomingChatMessageListener");
         chatManager = ChatManager.getInstanceFor(connection);  
         incomingChatMessageListener = new IncomingChatMessageListener() {
@@ -1469,7 +1481,7 @@ public class XMPPServiceImpl implements XMPPService{
 	 * @param connection
 	 *            The connection to set up
 	 */
-	private void installConnectionListeners(final AbstractXMPPConnection connection) {
+	private void installConnectionListeners(final XMPPConnection connection) {
 	    if (connection != null) {
 	        connectionListener = new ConnectionListener() {
 
@@ -1477,22 +1489,20 @@ public class XMPPServiceImpl implements XMPPService{
 				@Override
 				public void authenticated(XMPPConnection connection, boolean arg1) {
 					log.info("Reconnect is Authencated:"+connection.isAuthenticated());
-					roster = initRoster(connection);
-
 				}
 
 				@Override
 				public void connected(XMPPConnection connection) {
 					log.info("XMPPConnection:"+connection +" connected");
 					isConnected = connection.isConnected();
-
+					
 				}
 
 				@Override
 				public void connectionClosed() {
 					log.info("XMPPConnection closed");
 					isConnected = false;
-					disconnect();
+					//disconnect();
 				}
 
 				@Override
@@ -1903,6 +1913,7 @@ public class XMPPServiceImpl implements XMPPService{
 	
 	private Roster initRoster(XMPPConnection connection) {
 		log.info("init Roster");
+		buddies = new HashMap<>();
 		Roster roster = Roster.getInstanceFor(connection);
 		roster.setRosterLoadedAtLogin(true);
 		//roster = Roster.getInstanceFor(connection);
@@ -1915,7 +1926,7 @@ public class XMPPServiceImpl implements XMPPService{
 		}
 
 		Collection<RosterEntry> entries = roster.getEntries();
-		buddies = new HashMap<>();
+
 		for (RosterEntry entry : entries) {
 			String jid = entry.getJid().toString();
 			Presence entryPresence = roster.getPresence(entry.getJid());
@@ -1923,7 +1934,7 @@ public class XMPPServiceImpl implements XMPPService{
 				Buddy buddy = new Buddy(jid);
 				buddy.setOnline(entryPresence.isAvailable() || entryPresence.isAway());
 				buddies.put(jid, buddy);
-		        log.info("####User status"+"...."+entry.getJid()+"....."+entryPresence.getStatus()+"....."+entryPresence +" \ntype: "+entryPresence.getType() + "\nmode: " +entryPresence.getMode() + "\nstatus: " + entryPresence.getStatus());// + "\nType: " + status.getType());
+		        //log.info("####User status"+"...."+entry.getJid()+"....."+entryPresence.getStatus()+"....."+entryPresence +" \ntype: "+entryPresence.getType() + "\nmode: " +entryPresence.getMode() + "\nstatus: " + entryPresence.getStatus());// + "\nType: " + status.getType());
 
 			}
 			checkVpnConnection();
@@ -1985,7 +1996,7 @@ public class XMPPServiceImpl implements XMPPService{
 	
 	}
 		
-	private FileTransferManager initFileTransferManager(AbstractXMPPConnection connection) {
+	private FileTransferManager initFileTransferManager(XMPPConnection connection) {
 		log.info("init FileTransferManager");
 		FileTransferNegotiator.IBB_ONLY = true;
 		jingleManager = JingleManager.getInstanceFor(connection);
@@ -2010,21 +2021,6 @@ public class XMPPServiceImpl implements XMPPService{
 		        public void fileTransferRequest(FileTransferRequest request) {
 	                //String fileName = pathToDirectory +"/"+request.getFileName();
 	                try{
-/*	                	String fileName = request.getFileName();
-						final File tempFile = File.createTempFile("temp-",fileName);
-				        tempFile.deleteOnExit();
-		                IncomingFileTransfer ift = request.accept();
-			            String contentType = request.getMimeType();
-			            Jid jid = request.getRequestor();
-			    		String requester = jid.toString().split("@")[0];
-			    		ift.receiveFile(tempFile);
-						log.info("Incoming file transfer: " + fileName);
-						log.info("Transfer status is: " + ift.getStatus());
-						if(ift.getStatus().toString().equals("Error")) {
-							log.error("Transfer file error",jid.toString());
-							ift.cancel();
-							return;
-						}*/
 	                	String fileName = request.getFileName();
 	                	String description = request.getDescription();
 			            String contentType = request.getMimeType();
@@ -2096,7 +2092,7 @@ public class XMPPServiceImpl implements XMPPService{
 		//connection.isAuthenticated();
         //vCardManager = VCardManager.getInstanceFor(connection);
 	    pingManager = PingManager.getInstanceFor(connection);
-	    pingManager.setPingInterval(100);
+	    pingManager.setPingInterval(600);
 	    pingManager.pingMyServer();	
 	    pingManager.registerPingFailedListener(new PingFailedListener() {
 
@@ -2633,6 +2629,203 @@ public static String[] translateCommandline(String toProcess) {
     return result.toArray(new String[result.size()]);
 }
 
+	@Override
+	public void connected(XMPPConnection connection) {
+		log.info("connected to login:"+connection);
+	    try {
+
+	        ((AbstractXMPPConnection) connection).login();
+			reconnectionManager = ReconnectionManager.getInstanceFor((AbstractXMPPConnection) connection);
+			ReconnectionManager.setEnabledPerDefault(true);
+			reconnectionManager.enableAutomaticReconnection();
+			reconnectionManager.setReconnectionPolicy(ReconnectionPolicy.RANDOM_INCREASING_DELAY);
+		    pingManager = PingManager.getInstanceFor(connection);
+		    pingManager.setPingInterval(60);
+		    pingManager.pingMyServer();
+		    pingManager.registerPingFailedListener(new PingFailedListener() {
+
+				@Override
+				public void pingFailed() {
+					log.error("Ping failed: reconnect");
+					//disconnect();
+					try {
+						((AbstractXMPPConnection) mConnection).connect();
+					} catch (SmackException | IOException | XMPPException
+							| InterruptedException e) {
+						log.error(e.getMessage());
+					}
+				}
+	        	
+	        });		    
+	    } catch (XMPPException | SmackException | IOException | InterruptedException e) {
+	        log.error(e.getMessage());
+	    }
+		
+	}
+	
+	@Override
+	public void authenticated(XMPPConnection connection, boolean resumed) {
+		log.info("authenticated to load Roster:"+connection);
+
+		roster = Roster.getInstanceFor(connection);
+		roster.setRosterLoadedAtLogin(true);
+		roster.addRosterLoadedListener(this);
+		roster.addRosterListener((RosterListener) this);
+		chatManager = ChatManager.getInstanceFor(connection);
+		chatManager.addIncomingListener(this);
+		fileTransferManager = FileTransferManager.getInstanceFor(connection);
+		fileTransferManager.addFileTransferListener(this);
+	}
+	
+	@Override
+	public void connectionClosed() {
+		log.info("connection closed:");
+		
+	}
+	
+	@Override
+	public void connectionClosedOnError(Exception e) {
+		log.info("connectionClosedOnError to connect again");
+	    try {
+	        ((AbstractXMPPConnection) mConnection).connect();
+	    } catch (SmackException | IOException | XMPPException | InterruptedException exception) {
+	    	log.error(e.getMessage());
+	    }
+		
+	}
+
+	@Override
+	public void pingFailed() {
+		log.error("Ping failed: reconnect");
+		//disconnect();
+		try {
+			((AbstractXMPPConnection) mConnection).connect();
+		} catch (SmackException | IOException | XMPPException
+				| InterruptedException e) {
+			log.error(e.getMessage());
+		}
+		
+	}
+
+	@Override
+	public void onRosterLoaded(Roster roster) {
+		Collection<RosterEntry> entries = roster.getEntries();
+		buddies = new HashMap<>();
+		for (RosterEntry entry : entries) {
+			String jid = entry.getJid().toString();
+			Presence entryPresence = roster.getPresence(entry.getJid());
+			if(entryPresence != null) {
+				Buddy buddy = new Buddy(jid);
+				buddy.setOnline(entryPresence.isAvailable() || entryPresence.isAway());
+				buddies.put(jid, buddy);
+			}
+		}
+		
+	}
+
+	@Override
+	public void onRosterLoadingFailed(Exception exception) {
+		log.error(exception.getMessage());
+		
+	}
+
+	@Override
+	public void newIncomingMessage(EntityBareJid from, Message message, Chat chat) {
+       	processMessage(from, message,chat);
+	}
+
+	@Override
+	public void fileTransferRequest(FileTransferRequest request) {
+            //String fileName = pathToDirectory +"/"+request.getFileName();
+            try{
+            	String fileName = request.getFileName();
+            	String description = request.getDescription();
+	            String contentType = request.getMimeType();
+	            if(contentType==null) {
+	            	MimetypesFileTypeMap mimeTypesMap = new MimetypesFileTypeMap();
+	            	contentType = mimeTypesMap.getContentType(fileName);
+	            }
+	            	
+	            long size = request.getFileSize();
+	            Jid jid = request.getRequestor();	   
+	    		String requester = jid.toString().split("@")[0];
+                IncomingFileTransfer ift = request.accept();
+                
+				InputStream is = ift.receiveFile();
+				
+				ByteArrayOutputStream os = new ByteArrayOutputStream();
+				int nRead;
+				byte[] buf = new byte[1024];
+				while ((nRead = is.read(buf,  0, buf.length)) != -1) {
+					os.write(buf, 0, nRead);
+				}
+				os.flush();
+				log.info("Filetransfer receiving status: " + ift.getStatus()+" .size:"+os.size()+"/"+size  + ". Progress: " + ift.getProgress());
+
+		        log.info("fileTransferRequest:"+fileName+"/"+contentType+"/"+requester+"/"+description);
+		        InputStream inputStream = new ByteArrayInputStream(os.toByteArray()); 
+                saveAsset(requester,inputStream,contentType,fileName,description,size);
+            }
+            catch(SmackException e){
+                log.error(e.getMessage());
+            }
+            catch(IOException e){
+                log.error(e.getMessage());	                    
+            } catch (RepositoryException e) {
+            	log.error(e.getMessage());
+			} catch (InterruptedException e) {
+				log.error(e.getMessage());	
+			} catch (XMPPErrorException e) {
+				log.error(e.getMessage());	
+			}
+        }
+
+	public  void presenceChanged(Presence prsnc) {
+		String uname = prsnc.getFrom().toString();//prsnc.getFrom().asBareJid().toString();
+
+		Buddy b = buddies.get(uname);
+		if (b == null) {
+			// add to buddy list
+			b = new Buddy(uname);
+			buddies.put(uname, b);
+		}
+		//System.out.println("presence changed: " + uname + ": " + prsnc + "  -" + (prsnc.isAvailable() || prsnc.isAway()));
+		b.setOnline(prsnc.isAvailable() || prsnc.isAway());
+	}
+
+	@Override
+	public void entriesAdded(Collection<Jid> addresses) {
+		for(Jid jid:addresses) {
+			String sjid = jid.toString();
+			buddies.get(sjid).setOnline(roster.getPresence(jid.asBareJid()) != null);
+		
+		}
+		checkVpnConnection();				
+	}
+
+	@Override
+	public void entriesUpdated(Collection<Jid> addresses) {
+		for(Jid jid:addresses) {
+			String sjid = jid.toString();
+			Buddy buddy = buddies.get(sjid);
+			if(buddy.isOnline()) buddy.setOnline(false);
+			buddies.remove(sjid);
+		
+		}
+		checkVpnConnection();						
+	}
+
+	@Override
+	public void entriesDeleted(Collection<Jid> addresses) {
+		for(Jid jid:addresses) {
+			String sjid = jid.toString();
+			Buddy buddy = buddies.get(sjid);
+			if(buddy.isOnline()) buddy.setOnline(false);
+			buddies.remove(sjid);
+		
+		}
+		checkVpnConnection();					
+	}
 
 
 }
