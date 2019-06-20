@@ -761,6 +761,14 @@
 		        <artifactId>smack-extensions</artifactId>
 		        <version>4.3.0</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.igniterealtime.smack/smack-omemo -->
+		<dependency>
+		    <groupId>org.igniterealtime.smack</groupId>
+		    <artifactId>smack-omemo</artifactId>
+		    <version>4.4.0-alpha1</version>
+		</dependency>
+
+				
 		<!-- https://mvnrepository.com/artifact/org.igniterealtime.smack/smack-experimental -->
 		<dependency>
 		    <groupId>org.igniterealtime.smack</groupId>
