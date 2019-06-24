@@ -201,6 +201,7 @@ public class XMPPServiceImpl implements XMPPService, ConnectionListener,PingFail
 	private static boolean isConnected = false; 
 	private static boolean vpnConnected = true; 	
 	private static boolean closeVPN = false; 
+	private static boolean initialized = false;
 	//private PingFailedListener pingFailedListener ;
 	private static final PegDownProcessor pegDownProcessor = new PegDownProcessor();
 			//Extensions.ALL | Extensions.SUPPRESS_ALL_HTML, 5000);
@@ -304,8 +305,9 @@ public class XMPPServiceImpl implements XMPPService, ConnectionListener,PingFail
             mConnection.addConnectionListener(this);
 
             try {
-
+                checkConnection();
             	((AbstractXMPPConnection) mConnection).connect();
+
                 connection = (AbstractXMPPConnection) mConnection;
                 connection.login();
                 initProviderManager();
@@ -336,7 +338,7 @@ public class XMPPServiceImpl implements XMPPService, ConnectionListener,PingFail
 			//fileTransferManager.addFileTransferListener(fileTransferListener);
 			//login(username,password);		
 	        //test();
-            checkConnection();
+            initialized = true;
 		} catch (IOException | ParseException e) {
 			log.error("init error:"+e.getMessage());
 		} catch (RepositoryException e) {
@@ -1619,8 +1621,9 @@ public class XMPPServiceImpl implements XMPPService, ConnectionListener,PingFail
 		   TimerTask repeatedTask = new TimerTask() {
 		        public void run() {
 		        	try {
-
-		        		if(!connection.isConnected()) {
+		        		if(!initialized) {
+		        			initialize();
+		        		}else if(!connection.isConnected()) {
 		        			connection.connect();
 		        		}else if(!connection.isAuthenticated()) {
 							connection.login();
@@ -1634,7 +1637,7 @@ public class XMPPServiceImpl implements XMPPService, ConnectionListener,PingFail
 		                }
 					} catch (SmackException | IOException | XMPPException | InterruptedException e ) {
 	        			log.error(e.getMessage());
-						//initialize();
+						initialized = false;
 					}
 		        }
 		    };
