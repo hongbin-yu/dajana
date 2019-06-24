@@ -307,22 +307,26 @@ public class XMPPServiceImpl implements XMPPService, ConnectionListener,PingFail
 
             	((AbstractXMPPConnection) mConnection).connect();
                 connection = (AbstractXMPPConnection) mConnection;
-    	        initProviderManager();
+                connection.login();
+                initProviderManager();
+                roster = initRoster(connection);
+    	        initReconnectManager();
 
-    			reconnectionManager = ReconnectionManager.getInstanceFor((AbstractXMPPConnection) connection);
+/*    			reconnectionManager = ReconnectionManager.getInstanceFor((AbstractXMPPConnection) connection);
     			ReconnectionManager.setEnabledPerDefault(true);
     			reconnectionManager.enableAutomaticReconnection();
 
     			reconnectionManager.setReconnectionPolicy(ReconnectionPolicy.RANDOM_INCREASING_DELAY);
     		    pingManager = PingManager.getInstanceFor(connection);
-    		    pingManager.setPingInterval(60);
+    		    pingManager.setPingInterval(50);
     		    
-    		    pingManager.registerPingFailedListener(this);	
-                chatManager = ChatManager.getInstanceFor(connection);
-        		chatManager.addIncomingListener(this);
+    		    pingManager.registerPingFailedListener(this);	*/
+                //chatManager = ChatManager.getInstanceFor(connection);
+        		//chatManager.addIncomingListener(this);
+                initChatManager(connection);
         		fileTransferManager = initFileTransferManager(connection);//FileTransferManager.getInstanceFor(connection);
     			
-        		pingManager.pingMyServer();                
+               
 			} catch (SmackException | XMPPException | InterruptedException e) {
 				log.error(e.getMessage());
 			}
@@ -429,7 +433,7 @@ public class XMPPServiceImpl implements XMPPService, ConnectionListener,PingFail
 			httpFileUploadManager = HttpFileUploadManager.getInstanceFor(connection);
 			installConnectionListeners(connection);
 			roster = initRoster(connection);
-            installIncomingChatMessageListener(connection);
+			initChatManager(connection);
        		fileTransferManager = initFileTransferManager(connection);			            
 			initReconnectManager();
 			ibbManager = InBandBytestreamManager.getByteStreamManager(connection);
@@ -630,7 +634,7 @@ public class XMPPServiceImpl implements XMPPService, ConnectionListener,PingFail
 			log.error(e.getMessage());;
 		}			
 	}
-	private void installIncomingChatMessageListener(final XMPPConnection connection) {
+	private void initChatManager(final XMPPConnection connection) {
 		log.info("installIncomingChatMessageListener");
         chatManager = ChatManager.getInstanceFor(connection);  
         incomingChatMessageListener = new IncomingChatMessageListener() {
@@ -1623,6 +1627,10 @@ public class XMPPServiceImpl implements XMPPService, ConnectionListener,PingFail
 		                }else {
 			                checkVpnConnection();
 			                log.info("Online:"+getOnlineCount());
+			                if(!pingManager.pingMyServer()) {
+			                	connection.disconnect();
+			                	log.error("Ping fail, reconnect");
+			                }
 		                }
 					} catch (SmackException | IOException | XMPPException | InterruptedException e ) {
 	        			log.error(e.getMessage());
@@ -1934,12 +1942,12 @@ public class XMPPServiceImpl implements XMPPService, ConnectionListener,PingFail
 	private Roster initRoster(XMPPConnection connection) {
 		log.info("init Roster");
 		buddies = new HashMap<>();
-		Roster roster = Roster.getInstanceFor(connection);
+		roster = Roster.getInstanceFor(connection);
 		roster.setRosterLoadedAtLogin(true);
-		roster.addRosterListener(this);
-		roster.addRosterLoadedListener(this);
+		//roster.addRosterListener(this);
+		//roster.addRosterLoadedListener(this);
 		//roster = Roster.getInstanceFor(connection);
-		/*
+		
 		if (!roster.isLoaded()) {
 			  try {
 		            roster.reloadAndWait();
@@ -1962,13 +1970,13 @@ public class XMPPServiceImpl implements XMPPService, ConnectionListener,PingFail
 			}
 			checkVpnConnection();
 		}
-		*/
-		//rosterListener = getRosterListener(roster);
-		//roster.addRosterListener(rosterListener);
+		
+        rosterListener = getRosterListener(roster);
+		roster.addRosterListener(rosterListener);
 		roster.setSubscriptionMode(Roster.SubscriptionMode.accept_all);
 		//roster.setRosterLoadedAtLogin(true);
 
-		presence = new Presence(connection.getUser(),Type.available);
+		Presence presence = new Presence(connection.getUser(),Type.available);
 		//Presence presence = roster.getPresence(connection.getUser().asBareJid());
 	    //connection.setReplyTimeout(10000);
 		presence.setType(Type.available);
@@ -2118,7 +2126,7 @@ public class XMPPServiceImpl implements XMPPService, ConnectionListener,PingFail
 		//connection.isAuthenticated();
         //vCardManager = VCardManager.getInstanceFor(connection);
 	    pingManager = PingManager.getInstanceFor(connection);
-	    pingManager.setPingInterval(600);
+	    pingManager.setPingInterval(50);
 	    pingManager.pingMyServer();	
 	    pingManager.registerPingFailedListener(new PingFailedListener() {
 
@@ -2689,23 +2697,20 @@ public static String[] translateCommandline(String toProcess) {
 	
 	@Override
 	public void authenticated(XMPPConnection connection, boolean resumed) {
-		log.info("authenticated "+resumed+" to load Roster:"+connection);
-		roster = initRoster(connection);
-		roster.addRosterListener(this);
-		roster.addRosterLoadedListener(this);
+		log.info("authenticated "+" to load Roster:"+connection);
 		//fileTransferManager.addFileTransferListener(this);
 		//bytestreamManager = Socks5BytestreamManager.getBytestreamManager(connection);
 		//bytestreamManager.addIncomingBytestreamListener(this);
 		//ibbManager = InBandBytestreamManager.getByteStreamManager(connection);
 		//ibbManager.addIncomingBytestreamListener(this);
-		Presence presence = new Presence(connection.getUser(),Type.available);
+/*		Presence presence = new Presence(connection.getUser(),Type.available);
 		presence.setStatus("cloud available");
 
 		try {
 			connection.sendStanza(presence);
 		} catch (NotConnectedException | InterruptedException e) {
 			log.error("connection authorized send presence:"+e.getMessage());
-		}
+		}*/
 	}
 	
 	@Override
