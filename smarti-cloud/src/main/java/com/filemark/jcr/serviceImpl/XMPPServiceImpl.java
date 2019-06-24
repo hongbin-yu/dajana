@@ -81,6 +81,11 @@ import org.jivesoftware.smack.util.PacketParserUtils;
 import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.smack.util.TLSUtils;
 import org.jivesoftware.smack.util.XmlStringBuilder;
+import org.jivesoftware.smackx.bytestreams.BytestreamListener;
+import org.jivesoftware.smackx.bytestreams.BytestreamManager;
+import org.jivesoftware.smackx.bytestreams.BytestreamRequest;
+import org.jivesoftware.smackx.bytestreams.BytestreamSession;
+import org.jivesoftware.smackx.bytestreams.ibb.InBandBytestreamManager;
 import org.jivesoftware.smackx.bytestreams.ibb.provider.CloseIQProvider;
 import org.jivesoftware.smackx.bytestreams.ibb.provider.DataPacketProvider;
 import org.jivesoftware.smackx.bytestreams.ibb.provider.OpenIQProvider;
@@ -150,7 +155,7 @@ import com.lowagie.text.pdf.PdfReader;
 
 
 @SuppressWarnings("deprecation")
-public class XMPPServiceImpl implements XMPPService, ConnectionListener,PingFailedListener,RosterLoadedListener,RosterListener,IncomingChatMessageListener,FileTransferListener{
+public class XMPPServiceImpl implements XMPPService, ConnectionListener,PingFailedListener,RosterLoadedListener,RosterListener,IncomingChatMessageListener,FileTransferListener,BytestreamListener{
 
 	private final Logger log = LoggerFactory.getLogger(XMPPServiceImpl.class);
 	//private static String host = "host ip";
@@ -175,6 +180,8 @@ public class XMPPServiceImpl implements XMPPService, ConnectionListener,PingFail
 	private PingManager pingManager;
 	private VCardManager vCardManager;
 	private ReconnectionManager reconnectionManager;
+	private Socks5BytestreamManager bytestreamManager;
+	private InBandBytestreamManager ibbManager;
 	private static FileTransferManager fileTransferManager ;
 	private static HttpFileUploadManager httpFileUploadManager;
 	private JingleManager jingleManager;
@@ -293,17 +300,33 @@ public class XMPPServiceImpl implements XMPPService, ConnectionListener,PingFail
 
 
 		    mConnection = new XMPPTCPConnection(config);
-            mConnection.setReplyTimeout(10000);
+            mConnection.setReplyTimeout(50000);
             mConnection.addConnectionListener(this);
-            connection = (AbstractXMPPConnection) mConnection;
+
             try {
 
             	((AbstractXMPPConnection) mConnection).connect();
-		
+                connection = (AbstractXMPPConnection) mConnection;
+    	        initProviderManager();
+
+    			reconnectionManager = ReconnectionManager.getInstanceFor((AbstractXMPPConnection) connection);
+    			ReconnectionManager.setEnabledPerDefault(true);
+    			reconnectionManager.enableAutomaticReconnection();
+
+    			reconnectionManager.setReconnectionPolicy(ReconnectionPolicy.RANDOM_INCREASING_DELAY);
+    		    pingManager = PingManager.getInstanceFor(connection);
+    		    pingManager.setPingInterval(60);
+    		    
+    		    pingManager.registerPingFailedListener(this);	
+                chatManager = ChatManager.getInstanceFor(connection);
+        		chatManager.addIncomingListener(this);
+        		fileTransferManager = initFileTransferManager(connection);//FileTransferManager.getInstanceFor(connection);
+    			
+        		pingManager.pingMyServer();                
 			} catch (SmackException | XMPPException | InterruptedException e) {
 				log.error(e.getMessage());
 			}
-			
+
 			//fileTransferListener = new FileTransferIbbListener(this);
 			//fileTransferManager = FileTransferManager.getInstanceFor(connection);
 			//fileTransferManager.addFileTransferListener(fileTransferListener);
@@ -322,8 +345,7 @@ public class XMPPServiceImpl implements XMPPService, ConnectionListener,PingFail
 			log.error("init error:"+e.getMessage());	
 		} catch (InterruptedException e) {
 			log.error("init error:"+e.getMessage());	
-		}*/ 
-
+		}*/
 
 		
 
@@ -410,7 +432,8 @@ public class XMPPServiceImpl implements XMPPService, ConnectionListener,PingFail
             installIncomingChatMessageListener(connection);
        		fileTransferManager = initFileTransferManager(connection);			            
 			initReconnectManager();
-
+			ibbManager = InBandBytestreamManager.getByteStreamManager(connection);
+			ibbManager.addIncomingBytestreamListener(this);
 			//sendFile(connection,"admin@"+domain+"/tu.dajana.net","C:\\Users\\hongbin.yu\\Pictures\\hongbinyu.jpg","a testing");	            
 /*			if(httpFileUploadManager.isUploadServiceDiscovered()) {
 				log.info(httpFileUploadManager.uploadFile(new File("C:\\Users\\hongbin.yu\\Pictures\\hongbinyu.jpg")).toString());
@@ -479,6 +502,7 @@ public class XMPPServiceImpl implements XMPPService, ConnectionListener,PingFail
 	
 	public void disconnect() {
 		isConnected = false;
+		buddies = new HashMap<>();
 		//fileTransferManager = null;
 		if(roster !=null) {
 			roster.removeRosterListener(this);
@@ -679,6 +703,7 @@ public class XMPPServiceImpl implements XMPPService, ConnectionListener,PingFail
         		}
         		log.debug("p="+p_value +",q="+query);
             }else if(commandLine.hasOption('t')) {	
+            	test();
             }else if(commandLine.hasOption('d')) {	
             }else if(commandLine.hasOption('r')) {	
             	disconnect();
@@ -1590,6 +1615,7 @@ public class XMPPServiceImpl implements XMPPService, ConnectionListener,PingFail
 		   TimerTask repeatedTask = new TimerTask() {
 		        public void run() {
 		        	try {
+
 		        		if(!connection.isConnected()) {
 		        			connection.connect();
 		        		}else if(!connection.isAuthenticated()) {
@@ -1598,16 +1624,9 @@ public class XMPPServiceImpl implements XMPPService, ConnectionListener,PingFail
 			                checkVpnConnection();
 			                log.info("Online:"+getOnlineCount());
 		                }
-					} catch (NotConnectedException e ) {
-						log.error("checkConnection:"+e.getMessage());
-					} catch (InterruptedException e) {
-						log.error("checkConnection:"+e.getMessage());
-					} catch (SmackException e) {
-						log.error("checkConnection:"+e.getMessage());
-					} catch (IOException e) {
-						log.error("checkConnection:"+e.getMessage());
-					} catch (XMPPException e) {
-						log.error("checkConnection:"+e.getMessage());
+					} catch (SmackException | IOException | XMPPException | InterruptedException e ) {
+	        			log.error(e.getMessage());
+						//initialize();
 					}
 		        }
 		    };
@@ -1955,7 +1974,7 @@ public class XMPPServiceImpl implements XMPPService, ConnectionListener,PingFail
 		presence.setType(Type.available);
 		log.debug("Status:"+presence.getStatus()+"/"+presence.getType()+"/"+presence);
 
-		presence.setPriority(presence.getPriority()+1);
+		//presence.setPriority(presence.getPriority()+1);
 		try {
 			log.info("set vcard:");
 			connection.sendStanza(presence);
@@ -2005,7 +2024,7 @@ public class XMPPServiceImpl implements XMPPService, ConnectionListener,PingFail
 		
 	private FileTransferManager initFileTransferManager(XMPPConnection connection) {
 		log.info("init FileTransferManager");
-		FileTransferNegotiator.IBB_ONLY = true;
+		//FileTransferNegotiator.IBB_ONLY = true;
 		jingleManager = JingleManager.getInstanceFor(connection);
 		
         JingleIBBTransportProvider ibbProvider = new JingleIBBTransportProvider();
@@ -2106,7 +2125,7 @@ public class XMPPServiceImpl implements XMPPService, ConnectionListener,PingFail
 			@Override
 			public void pingFailed() {
 				log.error("Ping failed:");
-				disconnect();
+				//disconnect();
 				//checkConnection();
 			}
         	
@@ -2122,7 +2141,7 @@ public class XMPPServiceImpl implements XMPPService, ConnectionListener,PingFail
 		ProviderManager.addIQProvider("query","http://jabber.org/protocol/bytestreams", new BytestreamsProvider());
 		ProviderManager.addIQProvider("open","http://jabber.org/protocol/ibb", new OpenIQProvider());
 		ProviderManager.addIQProvider("close","http://jabber.org/protocol/ibb", new CloseIQProvider());
-		FileTransferNegotiator.IBB_ONLY = true;
+		//FileTransferNegotiator.IBB_ONLY = true;
 		jingleManager = JingleManager.getInstanceFor(connection);
 		
         JingleIBBTransportProvider ibbProvider = new JingleIBBTransportProvider();
@@ -2404,13 +2423,13 @@ public class XMPPServiceImpl implements XMPPService, ConnectionListener,PingFail
 	private final byte[] dataToSend = StringUtils.randomString(1024 * 4 * 3).getBytes();
 	private static byte[] dataReceived=null;  	
 	private void test() {
-		String path="C:\\Users\\hongbin.yu\\Documents\\yuhongweb\\product_sample.jpg";
+		String path="C:\\Users\\hongbin.yu\\Pictures\\2014-10-18\\IMG_0006.JPG";
 /*		JingleUtil jutil = new JingleUtil(connection);
         FullJid test = connection.getUser().asFullJidOrThrow();
         FullJid juliet;*/
       
 		try {
-			FileTransferNegotiator.IBB_ONLY = true;
+			//FileTransferNegotiator.IBB_ONLY = true;
 			XMPPTCPConnectionConfiguration.Builder conf = XMPPTCPConnectionConfiguration.builder();
 			conf.setHost(domain);
 			conf.setXmppDomain(domain);
@@ -2477,7 +2496,7 @@ public class XMPPServiceImpl implements XMPPService, ConnectionListener,PingFail
 			}
 			*/			
 			//FileTransferManager ftm = initFileTransferManager(connection2);
-			sendFile(connection1,username+"@"+domain+"/receiver",path,"a greeting");
+			sendFile(connection,username+"@"+domain+"/cloud",path,"a greeting");
 			connection1.disconnect();
 			connection2.disconnect();
 			Thread.sleep(1000);
@@ -2516,9 +2535,11 @@ public class XMPPServiceImpl implements XMPPService, ConnectionListener,PingFail
 	        OutgoingFileTransfer oft = FileTransferManager.getInstanceFor(conn).createOutgoingFileTransfer(fqdn);
 	        //FileTransferNegotiator.IBB_ONLY = true;
 	        //oft.sendFile(new File(path), description);
+	        String sender = conn.getUser().toString();
 	        File file = new File(path);
 		    Date start=new Date();
-	        OutgoingFileTransfer.setResponseTimeout(600000);
+			float speed = file.length();
+		    OutgoingFileTransfer.setResponseTimeout(100000);
 	        InputStream in = new FileInputStream(file);
 			oft.sendStream(in, file.getName(), file.length(), "sending a file");
 			outerloop: while (!oft.isDone()) {
@@ -2531,10 +2552,16 @@ public class XMPPServiceImpl implements XMPPService, ConnectionListener,PingFail
 					break;
 				}
 				Thread.sleep(1000);
+				speed = speed/(new Date().getTime() - start.getTime());			
+                if(speed < 0.1 && new Date().getTime() - start.getTime() > 5000) {
+                    oft.cancel();
+                    log.info("Filetransfer receiving slow: " + oft.getStatus() + ". Progress: " + oft.getProgress());
+                    break outerloop;
+                }
 			}
-			float speed = file.length();
+
 			speed = speed/(new Date().getTime() - start.getTime());			
-			log.info("Filetransfer sending status: " + oft.getStatus() + ". speed: " + speed+ "(k/s)");
+			log.info("Filetransfer sending from "+sender +" to "+jid+",status:"+ oft.getStatus() + ". speed: " + speed+ "(k/s)");
 
 			in.close();
 			
@@ -2656,36 +2683,21 @@ public static String[] translateCommandline(String toProcess) {
 	@Override
 	public void connected(XMPPConnection connection) {
 		log.info("connected to login:"+connection);
-	    try {
-			this.connection = (AbstractXMPPConnection) connection;
-	        initProviderManager();
-	        ((AbstractXMPPConnection) connection).login();
-			reconnectionManager = ReconnectionManager.getInstanceFor((AbstractXMPPConnection) connection);
-			ReconnectionManager.setEnabledPerDefault(true);
-			reconnectionManager.enableAutomaticReconnection();
+		this.connection = (AbstractXMPPConnection) connection;
 
-			reconnectionManager.setReconnectionPolicy(ReconnectionPolicy.RANDOM_INCREASING_DELAY);
-		    pingManager = PingManager.getInstanceFor(connection);
-		    pingManager.setPingInterval(60);
-		    pingManager.pingMyServer();
-		    pingManager.registerPingFailedListener(this);		    
-	    } catch (XMPPException | SmackException | IOException | InterruptedException e) {
-	        log.error(e.getMessage());
-	    }
-		
 	}
 	
 	@Override
 	public void authenticated(XMPPConnection connection, boolean resumed) {
 		log.info("authenticated "+resumed+" to load Roster:"+connection);
-		chatManager = ChatManager.getInstanceFor(connection);
-		chatManager.addIncomingListener(this);
 		roster = initRoster(connection);
 		roster.addRosterListener(this);
 		roster.addRosterLoadedListener(this);
-		fileTransferManager = FileTransferManager.getInstanceFor(connection);
-		fileTransferManager.addFileTransferListener(this);
-
+		//fileTransferManager.addFileTransferListener(this);
+		//bytestreamManager = Socks5BytestreamManager.getBytestreamManager(connection);
+		//bytestreamManager.addIncomingBytestreamListener(this);
+		//ibbManager = InBandBytestreamManager.getByteStreamManager(connection);
+		//ibbManager.addIncomingBytestreamListener(this);
 		Presence presence = new Presence(connection.getUser(),Type.available);
 		presence.setStatus("cloud available");
 
@@ -2699,37 +2711,40 @@ public static String[] translateCommandline(String toProcess) {
 	@Override
 	public void connectionClosed() {
 		log.info("connection closed:");
-	    try {
-			buddies = new HashMap<>();	
-			if(roster !=null) roster.removeRosterListener(this);
-			if(fileTransferManager != null) fileTransferManager.removeFileTransferListener(this);
-			if(chatManager != null) chatManager.removeIncomingListener(this);
+/*	    try {
+			//if(roster !=null) roster.removeRosterListener(this);
+			//if(fileTransferManager != null) fileTransferManager.removeFileTransferListener(this);
+			//if(chatManager != null) chatManager.removeIncomingListener(this);
 	        ((AbstractXMPPConnection) mConnection).disconnect(presence);
 	    } catch (SmackException exception) {
 	    	log.error("connectionClosed:"+exception.getMessage());
-	    }
+	    }*/
 	}
 	
 	@Override
 	public void connectionClosedOnError(Exception e) {
 		log.info("connectionClosedOnError to connect again");
-	    try {
-			//buddies = new HashMap<>();	
-			//if(roster !=null) roster.removeRosterListener(this);
-			//if(fileTransferManager != null) fileTransferManager.removeFileTransferListener(this);
-			//if(chatManager != null) chatManager.removeIncomingListener(this);			
-	        ((AbstractXMPPConnection) mConnection).connect();
-	    } catch (SmackException | IOException | XMPPException | InterruptedException exception) {
-	    	log.error("connectionClosedOnError:"+e.getMessage());
-	    }
+	    //buddies = new HashMap<>();	
+		//if(roster !=null) roster.removeRosterListener(this);
+		//if(fileTransferManager != null) fileTransferManager.removeFileTransferListener(this);
+		//if(chatManager != null) chatManager.removeIncomingListener(this);			
+		//((AbstractXMPPConnection) mConnection).connect();
+		//connection.disconnect();
 		
 	}
 
 	@Override
 	public void pingFailed() {
 		log.error("Ping failed: reconnect");
-		disconnect();
-		initialize();
+		connection.disconnect();
+		try {
+			connection.connect();
+		} catch (SmackException | IOException | XMPPException
+				| InterruptedException e) {
+			log.error("pingFail connect:"+e);
+		}
+		//disconnect();
+		//initialize();
 
 	}
 
@@ -2777,8 +2792,32 @@ public static String[] translateCommandline(String toProcess) {
 	            long size = request.getFileSize();
 	            Jid jid = request.getRequestor();	   
 	    		String requester = jid.toString().split("@")[0];
+	    		String streamId = request.getStreamID();
                 IncomingFileTransfer ift = request.accept();
-                
+                double speed = size;
+				log.info("Filetransfer receiving status: " + ift.getStatus());
+				outerloop: while (!ift.isDone()) {
+					switch (ift.getStatus()) {
+					case error:
+						log.info("Filetransfer receiving error: " + ift.getError());
+						ift.cancel();
+						break outerloop;
+					case cancelled:
+						log.info("Filetransfer receiving cancelled: " + ift.getError());
+						break outerloop;						
+					default:
+						log.info("Filetransfer receiving status: " + ift.getStatus() + ". Progress: " + ift.getProgress());
+						break;
+					}
+					Thread.sleep(1000);
+		            speed = size*ift.getProgress()/(new Date().getTime() - start.getTime());
+
+                    if(speed < 0.1 && new Date().getTime() - start.getTime() > 5000) {
+                        ift.cancel();
+                        log.info("Filetransfer receiving slow: " + ift.getStatus() + ". Progress: " + ift.getProgress());
+                        return;
+                    }
+				}
 				InputStream is = ift.receiveFile();
 				
 				ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -2790,7 +2829,7 @@ public static String[] translateCommandline(String toProcess) {
 				os.flush();
 				log.info("Filetransfer receiving status: " + ift.getStatus()+" .size:"+os.size()+"/"+size  + ". speed: " + (float)(os.size())/(new Date().getTime() - start.getTime())+"(k/s)");
 
-		        log.info("fileTransferRequest:"+fileName+"/"+contentType+"/"+requester+"/"+description);
+		        log.info("fileTransferRequest:"+fileName+"/"+contentType+"/"+jid.toString()+"/"+description);
 		        InputStream inputStream = new ByteArrayInputStream(os.toByteArray()); 
                 saveAsset(requester,inputStream,contentType,fileName,description,size);
             }
@@ -2853,6 +2892,34 @@ public static String[] translateCommandline(String toProcess) {
 		
 		}
 		checkVpnConnection();					
+	}
+
+	@Override
+	public void incomingBytestreamRequest(BytestreamRequest request) {
+
+		try {
+			BytestreamSession session = request.accept();
+			String streamId = request.getSessionID();
+			log.info("incomingBytestreamRequest receiving ID: "+streamId);
+			InputStream is = session.getInputStream();
+			
+			ByteArrayOutputStream os = new ByteArrayOutputStream();
+			int nRead;
+			byte[] buf = new byte[1024];
+			while ((nRead = is.read(buf,  0, buf.length)) != -1) {
+				os.write(buf, 0, nRead);
+			}
+			
+		} catch (XMPPErrorException e) {
+			log.error(e.getMessage());	
+		} catch (InterruptedException e) {
+			log.error(e.getMessage());	
+		} catch (SmackException e) {
+			log.error(e.getMessage());	
+		} catch (IOException e) {
+			log.error(e.getMessage());	
+		}
+		
 	}
 
 
