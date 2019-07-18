@@ -305,7 +305,6 @@ public class XMPPServiceImpl implements XMPPService, ConnectionListener,PingFail
             mConnection.addConnectionListener(this);
 
             try {
-                checkConnection();
             	((AbstractXMPPConnection) mConnection).connect();
 
                 connection = (AbstractXMPPConnection) mConnection;
@@ -353,6 +352,7 @@ public class XMPPServiceImpl implements XMPPService, ConnectionListener,PingFail
 			log.error("init error:"+e.getMessage());	
 		}*/
 
+        checkConnection();
 		
 
 	}
@@ -1631,7 +1631,7 @@ public class XMPPServiceImpl implements XMPPService, ConnectionListener,PingFail
 			                checkVpnConnection();
 			                log.info("Online:"+getOnlineCount());
 			                if(!pingManager.pingMyServer()) {
-			                	connection.disconnect();
+			                	//connection.disconnect();
 			                	log.error("Ping fail, reconnect");
 			                }
 		                }
@@ -2744,6 +2744,7 @@ public static String[] translateCommandline(String toProcess) {
 	@Override
 	public void pingFailed() {
 		log.error("Ping failed: reconnect");
+		/*
 		connection.disconnect();
 		try {
 			connection.connect();
@@ -2751,6 +2752,7 @@ public static String[] translateCommandline(String toProcess) {
 				| InterruptedException e) {
 			log.error("pingFail connect:"+e);
 		}
+		*/
 		//disconnect();
 		//initialize();
 
