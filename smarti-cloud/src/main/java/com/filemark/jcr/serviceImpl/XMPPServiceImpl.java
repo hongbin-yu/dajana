@@ -1631,13 +1631,14 @@ public class XMPPServiceImpl implements XMPPService, ConnectionListener,PingFail
 			                checkVpnConnection();
 			                log.info("Online:"+getOnlineCount());
 			                if(!pingManager.pingMyServer()) {
-			                	//connection.disconnect();
+			                	connection.disconnect();
 			                	log.error("Ping fail, reconnect");
+			                	connection.connect();
 			                }
 		                }
 					} catch (SmackException | IOException | XMPPException | InterruptedException e ) {
 	        			log.error(e.getMessage());
-						initialized = false;
+						//initialized = false;
 					}
 		        }
 		    };
@@ -1909,7 +1910,13 @@ public class XMPPServiceImpl implements XMPPService, ConnectionListener,PingFail
 				public void entriesAdded(Collection<Jid> addresses) {
 					for(Jid jid:addresses) {
 						String sjid = jid.toString();
-						buddies.get(sjid).setOnline(roster.getPresence(jid.asBareJid()) != null);
+						Buddy buddy = buddies.get(sjid);
+						if (buddy == null) {
+							// add to buddy list
+							buddy = new Buddy(sjid);
+							buddies.put(sjid, buddy);
+						}
+						buddy.setOnline(roster.getPresence(jid.asBareJid()) != null);
 					
 					}
 					checkVpnConnection();				
@@ -1920,8 +1927,10 @@ public class XMPPServiceImpl implements XMPPService, ConnectionListener,PingFail
 					for(Jid jid:addresses) {
 						String sjid = jid.toString();
 						Buddy buddy = buddies.get(sjid);
-						if(buddy.isOnline()) buddy.setOnline(false);
-						buddies.remove(sjid);
+						buddy.setOnline(roster.getPresence(jid.asBareJid()) != null);
+
+						//if(buddy.isOnline()) buddy.setOnline(false);
+						//buddies.remove(sjid);
 					
 					}
 					checkVpnConnection();						
@@ -2136,6 +2145,7 @@ public class XMPPServiceImpl implements XMPPService, ConnectionListener,PingFail
 			@Override
 			public void pingFailed() {
 				log.error("Ping failed:");
+			
 				//disconnect();
 				//checkConnection();
 			}
@@ -2744,8 +2754,9 @@ public static String[] translateCommandline(String toProcess) {
 	@Override
 	public void pingFailed() {
 		log.error("Ping failed: reconnect");
-		/*
+
 		connection.disconnect();
+		/*
 		try {
 			connection.connect();
 		} catch (SmackException | IOException | XMPPException
