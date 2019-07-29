@@ -1638,7 +1638,8 @@ public class XMPPServiceImpl implements XMPPService, ConnectionListener,PingFail
 		                }
 					} catch (SmackException | IOException | XMPPException | InterruptedException e ) {
 	        			log.error(e.getMessage());
-						//initialized = false;
+	        			disconnect();
+						initialized = false;
 					}
 		        }
 		    };
