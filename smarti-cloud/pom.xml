@@ -417,7 +417,7 @@
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<type>jar</type>
-			<version>5.1.6</version>
+			<version>8.0.28</version>
 		</dependency>
 
 		<dependency>
