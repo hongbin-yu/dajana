@@ -18,7 +18,7 @@
 		<org.slf4j-version>1.6.6</org.slf4j-version>
 		<jackrabbit.version>2.10.1</jackrabbit.version>
 		<spring.modules.version>0.8</spring.modules.version>
-		<jackson.version>2.9.4</jackson.version>
+		<jackson.version>2.12.6.1</jackson.version>
 		<localpath>${project.basedir}/src/lib/local</localpath>
 	</properties>
 
